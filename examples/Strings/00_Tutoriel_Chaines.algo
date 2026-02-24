@@ -1,0 +1,37 @@
+Algorithme Tutoriel_Chaines;
+Var
+    // 1. Déclaration de Chaînes de Caractères
+    // Une chaîne est une suite de caractères.
+    // Syntaxe : nomDeLaChaine[Taille] : Chaine;
+    prenom[50] : Chaine;
+    nom[50] : Chaine;
+    nomComplet[100] : Chaine;
+    espace[5] : Chaine;
+    premiereLettre : Caractere;
+
+Debut
+    Ecrire("=== 🔤 Tutoriel : Les Chaînes de Caractères ===\n");
+    Ecrire("\n");
+
+    // 2. Affectation
+    prenom <- "Jean";
+    nom <- "Dupont";
+    espace <- " ";
+    
+    // 3. Concaténation
+    // On doit assembler des chaînes avec la fonction Concat(s1, s2)
+    nomComplet <- Concat(prenom, espace);
+    nomComplet <- Concat(nomComplet, nom);
+    Ecrire("Nom complet : ", nomComplet, "\n");
+    
+    // 4. Manipulation (Accès aux caractères)
+    // On extrait le premier caractère par son indice
+    premiereLettre <- prenom[0];
+    Ecrire("La première lettre du prénom est : ", premiereLettre, "\n");
+    
+    Ecrire("\n");
+    Ecrire("Longueur de la chaîne : ", Longueur(nomComplet), "\n");
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur les chaînes de caractères.\n");
+Fin.

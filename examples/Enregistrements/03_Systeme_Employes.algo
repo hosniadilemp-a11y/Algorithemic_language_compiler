@@ -1,0 +1,132 @@
+// ================================================================
+// PROBLEME 2 : Système de Gestion des Employés et de la Paie
+// ================================================================
+// Ce programme simule une base de données d'employés avec gestion
+// des adresses, des départements et calcul automatique des salaires.
+// ================================================================
+
+Type Date = Enregistrement
+Debut
+    jour, mois, annee : Entier;
+Fin;
+
+Type Adresse = Enregistrement
+Debut
+    numero : Entier;
+    rue[50]    : Chaine;
+    ville[50]  : Chaine;
+Fin;
+
+Type Employe = Enregistrement
+Debut
+    nom[50]       : Chaine;
+    pos[30]       : Chaine; // Position / Poste
+    salaire_base  : Reel;
+    service[20]   : Chaine; // DEPT
+    date_embauche : Date;
+    domicile      : Adresse;
+Fin;
+
+// --- Fonctions de Traitement ---
+
+Fonction Reel_Calculer_IRG(salaire : Reel) : Reel
+Debut
+    Si salaire > 5000.0 Alors
+        Retourner(salaire * 0.15); // 15% taxe
+    Sinon
+        Retourner(salaire * 0.05); // 5% taxe
+    Fsi
+Fin;
+
+Fonction Reel_Calculer_Net(e : Employe) : Reel
+Var irg, sss : Reel;
+Debut
+    irg := Reel_Calculer_IRG(e.salaire_base);
+    sss := e.salaire_base * 0.09; // Securite Sociale 9%
+    Retourner(e.salaire_base - irg - sss);
+Fin;
+
+// --- Procedures de Gestion ---
+
+Procedure Afficher_Fiche_Paie(e : Employe)
+Var net : Reel;
+Debut
+    net := Reel_Calculer_Net(e);
+    Ecrire("\n--------------------------------------------\n");
+    Ecrire("FICHE DE PAIE : "); Ecrire(e.nom); Ecrire("\n");
+    Ecrire("Poste         : "); Ecrire(e.pos); Ecrire("\n");
+    Ecrire("Service       : "); Ecrire(e.service); Ecrire("\n");
+    Ecrire("Date Emb.     : "); 
+    Ecrire(e.date_embauche.jour); Ecrire("/");
+    Ecrire(e.date_embauche.mois); Ecrire("/");
+    Ecrire(e.date_embauche.annee); Ecrire("\n");
+    Ecrire("Adresse       : "); 
+    Ecrire(e.domicile.numero); Ecrire(", ");
+    Ecrire(e.domicile.rue); Ecrire(" (");
+    Ecrire(e.domicile.ville); Ecrire(")\n");
+    Ecrire("--------------------------------------------\n");
+    Ecrire("Salaire Brut  : "); Ecrire(e.salaire_base); Ecrire("\n");
+    Ecrire("Salaire Net   : "); Ecrire(net); Ecrire("\n");
+    Ecrire("--------------------------------------------\n");
+Fin;
+
+Procedure Augmenter_Salaire(Var e : Employe, taux : Reel)
+Debut
+    e.salaire_base := e.salaire_base * (1.0 + taux);
+Fin;
+
+Algorithme Gestion_Paie_Service;
+Var
+    staff[5] : Employe;
+    i : Entier;
+    masse_salariale : Reel;
+
+Debut
+    // Employe 1 : Cadre
+    staff[0].nom := "Ben Ali";
+    staff[0].pos := "Directeur IT";
+    staff[0].salaire_base := 8500.0;
+    staff[0].service := "Informatique";
+    staff[0].date_embauche.jour := 1; staff[0].date_embauche.mois := 1; staff[0].date_embauche.annee := 2015;
+    staff[0].domicile.numero := 12; staff[0].domicile.rue := "Rue des Lilas"; staff[0].domicile.ville := "Alger";
+
+    // Employe 2 : Developpeur
+    staff[1].nom := "Meziane";
+    staff[1].pos := "Ingenieur Dev";
+    staff[1].salaire_base := 6200.0;
+    staff[1].service := "Informatique";
+    staff[1].date_embauche.jour := 15; staff[1].date_embauche.mois := 6; staff[1].date_embauche.annee := 2020;
+    staff[1].domicile.numero := 45; staff[1].domicile.rue := "Residence Panorama"; staff[1].domicile.ville := "Oran";
+
+    // Employe 3 : Secretaire
+    staff[2].nom := "Khadidja";
+    staff[2].pos := "Secretaire";
+    staff[2].salaire_base := 3800.0;
+    staff[2].service := "Administration";
+    staff[2].date_embauche.jour := 10; staff[2].date_embauche.mois := 3; staff[2].date_embauche.annee := 2018;
+    staff[2].domicile.numero := 5; staff[2].domicile.rue := "Avenue Pasteur"; staff[2].domicile.ville := "Annaba";
+
+    Ecrire("=== SYSTEME DE GESTION RH ET PAIE ===\n");
+    
+    // Augmentation de 10% pour l'informatique
+    Ecrire("\n[INFO] Application d'une augmentation de 10% au service Informatique.\n");
+    Pour i := 0 a 2 Faire
+        Si staff[i].service = "Informatique" Alors
+            Augmenter_Salaire(staff[i], 0.10);
+        Fsi
+    FinPour
+
+    // Edition des fiches de paie et calcul de la masse salariale
+    masse_salariale := 0.0;
+    Ecrire("\nGeneration des fiches de paie :\n");
+    Pour i := 0 a 2 Faire
+        Afficher_Fiche_Paie(staff[i]);
+        masse_salariale := masse_salariale + staff[i].salaire_base;
+    FinPour
+
+    Ecrire("\nSynthese Financiere :\n");
+    Ecrire("  - Effectif Total   : 3 agents\n");
+    Ecrire("  - Masse Salariale  : "); Ecrire(masse_salariale); Ecrire(" DA/mois\n");
+
+    Ecrire("\nFin du programme RH.\n");
+Fin.

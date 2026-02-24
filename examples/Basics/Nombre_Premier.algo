@@ -1,0 +1,27 @@
+Algorithme NombrePremier;
+Var
+    nombre, i : Entier;
+    est_premier : Booleen;
+Debut
+    nombre := 29;
+    est_premier := Vrai;
+    
+    Ecrire("--- Verification de Nombre Premier ---", "\n");
+    Ecrire("Nombre a tester = ", nombre, "\n");
+    
+    Si nombre <= 1 Alors
+        est_premier := Faux;
+    Sinon
+        Pour i := 2 a nombre - 1 Faire
+            Si nombre mod i = 0 Alors
+                est_premier := Faux;
+            Fsi
+        FinPour
+    Fsi
+    
+    Si est_premier = Vrai Alors
+        Ecrire(nombre, " est un nombre premier!", "\n");
+    Sinon
+        Ecrire(nombre, " n'est PAS un nombre premier.", "\n");
+    Fsi
+Fin.

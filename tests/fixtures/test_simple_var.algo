@@ -1,0 +1,8 @@
+Algorithme TestSimple;
+Var 
+    x : Entier;
+
+Debut
+    x <- 5;
+    Ecrire("x =", x);
+Fin.

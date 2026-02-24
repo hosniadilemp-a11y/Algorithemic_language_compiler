@@ -1,0 +1,12 @@
+Algorithme TestNIL;
+Var
+    p : ^Entier;
+    promo : ^Entier;
+Debut
+    p := NIL;
+    promo := NIL;
+    Ecrire("Pointer p: "); Ecrire(p); Ecrire("\n");
+    Ecrire("Pointer promo: "); Ecrire(promo); Ecrire("\n");
+    Ecrire("=== GESTION DYNAMIQUE DES ETUDIANTS ===\n\n", promo);
+    Ecrire("\n");
+Fin.

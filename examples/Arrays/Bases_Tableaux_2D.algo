@@ -1,0 +1,34 @@
+Algorithme ExplicationTableaux2D;
+Var
+    // Déclaration d'un tableau à 2 dimensions (matrice 3x3)
+    matrice[3][3] : Entier;
+    i, j : Entier;
+    somme_diagonale : Entier;
+
+Debut
+    Ecrire("=== Tableaux a 2 Dimensions (Matrices) ===", "\n");
+    
+    // 1. Initialisation de la matrice
+    Ecrire("Remplissage de la matrice 3x3...", "\n");
+    Pour i := 0 a 2 Faire
+        Pour j := 0 a 2 Faire
+            matrice[i][j] := (i + 1) * (j + 1);
+        FinPour
+    FinPour
+    
+    // 2. Affichage de la matrice
+    Ecrire("\nContenu de la matrice:", "\n");
+    Pour i := 0 a 2 Faire
+        // On affiche chaque ligne
+        Ecrire("[ ", matrice[i][0], " , ", matrice[i][1], " , ", matrice[i][2], " ]", "\n");
+    FinPour
+    
+    // 3. Calcul de la trace (somme de la diagonale principale)
+    somme_diagonale := 0;
+    Pour i := 0 a 2 Faire
+        somme_diagonale := somme_diagonale + matrice[i][i];
+    FinPour
+    
+    Ecrire("\nLa somme de la diagonale principale est: ", somme_diagonale, "\n");
+    Ecrire("==========================================", "\n");
+Fin.

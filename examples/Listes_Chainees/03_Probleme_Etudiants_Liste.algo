@@ -1,0 +1,147 @@
+// ================================================================
+// PROBLEME : Gestion d'Étudiants par Listes Chaînées
+// ================================================================
+// Ce programme combine les enregistrements et les listes chainées
+// pour gérer une base d'étudiants dynamique (ajout, suppression,
+// mise à jour des notes).
+// ================================================================
+
+Type Etudiant = Enregistrement
+Debut
+    id     : Entier;
+    nom[50]: Chaine;
+    note   : Reel;
+Fin;
+
+Type Noeud = Enregistrement
+Debut
+    data : Etudiant;
+    suiv : ^Noeud;
+Fin;
+
+// --- 1. Gestion des Étudiants ---
+
+Procedure Inserer_Etudiant(Var L : ^^Noeud, id_v : Entier, nom_v : Chaine, note_v : Reel)
+Var n, curr, prev : ^Noeud;
+i:Entier;
+Debut
+
+    n := allouer(taille(Noeud));
+    n->data.id := id_v;
+    n->data.nom := nom_v;
+    n->data.note := note_v;
+    n->suiv := NIL;
+    
+    si L^ = NIL Alors
+      L^ :=n;
+    Sinon
+        // Insertion triee par ID croissant
+        curr := L^;
+        prev := NIL;
+         Ecrire(curr->data.id,id_v);
+         lire(i);
+        TantQue curr <> NIL Et curr->data.id < id_v Faire
+             
+            lire(i);
+            prev := curr;
+            curr := curr->suiv;
+            Ecrire(curr->data.id,id_v);
+        FinTantQue
+
+        Si prev = NIL Alors
+            n->suiv := L^;
+            L^ := n;
+        Sinon
+            n->suiv := curr;
+            prev->suiv := n;
+        Fsi
+    Fsi
+    Ecrire("[INFO] Etudiant "); Ecrire(nom_v); Ecrire(" ajoute.\n");
+Fin;
+
+Procedure Supprimer_Etudiant(Var L : ^Noeud, id_del : Entier)
+Var curr, prev : ^Noeud;
+Debut
+    curr := L;
+    prev := NIL;
+    
+    TantQue curr <> NIL Et curr->data.id <> id_del Faire
+        prev := curr;
+        curr := curr->suiv;
+    FinTantQue
+    
+    Si curr <> NIL Alors
+        Si prev = NIL Alors
+            L := curr->suiv;
+        Sinon
+            prev->suiv := curr->suiv;
+        Fsi
+        Ecrire("[INFO] Suppression de l'etudiant ID: "); Ecrire(id_del); Ecrire("\n");
+        liberer(curr);
+    Sinon
+        Ecrire("[AVIS] Etudiant ID: "); Ecrire(id_del); Ecrire(" non trouve.\n");
+    Fsi
+Fin;
+
+// --- 2. Consultation et Mise à jour ---
+
+Procedure Modifier_Note(L : ^Noeud, id_m : Entier, nv_note : Reel)
+Var curr : ^Noeud;
+Debut
+    curr := L;
+    TantQue curr <> NIL Et curr->data.id <> id_m Faire
+        curr := curr->suiv;
+    FinTantQue
+    
+    Si curr <> NIL Alors
+        curr->data.note := nv_note;
+        Ecrire("[INFO] Note mise a jour pour "); Ecrire(curr->data.nom); Ecrire("\n");
+    Fsi
+Fin;
+
+Procedure Afficher_Promotion(L : ^Noeud)
+Var curr : ^Noeud;
+Debut
+    Ecrire("\nLISTE DE LA PROMOTION :\n");
+    Ecrire("-------------------------------------\n");
+    curr := L;
+    Si curr = NIL Alors
+        Ecrire("(Liste Vide)\n");
+    Sinon
+        TantQue curr <> NIL Faire
+            Ecrire("[ID: "); Ecrire(curr->data.id); Ecrire("] ");
+            Ecrire(curr->data.nom); Ecrire(" -> Note: ");
+            Ecrire(curr->data.note); Ecrire("\n");
+            curr := curr->suiv;
+        FinTantQue
+    Fsi
+    Ecrire("-------------------------------------\n");
+Fin;
+
+Algorithme Gestion_Etudiants_Dynamique;
+Var
+    promo : ^Noeud;
+
+Debut
+    promo := NIL;
+    
+    Ecrire("=== GESTION DYNAMIQUE DES ETUDIANTS ===\n\n");
+    
+    // 1. Inscriptions
+    Inserer_Etudiant(&promo, 103, "Zizou", 14.5);
+    Inserer_Etudiant(&promo, 101, "Merzak", 16.0);
+    Inserer_Etudiant(&promo, 105, "Ahmed", 11.0);
+    Inserer_Etudiant(&promo, 102, "Samy", 09.5);
+    Ecrire("=== done ===\n\n");
+    Afficher_Promotion(promo);
+
+    // 2. Mise a jour
+    Modifier_Note(promo, 102, 12.0); // Samy a rattrape l'examen
+
+    // 3. Radiation
+    Supprimer_Etudiant(promo, 103); // Zizou est parti
+    
+    Afficher_Promotion(promo);
+
+    Ecrire("\nFin du programme.\n");
+Fin.

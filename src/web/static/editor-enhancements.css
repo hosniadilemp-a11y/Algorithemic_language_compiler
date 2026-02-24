@@ -1,0 +1,240 @@
+/* Sophisticated Editor Enhancements */
+
+/* Fold gutter styling */
+.CodeMirror-foldmarker {
+    color: #6c6;
+    text-shadow: 0 0 2px rgba(102, 204, 102, 0.5);
+    font-family: arial;
+    line-height: .3;
+    cursor: pointer;
+}
+
+.CodeMirror-foldgutter {
+    width: 12px;
+}
+
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+    cursor: pointer;
+    color: #5c5;
+}
+
+.CodeMirror-foldgutter-open:after {
+    content: "▼";
+    font-size: 10px;
+}
+
+.CodeMirror-foldgutter-folded:after {
+    content: "▶";
+    font-size: 10px;
+}
+
+/* Active line highlighting */
+.CodeMirror-activeline-background {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.CodeMirror-activeline-gutter {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Search dialog styling */
+.CodeMirror-dialog {
+    background: #2b2b2b;
+    color: #e0e0e0;
+    border: 1px solid #444;
+    padding: 8px 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.CodeMirror-dialog input {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    min-width: 300px;
+}
+
+.CodeMirror-dialog input:focus {
+    border-color: #0e639c;
+    box-shadow: 0 0 0 2px rgba(14, 99, 156, 0.3);
+}
+
+.CodeMirror-dialog button {
+    background: #0e639c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 13px;
+}
+
+.CodeMirror-dialog button:hover {
+    background: #1177bb;
+}
+
+/* Scrollbar styling */
+.CodeMirror-simplescroll-horizontal,
+.CodeMirror-simplescroll-vertical {
+    background: #2b2b2b;
+}
+
+.CodeMirror-simplescroll-horizontal div,
+.CodeMirror-simplescroll-vertical div {
+    background: #555;
+    border-radius: 4px;
+}
+
+.CodeMirror-simplescroll-horizontal div:hover,
+.CodeMirror-simplescroll-vertical div:hover {
+    background: #666;
+}
+
+/* Selection highlighting */
+.CodeMirror-selected {
+    background: rgba(14, 99, 156, 0.3) !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+    background: rgba(14, 99, 156, 0.4) !important;
+}
+
+/* Multiple cursor/selection */
+.CodeMirror-selectedtext {
+    background: rgba(14, 99, 156, 0.4) !important;
+}
+
+/* Matching brackets */
+.CodeMirror-matchingbracket {
+    color: #0f0 !important;
+    background: rgba(0, 255, 0, 0.2);
+    font-weight: bold;
+}
+
+.CodeMirror-nonmatchingbracket {
+    color: #f00 !important;
+    background: rgba(255, 0, 0, 0.2);
+}
+
+/* Fullscreen mode */
+.CodeMirror-fullscreen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100% !important;
+    z-index: 9999;
+}
+
+/* Line wrapping indicator */
+.CodeMirror-wrap pre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+}
+
+/* Gutter improvements */
+.CodeMirror-gutters {
+    background: #1e1e1e;
+    border-right: 1px solid #333;
+}
+
+.CodeMirror-linenumber {
+    color: #858585;
+    padding: 0 8px 0 5px;
+    min-width: 30px;
+    text-align: right;
+}
+
+/* Cursor improvements */
+.CodeMirror-cursor {
+    border-left: 2px solid #0e639c;
+    animation: blink 1.2s step-end infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    50.01%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Search match highlighting */
+.CodeMirror-searching {
+    background-color: rgba(255, 255, 0, 0.3);
+    border: 1px solid rgba(255, 255, 0, 0.5);
+}
+
+/* Status bar (if we add one later) */
+.editor-status-bar {
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #858585;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.editor-status-bar span {
+    margin-right: 16px;
+}
+
+/* Keyboard shortcuts help overlay */
+.shortcuts-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2b2b2b;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    max-width: 600px;
+    display: none;
+}
+
+.shortcuts-overlay.visible {
+    display: block;
+}
+
+.shortcuts-overlay h3 {
+    margin-top: 0;
+    color: #e0e0e0;
+    border-bottom: 1px solid #444;
+    padding-bottom: 12px;
+}
+
+.shortcuts-overlay table {
+    width: 100%;
+    color: #e0e0e0;
+}
+
+.shortcuts-overlay td {
+    padding: 8px;
+}
+
+.shortcuts-overlay kbd {
+    background: #1e1e1e;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 12px;
+}

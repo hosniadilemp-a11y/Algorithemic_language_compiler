@@ -1,0 +1,112 @@
+FORMAL SYNTAX STRUCUTRE OF THE ALGORITHM LANGUAGE
+
+1. GENERAL STRUCTURE
+   Algorithme <Nom_Algorithme>;
+   Const
+       <Nom_Constante> = <Valeur>;
+   Var
+       <Nom_Variable> : <Type>;
+   Debut
+       <Instructions>;
+   Fin.
+
+2. DATA TYPES (TYPES DE DONNEES)
+   - Entier (Integer)
+   - Reel (Real)
+   - Caractere (Character)
+   - Chaine (String) or Chaine de caractere
+   - Booleen (Boolean)
+
+3. VARIABLE DECLARATION (DECLARATION DES VARIABLES)
+   Var <Liste_Identificateurs> : <Type>;
+
+4. CONSTANT DECLARATION (DECLARATION DES CONSTANTES)
+   Const <Identificateur> = <Valeur>;
+
+5. ARRAYS (TABLEAUX)
+   - 1D: <Nom> [<Taille>] : tableau de <Type>;
+     Example: T[100]: tableau d'entier;
+   - 2D: <Nom> [<Lignes>][<Colonnes>] : tableau de <Type>;
+     Example: Mat[10][10]: tableau de reel;
+
+6. POINTERS (POINTEURS)
+   - Declaration: <Nom> : ^<Type>;  (or ↑<Type>)
+   - Null value: NIL
+
+7. RECORDS (ENREGISTREMENTS)
+   - Implicitly defined in examples (e.g., for Lists).
+   - <Nom> = Enregistrement
+         <Champ1> : <Type>;
+         <Champ2> : <Type>;
+     Fin; (Inferred)
+
+8. OPERATORS (OPERATEURS)
+   - Assignment: := (or <--)
+   - Arithmetic: +, -, *, /, div (integer division), mod (modulo)
+   - Comparison: =, <>, <, <=, >, >=
+   - Logical: NON, ET, OU
+
+9. CONTROL STRUCTURES (STRUCTURES DE CONTROLE)
+   - Conditional:
+     Si <Condition> Alors
+         <Instructions>;
+     Sinon
+         <Instructions>;
+     Fsi; (or Fin Si)
+   
+   - Multiple Choice:
+     Selon <Expression> Faire (or Selon Que)
+         <Valeur1> : <Instructions>;
+         <Valeur2> : <Instructions>;
+         Sinon : <Instructions>;
+     Fin Selon;
+
+   - Loops (Boucles):
+     - For: Pour <Compteur> := <Init> a <Final> Faire ... Fin;
+     - While: Tant que <Condition> Faire ... Fin;
+     - Repeat: Repeter ... Jusqu'a <Condition>;
+
+10. INPUT/OUTPUT (ENTREES/SORTIES)
+    - Read: Lire(var1, var2, ...);  // Lecture multiple séparée par des virgules
+    - Write: Ecrire(expr1, expr2, ...); // Ecriture multiple séparée par des virgules
+
+11. SUBPROGRAMS (SOUS-PROGRAMMES)
+    - Functions:
+      Fonction <Nom>(<Parametres>) : <Type_Retour>;
+      Var <Locales>;
+      Debut
+          ...
+          Retourner(<Resultat>);
+      Fin;
+    
+    - Procedures:
+      Procedure <Nom>(<Parametres>);
+      Var <Locales>;
+      Debut
+          ...
+      Fin;
+
+    - Parameters:
+      <Nom> : <Type> (Value pass implied usually)
+      Var <Nom> : <Type> (Reference pass, implied in some contexts)
+      Calling syntax for ref: sometimes &<Var> is used in calls.
+
+12. DYNAMIC ALLOCATION (ALLOCATION DYNAMIQUE)
+    - Allocate: allouer(<Pointeur>);
+    - Free: liberer(<Pointeur>);
+    - Size: taille(<Type>);
+
+13. FILES (FICHIERS)
+    - Declaration: f : fichier;
+    - Open: f := ouvrir(<Chemin>, <Mode>); ("lecture", "ecriture", "mettre a jour")
+    - Close: fermer(f);
+    - Read: lire(f, <Var>);
+    - Write: ecrire(f, <Var>);
+    - EOF: fin(f) (Returns Boolean)
+    - Positioning: pointer(f, <Position>);
+
+14. LISTS (LISTES CHAINEES) & STACKS (PILES) & QUEUES (FILES)
+    - Treated as Abstract Data Types with specific primitives.
+    - List primitives: creation, insertion, suppression, parcours.
+    - Stack primitives: Initialiser_Pile, Empiler, Depiler, SommetPile, PileVide.
+    - Queue primitives: Initialiser_File, Enfiler, Defiler, TeteFile, FileVide.

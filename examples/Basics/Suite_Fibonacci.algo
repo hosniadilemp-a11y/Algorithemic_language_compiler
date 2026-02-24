@@ -1,0 +1,27 @@
+Algorithme Fibonacci;
+Var
+    n, i : Entier;
+    t1, t2, terme_suivant : Entier;
+Debut
+    n := 10; // Nombre de termes a afficher
+    t1 := 0;
+    t2 := 1;
+    
+    Ecrire("--- Suite de Fibonacci ---", "\n");
+    Ecrire("Affichage des ", n, " premiers termes:", "\n");
+    
+    Si n >= 1 Alors
+        Ecrire("Terme 1: ", t1, "\n");
+    Fsi
+    
+    Si n >= 2 Alors
+        Ecrire("Terme 2: ", t2, "\n");
+    Fsi
+    
+    Pour i := 3 a n Faire
+        terme_suivant := t1 + t2;
+        Ecrire("Terme ", i, ": ", terme_suivant, "\n");
+        t1 := t2;
+        t2 := terme_suivant;
+    FinPour
+Fin.

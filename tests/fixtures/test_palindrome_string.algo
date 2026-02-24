@@ -1,0 +1,24 @@
+Algorithme Palindrome;
+Var 
+    mot[20] : Chaine;
+    i, j : Entier;
+    estPal : Booleen;
+    len : Entier;
+    lens : Entier;
+
+Debut
+    Ecrire("Verification de Palindrome");
+    // Hardcode input for non-interactive test
+    // Lire(mot); 
+    // Manual assignment to simulate Lire result effectively or just assign
+    // But to repro the read creating a string, we need Lire behavior in generated code.
+    // However, compile_cli just compiles. usage of Lire produces _algo_read_typed call.
+    
+    // Let's rely on manual assignment that mimics what _algo_read_typed would do if broken (assign string)
+    // Or just compile and check handling.
+    
+    lens <- Longueur(mot); // This should trigger int not callable if 'len' is var
+
+    i <- 0;
+    mot[i] <- "a"; // This triggers str assignment error if mot is str
+Fin.

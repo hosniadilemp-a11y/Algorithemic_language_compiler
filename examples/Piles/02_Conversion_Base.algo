@@ -1,0 +1,100 @@
+// ================================================================
+// PROBLEME : Conversion Décimal vers Binaire (Piles)
+// ================================================================
+// Ce programme convertit un nombre décimal en binaire en utilisant
+// une pile pour stocker les restes des divisions successives.
+// ================================================================
+
+Type Element = Enregistrement
+Debut
+    val  : Entier;
+    suiv : ^Element;
+Fin;
+
+Type Pile = Enregistrement
+Debut
+    sommet : ^Element;
+Fin;
+
+// --- Primitives de Base ---
+
+Procedure Init(Var P : Pile)
+Debut
+    P.sommet := NIL;
+Fin;
+
+Procedure Empiler(Var P : Pile, v : Entier)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->val := v;
+    n->suiv := P.sommet;
+    P.sommet := n;
+Fin;
+
+Procedure Depiler(Var P : Pile, Var v : Entier)
+Var tmp : ^Element;
+Debut
+    Si P.sommet <> NIL Alors
+        tmp := P.sommet;
+        v := tmp->val;
+        P.sommet := tmp->suiv;
+        liberer(tmp);
+    Fsi
+Fin;
+
+Fonction Booleen_Est_Vide(P : Pile) : Booleen
+Debut
+    Retourner(P.sommet = NIL);
+Fin;
+
+// --- Logique de Conversion ---
+
+Procedure Convertir_En_Binaire(n : Entier)
+Var p : Pile; reste, quotient, bit : Entier;
+Debut
+    Init(p);
+    quotient := n;
+    
+    Si n = 0 Alors
+        Ecrire("0");
+        
+    Fsi
+    
+    // 1. Division successive et empilement des restes
+    TantQue quotient > 0 Faire
+        reste := quotient MOD 2;
+        Empiler(p, reste);
+        quotient := quotient DIV 2;
+    FinTantQue
+    
+    // 2. Depilement pour afficher le binaire (ordre inverse)
+    Ecrire("Resultat binaire : ");
+    TantQue Non Booleen_Est_Vide(p) Faire
+        Depiler(p, bit);
+        Ecrire(bit);
+    FinTantQue
+    Ecrire("\n");
+Fin;
+
+Algorithme Decimal_To_Binaire_Pile;
+Var
+    nb : Entier;
+
+Debut
+    Ecrire("=== CONVERSiON DECIMAL -> BINAIRE ===\n\n");
+    
+    nb := 25;
+    Ecrire("Nombre decimal : "); Ecrire(nb); Ecrire("\n");
+    Convertir_En_Binaire(nb); // S'attend a 11001
+
+    nb := 1024;
+    Ecrire("\nNombre decimal : "); Ecrire(nb); Ecrire("\n");
+    Convertir_En_Binaire(nb); // S'attend a 10000000000
+
+    nb := 255;
+    Ecrire("\nNombre decimal : "); Ecrire(nb); Ecrire("\n");
+    Convertir_En_Binaire(nb); // S'attend a 11111111
+
+    Ecrire("\nFin du programme.\n");
+Fin.

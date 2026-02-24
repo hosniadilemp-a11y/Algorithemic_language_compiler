@@ -1,0 +1,38 @@
+Algorithme TriABulles;
+Var
+    t[6] : Entier;
+    i, j, temp : Entier;
+    n : Entier;
+
+Debut
+    n := 6;
+    t[0] := 64;
+    t[1] := 34;
+    t[2] := 25;
+    t[3] := 12;
+    t[4] := 22;
+    t[5] := 11;
+    
+    Ecrire("--- Tri a Bulles (Bubble Sort) ---", "\n");
+    Ecrire("Tableau non trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+    
+    // Logique du Tri à Bulles
+    Pour i := 0 a n-2 Faire
+        Pour j := 0 a n-i-2 Faire
+            Si t[j] > t[j+1] Alors
+                // Echange
+                temp := t[j];
+                t[j] := t[j+1];
+                t[j+1] := temp;
+            Fsi
+        FinPour
+    FinPour
+    
+    Ecrire("\nTableau trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+Fin.

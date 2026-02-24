@@ -1,0 +1,30 @@
+// Fonction qui calcule x a la puissance n (x^n)
+Fonction Puissance(x : Reel, n : Entier) : Reel;
+Var
+    i : Entier;
+    p : Reel;
+Debut
+    p := 1.0;
+    Pour i := 1 a n Faire
+        p := p * x;
+    FinPour
+    Retourner p;
+Fin;
+
+Algorithme Calcul_Puissance;
+Var
+    base : Reel;
+    exp : Entier;
+    resultat : Reel;
+
+Debut
+    Ecrire("--- Calcul de Puissance ---", "\n");
+    Ecrire("Entrez la base (Reel) : ");
+    Lire(base);
+    Ecrire("Entrez l exponentielle (Entier) : ");
+    Lire(exp);
+    
+    resultat := Puissance(base, exp);
+    
+    Ecrire(base, " a la puissance ", exp, " = ", resultat, "\n");
+Fin.

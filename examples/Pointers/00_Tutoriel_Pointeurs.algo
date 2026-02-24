@@ -1,0 +1,37 @@
+Algorithme Tutoriel_Pointeurs;
+Var
+    // 1. Déclaration de Pointeurs
+    // Un pointeur stocke l'adresse mémoire d'une autre variable.
+    // Syntaxe : ^Type (ex: ^Entier)
+    p : ^Entier;
+    valeur : Entier;
+
+Debut
+    Ecrire("=== 🎯 Tutoriel : Les Pointeurs ===\n");
+    Ecrire("\n");
+
+    // 2. Initialisation
+    valeur <- 42;
+    Ecrire("Valeur initiale : ", valeur, "\n");
+    
+    // 3. Allocation de mémoire
+    // On alloue de l'espace mémoire pour le pointeur avec 'Allouer'
+    Allouer(p);
+    
+    // 4. Déréférencement (Accès à la valeur pointée)
+    // On utilise p^ pour accéder ou modifier la valeur à laquelle le pointeur fait référence
+    p^ <- 100;
+    
+    Ecrire("Valeur pointée par p (p^) : ", p^, "\n");
+    
+    Ecrire("\n");
+    Ecrire("Une fois qu'on a fini, il faut libérer la mémoire !\n");
+    // 5. Libération de la mémoire
+    // On libère la mémoire avec 'Liberer(p)'
+    Liberer(p);
+    
+    Ecrire("Mémoire libérée avec succès.\n");
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur les pointeurs.\n");
+Fin.

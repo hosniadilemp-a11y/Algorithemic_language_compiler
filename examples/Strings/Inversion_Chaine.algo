@@ -1,0 +1,24 @@
+Algorithme InversionChaine;
+Var
+    phrase_originale[100] : Chaine;
+    phrase_inversee[100] : Chaine;
+    i, n : Entier;
+
+Debut
+    phrase_originale := "Bonjour AlgoCompiler!";
+    n := Longueur(phrase_originale);
+    
+    Ecrire("--- Probleme: Inversion d'une Chaine de Caracteres ---", "\n");
+    Ecrire("Chaine originale: ", phrase_originale, "\n");
+    
+    // Parcourir et assigner à l'envers
+    // Note: on utilise n-1 car les indices vont de 0 a longueur-1
+    Pour i := 0 a n - 1 Faire
+        phrase_inversee[i] := phrase_originale[n - 1 - i];
+    FinPour
+    
+    // Ajout du caractère de Fin; de chaîne (important pour les tableaux simulés en chaîne)
+    phrase_inversee[n] := '\0';
+    
+    Ecrire("\nChaine inversee : ", phrase_inversee, "\n");
+Fin.

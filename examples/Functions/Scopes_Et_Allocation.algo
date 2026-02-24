@@ -1,0 +1,57 @@
+Procedure ModifierGlobal();
+Debut
+    Ecrire("  (Dans ModifierGlobal) compteurGlobal avant : ", compteurGlobal, "\n");
+    compteurGlobal := compteurGlobal + 10;
+    Ecrire("  (Dans ModifierGlobal) compteurGlobal apres : ", compteurGlobal, "\n");
+Fin;
+
+Fonction AllocationStatique() : ^Entier;
+Var
+    tableauStatic[3] : Entier;
+Debut
+    tableauStatic[0] := 555;
+    Ecrire("  (AllocationStatique) tableauStatic[0]=", tableauStatic[0], " a l'adresse ", &tableauStatic[0], "\n");
+    Retourner &tableauStatic[0];
+Fin;
+
+Fonction AllocationDynamique() : ^Entier;
+Var
+    ptrLocalDynamique: ^Entier;
+Debut
+    ptrLocalDynamique := Allouer(Taille(Entier) * 3);
+    ptrLocalDynamique^ := 999;
+    Ecrire("  (AllocationDynamique) On alloue ", ptrLocalDynamique, " et on met ", ptrLocalDynamique^, "\n");
+    Retourner ptrLocalDynamique;
+Fin;
+
+Algorithme Scopes_Et_Allocation;
+Var
+    compteurGlobal: Entier;
+    ptrStatic: ^Entier;
+    ptrDynamic: ^Entier;
+Debut
+    compteurGlobal := 1;
+    
+    // --- 1. MODIFICATION DE VARIABLE GLOBALE ---
+    Ecrire("--- 1. MODIFICATION DE VARIABLE GLOBALE DEPUIS UNE PROCEDURE ---\n");
+    Ecrire("Global avant appel : ", compteurGlobal, "\n");
+    ModifierGlobal();
+    Ecrire("Global apres appel : ", compteurGlobal, " (Modifie !)\n\n");
+
+    // --- 2. CYCLE DE VIE : STATIQUE VS DYNAMIQUE ---
+    Ecrire("--- 2. CYCLE DE VIE : ALLOCATION STATIQUE VS DYNAMIQUE ---\n");
+    
+    Ecrire("> Test Allocation Statique : \n");
+    ptrStatic := AllocationStatique();
+    Ecrire("Adresse retournee (Statique): ", ptrStatic, " \n");
+    Ecrire("Note: Le tableau a ete detruit localement de la memoire ! L'adresse pointe sur un espace techniquement invalide (dangling pointer).\n\n");
+    
+    Ecrire("> Test Allocation Dynamique : \n");
+    ptrDynamic := AllocationDynamique();
+    Ecrire("Adresse retournee (Dynamique): ", ptrDynamic, " \n");
+    Ecrire("Note: L'espace memoire a l'adresse ", ptrDynamic, " est toujours valide car alloue sur le tas (Heap) !\n");
+    Ecrire("Valeur lue via pointeur dynamique (survit a la fonction) : ", ptrDynamic^, "\n");
+    
+    Liberer(ptrDynamic);
+    Ecrire("Memoire dynamique liberee.\n");
+Fin.

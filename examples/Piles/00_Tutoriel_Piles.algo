@@ -1,0 +1,127 @@
+// ================================================================
+// TUTORIEL : La Pile (LIFO - Last In First Out)
+// ================================================================
+// Ce programme implémente les primitives de base d'une pile
+// utilisant une liste chaînée :
+// 1. Initialisation
+// 2. Empiler (Push)
+// 3. Dépiler (Pop)
+// 4. Sommet (Top/Peek)
+// 5. EstVide (IsEmpty)
+// ================================================================
+
+Type Element = Enregistrement
+Debut
+    val  : Entier;
+    suiv : ^Element;
+Fin;
+
+Type Pile = Enregistrement
+Debut
+    sommet : ^Element;
+    nombre : Entier;
+Fin;
+
+// --- 1. Primitives de Gestion ---
+
+Procedure Initialiser_Pile(Var P : Pile)
+Debut
+    P.sommet := NIL;
+    P.nombre := 0;
+Fin;
+
+Fonction Booleen_Est_Vide(P : Pile) : Booleen
+Debut
+    Si P.sommet = NIL Alors
+        Retourner(Vrai);
+    Sinon
+        Retourner(Faux);
+    Fsi
+Fin;
+
+Procedure Empiler(Var P : Pile, v : Entier)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->val := v;
+    n->suiv := P.sommet;
+    P.sommet := n;
+    P.nombre := P.nombre + 1;
+Fin;
+
+Procedure Depiler(Var P : Pile, Var v : Entier)
+Var tmp : ^Element;
+Debut
+    Si Booleen_Est_Vide(P) Alors
+        Ecrire("[ERREUR] Pile Vide ! Impossible de depiler.\n");
+    Sinon
+        tmp := P.sommet;
+        v := tmp->val;
+        P.sommet := tmp->suiv;
+        liberer(tmp);
+        P.nombre := P.nombre - 1;
+    Fsi
+Fin;
+
+Fonction Entier_Besoin_Sommet(P : Pile) : Entier
+Debut
+    Si Booleen_Est_Vide(P) Alors
+        Ecrire("[AVIS] Pile Vide.\n");
+        Retourner(-1);
+    Sinon
+        Retourner(P.sommet->val);
+    Fsi
+Fin;
+
+// --- 2. Procedure de Consultation ---
+
+Procedure Afficher_Pile(P : Pile)
+Var curr : ^Element;
+Debut
+    Ecrire("ETAT PILE (du sommet vers le bas) :\n");
+    Si Booleen_Est_Vide(P) Alors
+        Ecrire("  (Vide)\n");
+    Sinon
+        curr := P.sommet;
+        TantQue curr <> NIL Faire
+            Ecrire("| "); Ecrire(curr->val); Ecrire(" |\n");
+            curr := curr->suiv;
+        FinTantQue
+        Ecrire("+---+\n");
+    Fsi
+Fin;
+
+Algorithme Tutoriel_Piles_LIFO;
+Var
+    p : Pile;
+    v_recuperante : Entier;
+
+Debut
+    Initialiser_Pile(p);
+    
+    Ecrire("=== TUTORIEL SUR LES PILES ===\n\n");
+    
+    Ecrire("1. Empilement de 10, 20, 30 :\n");
+    Empiler(p, 10);
+    Empiler(p, 20);
+    Empiler(p, 30);
+    Afficher_Pile(p);
+
+    Ecrire("\n2. Consultation du sommet :\n");
+    Ecrire("Sommet actuel : "); Ecrire(Entier_Besoin_Sommet(p)); Ecrire("\n");
+
+    Ecrire("\n3. Depilement de deux elements :\n");
+    Depiler(p, v_recuperante);
+    Ecrire("Element retire : "); Ecrire(v_recuperante); Ecrire("\n");
+    
+    Depiler(p, v_recuperante);
+    Ecrire("Element retire : "); Ecrire(v_recuperante); Ecrire("\n");
+    
+    Afficher_Pile(p);
+
+    Ecrire("\n4. Empilement de 50 :\n");
+    Empiler(p, 50);
+    Afficher_Pile(p);
+
+    Ecrire("\nFin du tutoriel.\n");
+Fin.

@@ -1,0 +1,48 @@
+
+
+// 1. Déclaration de Procédures
+// Une procédure exécute une action mais ne renvoie pas de résultat directement.
+// Syntaxe : Procedure nomDeLaProcedure(paramètres) ... Fin;
+Procedure direBonjour(nom : Chaine);
+Debut
+    Ecrire("Bonjour, ", nom, " !\n");
+Fin;
+
+// 2. Déclaration de Fonctions
+// Une fonction effectue un calcul et renvoie obligatoirement un résultat.
+// Syntaxe : Fonction nomDeLaFonction(paramètres) : TypeDuResultat ... Fin;
+Fonction calculerCarre(nombre : Entier) : Entier;
+Var
+    resultat : Entier;
+Debut
+    resultat <- nombre * nombre;
+    // Le mot clé Retourner indique la valeur finale
+    Retourner resultat;
+Fin;
+
+
+Algorithme Tutoriel_Fonctions;
+Var
+    // Variables du programme principal
+    x : Entier;
+    carre_x : Entier;
+
+Debut
+    Ecrire("=== 🛠️ Tutoriel : Les Fonctions et Procédures ===\n");
+    Ecrire("\n");
+
+    // 3. Appel de Procédure
+    Ecrire("Appel de la procédure 'direBonjour' :\n");
+    direBonjour("Alice");
+    
+    // 4. Appel de Fonction
+    x <- 5;
+    Ecrire("\n");
+    Ecrire("Appel de la fonction 'calculerCarre' :\n");
+    carre_x <- calculerCarre(x);
+    
+    Ecrire("Le carré de ", x, " est : ", carre_x, "\n");
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur les fonctions.\n");
+Fin.

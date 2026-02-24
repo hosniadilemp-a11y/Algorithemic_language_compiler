@@ -1,0 +1,54 @@
+Algorithme TableauxUneDimension;
+// ============================================================
+// Exemple : Tableaux a 1 Dimension (Vecteurs)
+// Couvre :
+//   - Declaration d'un tableau fixe  tab[N] : Type
+//   - Remplissage manuel et par boucle
+//   - Calcul de somme et moyenne
+//   - Recherche du maximum
+// ============================================================
+
+Var
+    // Déclaration d'un tableau à 1 dimension (taille fixe 5)
+    notes[5] : Entier;
+    i : Entier;
+    somme : Entier;
+    moyenne : Reel;
+    max_note : Entier;
+
+Debut
+    Ecrire("=== Tableaux a 1 Dimension (Vecteurs) ===", "\n");
+    
+    // 1. Initialisation manuelle
+    notes[0] := 12;
+    notes[1] := 15;
+    notes[2] := 8;
+    notes[3] := 19;
+    notes[4] := 10;
+    
+    Ecrire("\nAffichage des notes: ", "\n");
+    Pour i := 0 a 4 Faire
+        Ecrire("Note ", i, " : ", notes[i], "\n");
+    FinPour
+    
+    // 2. Traitement sur le tableau (Somme et Moyenne)
+    somme := 0;
+    Pour i := 0 a 4 Faire
+        somme := somme + notes[i];
+    FinPour
+    
+    moyenne := somme / 5.0;
+    Ecrire("\nLa somme des notes est: ", somme, "\n");
+    Ecrire("La moyenne de la classe est: ", moyenne, "\n");
+    
+    // 3. Recherche du maximum
+    max_note := notes[0];
+    Pour i := 1 a 4 Faire
+        Si notes[i] > max_note Alors
+            max_note := notes[i];
+        Fsi
+    FinPour
+    
+    Ecrire("\nLa meilleure note est: ", max_note, "\n");
+    Ecrire("=========================================", "\n");
+Fin.

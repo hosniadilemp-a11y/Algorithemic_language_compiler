@@ -1,0 +1,49 @@
+Algorithme RechercheDichotomique;
+Var
+    t[10] : Entier;
+    n, val_cherchee : Entier;
+    gauche, droite, milieu : Entier;
+    trouve : Booleen;
+
+Debut
+    n := 10;
+    // Le tableau doit Etre TIRE pour la recherche dichotomique
+    t[0] := 2;
+    t[1] := 5;
+    t[2] := 8;
+    t[3] := 12;
+    t[4] := 16;
+    t[5] := 23;
+    t[6] := 38;
+    t[7] := 56;
+    t[8] := 72;
+    t[9] := 91;
+    
+    val_cherchee := 23;
+    trouve := Faux;
+    gauche := 0;
+    droite := n - 1;
+    
+    Ecrire("--- Recherche Dichotomique (Binary Search) ---", "\n");
+    Ecrire("Valeur cherchee = ", val_cherchee, "\n");
+    
+    Tant Que (gauche <= droite) Et (trouve = Faux) Faire
+        milieu := (gauche + droite) div 2;
+        
+        Si t[milieu] = val_cherchee Alors
+            trouve := Vrai;
+        Sinon
+            Si t[milieu] < val_cherchee Alors
+                gauche := milieu + 1;
+            Sinon
+                droite := milieu - 1;
+            Fsi
+        Fsi
+    FinTantQue
+    
+    Si trouve = Vrai Alors
+        Ecrire("Valeur ", val_cherchee, " trouvee a l'indice ", milieu, " !", "\n");
+    Sinon
+        Ecrire("Valeur ", val_cherchee, " NON trouvee dans le tableau.", "\n");
+    Fsi
+Fin.

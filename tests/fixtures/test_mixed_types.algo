@@ -1,0 +1,10 @@
+Algorithme TestMixed;
+Var 
+    x : Entier;
+    a : Reel;
+
+Debut
+    x <- 5;
+    a <- 3.14;
+    Ecrire("x =", x, ", a =", a);
+Fin.

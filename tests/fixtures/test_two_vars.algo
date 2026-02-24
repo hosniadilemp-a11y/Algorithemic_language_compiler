@@ -1,0 +1,10 @@
+Algorithme TestTwo;
+Var 
+    x : Entier;
+    y : Entier;
+
+Debut
+    x <- 5;
+    y <- 10;
+    Ecrire("x =", x, ", y =", y);
+Fin.

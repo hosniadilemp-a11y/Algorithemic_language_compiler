@@ -1,0 +1,106 @@
+// ================================================================
+// PROBLEME : Évaluation d'Expressions Postfixées (Piles)
+// ================================================================
+// Ce programme utilise une pile d'entiers pour évaluer une 
+// expression mathématique écrite en notation Polonaise Inverse (RPN).
+// Exemple : "53+2*" -> (5+3)*2 = 16
+// ================================================================
+
+Type Element = Enregistrement
+Debut
+    val  : Entier;
+    suiv : ^Element;
+Fin;
+
+Type Pile = Enregistrement
+Debut
+    sommet : ^Element;
+Fin;
+
+// --- Primitives de Base ---
+
+Procedure Init(Var P : Pile)
+Debut
+    P.sommet := NIL;
+Fin;
+
+Procedure Empiler(Var P : Pile, v : Entier)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->val := v;
+    n->suiv := P.sommet;
+    P.sommet := n;
+Fin;
+
+Procedure Depiler(Var P : Pile, Var v : Entier)
+Var tmp : ^Element;
+Debut
+    Si P.sommet <> NIL Alors
+        tmp := P.sommet;
+        v := tmp->val;
+        P.sommet := tmp->suiv;
+        liberer(tmp);
+    Fsi
+Fin;
+
+// --- Logique d'Evaluation ---
+
+Fonction Calculer_RPN(expr : Chaine) : Entier
+Var p : Pile; i, n1, n2, res, v : Entier; c : Caractere;
+Debut
+    Init(p);
+    
+    Pour i := 0 a Longueur(expr) - 1 Faire
+        c := expr[i];
+        
+        Si c >= '0' Et c <= '9' Alors
+            // Conversion manuelle du chiffre
+            Si c = '0' Alors v := 0; Fsi
+            Si c = '1' Alors v := 1; Fsi
+            Si c = '2' Alors v := 2; Fsi
+            Si c = '3' Alors v := 3; Fsi
+            Si c = '4' Alors v := 4; Fsi
+            Si c = '5' Alors v := 5; Fsi
+            Si c = '6' Alors v := 6; Fsi
+            Si c = '7' Alors v := 7; Fsi
+            Si c = '8' Alors v := 8; Fsi
+            Si c = '9' Alors v := 9; Fsi
+            Empiler(p, v);
+        Sinon
+            Si c = '+' Ou c = '-' Ou c = '*' Ou c = '/' Alors
+                Depiler(p, n2);
+                Depiler(p, n1);
+                
+                Si c = '+' Alors res := n1 + n2; Fsi
+                Si c = '-' Alors res := n1 - n2; Fsi
+                Si c = '*' Alors res := n1 * n2; Fsi
+                Si c = '/' Alors res := n1 / n2; Fsi
+                
+                Empiler(p, res);
+            Fsi
+        Fsi
+    FinPour
+    
+    Depiler(p, res);
+    Retourner(res);
+Fin;
+
+Algorithme Evaluation_Expression_RPN;
+Var
+    exp1[100], exp2[100] : Chaine;
+
+Debut
+    Ecrire("=== EVALUATEUR POSTFIXE (RPN) ===\n\n");
+    
+    exp1 := "53+2*"; // (5+3)*2 = 16
+    exp2 := "82/4+"; // (8/2)+4 = 8
+    
+    Ecrire("Expression 1 : "); Ecrire(exp1);
+    Ecrire(" -> Score : "); Ecrire(Calculer_RPN(exp1)); Ecrire("\n");
+
+    Ecrire("Expression 2 : "); Ecrire(exp2);
+    Ecrire(" -> Score : "); Ecrire(Calculer_RPN(exp2)); Ecrire("\n");
+
+    Ecrire("\nFin du programme.\n");
+Fin.

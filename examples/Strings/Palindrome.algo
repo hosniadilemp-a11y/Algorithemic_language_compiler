@@ -1,0 +1,29 @@
+Algorithme Palindrome;
+Var
+    mot[50] : Chaine;
+    i, n : Entier;
+    est_palindrome : Booleen;
+
+Debut
+    // Exemple d'un mot palindrome
+    mot := "radar"; 
+    n := Longueur(mot);
+    est_palindrome := Vrai;
+    
+    Ecrire("--- Probleme: Testeur de Palindrome ---", "\n");
+    Ecrire("Mot a verifier: ", mot, "\n");
+    
+    // Vérifier les caractères opposés
+    Pour i := 0 a (n div 2) - 1 Faire
+        Si mot[i] <> mot[n - 1 - i] Alors
+            est_palindrome := Faux;
+        Fsi
+    FinPour
+    
+    // Resultat
+    Si est_palindrome = Vrai Alors
+        Ecrire("Le mot '", mot, "' EST un palindrome.", "\n");
+    Sinon
+        Ecrire("Le mot '", mot, "' N'EST PAS un palindrome.", "\n");
+    Fsi
+Fin.

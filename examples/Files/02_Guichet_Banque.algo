@@ -1,0 +1,102 @@
+// ================================================================
+// PROBLEME : Simulation de File d'Attente à un Guichet (Files)
+// ================================================================
+// Ce programme simule une file d'attente dans une banque où les 
+// clients sont servis selon leur ordre d'arrivée.
+// ================================================================
+
+Type Client = Enregistrement
+Debut
+    nom[30]    : Chaine;
+    operation[20]: Chaine;
+    num_ticket : Entier;
+Fin;
+
+Type Noeud = Enregistrement
+Debut
+    donnee : Client;
+    suivant : ^Noeud;
+Fin;
+
+Type FileBanque = Enregistrement
+Debut
+    tete : ^Noeud;
+    queue : ^Noeud;
+    nb_clients : Entier;
+Fin;
+
+// --- Primitives ---
+
+Procedure Initialiser(Var F : FileBanque)
+Debut
+    F.tete := NIL;
+    F.queue := NIL;
+    F.nb_clients := 0;
+Fin;
+
+Procedure Arrivee_Client(Var F : FileBanque, n : Chaine, op : Chaine)
+Var nveau : ^Noeud;
+Debut
+    nveau := allouer(taille(Noeud));
+    nveau->donnee.nom := n;
+    nveau->donnee.operation := op;
+    nveau->donnee.num_ticket := F.nb_clients + 100; // Ticket base 100
+    nveau->suivant := NIL;
+    
+    Si F.tete = NIL Alors
+        F.tete := nveau;
+    Sinon
+        F.queue->suivant := nveau;
+    Fsi
+    
+    F.queue := nveau;
+    F.nb_clients := F.nb_clients + 1;
+    Ecrire("[TICKET "); Ecrire(nveau->donnee.num_ticket);
+    Ecrire("] Client "); Ecrire(n); Ecrire(" est entre dans la file.\n");
+Fin;
+
+Procedure Servir_Client(Var F : FileBanque)
+Var tmp : ^Noeud;
+Debut
+    Si F.tete = NIL Alors
+        Ecrire("[GUICHET] Aucun client en attente.\n");
+    Sinon
+        tmp := F.tete;
+        Ecrire("[GUICHET] Service en cours pour : "); Ecrire(tmp->donnee.nom);
+        Ecrire(" (Operation : "); Ecrire(tmp->donnee.operation); Ecrire(")\n");
+        
+        F.tete := tmp->suivant;
+        Si F.tete = NIL Alors F.queue := NIL; Fsi
+        
+        liberer(tmp);
+        F.nb_clients := F.nb_clients - 1;
+    Fsi
+Fin;
+
+Algorithme Gestion_Guichet_Banque;
+Var
+    file_attente : FileBanque;
+
+Debut
+    Initialiser(file_attente);
+    
+    Ecrire("=== SiMULATION FILE D'ATTENTE BANQUE ===\n\n");
+    
+    Arrivee_Client(file_attente, "Sidali", "Versement");
+    Arrivee_Client(file_attente, "Karima", "Retrait");
+    Arrivee_Client(file_attente, "Brahim", "Virement");
+
+    Ecrire("\nOuverture du guichet n°1 :\n");
+    Servir_Client(file_attente);
+    Servir_Client(file_attente);
+    
+    Ecrire("\nNouvelle arrivee :\n");
+    Arrivee_Client(file_attente, "Linda", "Information");
+
+    Ecrire("\nSuite du service :\n");
+    Servir_Client(file_attente);
+    Servir_Client(file_attente);
+    Servir_Client(file_attente); // Vide
+
+    Ecrire("\nFin de journee.\n");
+Fin.

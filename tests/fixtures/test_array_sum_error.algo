@@ -1,0 +1,28 @@
+Algorithme ExempleTableau1D;
+Var 
+    t[5] : Entier;
+    i : Entier;
+    som : Entier;
+
+Debut
+    Ecrire("Remplissage du tableau (5 valeurs)");
+    
+    som <- 0;
+    
+    // Hardcode loop for CLI testing without interactive input
+    // We will simulate input by manually assigning strictly speaking, 
+    // OR we can rely on verify_all_examples if I add an input file.
+    // For CLI reproduction locally, I might just rely on the fact that 
+    // the generated code will show t initialized as [None]*5.
+    
+    // To strictly repro the Runtime Error, I need to RUN it.
+    // parse.py generates python. 
+    // I can inspect the generated python to see "t = [None] * 5".
+    
+    Pour i de 0 a 4 Faire
+        t[i] <- i; // This is SETTING.
+        // User used Lire(t[i])
+        // Code: t[i] = _algo_read_typed(t[i], _algo_read())
+        // parsing t[i] pass t[i] (which is None) to _algo_read_typed.
+    Finpour;
+Fin.

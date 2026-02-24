@@ -1,0 +1,27 @@
+// Fonction recursive pour calculer la factorielle de n
+Fonction Factorielle(n : Entier) : Entier;
+Debut
+    Si (n <= 1) Alors
+        Retourner 1;
+    Sinon
+        // Appel recursif
+        Retourner n * Factorielle(n - 1);
+    Fsi
+Fin;
+
+Algorithme Factorielle_Recursive;
+Var
+    nb, res : Entier;
+
+Debut
+    Ecrire("Calcul de la factorielle par recursion", "\n");
+    Ecrire("Entrez un nombre positif : ");
+    Lire(nb);
+    
+    Si (nb < 0) Alors
+        Ecrire("Erreur : le nombre doit etre positif.", "\n");
+    Sinon
+        res := Factorielle(nb);
+        Ecrire("La factorielle de ", nb, " est ", res, "\n");
+    Fsi
+Fin.

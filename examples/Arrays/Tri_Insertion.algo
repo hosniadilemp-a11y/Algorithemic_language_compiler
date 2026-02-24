@@ -1,0 +1,40 @@
+Algorithme TriInsertion;
+Var
+    t[6] : Entier;
+    i, j, cle : Entier;
+    n : Entier;
+
+Debut
+    n := 6;
+    t[0] := 12;
+    t[1] := 11;
+    t[2] := 13;
+    t[3] := 5;
+    t[4] := 6;
+    t[5] := 7;
+    
+    Ecrire("--- Tri par Insertion (Insertion Sort) ---", "\n");
+    Ecrire("Tableau non trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+    
+    // Logique du Tri par Insertion
+    Pour i := 1 a n-1 Faire
+        cle := t[i];
+        j := i - 1;
+        
+        // Deplacer les elements de t[0..i-1] superieurs a cle
+        // vers une position en avant de leur position actuelle
+        Tant Que (j >= 0) Et (t[j] > cle) Faire
+            t[j + 1] := t[j];
+            j := j - 1;
+        FinTantQue
+        t[j + 1] := cle;
+    FinPour
+    
+    Ecrire("\nTableau trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+Fin.

@@ -1,0 +1,118 @@
+// 1. Passage par valeur (a) et par reference (b) via des Pointeurs
+Procedure ModifierValeurs(a: Entier, b: ^Entier);
+Debut
+    a := a + 10;
+    b^ := b^ + 10;
+Fin;
+
+// 2. Passage de chaine de caracteres et de vecteur (Tableau 1D) et de references complexes
+Procedure AfficherVecteur(titre[20]: Chaine, vec[5]: Entier, a: Entier, b: ^Entier);
+Var
+    i: Entier;
+Debut
+    a := 100;
+    b^ := 1000;
+    Ecrire(titre, "\n");
+    Ecrire("  a (par valeur)     = ", a, "\n");
+    Ecrire("  b^ (par reference) = ", b^, "\n");
+    Pour i := 0 a 4 Faire
+        Ecrire("[", i, "] = ", vec[i], "\n");
+    FinPour
+Fin;
+
+// 3. Passage de matrice complete (Tableau 2D)
+Procedure AfficherMatrice(mat[2][3]: Entier);
+Var
+    l, c: Entier;
+Debut
+    Ecrire("Matrice 2x3 :", "\n");
+    Pour l := 0 a 1 Faire
+        Pour c := 0 a 2 Faire
+            Ecrire(mat[l][c], "  ");
+        FinPour
+        Ecrire("\n");
+    FinPour
+Fin;
+
+// 4. Passage d'une ligne de Matrice (se comporte comme un Tableau 1D)
+Procedure AfficherLigne(ligne[3]: Entier);
+Var
+    i: Entier;
+Debut
+    Pour i := 0 a 2 Faire
+        Ecrire("Ligne[", i, "] = ", ligne[i], "  ");
+    FinPour
+    Ecrire("\n");
+Fin;
+
+// 5. Passage d'un mot (Chaine) extrait d'un tableau de mots
+Procedure AfficherMot(mot[20]: Chaine);
+Debut
+    Ecrire("Le mot recu est : '", mot, "'\n");
+Fin;
+
+// 6. Variables locales dynamiques
+Procedure CreerTableauLocal();
+Var
+    tableauLocal[3]: Entier;
+    i: Entier;
+Debut
+    Pour i := 0 a 2 Faire
+        tableauLocal[i] := (i + 1) * 100;
+        Ecrire("tableauLocal[", i, "] = ", tableauLocal[i], "\n");
+    FinPour
+Fin;
+
+Algorithme Demonstration_Complete;
+Var
+    valeur, reference: Entier;
+    monTitre[20]: Chaine;
+    monVecteur[5]: Entier;
+    maMatrice[2][3]: Entier;
+    mots[3][20]: Chaine;
+    
+Debut
+    // ---> TEST 1: Valeur et Reference
+    Ecrire("--- TEST 1: Valeur vs Reference ---", "\n");
+    valeur := 5;
+    reference := 5;
+    ModifierValeurs(valeur, &reference);
+    Ecrire("Apres appel (valeur initiale = 5) -> ", valeur, " (Inchange)\n");
+    Ecrire("Apres appel (reference initiale = 5) -> ", reference, " (Modifie)\n\n");
+    
+    // ---> TEST 2: Chaine, Tableau 1D, et Elements de Tableau (Valeur vs Reference)
+    Ecrire("--- TEST 2: Chaine et Elements de Tableau ---", "\n");
+    monTitre := "Mon Vecteur :";
+    monVecteur[0] := 1; monVecteur[1] := 2; monVecteur[2] := 4; monVecteur[3] := 8; monVecteur[4] := 16;
+    Ecrire("Avant appel : monVecteur[2]=", monVecteur[2], " | monVecteur[3]=", monVecteur[3], "\n");
+    AfficherVecteur(monTitre, monVecteur, monVecteur[2], &monVecteur[3]);
+    Ecrire("Apres appel (valeur)     : monVecteur[2] = ", monVecteur[2], " (Inchange car 'a' etait passe par valeur)\n");
+    Ecrire("Apres appel (reference)  : monVecteur[3] = ", monVecteur[3], " (Modifie car 'b' pointait sur l'adresse de monVecteur[3])\n");
+    Ecrire("\n");
+    
+    // ---> TEST 3: Matrice 2D et Ligne Extraite
+    Ecrire("--- TEST 3: Tableau 2D (Matrice) ---", "\n");
+    maMatrice[0][0] := 1; maMatrice[0][1] := 0; maMatrice[0][2] := 0;
+    maMatrice[1][0] := 0; maMatrice[1][1] := 1; maMatrice[1][2] := 0;
+    AfficherMatrice(maMatrice);
+    
+    // Extraire et passer explicitement une ligne (Tableau 1D) a une fonction
+    Ecrire("- Envoi de la ligne 1 (maMatrice[1]) a une fonction :", "\n");
+    AfficherLigne(maMatrice[1]);
+    Ecrire("\n");
+
+    // ---> TEST 4: Tableau de mots (Chaines de caracteres)
+    Ecrire("--- TEST 4: Tableau de Mots ---", "\n");
+    mots[0] := "Bonjour";
+    mots[1] := "le";
+    mots[2] := "Monde";
+    Ecrire("- Envoi du mot 2 (mots[2]) a une fonction :\n");
+    AfficherMot(mots[2]);
+    Ecrire("\n");
+
+    // ---> TEST 5: Allocation Locale (Regardez l'inspecteur de variables !)
+    Ecrire("--- TEST 5: Allocation Memoire Locale ---", "\n");
+    CreerTableauLocal();
+    
+    Ecrire("\nFin de la demonstration globale !\n");
+Fin.

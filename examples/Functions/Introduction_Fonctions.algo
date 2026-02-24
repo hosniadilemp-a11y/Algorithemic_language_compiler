@@ -1,0 +1,29 @@
+// Declaration d'une fonction qui calcule le carre d'un nombre
+// Une fonction retourne toujours une valeur via le mot-cle RETOURNER
+Fonction Carre(n : Entier) : Entier;
+Debut
+    Retourner n * n;
+Fin;
+
+// Declaration d'une procedure qui affiche un message de bienvenue
+// Une procedure ne retourne pas de valeur
+Procedure DireBonjour(nom[20] : Chaine)
+Debut
+    Ecrire("Bonjour ", nom, " !", "\n");
+Fin;
+Algorithme Introduction_Fonctions;
+Var
+    x, resultat : Entier;
+    nom_utilisateur[20] : Chaine;
+
+Debut
+    x := 5;
+    
+    // Appel de la fonction
+    resultat := Carre(x);
+    Ecrire("Le carre de ", x, " est ", resultat, "\n");
+    
+    // Appel de la procedure
+    nom_utilisateur := "Adel";
+    DireBonjour(nom_utilisateur);
+Fin.

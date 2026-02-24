@@ -1,0 +1,48 @@
+Algorithme FiltrageTableauDynamique;
+Var
+    T : ^Entier;
+    T_Pair : ^Entier;
+    n, nb_pairs, i, j : Entier;
+
+Debut
+    n := 10;
+    Ecrire("--- Probleme: Filtrer les Nombres Pairs ---", "\n");
+    Ecrire("Generation de ", n, " valeurs numeriques... ", "\n");
+    
+    // 1. Allouer le tableau principal
+    T := allouer(n * taille(Entier));
+    T[0] := 5; T[1] := 12; T[2] := 7; T[3] := 8; T[4] := 15;
+    T[5] := 20; T[6] := 3; T[7] := 14; T[8] := 9; T[9] := 18;
+    
+    // 2. Compter le nombre d'éléments pairs pour allouer la taille exacte
+    nb_pairs := 0;
+    Pour i := 0 a n-1 Faire
+        Si T[i] mod 2 = 0 Alors
+            nb_pairs := nb_pairs + 1;
+        Fsi
+    FinPour
+    
+    Ecrire("Trouve ", nb_pairs, " nombres pairs. Allocation exact...", "\n");
+    
+    // 3. Allouer le nouveau tableau aux dimensions exactes
+    T_Pair := allouer(nb_pairs * taille(Entier));
+    
+    // 4. Copier les elements
+    j := 0;
+    Pour i := 0 a n-1 Faire
+        Si T[i] mod 2 = 0 Alors
+            T_Pair[j] := T[i];
+            j := j + 1;
+        Fsi
+    FinPour
+    
+    // 5. Affichage du resultat
+    Ecrire("\nTableau des nombres pairs (taille exacte):", "\n");
+    Pour i := 0 a nb_pairs-1 Faire
+        Ecrire("T_Pair[", i, "] = ", T_Pair[i], "\n");
+    FinPour
+    
+    // 6. Liberation de la memoire
+    liberer(T);
+    liberer(T_Pair);
+Fin.

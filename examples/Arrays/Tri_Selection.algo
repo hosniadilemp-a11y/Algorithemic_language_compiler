@@ -1,0 +1,41 @@
+Algorithme TriSelection;
+Var
+    t[6] : Entier;
+    i, j, min_idx, temp : Entier;
+    n : Entier;
+
+Debut
+    n := 6;
+    t[0] := 64;
+    t[1] := 25;
+    t[2] := 12;
+    t[3] := 22;
+    t[4] := 11;
+    t[5] := 90;
+    
+    Ecrire("--- Tri par Selection (Selection Sort) ---", "\n");
+    Ecrire("Tableau non trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+    
+    // Logique du Tri par Sélection
+    Pour i := 0 a n-2 Faire
+        min_idx := i;
+        Pour j := i+1 a n-1 Faire
+            Si t[j] < t[min_idx] Alors
+                min_idx := j;
+            Fsi
+        FinPour
+        
+        // Echange le min trouve avec le premier element
+        temp := t[min_idx];
+        t[min_idx] := t[i];
+        t[i] := temp;
+    FinPour
+    
+    Ecrire("\nTableau trie:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+Fin.

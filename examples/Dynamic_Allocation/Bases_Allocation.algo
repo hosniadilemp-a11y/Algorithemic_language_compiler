@@ -1,0 +1,182 @@
+Algorithme AllocationDynamiqueDiversifiee;
+// ============================================================
+// Exemple : Allocation Dynamique - Types Varies
+// Couvre :
+//   1. Tableau 1D dynamique d'Entiers
+//   2. Tableau 2D dynamique d'Entiers (matrice)
+//   3. Tableau 1D dynamique de Caracteres (chaine dynamique)
+//   4. Tableau de Mots (^^Caractere : double pointeur)
+// ============================================================
+
+Var
+    // --- 1. Tableau 1D d'entiers ---
+    t_entier  : ^Entier;
+    n         : Entier;
+
+    // --- 2. Matrice 2D d'entiers ---
+    matrice   : ^^Entier;
+    lignes, colonnes : Entier;
+
+    // --- 3. Chaine dynamique (tableau de Caracteres) ---
+    ch        : ^Caractere;
+    taille_c  : Entier;
+
+    // --- 4. Tableau de mots (double pointeur de Caractere) ---
+    mots      : ^^Caractere;
+    n_mots    : Entier;
+    taille_mot : Entier;
+
+    // Variables de boucle
+    i, j      : Entier;
+    c         : Caractere;
+
+Debut
+    // =========================================================
+    // PARTIE 1 : Tableau 1D dynamique d'Entiers
+    // =========================================================
+    Ecrire("=== 1. Tableau Dynamique d'Entiers (^Entier) ===\n");
+
+    n := 5;
+    t_entier := allouer(n * taille(Entier));
+
+    // Remplissage : t_entier[i] = i^2
+    Pour i := 0 a n-1 Faire
+        t_entier[i] := i * i;
+    FinPour
+
+    // Affichage
+    Pour i := 0 a n-1 Faire
+        Ecrire("  t_entier[");
+        Ecrire(i);
+        Ecrire("] = ");
+        Ecrire(t_entier[i]);
+        Ecrire("\n");
+    FinPour
+
+    Liberer(t_entier);
+    Ecrire("Tableau entier libere.\n\n");
+
+    // =========================================================
+    // PARTIE 2 : Matrice 2D dynamique d'Entiers (^^Entier)
+    // =========================================================
+    Ecrire("=== 2. Matrice 2D d'Entiers (^^Entier) ===\n");
+
+    lignes   := 3;
+    colonnes := 4;
+
+    // Allouer le tableau de pointeurs (une ligne = un ^Entier)
+    matrice := allouer(lignes * taille(^Entier));
+
+    // Allouer chaque ligne
+    Pour i := 0 a lignes-1 Faire
+        matrice[i] := allouer(colonnes * taille(Entier));
+    FinPour
+
+    // Remplissage : matrice[i][j] = i * colonnes + j
+    Pour i := 0 a lignes-1 Faire
+        Pour j := 0 a colonnes-1 Faire
+            matrice[i][j] := i * colonnes + j;
+        FinPour
+    FinPour
+
+    // Affichage de la matrice
+    Pour i := 0 a lignes-1 Faire
+        Ecrire("  Ligne ");
+        Ecrire(i);
+        Ecrire(" : ");
+        Pour j := 0 a colonnes-1 Faire
+            Ecrire(matrice[i][j]);
+            Ecrire(" ");
+        FinPour
+        Ecrire("\n");
+    FinPour
+
+    // Liberation dans l'ordre inverse
+    Pour i := 0 a lignes-1 Faire
+        Liberer(matrice[i]);
+    FinPour
+    Liberer(matrice);
+    Ecrire("Matrice liberee.\n\n");
+
+    // =========================================================
+    // PARTIE 3 : Chaine dynamique (^Caractere)
+    // =========================================================
+    Ecrire("=== 3. Chaine Dynamique (^Caractere) ===\n");
+
+    taille_c := 20;
+    ch := allouer(taille_c * taille(Caractere));
+
+    // Remplissage caractere par caractere : "Bonjour"
+    ch[0] := 'B';  ch[1] := 'o';  ch[2] := 'n';
+    ch[3] := 'j';  ch[4] := 'o';  ch[5] := 'u';
+    ch[6] := 'r';  ch[7] := #0;   // Fin; de chaine
+
+    // Affichage jusqu'au marqueur #0
+    Ecrire("  Chaine : ");
+    i := 0;
+    c := ch[i];
+    Tant Que c <> #0 Faire
+        Ecrire(c);
+        i := i + 1;
+        c := ch[i];
+    FinTantQue
+    Ecrire("\n  Longueur = ");
+    Ecrire(i);
+    Ecrire("\n");
+
+    Liberer(ch);
+    Ecrire("Chaine liberee.\n\n");
+
+    // =========================================================
+    // PARTIE 4 : Tableau de Mots (^^Caractere)
+    // Chaque element est un pointeur vers un tableau de char
+    // =========================================================
+    Ecrire("=== 4. Tableau de Mots (^^Caractere) ===\n");
+
+    n_mots    := 4;
+    taille_mot := 20;   // taille max par mot (19 chars + #0)
+
+    // Allouer le tableau de n_mots pointeurs vers Caractere
+    mots := allouer(n_mots * taille(^Caractere));
+
+    // Allouer chaque mot et le remplir
+    mots[0] := allouer(taille_mot * taille(Caractere));
+    mots[0] := "Algorithme";     // remplissage par chaine litterale
+
+    mots[1] := allouer(taille_mot * taille(Caractere));
+    mots[1] := "Dynamique";
+
+    mots[2] := allouer(taille_mot * taille(Caractere));
+    mots[2] := "Pointeur";
+
+    mots[3] := allouer(taille_mot * taille(Caractere));
+    // Remplissage manuel caractere par caractere
+    mots[3][0] := 'C'; mots[3][1] := 'o'; mots[3][2] := 'd';
+    mots[3][3] := 'e'; mots[3][4] := #0;
+
+    // Affichage de chaque mot et sa longueur
+    Pour i := 0 a n_mots-1 Faire
+        Ecrire("  mots[");
+        Ecrire(i);
+        Ecrire("] = ");
+        Ecrire("\n");
+        j := 0;
+        c := mots[i][j];
+        Tant Que c <> #0 Faire
+            Ecrire(c);
+            j := j + 1;
+            c := mots[i][j];
+        FinTantQue
+        Ecrire("\n  (");
+        Ecrire(j);
+        Ecrire(" caracteres)\n");
+    FinPour
+
+    // Liberation dans l'ordre inverse
+    Pour i := 0 a n_mots-1 Faire
+        Liberer(mots[i]);
+    FinPour
+    Liberer(mots);
+    Ecrire("Tableau de mots libere.\n");
+    Ecrire("\n=== Fin; ===\n");
+Fin.

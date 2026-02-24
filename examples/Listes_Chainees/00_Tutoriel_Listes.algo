@@ -1,0 +1,177 @@
+// ================================================================
+// TUTORIEL : Les Listes Chainées Simples (LLC)
+// ================================================================
+// Ce programme définit les structures et les primitives de base :
+// - Création d'un noeud
+// - Insertion (Tête, Fin, Milieu)
+// - Suppression (Tête, Fin, Valeur spécifique)
+// - Parcours et Recherche
+// ================================================================
+
+Type Noeud = Enregistrement
+Debut
+    val  : Entier;
+    suiv : ^Noeud;
+Fin;
+
+// --- 1. Création et Affichage ---
+
+Procedure Afficher_Liste(L : ^Noeud)
+Var curr : ^Noeud;
+Debut
+    curr := L;
+    Ecrire("LISTE : [ ");
+    TantQue curr <> NIL Faire
+        Ecrire(curr->val); Ecrire(" ");
+        curr := curr->suiv;
+    FinTantQue;
+    Ecrire("]\n");
+Fin;
+
+// --- 2. Primitives d'Insertion ---
+
+Procedure Inserer_Tete(Var L : ^Noeud, v : Entier)
+Var n : ^Noeud;
+Debut
+
+            n := allouer(taille(Noeud));
+            n->val := v;
+            n->suiv := L;
+            L := n;
+
+Fin;
+
+Procedure Inserer_Fin(Var L : ^Noeud, v : Entier)
+Var n, curr : ^Noeud;
+Debut
+    n := allouer(taille(Noeud));
+    n->val := v;
+    n->suiv := NIL;
+    
+    Si L = NIL Alors
+        L := n;
+    Sinon
+        curr := L;
+        TantQue curr->suiv <> NIL Faire
+            curr := curr->suiv;
+        FinTantQue;
+        curr->suiv := n;
+    Fsi;
+Fin;
+
+Procedure Inserer_Apres_Valeur(L : ^Noeud, cible : Entier, v : Entier)
+Var n, curr : ^Noeud;
+Debut
+Ecrire("\nok\n");
+    curr := L;
+    TantQue curr <> NIL Et curr->val <> cible Faire
+        curr := curr->suiv;
+    FinTantQue;
+    Ecrire("\nok\n");
+    Si curr <> NIL Alors
+        n := allouer(taille(Noeud));
+        n->val := v;
+        n->suiv := curr->suiv;
+        curr->suiv := n;
+    Fsi;
+Fin;
+
+// --- 3. Primitives de Suppression ---
+
+Procedure Supprimer_Tete(Var L : ^^Noeud)
+Var tmp : ^Noeud;
+Debut
+    Si L <> NIL Alors
+        tmp := L^;
+        L^ := L^->suiv;
+        liberer(tmp);
+    Fsi;
+Fin;
+
+Procedure Supprimer_Fin(Var L : ^Noeud)
+Var curr, prev : ^Noeud;
+Debut
+    Si L <> NIL Alors 
+   
+    
+        Si L->suiv = NIL Alors
+            liberer(L);
+            L := NIL;
+        Sinon
+            curr := L;
+            prev := NIL;
+            TantQue curr->suiv <> NIL Faire
+                prev := curr;
+                curr := curr->suiv;
+            FinTantQue;
+            prev->suiv := NIL;
+            liberer(curr);
+        Fsi;
+    Fsi;
+Fin;
+
+Procedure Supprimer_Valeur(Var L : ^Noeud, val_del : Entier)
+Var curr, prev : ^Noeud;
+Debut
+    curr := L;
+    prev := NIL;
+    
+    TantQue curr <> NIL Et curr->val <> val_del Faire
+        prev := curr;
+        curr := curr->suiv;
+    FinTantQue;
+    
+    Si curr <> NIL Alors
+        Si prev = NIL Alors
+            L := curr->suiv;
+        Sinon
+            prev->suiv := curr->suiv;
+        Fsi;
+        liberer(curr);
+    Fsi;
+Fin;
+
+Algorithme Tutoriel_Listes_Chainees;
+Var
+    ma_liste : ^Noeud;
+    i : Entier;
+
+Debut
+    ma_liste := NIL;
+    
+    Ecrire("=== TUTORIEL LISTES CHAINEES ===\n");
+    
+
+    Ecrire("\n2. Insertion en fin (5) :\n");
+    ma_liste := allouer(taille(Noeud));
+    ma_liste->val :=30;
+    ma_liste->suiv:=NIL;
+    Inserer_Fin(ma_liste, 20);
+    Inserer_Fin(ma_liste, 10);
+    Inserer_Fin(ma_liste, 5);
+    Afficher_Liste(ma_liste); // [ 30 20 10 5 ]
+
+    Ecrire("\n3. Insertion du milieu (15 apres 20) :\n");
+    Inserer_Apres_Valeur(ma_liste, 20, 15);
+    Ecrire("\nok\n");
+    Afficher_Liste(ma_liste); // [ 30 20 15 10 5 ]
+
+    Ecrire("\n4. Suppression en tete :\n");
+    Supprimer_Tete(&ma_liste);
+    Afficher_Liste(ma_liste); // [ 20 15 10 5 ]
+
+    Ecrire("\n5. Suppression en fin :\n");
+    Supprimer_Fin(ma_liste);
+    Afficher_Liste(ma_liste); // [ 20 15 10 ]
+
+    Ecrire("\n6. Suppression de la valeur 15 :\n");
+    Supprimer_Valeur(ma_liste, 15);
+    Afficher_Liste(ma_liste); // [ 20 10 ]
+
+    Ecrire("\n7. Vidage de la liste :\n");
+    Supprimer_Tete(&ma_liste);
+    Supprimer_Tete(&ma_liste);
+    Afficher_Liste(ma_liste); // [ ]
+
+    Ecrire("\nFin du tutoriel.\n");
+Fin.

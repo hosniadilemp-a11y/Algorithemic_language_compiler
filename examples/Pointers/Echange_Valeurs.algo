@@ -1,0 +1,27 @@
+Algorithme EchangeViaPointeurs;
+Var
+    a, b : Entier;
+    ptr_a, ptr_b : ^Entier;
+    temp : Entier;
+
+Debut
+    a := 10;
+    b := 99;
+    
+    ptr_a := &a;
+    ptr_b := &b;
+    
+    Ecrire("--- Probleme: Echange (Swap) avec Pointeurs ---", "\n");
+    Ecrire("Avant l'echange:", "\n");
+    Ecrire("a = ", a, "\n");
+    Ecrire("b = ", b, "\n");
+    
+    // Logique d'échange en utilisant les pointeurs
+    temp := ptr_a^;
+    ptr_a^ := ptr_b^;
+    ptr_b^ := temp;
+    
+    Ecrire("\nApres l'echange (via pointeurs):", "\n");
+    Ecrire("a = ", a, "\n");
+    Ecrire("b = ", b, "\n");
+Fin.

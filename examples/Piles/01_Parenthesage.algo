@@ -1,0 +1,118 @@
+// ================================================================
+// PROBLEME : Vérification du Parenthésage (Piles)
+// ================================================================
+// Ce programme utilise une pile pour vérifier si une expression 
+// mathématique est correctement parenthésée (équilibrée).
+// Supports : ( ), [ ], { }
+// ================================================================
+
+Type Element = Enregistrement
+Debut
+    car  : Caractere;
+    suiv : ^Element;
+Fin;
+
+Type Pile = Enregistrement
+Debut
+    sommet : ^Element;
+Fin;
+
+// --- Primitives de Base ---
+
+Procedure Init(Var P : Pile)
+Debut
+    P.sommet := NIL;
+Fin;
+
+Procedure Empiler(Var P : Pile, c : Caractere)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->car := c;
+    n->suiv := P.sommet;
+    P.sommet := n;
+Fin;
+
+Procedure Depiler(Var P : Pile, Var c : Caractere)
+Var tmp : ^Element;
+Debut
+    Si P.sommet <> NIL Alors
+        tmp := P.sommet;
+        c := tmp->car;
+        P.sommet := tmp->suiv;
+        liberer(tmp);
+    Fsi
+Fin;
+
+Fonction Booleen_Est_Vide(P : Pile) : Booleen
+Debut
+    Retourner(P.sommet = NIL);
+Fin;
+
+// --- Logique de Verification ---
+
+Fonction Booleen_Correspond(ouvrant : Caractere, fermant : Caractere) : Booleen
+Debut
+    Si ouvrant = '(' Et fermant = ')' Alors Retourner(Vrai); Fsi
+    Si ouvrant = '[' Et fermant = ']' Alors Retourner(Vrai); Fsi
+    Si ouvrant = '{' Et fermant = '}' Alors Retourner(Vrai); Fsi
+    Retourner(Faux);
+Fin;
+
+Fonction Booleen_Verifier_Equilibre(expr : Chaine) : Booleen
+Var p : Pile; i : Entier; c, recup : Caractere; valide : Booleen;
+Debut
+    Init(p);
+    valide := Vrai;
+    
+    Pour i := 0 a Longueur(expr) - 1 Faire
+        c := expr[i];
+        
+        // Si c'est un ouvrant, on empile
+        Si c = '(' Ou c = '[' Ou c = '{' Alors
+            Empiler(p, c);
+        Fsi
+        
+        // Si c'est un fermant, on verifie la correspondance
+        Si c = ')' Ou c = ']' Ou c = '}' Alors
+            Si Booleen_Est_Vide(p) Alors
+                valide := Faux;
+            Sinon
+                Depiler(p, recup);
+                Si Non Booleen_Correspond(recup, c) Alors
+                    valide := Faux;
+                Fsi
+            Fsi
+        Fsi
+        
+        Si Non valide Alors Retourner(Faux); Fsi
+    FinPour
+    
+    // A la Fin;, la pile doit etre vide
+    Si Non Booleen_Est_Vide(p) Alors valide := Faux; Fsi
+    
+    Retourner(valide);
+Fin;
+
+Algorithme Verification_Parenthesage_Pile;
+Var
+    exp1[100], exp2[100], exp3[100] : Chaine;
+
+Debut
+    Ecrire("=== VERIFICATEUR DE PARENTHESAGE ===\n\n");
+    
+    exp1 := "(2 + 3) * [5 / {10 - 2}]";
+    exp2 := "((5 + 2] * 4)";
+    exp3 := "{[()]}()";
+
+    Ecrire("Expression 1 : "); Ecrire(exp1);
+    Si Booleen_Verifier_Equilibre(exp1) Alors Ecrire(" -> VALIDE\n"); Sinon Ecrire(" -> INVALIDE\n"); Fsi
+
+    Ecrire("Expression 2 : "); Ecrire(exp2);
+    Si Booleen_Verifier_Equilibre(exp2) Alors Ecrire(" -> VALIDE\n"); Sinon Ecrire(" -> INVALIDE\n"); Fsi
+
+    Ecrire("Expression 3 : "); Ecrire(exp3);
+    Si Booleen_Verifier_Equilibre(exp3) Alors Ecrire(" -> VALIDE\n"); Sinon Ecrire(" -> INVALIDE\n"); Fsi
+
+    Ecrire("\nFin du programme.\n");
+Fin.

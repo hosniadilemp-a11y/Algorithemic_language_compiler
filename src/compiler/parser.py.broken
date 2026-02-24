@@ -1,0 +1,734 @@
+import ply.yacc as yacc
+from compiler.lexer import tokens
+
+# Indentation management
+indent_level = 0
+def get_indent():
+    return "    " * indent_level
+
+def increase_indent():
+    global indent_level
+    indent_level += 1
+
+def decrease_indent():
+    global indent_level
+    indent_level -= 1
+
+# Symbol Table: { variable_name: variable_type }
+symbol_table = {}
+
+def get_default_value(type_name):
+    t = type_name.lower()
+    if t == 'entier': return '0'
+    if t == 'reel': return '0.0'
+    if t == 'chaine': return '""'
+    if t == 'booleen': return 'False'
+    if t == 'caractere': return "''"
+    if 'pointeur' in t or t.startswith('pointeur_'): return 'None'  # NIL pointer
+    return '0'
+
+def check_type_compatibility(var_type, expr_type):
+    if var_type == 'UNKNOWN' or expr_type == 'UNKNOWN':
+        return True # Be lenient with unknown types
+    
+    # Normalize to lowercase for comparison
+    v_type = var_type.lower()
+    e_type = expr_type.lower()
+    
+    # Allow NIL (POINTEUR) to be assigned to any pointer type
+    if v_type.startswith('pointeur_') and e_type == 'pointeur':
+        return True
+    
+    # Exact match (case-insensitive)
+    if v_type == e_type:
+        return True
+    
+    # Handle _TYPE suffix variations
+    v_base = v_type.replace('_type', '')
+    e_base = e_type.replace('_type', '')
+    if v_base == e_base:
+        return True
+    
+    # Allow numeric promotions (Entier -> Reel)
+    if v_base in ['reel'] and e_base in ['entier']:
+        return True
+    
+    # Allow types with internal structure if base matches
+    if v_type.startswith('tableau_') and e_type.startswith('tableau_'):
+         return v_type == e_type
+    
+    if v_type.startswith('matrice_') and e_type.startswith('matrice_'):
+         return v_type == e_type
+    
+    return False
+
+# Precedence rules
+precedence = (
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('right', 'NOT'),
+    ('left', 'EQUALS', 'NEQUALS', 'LT', 'LE', 'GT', 'GE'),
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE', 'DIV', 'MOD')
+)
+
+# Grammar Rules
+
+def p_program(p):
+    '''program : ALGORITHME ID SEMICOLON declarations DEBUT statements FIN DOT'''
+    helper_code = """
+_INPUT_BUFFER = []
+def _algo_read():
+    global _INPUT_BUFFER
+    while not _INPUT_BUFFER:
+        try:
+            line = input()
+            if not line.strip(): continue
+            _INPUT_BUFFER = line.strip().split()
+        except EOFError:
+            raise
+    return _INPUT_BUFFER.pop(0)
+
+def _algo_read_typed(var, val):
+    # Handle Chaine[N] (list of chars)
+    if isinstance(var, list) and var and all(isinstance(x, str) and builtins.len(x) <= 1 for x in var):
+        # Reconstruct string from val (truncated to length)
+        target_len = builtins.len(var)
+        s_val = builtins.str(val)
+        s_val = s_val[:target_len]
+        new_list = list(s_val)
+        while builtins.len(new_list) < target_len:
+            new_list.append("")
+        return new_list
+
+def _algo_convert(var, val):
+    """Convert a value to match the variable's type"""
+    if isinstance(var, bool):
+        val_str = builtins.str(val).lower()
+        if val_str in ['vrai', 'true', '1']: return True
+        if val_str in ['faux', 'false', '0']: return False
+        raise ValueError(f"Type mismatch: '{val}' is not a valid Boolean (Booleen).")
+    if isinstance(var, int):
+        try:
+            return builtins.int(val)
+        except:
+            raise ValueError(f"Type mismatch: '{val}' is not a valid Integer (Entier).")
+    if isinstance(var, float):
+        try:
+            return builtins.float(val)
+        except:
+            raise ValueError(f"Type mismatch: '{val}' is not a valid Real (Reel).")
+    return builtins.str(val)
+
+def _algo_to_string(val):
+    if isinstance(val, bool):
+        return "Vrai" if val else "Faux"
+    if isinstance(val, list):
+         # Check if it looks like a Fixed String
+         if all(isinstance(x, str) and builtins.len(x) <= 1 for x in val):
+             return "".join(val)
+    return builtins.str(val)
+
+def _algo_longueur(val):
+    if isinstance(val, list):
+        # Fixed string: count non-empty chars
+        if val and all(isinstance(x, str) and builtins.len(x) <= 1 for x in val):
+            count = 0
+            for char in val:
+                if char != '': count += 1
+            return count
+        return builtins.len(val)
+    return builtins.len(builtins.str(val))
+
+def _algo_concat(val1, val2):
+    return builtins.str(val1) + builtins.str(val2)
+
+def _algo_set_char(s, idx, char):
+    idx = builtins.int(idx)
+    s = builtins.str(s)
+    if idx < 0 or idx >= builtins.len(s):
+        raise IndexError(f"Index out of bounds: {idx}")
+    return s[:idx] + builtins.str(char) + s[idx+1:]
+
+# Simulated memory address system for educational purposes
+_address_map = {}
+_next_address = 1000
+
+def _get_simulated_address(obj):
+    """Get a simulated memory address for an object (e.g., @1513)"""
+    global _next_address
+    obj_id = id(obj)
+    if obj_id not in _address_map:
+        _address_map[obj_id] = _next_address
+        _next_address += 1
+    return f"@{_address_map[obj_id]}"
+
+class Pointer:
+    \"\"\"Helper class to simulate pointers in Python\"\"\"
+    def __init__(self, var_name=None, namespace=None):
+        self.var_name = var_name
+        self.namespace = namespace if namespace is not None else {}
+    
+    def get(self):
+        \"\"\"Dereference the pointer to get the value\"\"\"
+        if self.var_name is None:
+            raise ValueError("Cannot dereference NIL pointer")
+        # Try to get from namespace, fall back to globals
+        if self.var_name in self.namespace:
+            return self.namespace[self.var_name]
+        elif self.var_name in globals():
+            return globals()[self.var_name]
+        else:
+            raise NameError(f"Variable '{self.var_name}' not found")
+    
+    def set(self, value):
+        \"\"\"Set the value at the pointer's address\"\"\"
+        if self.var_name is None:
+            raise ValueError("Cannot assign to NIL pointer")
+        # Update in namespace or globals
+        if self.var_name in self.namespace:
+            self.namespace[self.var_name] = value
+        else:
+            globals()[self.var_name] = value
+    
+    def __eq__(self, other):
+        \"\"\"Check if pointer equals another (for NIL comparison)\"\"\"
+        if other is None:
+            return self.var_name is None
+        if isinstance(other, Pointer):
+            return self.var_name == other.var_name
+        return False
+    
+    def __str__(self):
+        """String representation showing simulated memory address"""
+        if self.var_name is None:
+            return "NIL"
+        # Get the actual variable to show its simulated address
+        try:
+            target_var = self.get()
+            return _get_simulated_address(target_var)
+        except:
+            return f"@{self.var_name}"
+    
+    def __repr__(self):
+        if self.var_name is None:
+            return "Pointer(NIL)"
+        return f"Pointer({self.var_name})"
+"""
+    p[0] = f"# Compiled from Algorithm {p[2]}\nimport sys\nimport math\nimport builtins\n\n{helper_code}\n\n{p[4]}\n\n{p[6]}"
+
+def p_declarations_empty(p):
+    '''declarations : '''
+    p[0] = ""
+
+def p_declarations_vars(p):
+    '''declarations : declarations VAR var_definitions
+                    | declarations CONST const_definitions'''
+    p[0] = f"{p[1]}{p[3]}"
+
+def p_var_definitions(p):
+    '''var_definitions : var_definitions var_definition
+                       | var_definition'''
+    if len(p) == 3:
+        p[0] = f"{p[1]}{p[2]}"
+    else:
+        p[0] = p[1]
+
+def p_var_definition(p):
+    '''var_definition : var_list SEMICOLON'''
+    # p[1] is (code, type)
+    if isinstance(p[1], tuple):
+        p[0] = f"{p[1][0]}\n"
+    else:
+        p[0] = f"{p[1]}\n"
+
+def p_const_definitions(p):
+    '''const_definitions : const_definitions const_definition
+                         | const_definition'''
+    if len(p) == 3:
+        p[0] = f"{p[1]}{p[2]}"
+    else:
+        p[0] = p[1]
+
+def p_const_definition(p):
+    '''const_definition : const_list SEMICOLON'''
+    p[0] = f"{p[1]}\n"
+
+def p_var_list_scalar(p):
+    '''var_list : ID COLON type'''
+    var_name = p[1]
+    var_type = p[3]
+    symbol_table[var_name] = var_type
+    
+    # Simple default value selection
+    if var_type == 'CHAINE_TYPE':
+         default_val = '""'
+    else:
+         default_val = get_default_value(var_type)
+    
+    code = f"{var_name} = {default_val} # {var_type}"
+    p[0] = (code, var_type)
+
+def p_var_list_multiple(p):
+    '''var_list : ID COMMA var_list'''
+    var_name = p[1]
+    # p[3] is (code, type_name)
+    prev_code, type_name = p[3]
+    
+    symbol_table[var_name] = type_name
+    default_val = get_default_value(type_name)
+    
+    code = f"{var_name} = {default_val}\n{prev_code}"
+    p[0] = (code, type_name)
+
+def p_var_list_array_or_fixed_string(p):
+    '''var_list : ID LBRACKET NUMBER RBRACKET COLON type'''
+    var_name = p[1]
+    var_type = p[6]
+    arr_type = f"TABLEAU_{var_type}"
+    symbol_table[var_name] = arr_type
+    
+    if var_type.lower() == 'chaine':
+         code = f"{var_name} = [''] * {p[3]}"
+    else:
+         default_val = get_default_value(var_type)
+         if default_val == 'None':
+             # Fallback if type unknown or complex
+             code = f"{var_name} = [None] * {p[3]}"
+         else:
+             code = f"{var_name} = [{default_val}] * {p[3]}"
+    p[0] = (code, arr_type)
+
+def p_var_list_tableau(p):
+    '''var_list : ID COLON TABLEAU DE type'''
+    var_name = p[1]
+    arr_type = f"TABLEAU_{p[5]}"
+    symbol_table[var_name] = arr_type
+    code = f"{var_name} = []"
+    p[0] = (code, arr_type)
+
+def p_var_list_matrix(p):
+    '''var_list : ID LBRACKET NUMBER RBRACKET LBRACKET NUMBER RBRACKET COLON type'''
+    var_name = p[1]
+    var_type = p[9]
+    mat_type = f"MATRICE_{var_type}"
+    mat_type = f"MATRICE_{var_type}"
+    symbol_table[var_name] = mat_type
+    
+    default_val = get_default_value(var_type)
+    if default_val == 'None':
+         code = f"{var_name} = [[None] * {p[6]} for _ in range({p[3]})]"
+    else:
+         code = f"{var_name} = [[{default_val}] * {p[6]} for _ in range({p[3]})]"
+    
+    p[0] = (code, mat_type)
+
+def p_const_list(p):
+    '''const_list : ID EQUALS value'''
+    p[0] = f"{p[1]} = {p[3]}"
+
+def p_type(p):
+    '''type : ENTIER_TYPE
+            | REEL_TYPE
+            | CHAINE_TYPE
+            | BOOLEEN_TYPE
+            | CARACTERE_TYPE
+            | CARET type'''
+    if len(p) == 2:
+        # Simple type
+        p[0] = p[1]
+    else:
+        # Pointer type: ^Type
+        base_type = p[2]
+        p[0] = f'POINTEUR_{base_type}'
+
+def p_statements(p):
+    '''statements : statements statement
+                  | statement'''
+    if len(p) == 3:
+        p[0] = f"{p[1]}\n{p[2]}"
+    else:
+        p[0] = f"{p[1]}"
+
+def p_statement_assign(p):
+    '''statement : ID ASSIGN expression SEMICOLON'''
+    var_name = p[1]
+    expr_code, expr_type = p[3]
+    var_type = symbol_table.get(var_name, 'UNKNOWN')
+    
+    if var_type != 'UNKNOWN' and expr_type != 'UNKNOWN':
+        if not check_type_compatibility(var_type, expr_type):
+            error_msg = f"Type mismatch: Cannot assign {expr_type} to {var_name} ({var_type})"
+            from compiler.lexer import find_column
+            parser_errors.append({
+                "line": p.lineno(1),
+                "column": 0,
+                "message": error_msg,
+                "type": "Semantic Error"
+            })
+            
+    p[0] = f"{get_indent()}{var_name} = {expr_code}"
+
+def p_statement_assign_pointer_deref(p):
+    '''statement : ID CARET ASSIGN expression SEMICOLON'''
+    ptr_name = p[1]
+    expr_code, expr_type = p[4]
+    ptr_type = symbol_table.get(ptr_name, 'UNKNOWN')
+    
+    # Assign to the dereferenced pointer (ptr^ := value)
+    p[0] = f"{get_indent()}{ptr_name}.set({expr_code})"
+
+def p_statement_io_write(p):
+    '''statement : ECRIRE LPAREN expression_list RPAREN SEMICOLON'''
+    p[0] = f"{get_indent()}print(*map(_algo_to_string, [{p[3]}]))"
+
+def p_id_list(p):
+    '''id_list : id_or_array_access
+               | id_or_array_access COMMA id_list'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+def p_id_or_array_access(p):
+    '''id_or_array_access : ID
+                          | ID LBRACKET expression RBRACKET
+                          | ID LBRACKET expression RBRACKET LBRACKET expression RBRACKET'''
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 5:
+        p[0] = f"{p[1]}[{p[3][0]}]"
+    else:
+        p[0] = f"{p[1]}[{p[3][0]}][{p[6][0]}]"
+
+def p_statement_io_read(p):
+    '''statement : LIRE LPAREN id_list RPAREN SEMICOLON'''
+    indent = get_indent()
+    vars = p[3]
+    code_blocks = []
+    
+    for var_name_access in vars:
+        block = f"{indent}{var_name_access} = _algo_read_typed({var_name_access}, _algo_read())"
+        code_blocks.append(block)
+        
+    p[0] = "\n".join(code_blocks)
+
+def p_indent_inc(p):
+    '''indent_inc :'''
+    increase_indent()
+
+def p_indent_dec(p):
+    '''indent_dec :'''
+    decrease_indent()
+
+def p_statement_if_complete(p):
+    '''statement : SI condition ALORS indent_inc statements indent_dec FSI SEMICOLON
+                 | SI condition ALORS indent_inc statements indent_dec FIN SI SEMICOLON'''
+    p[0] = f"{get_indent()}if {p[2]}:\n{p[5]}"
+
+def p_statement_if_else(p):
+    '''statement : SI condition ALORS indent_inc statements indent_dec SINON indent_inc statements indent_dec FSI SEMICOLON
+                 | SI condition ALORS indent_inc statements indent_dec SINON indent_inc statements indent_dec FIN SI SEMICOLON'''
+    p[0] = f"{get_indent()}if {p[2]}:\n{p[5]}\n{get_indent()}else:\n{p[9]}"
+
+def p_statement_while(p):
+    '''statement : TANT_QUE QUE condition FAIRE indent_inc statements indent_dec FIN TANT_QUE QUE SEMICOLON
+                 | TANT_QUE QUE condition FAIRE indent_inc statements indent_dec FIN TANT_QUE SEMICOLON
+                 | TANT_QUE QUE condition FAIRE indent_inc statements indent_dec FIN_TANT_QUE SEMICOLON
+                 | TANT_QUE condition FAIRE indent_inc statements indent_dec FIN_TANT_QUE SEMICOLON'''
+    if len(p) == 9:
+        # TantQue as one word with FinTantQue
+        p[0] = f"{get_indent()}while {p[2]}:\n{p[5]}"
+    else:
+        # Tant Que as two words
+        p[0] = f"{get_indent()}while {p[3]}:\n{p[6]}"
+
+def p_statement_for(p):
+    '''statement : POUR ID ASSIGN expression ID expression FAIRE indent_inc statements indent_dec FIN POUR SEMICOLON
+                 | POUR ID ASSIGN expression ID expression FAIRE indent_inc statements indent_dec FIN_POUR SEMICOLON'''
+    # p[5] should be 'a' (the range separator), but we now accept any ID
+    # We'll validate it's 'a' at runtime if needed, or just accept it
+    if p[5].lower() != 'a':
+        from compiler.lexer import find_column
+        parser_errors.append({
+            "line": p.lineno(5),
+            "column": 0,
+            "message": f"Expected 'a' in Pour loop, got '{p[5]}'",
+            "type": "Syntax Error"
+        })
+    start_expr = p[4][0]
+    end_expr = p[6][0]
+    p[0] = f"{get_indent()}for {p[2]} in range({start_expr}, {end_expr} + 1):\n{p[9]}"
+
+def p_condition(p):
+    '''condition : expression'''
+    p[0] = p[1][0]
+
+def p_statement_repeat(p):
+    '''statement : REPETER indent_inc statements indent_dec JUSQUA condition SEMICOLON'''
+    p[0] = f"{get_indent()}while True:\n{p[3]}\n{get_indent()}    if {p[6]}:\n{get_indent()}        break"
+
+def p_expression_binop(p):
+    '''expression : expression PLUS expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression
+                  | expression EQUALS expression
+                  | expression NEQUALS expression
+                  | expression LT expression
+                  | expression LE expression
+                  | expression GT expression
+                  | expression GE expression
+                  | expression AND expression
+                  | expression OR expression'''
+    op = p[2]
+    code1, type1 = p[1]
+    code2, type2 = p[3]
+    
+    res_type = 'UNKNOWN'
+    if op in ['+', '-', '*', '/', 'mod', 'div']:
+        if type1 in ['ENTIER', 'REEL'] and type2 in ['ENTIER', 'REEL']:
+            if type1 == 'REEL' or type2 == 'REEL' or op == '/':
+                 res_type = 'REEL'
+            else:
+                 res_type = 'ENTIER'
+        elif type1 == 'CHAINE' and type2 == 'CHAINE' and op == '+':
+             res_type = 'CHAINE'
+             op = '+'
+    elif op in ['=', '<>', '<', '<=', '>', '>=', 'et', 'ou', 'non']:
+        res_type = 'BOOLEEN'
+
+    op_lower = op.lower()
+    if op_lower == '=': op = '=='
+    if op_lower == '<>': op = '!='
+    if op_lower == 'et': op = 'and'
+    if op_lower == 'ou': op = 'or'
+    if op_lower == 'mod': op = '%'
+    if op_lower == 'div': op = '//'
+    
+    p[0] = (f"{code1} {op} {code2}", res_type)
+
+def p_expression_binop_mod_div(p):
+    '''expression : expression MOD expression
+                  | expression DIV expression'''
+    code1, type1 = p[1]
+    code2, type2 = p[3]
+    op = p[2]
+    if op.lower() == 'mod':
+        operator = '%'
+    else:
+        operator = '//'
+    p[0] = (f"{code1} {operator} {code2}", 'ENTIER')
+
+def p_expression_unary(p):
+    '''expression : NOT expression'''
+    p[0] = (f"not ({p[2][0]})", 'BOOLEEN')
+
+def p_expression_group(p):
+    '''expression : LPAREN expression RPAREN'''
+    p[0] = (f"({p[2][0]})", p[2][1])
+
+def p_expression_number(p):
+    '''expression : NUMBER'''
+    val = p[1]
+    if isinstance(val, float):
+        p[0] = (str(val), 'REEL')
+    else:
+        p[0] = (str(val), 'ENTIER')
+
+def p_expression_search(p):
+    '''expression : ID'''
+    var_name = p[1]
+    var_type = symbol_table.get(var_name, 'UNKNOWN')
+    p[0] = (var_name, var_type)
+
+def p_expression_string(p):
+    '''expression : STRING_LITERAL'''
+    p[0] = (repr(p[1]), 'CHAINE')
+
+def p_expression_bool(p):
+    '''expression : VRAI
+                  | FAUX'''
+    code = 'True' if p[1].lower() == 'vrai' else 'False'
+    p[0] = (code, 'BOOLEEN_TYPE')
+
+def p_expression_nil(p):
+    '''expression : NIL'''
+    p[0] = ('None', 'POINTEUR')
+
+def p_expression_address_of(p):
+    '''expression : AMPERSAND ID'''
+    var_name = p[2]
+    var_type = symbol_table.get(var_name, 'UNKNOWN')
+    # Create a Pointer object that references this variable
+    p[0] = (f'Pointer(\"{var_name}\", locals())', f'POINTEUR_{var_type}')
+
+def p_expression_dereference(p):
+    '''expression : ID CARET'''
+    ptr_name = p[1]
+    ptr_type = symbol_table.get(ptr_name, 'UNKNOWN')
+    # Get the value from the pointer (postfix notation: ptr^)
+    if ptr_type.startswith('POINTEUR_'):
+        base_type = ptr_type.replace('POINTEUR_', '')
+        p[0] = (f'{ptr_name}.get()', base_type)
+    else:
+        p[0] = (f'{ptr_name}.get()', 'UNKNOWN')
+
+def p_expression_len(p):
+    '''expression : LONGUEUR LPAREN expression RPAREN'''
+    p[0] = (f"_algo_longueur({p[3][0]})", 'ENTIER')
+
+def p_expression_concat(p):
+    '''expression : CONCAT LPAREN expression COMMA expression RPAREN'''
+    p[0] = (f"_algo_concat({p[3][0]}, {p[5][0]})", 'CHAINE')
+
+def p_expression_list(p):
+    '''expression_list : expression
+                       | expression COMMA expression_list'''
+    if len(p) == 2:
+        p[0] = p[1][0]
+    else:
+        p[0] = f"{p[1][0]}, {p[3]}"
+
+def p_value(p):
+    '''value : NUMBER
+             | STRING_LITERAL
+             | VRAI
+             | FAUX'''
+    if p[1].lower() == 'vrai':
+        p[0] = 'True'
+    elif p[1].lower() == 'faux':
+        p[0] = 'False'
+    else:
+        p[0] = str(p[1])
+
+def p_expression_array_access(p):
+    '''expression : ID LBRACKET expression RBRACKET'''
+    var_name = p[1]
+    idx_code = p[3][0]
+    arr_type = symbol_table.get(var_name, 'UNKNOWN')
+    elem_type = 'UNKNOWN'
+    if arr_type.startswith('TABLEAU_'):
+        elem_type = arr_type.replace('TABLEAU_', '')
+    elif arr_type == 'CHAINE':
+        elem_type = 'CARACTERE_TYPE'
+    p[0] = (f"{var_name}[{idx_code}]", elem_type)
+
+def p_expression_matrix_access(p):
+    '''expression : ID LBRACKET expression RBRACKET LBRACKET expression RBRACKET'''
+    var_name = p[1]
+    idx1 = p[3][0]
+    idx2 = p[6][0]
+    mat_type = symbol_table.get(var_name, 'UNKNOWN')
+    elem_type = 'UNKNOWN'
+    if mat_type.startswith('MATRICE_'):
+        elem_type = mat_type.replace('MATRICE_', '')
+    p[0] = (f"{var_name}[{idx1}][{idx2}]", elem_type)
+
+def p_statement_assign_array(p):
+    '''statement : ID LBRACKET expression RBRACKET ASSIGN expression SEMICOLON'''
+    var_name = p[1]
+    idx_code = p[3][0]
+    val_code = p[6][0]
+    
+    var_type = symbol_table.get(var_name, 'UNKNOWN')
+    
+    if var_type.upper() in ['CHAINE', 'CHAINE_TYPE']:
+        # Strings are immutable in Python, so we must replace the variable with a new string
+        p[0] = f"{get_indent()}{var_name} = _algo_set_char({var_name}, {idx_code}, {val_code})"
+    else:
+        # Arrays/Lists are mutable
+        p[0] = f"{get_indent()}{var_name}[{idx_code}] = {val_code}"
+
+def p_statement_assign_matrix(p):
+    '''statement : ID LBRACKET expression RBRACKET LBRACKET expression RBRACKET ASSIGN expression SEMICOLON'''
+    p[0] = f"{get_indent()}{p[1]}[{p[3][0]}][{p[6][0]}] = {p[9][0]}"
+
+# Error tracking
+parser_errors = []
+
+def p_error(p):
+    if p:
+        error_msg = f"Syntax error at '{p.value}'"
+        from compiler.lexer import find_column
+        col = find_column(p.lexer.lexdata, p)
+        parser_errors.append({
+            "line": p.lineno,
+            "column": col,
+            "message": error_msg,
+            "type": "Syntax Error"
+        })
+    else:
+        parser_errors.append({
+            "line": 0,
+            "column": 0,
+            "message": "Syntax error at EOF",
+            "type": "Syntax Error"
+        })
+
+def p_var_definition_error(p):
+    '''var_definition : var_list error'''
+    error_msg = f"Missing semicolon or invalid syntax after variable definition"
+    from compiler.lexer import find_column
+    col = find_column(p.lexer.lexdata, p.slice[2])
+    parser_errors.append({
+        "line": p.lineno(2),
+        "column": col,
+        "message": error_msg,
+        "type": "Syntax Error"
+    })
+    # Try to return valid code part so parsing continues
+    # p[1] is (code, type)
+    if isinstance(p[1], tuple):
+         p[0] = f"{p[1][0]}\n"
+    else:
+         p[0] = ""
+
+def p_statement_error(p):
+    '''statement : error SEMICOLON'''
+    error_msg = f"Syntax error in statement"
+    from compiler.lexer import find_column
+    col = find_column(p.lexer.lexdata, p.slice[1])
+    parser_errors.append({
+        "line": p.lineno(1),
+        "column": col,
+        "message": error_msg,
+        "type": "Syntax Error"
+    })
+    p[0] = ""
+
+def p_type_error(p):
+    '''type : ID'''
+    error_msg = f"Unknown type '{p[1]}'. Did you mean 'Entier'?"
+    from compiler.lexer import find_column
+    col = find_column(p.lexer.lexdata, p.slice[1])
+    parser_errors.append({
+        "line": p.lineno(1),
+        "column": col,
+        "message": error_msg,
+        "type": "Semantic Error"
+    })
+    p[0] = 'UNKNOWN'
+
+# Build the parser
+parser = yacc.yacc(debug=True)
+
+def compile_algo(code):
+    global indent_level
+    indent_level = 0
+    global symbol_table
+    symbol_table = {}
+    global parser_errors
+    parser_errors = []
+    
+    from compiler.lexer import lexer, clear_lexer_errors, get_lexer_errors
+    clear_lexer_errors()
+    lexer.lineno = 1
+    
+    try:
+        result = parser.parse(code, lexer=lexer)
+    except Exception as e:
+        return None, [{"line": 0, "column": 0, "message": str(e), "type": "Critical Error"}]
+    
+    all_errors = get_lexer_errors() + parser_errors
+    return result, all_errors

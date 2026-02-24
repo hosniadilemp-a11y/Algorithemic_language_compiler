@@ -1,0 +1,187 @@
+// ================================================================
+// TUTORIEL COMPLET : Enregistrements (Records/Structures)
+// ================================================================
+// La structure d'un programme avec des Enregistrements suit cet ordre :
+//   1. Declarations de types (chaque type avec son propre mot-cle 'Type')
+//   2. Fonctions et Procedures
+//   3. Algorithme ... Var ... Debut ... Fin.
+// ================================================================
+
+// -----------------------------------------------
+// 1. Declarations des types Enregistrement
+// -----------------------------------------------
+
+Type Etudiant = Enregistrement
+Debut
+    nom[50]    : Chaine;
+    prenom[50] : Chaine;
+    age        : Entier;
+    moyenne    : Reel;
+    actif      : Booleen;
+Fin;
+
+Type Point = Enregistrement
+Debut
+    x : Reel;
+    y : Reel;
+Fin;
+
+Type Date = Enregistrement
+Debut
+    jour  : Entier;
+    mois  : Entier;
+    annee : Entier;
+Fin;
+
+Type Employe = Enregistrement
+Debut
+    nom[50]       : Chaine;
+    salaire       : Reel;
+    date_embauche : Date;
+Fin;
+
+// -----------------------------------------------
+// 2. Fonctions et Procedures
+// -----------------------------------------------
+
+Procedure Afficher_Etudiant(etu : Etudiant)
+Debut
+    Ecrire("  Nom     : "); Ecrire(etu.nom); Ecrire("\n");
+    Ecrire("  Prenom  : "); Ecrire(etu.prenom); Ecrire("\n");
+    Ecrire("  Age     : "); Ecrire(etu.age); Ecrire("\n");
+    Ecrire("  Moyenne : "); Ecrire(etu.moyenne); Ecrire("\n");
+Fin;
+
+Procedure Appliquer_Bonus(etu : Etudiant, bonus : Reel)
+Debut
+    etu.moyenne := etu.moyenne + bonus;
+    Ecrire("  [Bonus de "); Ecrire(bonus); Ecrire(" applique]\n");
+Fin;
+
+Fonction Reel_Distance(p1 : Point, p2 : Point) : Reel
+Var
+    dx, dy : Reel;
+Debut
+    dx := p1.x - p2.x;
+    dy := p1.y - p2.y;
+    Retourner(dx * dx + dy * dy);
+Fin;
+
+// -----------------------------------------------
+// 3. Programme principal
+// -----------------------------------------------
+
+Algorithme Tutoriel_Enregistrements;
+Var
+    e1, e2 : Etudiant;
+    pt     : Point;
+    emp    : Employe;
+    ptr_e  : ^Etudiant;
+    i, n   : Entier;
+
+Debut
+    // ============================================================
+    // PARTIE 1 : Enregistrement Simple
+    // ============================================================
+    Ecrire("=== PARTIE 1 : Enregistrement Simple ===\n");
+
+    e1.nom    := "Dupont";
+    e1.prenom := "Alice";
+    e1.age    := 21;
+    e1.moyenne := 15.5;
+    e1.actif  := Vrai;
+
+    Ecrire("Etudiant 1 :\n");
+    Ecrire("  Nom     : "); Ecrire(e1.nom); Ecrire("\n");
+    Ecrire("  Prenom  : "); Ecrire(e1.prenom); Ecrire("\n");
+    Ecrire("  Age     : "); Ecrire(e1.age); Ecrire("\n");
+    Ecrire("  Moyenne : "); Ecrire(e1.moyenne); Ecrire("\n");
+    Ecrire("  Actif   : "); Ecrire(e1.actif); Ecrire("\n\n");
+
+    // ============================================================
+    // PARTIE 2 : Enregistrements avec Types Varies et Imbrication
+    // ============================================================
+    Ecrire("=== PARTIE 2 : Types Varies et Enregistrements Imbriques ===\n");
+
+    pt.x := 3.0;
+    pt.y := 4.0;
+    Ecrire("Point : ("); Ecrire(pt.x); Ecrire(", "); Ecrire(pt.y); Ecrire(")\n");
+
+    emp.nom    := "Martin";
+    emp.salaire := 3500.0;
+    emp.date_embauche.jour  := 15;
+    emp.date_embauche.mois  := 6;
+    emp.date_embauche.annee := 2022;
+
+    Ecrire("Employe : "); Ecrire(emp.nom); Ecrire("\n");
+    Ecrire("  Salaire       : "); Ecrire(emp.salaire); Ecrire("\n");
+    Ecrire("  Date embauche : ");
+    Ecrire(emp.date_embauche.jour); Ecrire("/");
+    Ecrire(emp.date_embauche.mois); Ecrire("/");
+    Ecrire(emp.date_embauche.annee); Ecrire("\n\n");
+
+    // ============================================================
+    // PARTIE 3 : Acces via . et ->
+    // ============================================================
+    Ecrire("=== PARTIE 3 : Acces via . et -> ===\n");
+
+    e2.nom    := "Bernard";
+    e2.prenom := "Bob";
+    e2.age    := 23;
+    e2.moyenne := 12.0;
+
+    Ecrire("Acces direct (.) :\n");
+    Ecrire("  "); Ecrire(e2.prenom); Ecrire(" "); Ecrire(e2.nom); Ecrire("\n");
+
+    // Acces via pointeur avec ->  (equivalent a ptr^.champ)
+    ptr_e := allouer(taille(Etudiant));
+    ptr_e->nom    := "Chen";
+    ptr_e->prenom := "Li";
+    ptr_e->age    := 20;
+    ptr_e->moyenne := 18.5;
+
+    Ecrire("Acces via pointeur (->) :\n");
+    Ecrire("  "); Ecrire(ptr_e->prenom); Ecrire(" ");
+    Ecrire(ptr_e->nom); Ecrire(", moyenne=");
+    Ecrire(ptr_e->moyenne); Ecrire("\n\n");
+
+    Liberer(ptr_e);
+
+    // ============================================================
+    // PARTIE 4 : Allocation Dynamique d'Enregistrements
+    // ============================================================
+    Ecrire("=== PARTIE 4 : Allocation Dynamique ===\n");
+
+    n := 3;
+    ptr_e := allouer(taille(Etudiant));
+    ptr_e->nom    := "Kowalski";
+    ptr_e->prenom := "Eva";
+    ptr_e->age    := 19;
+    ptr_e->moyenne := 14.0;
+
+    Ecrire("Enregistrement alloue dynamiquement :\n");
+    Ecrire("  "); Ecrire(ptr_e->prenom); Ecrire(" ");
+    Ecrire(ptr_e->nom); Ecrire(", age=");
+    Ecrire(ptr_e->age); Ecrire("\n\n");
+    Liberer(ptr_e);
+
+    // ============================================================
+    // PARTIE 5 : Enregistrements et Fonctions
+    // ============================================================
+    Ecrire("=== PARTIE 5 : Fonctions et Procedures ===\n");
+
+    e1.nom    := "Petit";
+    e1.prenom := "Jean";
+    e1.age    := 22;
+    e1.moyenne := 13.0;
+
+    Ecrire("Avant bonus :\n");
+    Afficher_Etudiant(e1);
+
+    Appliquer_Bonus(e1, 2.0);
+    Ecrire("Apres appel Appliquer_Bonus(+2.0) [valeur copiee] :\n");
+    Afficher_Etudiant(e1);
+
+    Ecrire("\n");
+    Ecrire("=== Fin; du Tutoriel sur les Enregistrements ===\n");
+Fin.

@@ -1,0 +1,29 @@
+Algorithme CompteurVoyelles;
+Var
+    phrase[100] : Chaine;
+    i, n : Entier;
+    nb_voyelles : Entier;
+    c : Caractere;
+
+Debut
+    phrase := "Programmation algorithmique avec le compilateur.";
+    n := Longueur(phrase);
+    nb_voyelles := 0;
+    
+    Ecrire("--- Probleme: Compteur de Voyelles ---", "\n");
+    Ecrire("Phrase : ", phrase, "\n");
+    
+    // Parcourir chaque caractère
+    Pour i := 0 a n - 1 Faire
+        c := phrase[i];
+        
+        // Vérifier si le caractère est une voyelle (minuscule ou majuscule)
+        Si (c = 'a') Ou (c = 'e') Ou (c = 'i') Ou (c = 'o') Ou (c = 'u') Ou (c = 'y') Ou
+           (c = 'A') Ou (c = 'E') Ou (c = 'I') Ou (c = 'O') Ou (c = 'U') Ou (c = 'Y') Alors
+            
+            nb_voyelles := nb_voyelles + 1;
+        Fsi
+    FinPour
+    
+    Ecrire("\nNombre total de voyelles trouvées : ", nb_voyelles, "\n");
+Fin.

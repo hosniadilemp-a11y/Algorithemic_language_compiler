@@ -1,0 +1,66 @@
+# ============================================================
+# AlgoCompiler — .gitignore
+# ============================================================
+
+# --- Python cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+.env/
+
+# --- PLY parser cache (auto-generated, causes conflicts) ---
+src/compiler/parser.out
+src/compiler/parsetab.py
+
+# --- Test artifacts ---
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# --- IDE / Editor settings ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+*.DS_Store     # macOS
+Thumbs.db      # Windows
+
+# --- Logs & temporary files ---
+*.log
+*.tmp
+nul
+generated_lire.py
+output.py
+debug_output.py
+test_addr.py
+test_alloc.py
+test_local.py
+test_nil_output.py
+test_poly.py
+test_poly_local.algo
+test_r_addr.algo
+test_sc_output.py
+test_user.py
+test_user2.py
+test_user3.py
+test_user_code.algo
+test_user_code.py
+test_user_poly2.algo
+test_alloc_loop.algo
+run_test.py
+appsvision.txt
+review.txt
+promets.txt
+
+# --- Archive / draft files ---
+archive/
+ppts/

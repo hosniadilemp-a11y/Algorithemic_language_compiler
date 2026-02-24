@@ -1,0 +1,82 @@
+DETAILED DESCRIPTION OF THE ALGORITHM LANGUAGE
+
+1. INTRODUCTION
+This document describes the algorithmic language used in the provided course materials (PowerPoint slides). The language is similar to Pascal but French-based. It is designed for teaching algorithms and data structures.
+
+2. AMBIGUITIES AND NOTES
+   - **Array Indexing**: The course materials show conflicting indexing methods. 
+     - "Physical" representation instructions say indices start at 0 (0 to N-1).
+     - Some exercises and examples use indices starting at 1 (1 to N).
+     - *Recommendation*: Be prepared to handle both, but default to 0-based if mapping to C/Python, or 1-based if strictly following specific mathematical algorithm examples.
+   
+   - **Parameter Passing**: 
+     - The slides differ on how reference passing is declared. One slide mentions "Transmission par adresse" but doesn't explicitly show a `Var` keyword in the parameter list in all examples.
+     - However, function *calls* in examples sometimes use the C-style `&` operator (e.g., `Somme(a, b, &S)`), implying that the address is passed explicitly at the call site.
+     - *Confusion*: Standard Pascal uses `Var` in declaration. This course seems to mix Pascal syntax (algorithm body) with C-style call semantics for references.
+
+   - **Structure Definitions**:
+     - The syntax for defining a Record (Enregistrement) is not explicitly shown in a dedicated "Syntax" slide in the extracted text, but is used implicitly.
+     - C-style `struct` is shown in the Linked List chapter as an equivalent.
+
+3. DETAILED SYNTAX ELEMENTS
+
+   3.1 PRIMARY DATA TYPES
+   - `Entier`: Standard integer.
+   - `Reel`: Floating point number.
+   - `Caractere`: Single character (surrounded by quotes, e.g., 'a').
+   - `Chaine`: String of characters. Operations: `longueur(ch)`, `concat(ch1, ch2)`.
+   - `Booleen`: True (Vrai) or False (Faux).
+
+   3.2 ARRAYS AND MATRICES
+   - Declaration: `Nom[Taille]: type`.
+   - Access: `Nom[Index]`.
+   - Matrices are simply 2D arrays: `Nom[Ligne][Colonne]`.
+
+   3.3 DYNAMIC MEMORY
+   - Uses explicit pointers.
+   - Dereferencing: `p^` or `content(p)`. Access to fields: `p^.champ` or `p->champ`.
+   - `p->champ` is noted as "la plus utilisée" (most used).
+   - `NIL` is used for null pointers.
+
+   3.4 FILES
+   - Binary files manipulation is emphasized.
+   - Logic involves strict `ouvrir` -> `lire/ecrire` -> `fermer` flow.
+   - `fin(f)` is used to check for End Of File.
+
+   3.5 ABSTRACT DATA TYPES (ADT)
+   - **Lists**: Singly linked lists are the primary focus. Primitives defined for creation (LIFO/FIFO), insertion, deletion.
+   - **Stacks (Piles)**: LIFO structure. Implemented using lists in the "version finale".
+   - **Queues (Files)**: FIFO structure.
+
+4. EXAMPLES
+
+   *Conditional:*
+   ```
+   Si x > 0 Alors
+      Ecrire("Positif");
+   Sinon
+      Ecrire("Negatif ou Nul");
+   Fsi;
+   ```
+
+   *Loop (For):*
+   ```
+   Pour i := 1 a 10 Faire
+      somme := somme + i;
+   Fin;
+   ```
+
+   *Loop (While):*
+   ```
+   Tant que x < 100 Faire
+      x := x * 2;
+   Fin;
+   ```
+
+   *Function:*
+   ```
+   Fonction Carre(x : entier) : entier;
+   Debut
+      Retourner x * x;
+   Fin;
+   ```

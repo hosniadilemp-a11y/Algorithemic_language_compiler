@@ -1,0 +1,21 @@
+Algorithme Factorielle;
+Var
+    n, i : Entier;
+    fact : Entier;
+Debut
+    n := 5;
+    fact := 1;
+    
+    Ecrire("--- Calcul de Factorielle ---", "\n");
+    Ecrire("Nombre n = ", n, "\n");
+    
+    Si n < 0 Alors
+        Ecrire("Erreur: La factorielle n'est pas definie pour les nombres negatifs.", "\n");
+    Sinon
+        Pour i := 1 a n Faire
+            fact := fact * i;
+        FinPour
+        
+        Ecrire("La factorielle de ", n, " (", n, "!) est: ", fact, "\n");
+    Fsi
+Fin.

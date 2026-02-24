@@ -1,0 +1,135 @@
+// ================================================================
+// PROBLEME 1 : Gestion Avancée d'une liste d'étudiants
+// ================================================================
+// Ce programme gère une promotion d'étudiants avec des fonctions de 
+// calcul de moyenne, de recherche (meilleur/moins bon), de tri 
+// alphabétique et par note, ainsi que de filtrage.
+// ================================================================
+
+Type Etudiant = Enregistrement
+Debut
+    identifiant : Entier;
+    nom[50]     : Chaine;
+    note        : Reel;
+    rang        : Entier;
+    admis       : Booleen;
+Fin;
+
+// --- Fonctions de Calcul ---
+
+Fonction Reel_Calculer_Moyenne(promo[10] : Etudiant, n : Entier) : Reel
+Var i : Entier; somme : Reel;
+Debut
+    somme := 0.0;
+    Pour i := 0 a n - 1 Faire
+        somme := somme + promo[i].note;
+    FinPour
+    Retourner(somme / n);
+Fin;
+
+Fonction Entier_Trouver_Meilleur(promo[10] : Etudiant, n : Entier) : Entier
+Var i, idx_best : Entier;
+Debut
+    idx_best := 0;
+    Pour i := 1 a n - 1 Faire
+        Si promo[i].note > promo[idx_best].note Alors
+            idx_best := i;
+        Fsi
+    FinPour
+    Retourner(idx_best);
+Fin;
+
+// --- Procedures de Traitement ---
+
+Procedure Determiner_Admissions(promo[10] : Etudiant, n : Entier, seuil : Reel)
+Var i : Entier;
+Debut
+    Pour i := 0 a n - 1 Faire
+        Si promo[i].note >= seuil Alors
+            promo[i].admis := Vrai;
+        Sinon
+            promo[i].admis := Faux;
+        Fsi
+    FinPour
+Fin;
+
+Procedure Trier_Par_Note(promo[10] : Etudiant, n : Entier)
+Var i, j, tmp_id, tmp_rang : Entier; tmp_note : Reel; tmp_nom[100] : Chaine; tmp_admis : Booleen;
+Debut
+    Pour i := 0 a n - 2 Faire
+        Pour j := 0 a n - 2 - i Faire
+            Si promo[j].note < promo[j+1].note Alors
+                // Echange complet de la structure
+                tmp_id := promo[j].identifiant; promo[j].identifiant := promo[j+1].identifiant; promo[j+1].identifiant := tmp_id;
+                tmp_nom := promo[j].nom; promo[j].nom := promo[j+1].nom; promo[j+1].nom := tmp_nom;
+                tmp_note := promo[j].note; promo[j].note := promo[j+1].note; promo[j+1].note := tmp_note;
+                tmp_rang := promo[j].rang; promo[j].rang := promo[j+1].rang; promo[j+1].rang := tmp_rang;
+                tmp_admis := promo[j].admis; promo[j].admis := promo[j+1].admis; promo[j+1].admis := tmp_admis;
+            Fsi
+        FinPour
+    FinPour
+Fin;
+
+Procedure Afficher_Rapport(promo[10] : Etudiant, n : Entier)
+Var i : Entier;
+Debut
+    Ecrire("\n+------+----------------------+-------+-------+----------+\n");
+    Ecrire("| ID   | NOM                  | NOTE  | RANG  | STATUS   |\n");
+    Ecrire("+------+----------------------+-------+-------+----------+\n");
+    Pour i := 0 a n - 1 Faire
+        Ecrire("| "); Ecrire(promo[i].identifiant); Ecrire("    | ");
+        Ecrire(promo[i].nom); 
+        // Compensation simple pour l'alignement
+        Si Longueur(promo[i].nom) < 20 Alors Pour j := 1 a (20 - Longueur(promo[i].nom)) Faire Ecrire(" "); FinPour Fsi
+        Ecrire(" | "); Ecrire(promo[i].note); Ecrire("  | ");
+        Ecrire(promo[i].rang); Ecrire("     | ");
+        Si promo[i].admis Alors Ecrire("ADMIS"); Sinon Ecrire("REFUSE"); Fsi
+        Ecrire("    |\n");
+    FinPour
+    Ecrire("+------+----------------------+-------+-------+----------+\n");
+Fin;
+
+Algorithme Gestion_Etudiants_Avancee;
+Var
+    promo[10] : Etudiant;
+    n, i, best : Entier;
+    moy : Reel;
+
+Debut
+    n := 6;
+    
+    // Initialisation
+    promo[0].identifiant := 101; promo[0].nom := "Zinou";   promo[0].note := 15.5;
+    promo[1].identifiant := 102; promo[1].nom := "Merzak";  promo[1].note := 18.0;
+    promo[2].identifiant := 103; promo[2].nom := "Ahmed";   promo[2].note := 12.5;
+    promo[3].identifiant := 104; promo[3].nom := "Samy";    promo[3].note := 09.0;
+    promo[4].identifiant := 105; promo[4].nom := "Yacine";  promo[4].note := 14.0;
+    promo[5].identifiant := 106; promo[5].nom := "Amine";   promo[5].note := 11.5;
+
+    Ecrire("=== Gestion des Etudiants (Avant Traitement) ===\n");
+    
+    // 1. Determiner les admissions
+    Determiner_Admissions(promo, n, 10.0);
+    
+    // 2. Calculer la moyenne
+    moy := Reel_Calculer_Moyenne(promo, n);
+    
+    // 3. Trier par note pour etablir les rangs
+    Trier_Par_Note(promo, n);
+    Pour i := 0 a n - 1 Faire
+        promo[i].rang := i + 1;
+    FinPour
+    
+    // 4. Afficher le rapport complet
+    Afficher_Rapport(promo, n);
+    
+    // 5. Statistiques finales
+    Ecrire("\nStatistiques de la promotion :\n");
+    Ecrire("  - Moyenne Generale : "); Ecrire(moy); Ecrire("\n");
+    
+    best := Entier_Trouver_Meilleur(promo, n);
+    Ecrire("  - Meilleur Etudiant : "); Ecrire(promo[best].nom);
+    Ecrire(" (Note: "); Ecrire(promo[best].note); Ecrire(")\n");
+    
+    Ecrire("\nFin du programme.\n");
+Fin.

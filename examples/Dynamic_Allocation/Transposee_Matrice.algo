@@ -1,0 +1,61 @@
+Algorithme TransposeeMatriceDynamique;
+Var
+    matrice : ^^Entier;
+    transposee : ^^Entier;
+    lignes, colonnes, i, j : Entier;
+
+Debut
+    lignes := 2;
+    colonnes := 3;
+    
+    Ecrire("--- Probleme: Transposee d'une Matrice Dynamique ---", "\n");
+    Ecrire("Matrice originale A (", lignes, "x", colonnes, ")", "\n");
+    
+    // Allouer la matrice originale A (2x3)
+    matrice := allouer(lignes * taille(^Entier));
+    Pour i := 0 a lignes-1 Faire
+        matrice[i] := allouer(colonnes * taille(Entier));
+        Pour j := 0 a colonnes-1 Faire
+            // Remplissage avec des valeurs fictives
+            matrice[i][j] := (i + 1) * 10 + j;
+        FinPour
+    FinPour
+    
+    // Affichage Matrice A
+    Pour i := 0 a lignes-1 Faire
+        Ecrire("[ ", matrice[i][0], " , ", matrice[i][1], " , ", matrice[i][2], " ]", "\n");
+    FinPour
+    
+    // Allouer la matrice Transposee (3x2)
+    Ecrire("\nAllocation de la transposee A_T (", colonnes, "x", lignes, ")", "\n");
+    transposee := allouer(colonnes * taille(^Entier));
+    Pour i := 0 a colonnes-1 Faire
+        transposee[i] := allouer(lignes * taille(Entier));
+    FinPour
+    
+    // Remplir la transposee (intervertir les indices i et j)
+    Pour i := 0 a lignes-1 Faire
+        Pour j := 0 a colonnes-1 Faire
+            transposee[j][i] := matrice[i][j];
+        FinPour
+    FinPour
+    
+    // Affichage Transposee
+    Ecrire("\nMatrice Transposee resultante:", "\n");
+    Pour i := 0 a colonnes-1 Faire
+        Ecrire("[ ", transposee[i][0], " , ", transposee[i][1], " ]", "\n");
+    FinPour
+    
+    // Liberation de la memoire globale de tout le programme
+    Pour i := 0 a lignes-1 Faire
+        liberer(matrice[i]);
+    FinPour
+    liberer(matrice);
+    
+    Pour i := 0 a colonnes-1 Faire
+        liberer(transposee[i]);
+    FinPour
+    liberer(transposee);
+    
+    Ecrire("\nMemoire nettoye.", "\n");
+Fin.

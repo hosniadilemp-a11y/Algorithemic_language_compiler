@@ -1,0 +1,129 @@
+// ================================================================
+// TUTORIEL : La File (FIFO - First In First Out)
+// ================================================================
+// Ce programme implémente les primitives de base d'une file
+// utilisant une liste chaînée avec deux pointeurs (Tête et Queue) :
+// 1. Initialisation
+// 2. Enfiler (Enqueue)
+// 3. Défiler (Dequeue)
+// 4. Premier (Front)
+// 5. EstVide (IsEmpty)
+// ================================================================
+
+Type Element = Enregistrement
+Debut
+    val  : Entier;
+    suiv : ^Element;
+Fin;
+
+Type File = Enregistrement
+Debut
+    tete  : ^Element;
+    queue : ^Element;
+    nombre : Entier;
+Fin;
+
+// --- 1. Primitives de Gestion ---
+
+Procedure Initialiser_File(Var F : File)
+Debut
+    F.tete := NIL;
+    F.queue := NIL;
+    F.nombre := 0;
+Fin;
+
+Fonction Booleen_Est_Vide(F : File) : Booleen
+Debut
+    Retourner(F.tete = NIL);
+Fin;
+
+Procedure Enfiler(Var F : File, v : Entier)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->val := v;
+    n->suiv := NIL;
+    
+    Si Booleen_Est_Vide(F) Alors
+        F.tete := n;
+        F.queue := n;
+    Sinon
+        F.queue->suiv := n;
+        F.queue := n;
+    Fsi
+    F.nombre := F.nombre + 1;
+Fin;
+
+Procedure Defiler(Var F : File, Var v : Entier)
+Var tmp : ^Element;
+Debut
+    Si Booleen_Est_Vide(F) Alors
+        Ecrire("[ERREUR] File Vide ! Impossible de defiler.\n");
+    Sinon
+        tmp := F.tete;
+        v := tmp->val;
+        F.tete := tmp->suiv;
+        
+        Si F.tete = NIL Alors
+            F.queue := NIL;
+        Fsi
+        
+        liberer(tmp);
+        F.nombre := F.nombre - 1;
+    Fsi
+Fin;
+
+Fonction Entier_Premier_Element(F : File) : Entier
+Debut
+    Si Booleen_Est_Vide(F) Alors Retourner(-1); Sinon Retourner(F.tete->val); Fsi
+Fin;
+
+// --- 2. Procedure de Consultation ---
+
+Procedure Afficher_File(F : File)
+Var curr : ^Element;
+Debut
+    Ecrire("ETAT FILE (Tete -> Queue) : ");
+    Si Booleen_Est_Vide(F) Alors
+        Ecrire("(Vide)\n");
+    Sinon
+        curr := F.tete;
+        TantQue curr <> NIL Faire
+            Ecrire(curr->val);
+            curr := curr->suiv;
+            Si curr <> NIL Alors Ecrire(" -- "); Fsi
+        FinTantQue
+        Ecrire("\n");
+    Fsi
+Fin;
+
+Algorithme Tutoriel_Files_FIFO;
+Var
+    f : File;
+    v : Entier;
+
+Debut
+    Initialiser_File(f);
+    
+    Ecrire("=== TUTORIEL SUR LES FILES ===\n\n");
+    
+    Ecrire("1. Enfilement de 100, 200, 300 :\n");
+    Enfiler(f, 100);
+    Enfiler(f, 200);
+    Enfiler(f, 300);
+    Afficher_File(f);
+
+    Ecrire("\n2. Premier element de la file : ");
+    Ecrire(Entier_Premier_Element(f)); Ecrire("\n");
+
+    Ecrire("\n3. Defilement d'un element :\n");
+    Defiler(f, v);
+    Ecrire("Element retire : "); Ecrire(v); Ecrire("\n");
+    Afficher_File(f);
+
+    Ecrire("\n4. Ajout de 400 :\n");
+    Enfiler(f, 400);
+    Afficher_File(f);
+
+    Ecrire("\nFin du tutoriel.\n");
+Fin.

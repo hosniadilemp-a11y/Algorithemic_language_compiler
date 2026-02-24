@@ -1,0 +1,88 @@
+Algorithme IntroductionPointeurs;
+// ============================================================
+// Exemple : Notions Fondamentales sur les Pointeurs
+// Couvre :
+//   - Declaration d'un pointeur  (^Type)
+//   - Referencement              ptr := &variable
+//   - Dereferencement            ptr^  (lire la valeur pointee)
+//   - Modification via pointeur  ptr^ := nouvelle_valeur
+//   - Pointeur de pointeur       ^^Type
+//   - Pointeur nul               NIL
+// ============================================================
+
+Var
+    // Variable ordinaire
+    valeur     : Entier;
+    autre      : Entier;
+
+    // Pointeur simple vers un Entier
+    ptr        : ^Entier;
+
+    // Double pointeur (pointeur vers un pointeur)
+    pptr       : ^^Entier;
+
+Debut
+    Ecrire("=== Introduction aux Pointeurs ===\n\n");
+
+    // ---------------------------------------------------------
+    // 1. INITIALISATION D'UNE VARIABLE
+    // ---------------------------------------------------------
+    valeur := 42;
+    autre  := 7;
+    Ecrire("valeur = ");
+    Ecrire(valeur);
+    Ecrire(",  autre = ");
+    Ecrire(autre);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 2. REFERENCEMENT : ptr pointe vers 'valeur'
+    //    ptr := &valeur  -> ptr contient l'adresse de valeur
+    // ---------------------------------------------------------
+    ptr := &valeur;
+    Ecrire("Apres  ptr := &valeur :\n");
+    Ecrire("  ptr^ (dereference) = ");
+    Ecrire(ptr^);   // lit la valeur a l'adresse stockee dans ptr
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 3. MODIFICATION VIA LE POINTEUR (dereferencement gauche)
+    //    ptr^ := 100  -> change la valeur de 'valeur' indirectement
+    // ---------------------------------------------------------
+    ptr^ := 100;
+    Ecrire("Apres  ptr^ := 100 :\n");
+    Ecrire("  valeur = ");
+    Ecrire(valeur);   // valeur a change via le pointeur
+    Ecrire("  (modifie via ptr)\n\n");
+
+    // ---------------------------------------------------------
+    // 4. REDIRECTION DU POINTEUR
+    //    ptr peut maintenant pointer vers une autre variable
+    // ---------------------------------------------------------
+    ptr := &autre;
+    Ecrire("Apres  ptr := &autre :\n");
+    Ecrire("  ptr^ = ");
+    Ecrire(ptr^);   // maintenant pointe vers 'autre'
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 5. DOUBLE POINTEUR (pointeur vers un pointeur)
+    //    pptr pointe vers ptr, qui pointe vers autre
+    // ---------------------------------------------------------
+    pptr := &ptr;
+    Ecrire("Double pointeur  pptr := &ptr :\n");
+
+    Ecrire("  valeur de  ptr   = ");
+    Ecrire(ptr^);
+    Ecrire("\n");
+
+    // ---------------------------------------------------------
+    // 6. POINTEUR NUL (NIL)
+    //    Un pointeur non initialise doit etre mis a NIL
+    // ---------------------------------------------------------
+    ptr := NIL;
+    Ecrire("Apres  ptr := NIL  (pointeur nul)\n");
+    Ecrire("  ptr vaut : NIL (ne pointe vers rien)\n\n");
+
+    Ecrire("=== Fin; ===\n");
+Fin.

@@ -1,0 +1,42 @@
+Algorithme Tutoriel_Allocation_Dynamique;
+// Type
+//     // 1. Déclaration de Types Enregistrements
+//     // Les types Enregistrement permettent de créer des structures de données complexes.
+//     // Syntaxe : Type nomDuType = Enregistrement .. Fin; Enregistrement
+//     Cellule = Enregistrement
+//         valeur : Entier;
+//         suivant : ^Cellule; // Pointeur vers une autre Cellule
+//     Fin; Enregistrement;
+// 
+// Var
+//     // 2. Déclaration de Pointeur vers un Type Enregistrement
+//     liste : ^Cellule;
+Debut
+    Ecrire("=== 🔗 Tutoriel : Allocation Dynamique ===\n");
+    Ecrire("\n");
+
+    Ecrire("REMARQUE: Le compilateur ne supporte pas encore les Enregistrements (Records).\n");
+    
+    // // 3. Allocation de mémoire pour l'enregistrement
+    // // On demande à l'ordinateur de nous prêter de l'espace pour une variable de type 'Cellule'
+    // Allouer(liste);
+    // 
+    // // 4. Initialisation des champs
+    // // On accède aux champs d'un enregistrement via un pointeur avec '.^'
+    // liste^.valeur <- 10;
+    // // On indique que cette cellule est la dernière (pointe vers 'NIL')
+    // liste^.suivant <- NIL;
+    // 
+    // Ecrire("La cellule contient la valeur : ", liste^.valeur, "\n");
+    
+    Ecrire("\n");
+    Ecrire("La mémoire est gérée par le programmeur en C, Pascal ou Algo !\n");
+    
+    // // 5. Libération de mémoire (IMPORTANT)
+    // // Toujours vérifier que l'on libère ce qu'on alloue
+    // Liberer(liste);
+    // Ecrire("La mémoire a été libérée.\n");
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur l'allocation dynamique.\n");
+Fin.

@@ -1,0 +1,52 @@
+Algorithme Tutoriel_Bases;
+Var
+    // 1. Déclaration des variables
+    // Les variables stockent des informations.
+    // Types disponibles : Entier, Reel, Booleen, Chaine.
+    age : Entier;
+    nom[50] : Chaine;
+    estMajeur : Booleen;
+    i : Entier;
+
+Debut
+    // 2. Affichage et Lecture (E/S)
+    Ecrire("=== 🟢 Tutoriel : Les Bases de l'Algorithmique ===\n");
+    Ecrire("\n");
+    Ecrire("Entrez votre nom : ");
+    Lire(nom);
+    
+    Ecrire("Entrez votre âge : ");
+    Lire(age);
+
+    // 3. Les Conditions (Si ... Alors ... Sinon)
+    Si age >= 18 Alors
+        estMajeur <- Vrai;
+        Ecrire("Bonjour ", nom, ", vous êtes majeur !\n");
+    Sinon
+        estMajeur <- Faux;
+        Ecrire("Bonjour ", nom, ", vous êtes mineur.\n");
+    Fsi
+    
+    Ecrire("\n");
+    Ecrire("--- Les Boucles ---\n");
+    // 4. Les Boucles (Pour, Tant Que)
+    // Boucle Pour : Utilisée quand on connaît le nombre d'itérations.
+    Ecrire("Comptage avec Pour :\n");
+    Pour i <- 1 a 3 Faire
+        Ecrire(i, "...\n");
+    FinPour
+    Ecrire("Go !\n");
+    
+    Ecrire("\n");
+    
+    // Boucle Tant Que : Utilisée quand on ne connaît pas le nombre d'itérations.
+    i <- 1;
+    Ecrire("Boucle Tant Que (jusqu'à 3) :\n");
+    Tant Que i <= 3 Faire
+        Ecrire("Tour numéro : ", i, "\n");
+        i <- i + 1;
+    FinTantQue
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur les bases.\n");
+Fin.

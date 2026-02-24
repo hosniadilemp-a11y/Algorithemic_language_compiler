@@ -1,0 +1,4556 @@
+=== FILE: Chapitre 1 Le langage algorithmiqueH.pptx ===
+
+--- Slide 1 ---
+Chapitre 1 
+Le langage algorithmique
+2ème Année MI
+
+ 
+<number>
+
+--- Slide 2 ---
+
+
+1. Définitions :
+
+C’est un nombre fini d’instructions à appliquer dans un ordre déterminé à un nombre fini de données permettant d’atteindre un résultat correct ou exacte.  « dictionnaire informatique »
+
+
+
+
+<number>
+
+--- Slide 3 ---
+2- Propriétés d’un algorithme :
+Chaque algorithme doit vérifier les 3 propriétés suivantes :
+
+A- Justesse : un algorithme juste donne toujours le bon résultats quelque soit les données en entrée, le concepteur doit prévoir tous les cas possible.
+
+B- Clarté : un algorithme non clair est embrouillé est très difficile à lire et à modifier même par son concepteur et quasiment impossible par d’autre personnes.
+
+C- Efficacité : c’est la mesure la plus importante, comme il existe parfois plusieurs solutions on peut parler de la meilleure. Donc un algorithme est le plus efficace s’il permet de résoudre le problème donné tout en utilisant le moins d’espace mémoire possible et en donnant les résultats le plus rapidement possible aussi.
+
+
+
+
+<number>
+
+--- Slide 4 ---
+3. Structure générale d’un algorithme :
+
+ algorithme  <identificateur> ;                         
+      <déclaration des constantes> ;
+      <déclaration des variables> ;                    
+ debut
+      <partie instruction> ;                 
+ fin.
+<number>
+
+--- Slide 5 ---
+<number>
+3.1.  Un identificateur :
+Un identificateur est une suite de caractères alphanumériques (a..z, A..Z, 0..9), les autres caractères ne sont pas autorisés sauf (‘_’ tiré 8). Il doit respecter les condition suivantes : 
+ - Il commence obligatoirement par une lettre alphabétique. 
+ - Pas d’espace entre ses caractères
+- Il ne doit pas être un mot clé comme : algorithme, debut,  
+  fin, …etc. (les mots clés seront étudiés au fur et à mesure).
+ - Il vaut mieux choisir des identificateurs significatifs
+Exemple :
+a, b , alpha, s10, som_div, som  : sont des identificateurs correctes.
+3v, a3-x, livré, µ ,π  , som div : sont des identificateurs incorrectes
+
+
+--- Slide 6 ---
+<number>
+
+3.2 . Déclaration des constantes :
+
+Une constante est un objet auquel on attribue une valeur à la déclaration. Sa valeur ne peut pas être modifiée tout au long d’un algorithme.  Sa syntaxe  de déclaration est :
+
+
+
+Le mot clé cons s’écrit une seule fois dans l’algorithme quelque soit le nombre de constantes.
+
+Exemples :
+  const   n=100;
+                pi=3.14;
+                lettre =‘f’;
+                module = ‘’informatique’’;
+
+
+const   <identificateur>  =  <valeur> ;
+
+--- Slide 7 ---
+<number>
+3.2 . Déclaration des variables :
+
+Une variable est un objet dont sa valeur peut être modifiée dans l’algorithme selon besoin. Sa déclaration est précédée par le mot clé var. Sa syntaxe de déclaration est :
+
+
+
+Le mot clé var s’écrit une seule fois dans un algorithme quelque soit le nombre de variables.
+
+ <liste_variables> : peut contenir une variable ou plusieurs  variables séparées par des virgules.
+ <type> : les types de bases et leur syntaxe sont :
+var  <liste_variables>  :  <type> ;
+
+--- Slide 8 ---
+<number>
+Exemples:
+var  x : entier;                                    
+var  x, y : caractere;     
+var  x : entier;
+             y, z : reel;
+
+--- Slide 9 ---
+<number>
+Une variable du type caractère possède 256 valeurs . Donc, elle appartient à l’ensemble fini suivant. 
+{'a', 'b',…, 'z'} {{'A', 'B',…, 'Z'}  {'0', '1',…, '9'}  {'. ', '? ', '! ', '\', …}
+Chaque  caractère a un code ASCII (un chiffre qui le représente).
+Les opérations de comparaisons (=, < >, <, <=, >, >=) sont possibles sur ce type. 
+La comparaison se fait en se basant sur la position du caractère dans la table ASCII ('0‘<'1'<…<'9'<'A'<…<‘Z‘….. <'a'<…<'z' ….).
+
+--- Slide 10 ---
+<number>
+Opérations sur les entiers :
+Les opérations arithmétiques  :
+     +   : addition
+     -    : soustraction
+     *   : multiplication
+     /    : division réelle
+     div : division entière
+     mod : reste de la division entière.
+ 
+Exemple : 
+      5 + 2  donne  7
+      5 - 2  donne  3
+      5*2  donne  10
+      5/2  donne  2.5         
+      5 div 2  donne  2
+      5 mod 2  donne  1
+
+--- Slide 11 ---
+<number>
+
+Les opérations de comparaison  :
+
+     =    : égalité
+     <>  : différence
+     <    : inférieur strictement
+     <=  : inférieur ou égale
+     >    : supérieur strictement
+     >=  : supérieur ou égale.
+
+--- Slide 12 ---
+<number>
+Opération sur les réels :
+Les opérations sur les réels sont les mêmes que celles définies sur les entiers, excepté le div et le mod qui s’appliquent que sur les entiers.
+Opération sur les caractères :
+Les opérations possibles sur les caractères sont les opérations de comparaisons (=, <>, <, <=, >, >=) et la comparaison se fait en se basant sur la position du caractère dans la table ASCII 
+   ‘0’<‘1’<…<‘9’<‘A’<…<‘Z’ <………..<‘a’<…<‘z’ ….
+Opération sur les booléens :
+Les opérations possibles sur les booléens sont les opérations logiques suivantes   :  
+NON : la négation logique
+OU :  le ou logique
+ET : le et logique
+
+
+--- Slide 13 ---
+
+   
+   ()
+ 
+ 
+ 
+*     /        div        mod   
+ 
+ 
++       - 
+Elevée
+Faible
+
+Ordre de priorité des opérateurs arithmétiques :
+Le calcul d’une expression se fait de de la priorité la plus élevée à la priorité la plus faible . 
+Les opérateurs qui se trouvent sur le même niveau ont la même priorité, leur calculs se fait de gauche à droite.
+13
+
+--- Slide 14 ---
+
+   
+   ()
+
+ 
+   non
+
+   et
+
+   ou 
+Elevée
+Faible
+
+Ordre de priorité des opérateurs logiques : 
+Le calcul d’une expression se fait de de la priorité la plus élevée à la priorité la plus faible . 
+Les opérateurs qui se trouvent sur le même niveau ont la même priorité, leur calculs se fait de gauche à droite.
+14
+
+--- Slide 15 ---
+
+Exemple : 
+Donner le résultat des expressions suivantes :
+
+a=4+5*6
+b=(4+5)*6
+x=Vrai ou Vrai et Faut
+y=(Vrai ou Vrai) et Faut
+
+Solution :
+a=4+30 = 34
+b=9*6 = 54
+x=Vrai ou Faut= Vrai
+y=Vrai et Faut = Faut
+15
+
+--- Slide 16 ---
+<number>
+3.3.1. L’instruction d’affectation :
+l’affectation permet de mettre le résultat d’une expression dans une variable. Pour le faire, on peut utiliser le symbole :    ou le symbole  :=
+
+On peut alors utiliser la syntaxe 1 :
+                         
+Ou bien la syntaxe 2 : 
+
+Dans notre  cours on va utiliser la syntaxe 2 ( qui utilise le symbole  :=  )
+
+<expression> peut être :
+ Une valeur
+ Une constante
+ Une variable
+ Une expression arithmétique ou logique
+
+3.3. Partie instruction :
+Elle constitue l’ensemble des instructions à appliquer pour résoudre le problème.
+variable  <expression> ;
+variable := <expression> ;
+
+--- Slide 17 ---
+<number>
+
+Exemple :
+
+const  N=10;
+car a,b,d : entier;
+                x : reel;
+
+    a := 10;                            /* valeur */
+    b := N;                             /* constante */
+    d := a;                              /* variable */
+    x := a/2 + 2*N – 20;       /* expression */
+
+--- Slide 18 ---
+<number>
+3.3.2.  L’instruction de Lecture  :
+
+Cette instruction permet de lire des valeurs à partir du clavier et les stocker dans des variables.
+
+Syntaxe :
+                         
+
+<liste_variable> :  est soit une variable ou plusieurs séparées par des virgules.
+
+Exemple : lire(a);    lire(x, y); lire(a, x, y);
+
+lire ( <liste_variable> ) ;
+
+--- Slide 19 ---
+<number>
+3.3.3. L’instruction d’écriture :
+L’instruction ecrire permet d’afficher à l’écran un ou plusieurs objets.
+
+Syntaxe :
+                         
+
+
+<liste_objets> :  est soit un objet ou plusieurs séparés par des virgules. Un objet peut être une valeur, une constante, une variable, une expression arithmétique, une constante chaine de caractères, ou leur combinaison.
+
+ecrire( <liste_objets> ) ;
+
+--- Slide 20 ---
+<number>
+Pour bien comprendre l’instruction d’écriture, nous présentons dans le tableau suivant quelques exemples d’écritures et leurs affichages sur écran :
+
+Soir x et y deux variables, avec x=5 et  y=8
+
+
+--- Slide 21 ---
+<number>
+
+
+Exercice 1 :
+
+Ecrire un algorithme qui permet de lire deux entiers x et y, puis calcule et affiche leur somme. 
+
+
+--- Slide 22 ---
+<number>
+
+3.3.4. Instructions conditionnelles :
+
+Une instruction conditionnelle est une instruction qui permet de réaliser un test (condition) et d’exécuter ou non un groupe d’instruction selon la valeur du test réalisé. La condition est une expression booléenne (dont l’évaluation donne soit vrai ou faux).
+
+On distingue 4 formes :
+1- conditionnelle simple.
+2- conditionnelle alternative.
+3- conditionnelle imbriquée.
+4- conditionnelle à choix multiple.
+
+--- Slide 23 ---
+<number>
+
+--- Slide 24 ---
+<number>
+Remarque : 
+Une condition peut être simple ou composée de plusieurs conditions reliées entre elles par des opérateurs logiques ( ou, et ).
+
+Un bloc d’instructions peut contenir une ou plusieurs instructions.
+
+Si un bloc d’instructions contient une seule instruction seulement, alors début et fin peuvent être enlevés.
+
+--- Slide 25 ---
+<number>
+Exercice 2 : 
+Ecrire un algorithme qui lit la moyenne d’un élève (on suppose que la moyenne est supérieure à 0). Puis, affiche son orientation (MI ou ST). 
+Un élève est orienté vers la spécialité MI si sa moyenne est supérieur à 12. Sinon, il est orienté vers la spécialité ST. 
+
+--- Slide 26 ---
+<number>
+Exercice 3 : 
+Ecrire l’algorithme qui permet de lire le degré d’un angle. Puis, d’afficher son type : aigu, droit, obtus, plat ou rentrant.
+
+Indication :
+- Un angle est aigu si son degré < 90.
+- Un angle est droit si son degré = 90.
+- Un angle est obtus si son degré >90 et <180.
+- Un angle est plat si son degré =180.
+- Un angle est rentrant si son degré est >180 et <360. 
+
+--- Slide 27 ---
+<number>
+ Conditionnelle à choix multiple.
+L’instruction conditionnelle à choix multiple est utilisée lorsqu’une expression prend des valeurs dans un ensemble fini et pour chaque valeur, un ensemble d’instructions est exécuté.
+
+--- Slide 28 ---
+<number>
+
+Fonctionnement : 
+
+Si la de valeur <expression> = valeur 1 alors c’est le Bloc1 d’instructions qui est exécuté, 
+Sinon, Si la de valeur <expression> = valeur 2 alors c’est le Bloc2 d’instructions qui est exécuté
+ …….
+Sinon, Si la de valeur <expression> = Valeur n alors c’est la Blocn d’instructions qui est exécuté.
+
+Remarques: 
+Si un bloc d’instructions contient une seule instruction seulement, alors début et fin peuvent être enlevés.
+La partie sinon est facultative si elle existe et la valeur de <expression> est différente de valeur 1 , valeur 2 , …, valeur n alors c’est le Blocn+1 d’instructions qui est exécuté.
+
+
+
+
+--- Slide 29 ---
+<number>
+
+Exercice  4 : 
+Ecrire l’algorithme qui permet de lire un nombre entier x. Puis, d’afficher ce chiffre en lettres s’il est compris entre 1 et 5, sinon d’afficher le message « ce nombre n’est pas entre un et cinq ».
+
+
+--- Slide 30 ---
+<number>
+
+Exercice  en plus : 
+Variable  Note : numérique 
+Lire (Note) 
+Selon Que       
+       Note > 10 : Ecrire « passable »
+       Note > 12 : Ecrire « assez bien »
+      Note > 14 : Ecrire « bien »
+       Note > 16 : Ecrire « très bien »
+Sinon : Ecrire « ajourné » 
+Fin Selon Que
+
+-C’est quoi le problème dans cette écriture ? Réécrire l’action Mention en utilisant seulement des si-alors sinon.
+
+
+
+--- Slide 31 ---
+<number>
+
+Exercice  en plus : 
+Variable Note : numérique Lire Note Si Note > 16 alors Ecrire « Très bien » Sinon       Si Note > 14 alors Ecrire « Bien »       Sinon                  Si Note > 12 alors Ecrire « Assez Bien »             Sinon                        Si Note > 10 alors Ecrire « Passable »                   Sinon Ecrire « Ajourné »                   Fsi                  Fsi            Fsi      Fsi 
+
+
+--- Slide 32 ---
+<number>
+
+Exercice  en plus : 
+◼ Ecrire un algorithme qui lit deux nombres, une opération arithmétique (+, -, *, /) et affiche le résultat de l’opération.
+◼ Ecrivez un algorithme qui lit deux valeurs entières (A et B) au clavier
+et qui affiche le signe du produit de A et B sans faire la multiplication.
+◼ Ecrivez un algorithme qui lit trois valeurs entières (A, B et C) au
+clavier. Triez les valeurs A, B et C par échanges successifs de manière
+à obtenir : val(A) val(B) val(C)
+◼ Ecrivez un algorithme qui lit deux valeurs entières (A et B) au clavier
+et qui affiche le signe de la somme de A et B sans faire l'addition.
+Utilisez la fonction abs. abs(-2) = 2
+
+
+--- Slide 33 ---
+<number>
+
+Exercice 4.1  : 
+Ecrire l’algorithme qui permet de lire et afficher la somme de 5 nombres entier. 
+
+
+--- Slide 34 ---
+<number>
+
+algorithme Exercice 4.1;                         
+      var a1,a2, a3 ,a4, a5, somme: entier;
+Debut
+	 somme:=0;
+	lire(a1);
+	somme:= somme + a1;
+	lire(a2);
+	somme:= somme + a2;
+	lire(a3);
+	somme:= somme + a3;
+	lire(a4);
+	somme:= somme + a4;
+	lire(a5);
+	somme:= somme + a5;
+                   ecrire(somme);
+ fin.
+
+Exercice 4.1  : 
+
+
+algorithme Exercice 4.1;                         
+      var A, somme, i: entier;
+Debut
+	 somme:=0;
+	pour i :=  1 a  5 faire
+	debut
+	    lire(A);
+	    somme:= somme + A;
+	 fin ;
+                  ecrire(somme);
+ fin.
+
+--- Slide 35 ---
+<number>
+
+3.3.5. Instructions itératives :
+
+Les instructions itératives ou boucles sont des instructions composées qui permettent de répéter plusieurs fois un bloc d’instructions.
+
+Il existe trois formes de boucles :
+
+                     1- La boucle    pour
+                     2- La boucle    tant que 
+                     3- La boucle    repeter   jusqu’a
+
+--- Slide 36 ---
+<number>
+Où:
+<compteur> : est une variable qui contrôle le nombre de répétitions. Elle possède une valeur initiale et une valeur finale.
+< Exp_1> et < Exp_2> : représentent respectivement la valeur initiale et la valeur finale du compteur. Chacune peut être une valeur simple ou le résultat d’une expression arithmétique.
+<compteur> , < Exp_1> et < Exp_2> : peuvent être de type entier ou caractère. 
+3.4.1.  La boucle « pour »  :
+Syntaxe :
+
+--- Slide 37 ---
+<number>
+Remarque : 
+ Le nombre de répétitions=valeur finale-valeur initiale +1.
+
+ A la sortie de la boucle, le compteur =valeur finale+1.
+
+Le compteur s’incrémente automatiquement de 1 sans rajouter l’instruction : i := i+1.
+
+Si un bloc d’instructions contient une seule instruction seulement, alors début et fin peuvent être enlevés.
+
+
+--- Slide 38 ---
+<number>
+
+Exercice 4.1  : 
+
+	
+
+algorithme Exercice 4.1;                         
+ var A, somme, i: entier;
+Debut
+	 somme:=0;
+	pour i :=  1 a  5 faire
+	debut
+	    lire(A);
+	    somme:= somme + A;
+	 fin ;
+                  ecrire(somme);
+ fin.
+
+
+
+--- Slide 39 ---
+<number>
+
+Exercice 5 : 
+Ecrire un algorithme qui permet de lire deux entiers a et b (un entier peut être positif ou négatif). Puis, d’afficher leur produit sans utiliser l’opérateur de multiplication, étudier les deux cas, (positif ou négatif). 
+
+--- Slide 40 ---
+<number>
+
+Exercice 5.1  : 
+Écrivez un algorithme qui vous permet de lire une série de nombres entiers. Jusqu'à ce que leur somme soit supérieure à 30.
+
+
+--- Slide 41 ---
+<number>
+La condition de répétition doit être initialisée avant la boucle.
+Dans le bloc d’instructions, il faut avoir une instruction qui permet la modification de la condition (pour ne pas avoir une boucle infinie).
+Remarque : 
+Si un bloc d’instructions contient une seule instruction seulement, alors début et fin peuvent être enlevés.
+3.4.2.  La boucle « tant que »  :
+Syntaxe :
+
+--- Slide 42 ---
+<number>
+
+Exercice 5.1  : 
+
+	
+
+algorithme Exercice 5.1;                         
+ var A, somme, i: entier;
+Debut
+	 somme:=0;i:=0;
+     tant que somme <= 30 faire
+	debut
+	    lire(A);
+	    somme:= somme + A;
+	    i:=i+1;
+	 fin ;
+                  ecrire(i);
+ fin.
+
+
+
+--- Slide 43 ---
+<number>
+
+
+Exercice 6 : 
+Ecrire un algorithme qui permet de lire deux entiers positifs a et b (b≠0). Puis, de calculer le quotient et le reste de a par b sans utiliser l’opérateur de la division ( utiliser que des soustractions).
+
+
+--- Slide 44 ---
+<number>
+La condition de répétition doit être initialisée avant ou à l’intérieur de la boucle.
+Dans le bloc d’instructions, il faut avoir une instruction qui permet la modification de la condition (pour ne pas avoir une boucle infinie).
+Remarque: 
+Si un bloc d’instructions contient une seule instruction seulement, alors début et fin peuvent être enlevés.
+3.4.3.  La boucle « repeter jusqu’à »  :
+Syntaxe :
+
+--- Slide 45 ---
+<number>
+
+
+Exercice 7 : 
+Ecrire un algorithme qui permet de lire deux entiers positifs a et b (b <= a), contrôler la lecture dans l’algorithme. Puis, de calculer et d’afficher le quotient et le reste de a par b sans utiliser l’opérateur de la division (utiliser que des soustractions).
+
+
+--- Slide 46 ---
+<number>
+
+Choix de la boucle à utiliser :
+
+Choisir entre les trois boucles
+
+
+--- Slide 47 ---
+<number>
+
+Choix de la boucle à utiliser :
+Pour choisir entre les trois boucles on passe par les questions suivantes :
+
+est ce qu’on connait le nombre d’itérations ? si oui c’est la boucle pour qu’il faudra utiliser (étant la plus simple).
+sinon : est ce que le nombre d’itérations est  >=1 ? Si oui c’est la boucle repeter jusq’a qu’il faudra utiliser, parce que on a au mois une itération quelle que soit la condition. 
+sinon on utilise la boucle tant que.
+
+--- Slide 48 ---
+<number>
+Les commentaires :
+Les commentaires ne sont pas des instructions mais juste des explications qu’on introduit dans un algorithme pour expliquer l’utilité de certains objets ou le travail fait par un sous ensemble d’instructions … . Il existe deux façons de faire un commentaires :
+
+ 1. Un commentaire commence par /* et se termine par */
+     Dans le cas d’un commentaire écrit sur plusieurs lignes.
+
+ 2. Un commentaire qui commence par  //
+       Dans le cas d’un commentaire écrit sur une seule ligne.
+
+Exemple :
+x := y ; // veut dire que la variable x reçoit la valeur de la variable y
+x := y+z*w ; /*cette instruction arithmétique contient 02 opérateurs. Pour l’évaluer, il faut prendre en considération la priorité, la multiplication est plus prioritaire que l’addition */ 
+
+
+=== FILE: Chapitre 10 Les files.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 10:
+Les files
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+2
+Dans quelques applications informatiques, on nécessite le traitement des données dans l’ordre de leur arrivée où la première donnée ajoutée sera la première traitée.
+Exemple: Gestion des ressources informatique (gestion des imprimantes, ….).
+
+Donc, il est nécessaire d’utiliser une nouvelle structure de données, appelée File.
+1. Introduction:
+
+--- Slide 3 ---
+3
+Une file est une structure de données fondée sur le principe «première donnée ajoutée est la première extraite » (FIFO: First In First Out). Elle contient des données qui sont du même type (simples ou structurées).
+L’ajout d’élément se fait par la queue et le retrait se fait par la tête (on retire le premier élément de la file). L’accès à un élément quelconque se fait après le retrait de tous les éléments qui le précèdent.
+Donc, une file doit être repéré par la tête et la queue.
+
+2. Définition d’une file:
+Retrait
+Ajout
+
+
+
+--- Slide 4 ---
+4
+ Gestion d’impression.
+Système multitâches.
+Les files d’attente. 
+ 
+
+3. Les domaines d’application des piles:
+
+--- Slide 5 ---
+
+
+
+
+
+
+
+
+
+
+5
+4. Les primitives de manipulation:
+Pour pouvoir manipuler les files, on utilise les primitives  suivantes:
+ Initialisation d’une file.
+ Ajout d’un élément.
+ Retrait d’un élément.
+ Consultation du premier élément.
+ Test de l’état de la file.
+Dans ce qui suit, on va détailler chaque primitive.
+
+
+
+
+ 
+
+--- Slide 6 ---
+
+
+
+
+
+
+
+
+
+
+6
+4.1. Initialisation d’une file:
+Permet d’ouvrir une file vide. Sa syntaxe est:
+
+
+
+
+ 
+
+--- Slide 7 ---
+
+
+
+
+
+
+
+
+
+
+7
+4.2. Ajout d’un élément: 
+Permet d’ajouter un élément à la fin d’une file. Sa syntaxe est:
+
+
+
+
+ 
+
+--- Slide 8 ---
+
+
+
+
+
+
+
+
+
+
+8
+4.3. Retrait d’un élément: 
+Permet de retirer un élément de la file et de récupérer sa valeur dans une variable (l’élément retiré est supprimé de la file). Sa syntaxe est:
+
+
+
+ 
+
+--- Slide 9 ---
+
+
+
+
+
+
+
+
+
+
+9
+4.4. Consultation de la tete:
+Permet de consulter ou de récupérer le premier élément de la file dans une variable sans le supprimer. Mais, il faut être sûr que la file n’est pas vide. Sa syntaxe est:
+
+
+
+
+ 
+
+--- Slide 10 ---
+
+
+
+
+
+
+
+
+
+
+10
+4.5. Test de l’état de la pile:
+Permet de vérifier si une file est vide ou non. Sa syntaxe est:
+
+
+Cette fonction retourne la valeur «vrai» si la file est vide. Sinon, elle retourne la valeur «faux».
+
+
+--- Slide 11 ---
+11
+Il existe deux types de représentation des files en mémoire:
+
+ Représentation à l’aide des tableaux.
+
+ Représentation à l’aide des listes simplement chainées.
+Donc, les primitives de manipulation dépendent de la représentation utilisée.  
+Dans ce chapitre, on va voir seulement la représentation d’une file par une liste simplement chainée.
+5. Représentation des files en mémoire:
+
+--- Slide 12 ---
+
+
+
+
+
+
+
+
+
+
+12
+6. Représentation d’une file avec une liste simplement chainée:
+Une file est repéré par l’adresse de son premier élément «tete» et l’adresse de son dernier élément queue.
+
+Exemple:  soit la file suivante.
+
+
+ 
+
+--- Slide 13 ---
+13
+On considère que le type de la partie information de la file est: <type_element> 
+
+
+
+
+
+
+
+
+On rajoute aussi l’enregistrement qui contient la tête et la queue.
+
+
+6.1. Déclaration d’une file:
+
+--- Slide 14 ---
+14
+
+
+
+
+
+
+
+
+
+
+
+6.1. Déclaration d’une file:
+
+--- Slide 15 ---
+15
+
+
+
+
+
+
+
+
+
+
+
+Exemple de déclaration d’une file d’entier:
+
+--- Slide 16 ---
+16
+ 6.2.1. InitialiserFile:
+6.2. Les primitives de manipulation:
+
+--- Slide 17 ---
+
+
+
+
+
+
+
+
+
+
+17
+6.1.2. Enfiler:
+L’enfilement d’un élément revient à faire un ajout à la fin de la liste.
+
+Exemple:  soit la file suivante.
+
+
+ 
+
+--- Slide 18 ---
+18
+
+--- Slide 19 ---
+
+
+
+
+
+
+
+
+
+
+19
+6.1.3. Défiler:
+Le défilement d’un élément revient à faire une suppression au début de la liste en récupérant l’élément supprimé.
+
+Exemple:  soit la file suivante:
+
+
+ 
+
+--- Slide 20 ---
+20
+
+--- Slide 21 ---
+21
+6.1.4. TeteFile:
+
+--- Slide 22 ---
+22
+6.1.5. FileVide:
+
+--- Slide 23 ---
+Ecrire l’action paramétrée Creation qui permet de créer une file de N entiers.
+Ecrire l’action paramétrée Affichage qui affiche l’élément qui se trouve dans la position k s’il existe. 
+Ecrire un algorithme qui permet de créer une file de N entiers. Puis, d’afficher l’élément qui se trouve dans la position pos (pos est donnée par l’utilisateur). 
+Remarque: Utiliser les primitives de manipulation des files.
+23
+Exercice :
+
+
+=== FILE: Chapitre 2 Les tableaux et les matricesh.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 2:
+Les tableaux et les matrices
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+0. Introduction:
+Un tableau est une structure de données complexe qui peut contenir plusieurs éléments du même type désignés par un identificateur unique. Il existe deux types de tableaux : 
+ Les tableaux à une seule dimension, appelés vecteurs ou tableaux.
+ Les tableaux à deux dimensions connus sous le nom matrices.
+
+2
+
+--- Slide 3 ---
+3
+Les tableaux à une seule dimension (les vecteurs)
+
+1.1. Déclaration d’un tableau:
+
+Où:
+<taille maximale>: peut être:
+ Une valeur. Exemple: T[100]: tableau d’entier;
+ La valeur d’une constante. Exemple:
+ const N=100;
+ T[N]: tableau de reel;
+
+
+--- Slide 4 ---
+4
+1.2. Représentation d’un tableau dans la mémoire:
+Les éléments d’un tableau sont stockés dans la mémoire dans un espace contigu (l’un à la suite de l’autre).
+Graphiquement, un tableau est représenté par une suite de cases consécutives où chaque case est repérée par un indice. Pour un tableau de taille N, l’indice de la première case est 0 et l’indice de la dernière case est N-1. 
+
+Exemple :
+
+
+
+
+
+--- Slide 5 ---
+5
+1.3. Accès aux éléments d’un tableau:
+Pour accéder à un élément d’un tableau, on écrit :
+
+
+<indice> doit appartenir à [1, N] et il peut prendre la forme de n’importe quelle expression arithmétique de type entier.
+Exemple: dans l’exemple précédent:
+T[2]=3.
+Si i=1 alors T[i]=T[1]=5; 
+T[1+15 div 5]=T[1+3]=0;
+
+--- Slide 6 ---
+6
+Remarque:
+Il faut faire la différence entre la taille maximale d’un tableau et sa taille réelle (significative).
+- La taille maximale est donnée dans la déclaration.
+- La taille réelle est donnée par l’utilisateur.
+
+
+
+
+
+--- Slide 7 ---
+7
+1.4. Lecture et écriture d’un tableau:
+
+La lecture ou l’écriture d’un tableau T de taille N consiste à lire ou à écrire chaque case en utilisant la boucle suivante:
+ 
+
+
+--- Slide 8 ---
+8
+Exercice 1:
+Ecrire un algorithme qui permet de lire un tableau de réels de taille 10. Puis, de calculer et d’afficher la moyenne de ses valeurs.
+
+
+
+--- Slide 9 ---
+9
+Exercice 2:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤50). Puis, de calculer et d’afficher le nombre d’apparition d’une valeur x dans T (x est une valeur quelconque donnée par l’utilisateur).
+
+
+
+--- Slide 10 ---
+10
+Exercice 3:
+Soit T un tableau de caractères de taille N (N est donné par l’utilisateur avec 1≤N ≤50). 
+Ecrire un algorithme qui permet de lire les (N-1) valeurs du T (en laissant la dernière case vide). Puis, de lire le caractère x et l’insérer dans la position p (p est donnée par l’utilisateur avec 1≤p ≤N). Enfin, d’afficher le tableau T.
+Exemple:  x='a'; p=3
+
+
+
+
+
+
+
+--- Slide 11 ---
+11
+Exercice 4:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤30). Puis, de supprimer la première apparition de la valeur val (val est donnée par l’utilisateur). Dans le cas où val n’existe pas dans T, alors afficher le message: « val n’existe pas » sinon afficher T.
+Exemple:  val=3
+
+
+
+
+
+
+
+--- Slide 12 ---
+12
+Exercice 4:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤30). Puis, chercher si une valeur existe.
+Exemple:  val=3
+Si le tableau n'est pas trié
+nous devons visiter tous les éléments du table.
+O(n)
+Si le tableau est trié
+on peut utiliser la recherche binaire (dichotomique).
+O(Log2(n))
+17 min
+1.8 ms
+
+--- Slide 13 ---
+13
+Trier un tableau, veut dire ordonner ses éléments selon l’ordre croissant ou décroissant. Généralement, il existe 03 algorithmes de tri :  
+Par sélection.
+Par permutation.
+Par insertion.
+
+
+Pour expliquer le principe de chaque algorithme, on suppose que le tri se fait selon l’ordre croissant.
+
+
+1.5. Les algorithmes de tri:
+
+--- Slide 14 ---
+14
+a. Le tri par sélection:
+Il consiste à parcourir le tableau (N-1) fois tel que :
+- Pour T[0] : on cherche la position du minimum dans le tableau à partir de la case d’indice 0. Si l’indice du minimum «indmin» est différent de 0, alors on permute T[0] avec T[indmin].
+- Pour T[1] : on cherche la position du minimum dans le tableau à partir de la case d’indice 1. Si l’indice du minimum « indmin » est différent de 1, alors on permute  T[1] avec T[indmin].
+…
+- Jusqu’à T[N-2].
+
+
+
+
+
+--- Slide 15 ---
+15
+Exercice 5:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤50). Puis, de le trier en appliquant l’algorithme de tri par sélection. Enfin, d’afficher T.
+
+
+
+--- Slide 16 ---
+16
+b. Le tri par permutation:
+Il consiste à faire plusieurs passages sur le tableau T. Lors de chaque passage, on compare chaque deux éléments consécutifs d’indice i et i+1 et si T[i] est supérieur à T[i+1] alors on les permute.
+Le nombre de passages maximal ne doit pas dépasser (N-2). Mais, si on effectue un passage et on ne trouve pas des permutations alors le tableau est trié et il n’est pas nécessaire d’effectuer un autre passage. 
+
+--- Slide 17 ---
+17
+On rajoute un complément de cet algorithme afin de l’optimiser : 
+A la fin du premier passage, la plus grande valeur est décalée vers la fin dans la case d’indice N (elle est dans la bonne place). Donc, dans le deuxième passage, on traite les éléments dont l’indice appartient à [1, N-2]. 
+Aussi, à la fin du deuxième  passage, la deuxième plus grande valeur est décalée vers la fin dans la case d’indice N-1. Donc, dans le troisième passage, on traite les éléments dont l’indice appartient à [1, N-3]…
+
+--- Slide 18 ---
+18
+Exercice 6:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤50). Puis, de le trier en appliquant l’algorithme de tri par permutation. Enfin, d’afficher T.
+
+
+
+--- Slide 19 ---
+19
+c. Le tri par insertion:
+Son principe consiste à trier les éléments d’un tableau un par un. 
+A chaque fois qu’on trie l’élément T[i], on est sûre que les éléments T[j] qui le précèdent sont déjà triés (j=i-1, …2, 1,0). Pour cela, on cherche la position d’insertion de T[i] dans les cases qui le précèdent en le décalant vers la gauche à chaque fois. L'arrêt se fera dans les deux cas suivants:
+1. L'élément T[j] qui est plus petit que T[i] est trouvé. Alors l'insertion de T[i] se fait dans la position j+1.
+2. Il n'existe aucun élément petit que T[i] (tous les éléments qui le précèdent sont inférieurs à T[i]. Par conséquent, on insère T[i] dans la position 1.
+
+--- Slide 20 ---
+20
+Exercice 7:
+Ecrire un algorithme qui permet de lire le tableau d’entiers T de taille N (N est donné par l’utilisateur avec 1≤N ≤50). Puis, de le trier en appliquant l’algorithme de tri par insertion. Enfin, d’afficher T.
+
+
+
+--- Slide 21 ---
+21
+2. Les tableaux à deux dimensions:
+
+
+
+
+
+2.1. Déclaration:
+
+
+
+Exemples:
+mat[100][100] :tableau d’entier;
+const N=100;
+               M=50;
+     mat[N][M]:tableau de caractere;
+ 
+
+--- Slide 22 ---
+22
+2.2. Représentation d’une matrice dans la mémoire:
+Dans la mémoire centrale, les éléments d’une matrice sont stockés ligne par ligne. Sachant que les éléments d’une ligne sont stockés l’un après l’autre. 
+Exemple : soit la matrice mat suivante:
+
+
+
+
+
+
+--- Slide 23 ---
+23
+2.3. Accès aux éléments d’une matrice:
+Un élément d’une matrice est repéré par deux indices: l’indice de sa ligne et l’indice de sa colonne. L’accès se fait avec cette syntaxe:
+
+
+Pour une matrice de taille N*M: l’indice de la ligne appartient à [1,N] et l’indice de la colonne appartient à [1,M].
+Exemple: dans l’exemple précédent
+ 
+
+
+--- Slide 24 ---
+24
+Exemple: soit la matrice mat suivante:
+
+
+mat[0,0]=1;
+mat[2,1]=-4;
+mat[3*2-5,15 div 5-1]=mat[1,2]=2;
+
+
+ 
+
+
+--- Slide 25 ---
+25
+2.4. Lecture d’une matrice:
+La lecture d’une matrice « mat » de taille N*M peut se faire ligne par ligne ou colonne par colonne.
+a. Ligne par ligne:
+
+
+b. Colonne par colonne:
+
+
+
+--- Slide 26 ---
+26
+2.5. Affichage d’une matrice:
+
+L’affichage d’une matrice « mat » de taille N*M nécessite l’affichage de tous ses éléments selon le format voulu par l’utilisateur.
+
+
+
+--- Slide 27 ---
+27
+Exercice 8:
+Ecrire un algorithme qui permet de lire la matrice d’entiers mat de taille 10*10. Puis, de calculer et d’afficher la moyenne de ses éléments.
+
+
+
+--- Slide 28 ---
+28
+Exercice 9:
+Ecrire un algorithme qui permet de lire la matrice d’entiers mat de taille N*M (N et M sont donnés par l’utilisateur avec 1≤N≤50 et 1≤M≤50). Puis, de calculer et d’afficher le maximum de chaque ligne.
+
+
+
+--- Slide 29 ---
+29
+Exercice 10:
+Ecrire un algorithme qui permet de lire la matrice d’entiers mat de taille N*M (N et M sont donnés par l’utilisateur avec 1≤N≤50 et 1≤M≤50). Puis, de calculer et d’afficher la somme de chaque colonne.
+
+
+
+--- Slide 30 ---
+30
+
+--- Slide 31 ---
+31
+CC1:
+Écrire un algorithme qui affiche tous les nombres narcissiques inférieurs à un nombre entier n donné par l'utilisateur. 
+1, 2 , 3 , …… , k , …… , n-3 , n-2 , n-1
+nous devons vérifier tous les nombres inférieurs à n s'ils correspondent à la condition ou non.
+c'est la première boucle que nous avons dans l'algorithme
+Pour k=1 a n-1 faire
+Debut
+<block instructions>
+fin
+
+--- Slide 32 ---
+32
+
+--- Slide 33 ---
+33
+153 / 10 = 15
+/ 10 = 1
+1 / 10 = 0
+Puissances = nombre de chiffre
+p=0 , 
+p=p+1
+153 / 10 = 15
+p=p+1
+/ 10 = 1
+p=p+1
+1 / 10 = 0
+A=153, p=0
+p=p+1 
+A / 10 = A
+p=p+1
+A / 10 = A
+p=p+1
+A / 10 = A
+Exmple, k =153
+
+
+
+
+
+
+A=153, p=0
+Repeter
+debut
+p=p+1
+A= A / 10 
+fin
+Jusqu’a (A==0)
+
+
+--- Slide 34 ---
+34
+CC1:
+Pour k=0 a n-1 faire
+  Debut
+    A=k, p=0
+    Repeter
+       debut
+       p=p+1
+       A=A / 10 
+       fin
+     Jusqu’a (A==0)
+     <block instructions>
+  fin
+
+--- Slide 35 ---
+35
+
+--- Slide 36 ---
+153 mod 10 =3
+153 / 10 = 15
+15 mod 10 =5
+15 / 10 = 1
+1 mod 10 =1
+1 / 10 = 0
+Puissances = nombre de chiffre
+S=0 , 
+153 mod 10 =3
+S+3**p=S
+153 / 10 = 15
+15 mod 10 =5
+S+5**p=S
+15 / 10 = 1
+1 mod 10 =1
+S+1**p=S
+1 / 10 = 0
+
+Exmple, k =153
+S=0 , A=153
+A mod 10 =R
+S+R**p=S
+A / 10 = A
+A mod 10 =R
+S+R**p=S
+A / 10 = A
+A mod 10 =R
+S+R**p=S
+A / 10 = 0
+
+
+
+
+
+--- Slide 37 ---
+Puissances = nombre de chiffre
+Exmple, k =153
+S=0 , A=153
+A mod 10 =R
+S+R**p=S
+A / 10 = A
+A mod 10 =R
+S+R**p=S
+A / 10 = A
+A mod 10 =R
+S+R**p=S
+A / 10 = 0
+
+
+
+
+A=k, S=0
+Repeter
+debut
+R= A mod 10 
+S=S+R**p
+A= A / 10 
+fin
+Jusqu’a (A==0)
+
+--- Slide 38 ---
+38
+CC1:
+Algorithme CC1
+Var  k, n, p, A, R,S: entier;
+debut
+Pour k=1 a n-1 faire
+  Debut
+    A=k, p=0;
+    Repeter
+       debut
+       p=p+1;
+       A=A / 10 ;
+       fin
+    Jusqu’a (A==0)
+A=k, S=0
+    Repeter
+       debut
+         R= A mod 10 ;
+         S=S+R**p;
+         A= A / 10 ;
+       fin
+    Jusqu’a (A==0)
+is ( k==S) alors
+Ecrice (k, “est Un nombre narcissique’’ );
+Fin Pour
+Fin Algorithm
+
+
+=== FILE: Chapitre 3 Les chaines de caractères.pptx ===
+
+--- Slide 1 ---
+Chapitre 3
+Les chaines de caractères 2ème Année MI
+
+ 
+1
+
+--- Slide 2 ---
+
+Chapitre 3:
+Les chaines de caractères
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+
+--- Slide 3 ---
+3
+#include <stdio.h>
+
+int main()
+{
+    printf("Hello World");
+    char c=0;
+    for (int i=0;i<128;i++)
+    printf("\n%c",c+i );
+    
+    return 0;
+}
+Que fait ce programme?????
+
+--- Slide 4 ---
+1. Définition :
+Une chaine de caractères est une suite finie de caractères. Elle peut être considérée aussi comme un tableau de caractères. 
+
+
+4
+Dans un programme informatique, les chaînes de caractères servent à stocker les informations non numériques comme par exemple une liste de nom de personne ou des adresses.
+
+
+--- Slide 5 ---
+5
+2. Déclaration d’une chaine de caractères:
+Elle peut être déclarée à l’aide de ces deux possibilités:
+
+
+
+Exemples:
+Ch: chaine;
+Ch[50]:chaine de caractère;
+Remarque:
+En langage C, la première déclaration n’est pas possible.
+
+--- Slide 6 ---
+6
+3. Lecture et écriture d’une chaine de caractères:
+
+Une chaine de caractères est une variable comme les autres variables du type simple. Donc, elle se lit et s’affiche comme  les autres types.
+
+Syntaxe:
+
+
+
+
+
+
+
+--- Slide 7 ---
+7
+Remarque:
+Lorsqu’on saisit une chaine de caractères, on ne saisit pas le caractère finchaine car il va être rajouté automatiquement. 
+
+Exemple:
+
+ch[50]:chaine de caractere;
+Si par exemple, l’utilisateur saisit: Bonjour.
+Alors, la représentation de la chaine ch dans la mémoire est:
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 8 ---
+8
+4. Initialisation d’une chaine de caractères:
+Une chaine de caractères peut être initialisée en mettant sa valeur entre guillemets ('').
+Exemple:
+Ch: chaine;
+Ch= ''Bonjour’’;
+
+
+
+
+--- Slide 9 ---
+9
+4. Initialisation d’une chaine de caractères:
+Une chaine de caractères peut être initialisée en mettant sa valeur entre guillemets (’’).
+
+‘x’ est un caractère constant, qui a une valeur numérique: Par exemple: 'x' à la valeur 120 dans le code ASCII.
+“x”est un tableau de caractères qui contient deux caractères: la lettre 'x' et le caractère 'finchaine': '\0’
+‘x’ est codé dans un octet
+“x”est codé dans deux octets
+
+
+
+
+--- Slide 10 ---
+10
+4.1 La table ASCII:
+
+
+
+
+
+
+--- Slide 11 ---
+11
+4.1 La table ASCII:
+Var C: char;
+
+C= ‘A’ ou C = 65, 
+C= ‘a’ ou C = 97. 
+
+is (C>='0’ et C<='9’) un chiffre 
+
+is (C>='A’ et C<='Z’) une majuscules 
+
+is (C>='a’ et C<='z’) une minuscules
+
+Il est facile, de convertir des lettres majuscules dans des minuscules:
+is (C>='A’ et C<='Z') C = C-'A'+'a’; ou vice-versa:
+is (C>='a’ et C<='z') C = C-'a'+'A';
+
+--- Slide 12 ---
+12
+5. Quelques fonctions de manipulation des chaines de caractères:
+
+5.1. La fonction longueur:
+Elle permet de retourner la taille d’une chaine de caractères (le nombre de caractères qu’elle contient). Sa syntaxe est:
+
+
+Exemple:
+Si la chaine ch=''Bonjour''. Alors
+L=longueur(ch);
+Donc, L=7.
+
+--- Slide 13 ---
+13
+5.2. La fonction concat:
+
+Elle permet de retourner une nouvelle chaine de caractères, qui est le résultat d’ajout une chaine à la fin d’une autre chaine. Sa syntaxe est:
+
+
+Remarque: 
+
+L’ordre des chaines de caractères dans cette fonction est très important (la <chaine2> va être rajoutée à la fin de <chaine1>.
+
+
+--- Slide 14 ---
+14
+Exemple :
+
+ch1,ch2,ch3:chaine;
+
+ch1=''Bonjour'';
+ch2=''tout le monde’’; 
+1)ch3=concat (ch1,ch2); alors ch3=''Bonjourtout le monde'';
+ch4=''  tout le monde’’; 
+2)ch3=concat (ch1,ch4); alors ch3=''Bonjour tout le monde’’;
+3)ch3=concat (ch1,   ’’  ‘’); alors ch3=''Bonjour ’’;
+ch3=concat (ch3,   ch2); alors ch3=''Bonjour tout le monde'';
+
+
+
+
+
+
+
+--- Slide 15 ---
+15
+6. Comparaison des chaines de caractères:
+
+Les chaines de caractères sont comparées selon l’ordre des caractères défini dans la table ASCII.
+La comparaison se fait à l’aide des opérateurs de comparaison (<, >, =, <>, …).
+
+
+
+
+--- Slide 16 ---
+16
+Exemple:
+
+ch1=''Bonjour'';
+
+ch2=''tout le monde'';
+
+On remarque que ch1 est inférieure à ch2 car la lettre B est inférieure à la lettre t.
+
+--- Slide 17 ---
+17
+7. Accès aux éléments d’une chaine de caractères:
+Pour accéder à un élément d’une chaine, on écrit :
+
+
+<indice>: pour une chaine de caractères de longueur L, indice doit appartenir à [1, L] et il peut prendre la forme de n’importe quelle expression arithmétique de type entier.
+Exemple:
+ch=''Bonjour''. 
+ch[1]='B'; ch[4]='j'; ch[7]='r';
+
+--- Slide 18 ---
+18
+Exercice 1:
+Ecrire un algorithme qui permet de lire une chaine de caractères. Puis, de calculer et d’afficher le nombre de lettres minuscules contenues dans cette chaine.
+
+
+
+--- Slide 19 ---
+19
+Exercice 2:
+Ecrire un algorithme qui permet de lire deux chaines de caractères. Puis, de les afficher dans l’ordre alphabétique croissant. 
+
+
+
+--- Slide 20 ---
+20
+Exercice 3:
+Ecrire un algorithme qui permet de lire une chaine de caractères. Puis, d’afficher un message indiquant si cette chaine est palindrome ou non.
+Indication: une chaine est palindrome si elle se lit de la droite vers la gauche ou de la gauche vers la droite.
+Exemples:
+« radar », « elle » sont deux mots palindromes.
+ 
+
+
+
+--- Slide 21 ---
+21
+8. Les tableaux de chaines de caractères (tableau de mots):
+Un tableau de mots est représentée par une matrice de chaines de caractères, où chaque ligne représente une seule chaine. 
+A noter que chaque chaine a sa propre taille (c'est-à-dire le nombre de colonnes n’est pas le même pour toutes les lignes). Il est déclarée comme une matrice. L’accès à un mot qui se trouve dans la ligne i se fait comme suit: 
+
+
+
+
+
+
+
+
+
+--- Slide 22 ---
+22
+Exemple:
+Soit le tableau de mots suivant:
+
+
+
+
+A[1]=''math'';
+A[3]=''algorithme'';
+A[1,1]='m';  A[4,2]='o';
+
+
+--- Slide 23 ---
+23
+Exercice 4:
+Ecrire un algorithme qui permet de lire un tableau de N mots (N est donnée par l’utilisateur avec 1≤N ≤50). Puis, d’afficher le mot qui a le maximum de lettres alphabétiques minuscules.
+Exemple:
+
+
+
+Le mot: AlgoRitHME a le maximum de lettres alphabétiques minuscules.
+
+
+
+
+=== FILE: Chapitre 3 Les chaines de caractères.pptx ===
+
+--- Slide 1 ---
+Chapitre 3
+Les chaines de caractères 2ème Année MI
+
+ 
+‹#›
+
+--- Slide 2 ---
+
+Chapitre 3:
+Les chaines de caractères
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+
+--- Slide 3 ---
+‹#›
+#include <stdio.h>
+
+int main()
+{
+    printf("Hello World");
+    char c=0;
+    for (int i=0;i<128;i++)
+    printf("\n%c",c+i );
+    
+    return 0;
+}
+Que fait ce programme?????
+
+--- Slide 4 ---
+1. Définition :
+Une chaine de caractères est une suite finie de caractères. Elle peut être considérée aussi comme un tableau de caractères. 
+
+
+‹#›
+Dans un programme informatique, les chaînes de caractères servent à stocker les informations non numériques comme par exemple une liste de nom de personne ou des adresses.
+
+
+--- Slide 5 ---
+‹#›
+2. Déclaration d’une chaine de caractères:
+Elle peut être déclarée à l’aide de ces deux possibilités:
+
+
+
+Exemples:
+Ch: chaine;
+Ch[50]:chaine de caractère;
+Remarque:
+En langage C, la première déclaration n’est pas possible.
+
+--- Slide 6 ---
+‹#›
+3. Lecture et écriture d’une chaine de caractères:
+
+Une chaine de caractères est une variable comme les autres variables du type simple. Donc, elle se lit et s’affiche comme  les autres types.
+
+Syntaxe:
+
+
+
+
+
+
+
+--- Slide 7 ---
+‹#›
+Remarque:
+Lorsqu’on saisit une chaine de caractères, on ne saisit pas le caractère finchaine car il va être rajouté automatiquement. 
+
+Exemple:
+
+ch[50]:chaine de caractere;
+Si par exemple, l’utilisateur saisit: Bonjour.
+Alors, la représentation de la chaine ch dans la mémoire est:
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 8 ---
+‹#›
+4. Initialisation d’une chaine de caractères:
+Une chaine de caractères peut être initialisée en mettant sa valeur entre guillemets ('').
+Exemple:
+Ch: chaine;
+Ch= ''Bonjour’’;
+
+
+
+
+--- Slide 9 ---
+‹#›
+4. Initialisation d’une chaine de caractères:
+Une chaine de caractères peut être initialisée en mettant sa valeur entre guillemets (’’).
+
+‘x’ est un caractère constant, qui a une valeur numérique: Par exemple: 'x' à la valeur 120 dans le code ASCII.
+“x”est un tableau de caractères qui contient deux caractères: la lettre 'x' et le caractère 'finchaine': '\0’
+‘x’ est codé dans un octet
+“x”est codé dans deux octets
+
+
+
+
+--- Slide 10 ---
+‹#›
+4.1 La table ASCII:
+
+
+
+
+
+
+--- Slide 11 ---
+‹#›
+4.1 La table ASCII:
+Var C: char;
+
+C= ‘A’ ou C = 65, 
+C= ‘a’ ou C = 97. 
+
+is (C>='0’ et C<='9’) un chiffre 
+
+is (C>='A’ et C<='Z’) une majuscules 
+
+is (C>='a’ et C<='z’) une minuscules
+
+Il est facile, de convertir des lettres majuscules dans des minuscules:
+is (C>='A’ et C<='Z') C = C-'A'+'a’; ou vice-versa:
+is (C>='a’ et C<='z') C = C-'a'+'A';
+
+--- Slide 12 ---
+‹#›
+5. Quelques fonctions de manipulation des chaines de caractères:
+
+5.1. La fonction longueur:
+Elle permet de retourner la taille d’une chaine de caractères (le nombre de caractères qu’elle contient). Sa syntaxe est:
+
+
+Exemple:
+Si la chaine ch=''Bonjour''. Alors
+L=longueur(ch);
+Donc, L=7.
+
+--- Slide 13 ---
+‹#›
+5.2. La fonction concat:
+
+Elle permet de retourner une nouvelle chaine de caractères, qui est le résultat d’ajout une chaine à la fin d’une autre chaine. Sa syntaxe est:
+
+
+Remarque: 
+
+L’ordre des chaines de caractères dans cette fonction est très important (la <chaine2> va être rajoutée à la fin de <chaine1>.
+
+
+--- Slide 14 ---
+‹#›
+Exemple :
+
+ch1,ch2,ch3:chaine;
+
+ch1=''Bonjour'';
+ch2=''tout le monde’’; 
+1)ch3=concat (ch1,ch2); alors ch3=''Bonjourtout le monde'';
+ch4=''  tout le monde’’; 
+2)ch3=concat (ch1,ch4); alors ch3=''Bonjour tout le monde’’;
+3)ch3=concat (ch1,   ’’  ‘’); alors ch3=''Bonjour ’’;
+ch3=concat (ch3,   ch2); alors ch3=''Bonjour tout le monde'';
+
+
+
+
+
+
+
+--- Slide 15 ---
+‹#›
+6. Comparaison des chaines de caractères:
+
+Les chaines de caractères sont comparées selon l’ordre des caractères défini dans la table ASCII.
+La comparaison se fait à l’aide des opérateurs de comparaison (<, >, =, <>, …).
+
+
+
+
+--- Slide 16 ---
+‹#›
+Exemple:
+
+ch1=''Bonjour'';
+
+ch2=''tout le monde'';
+
+On remarque que ch1 est inférieure à ch2 car la lettre B est inférieure à la lettre t.
+
+--- Slide 17 ---
+‹#›
+7. Accès aux éléments d’une chaine de caractères:
+Pour accéder à un élément d’une chaine, on écrit :
+
+
+<indice>: pour une chaine de caractères de longueur L, indice doit appartenir à [1, L] et il peut prendre la forme de n’importe quelle expression arithmétique de type entier.
+Exemple:
+ch=''Bonjour''. 
+ch[1]='B'; ch[4]='j'; ch[7]='r';
+
+--- Slide 18 ---
+‹#›
+Exercice 1:
+Ecrire un algorithme qui permet de lire une chaine de caractères. Puis, de calculer et d’afficher le nombre de lettres minuscules contenues dans cette chaine.
+
+
+
+--- Slide 19 ---
+‹#›
+Exercice 2:
+Ecrire un algorithme qui permet de lire deux chaines de caractères. Puis, de les afficher dans l’ordre alphabétique croissant. 
+
+
+
+--- Slide 20 ---
+‹#›
+Exercice 3:
+Ecrire un algorithme qui permet de lire une chaine de caractères. Puis, d’afficher un message indiquant si cette chaine est palindrome ou non.
+Indication: une chaine est palindrome si elle se lit de la droite vers la gauche ou de la gauche vers la droite.
+Exemples:
+« radar », « elle » sont deux mots palindromes.
+ 
+
+
+
+--- Slide 21 ---
+‹#›
+8. Les tableaux de chaines de caractères (tableau de mots):
+Un tableau de mots est représentée par une matrice de chaines de caractères, où chaque ligne représente une seule chaine. 
+A noter que chaque chaine a sa propre taille (c'est-à-dire le nombre de colonnes n’est pas le même pour toutes les lignes). Il est déclarée comme une matrice. L’accès à un mot qui se trouve dans la ligne i se fait comme suit: 
+
+
+
+
+
+
+
+
+
+--- Slide 22 ---
+‹#›
+Exemple:
+Soit le tableau de mots suivant:
+
+
+
+
+A[1]=''math'';
+A[3]=''algorithme'';
+A[1,1]='m';  A[4,2]='o';
+
+
+--- Slide 23 ---
+‹#›
+Exercice 4:
+Ecrire un algorithme qui permet de lire un tableau de N mots (N est donnée par l’utilisateur avec 1≤N ≤50). Puis, d’afficher le mot qui a le maximum de lettres alphabétiques minuscules.
+Exemple:
+
+
+
+Le mot: AlgoRitHME a le maximum de lettres alphabétiques minuscules.
+
+
+
+--- Slide 24 ---
+‹#›
+🧩 Exercice 1 : Suppression du bruit “sel et poivre” à l’aide du filtre médian
+
+🔊 1. Qu’est-ce que le bruit “sel et poivre” ?
+Le bruit sel et poivre est un type de perturbation courante dans les images numériques. Il apparaît sous forme de pixels blancs (sel) et pixels noirs (poivre) répartis de manière aléatoire, ce qui dégrade la qualité visuelle de l’image.
+Exemple visuel :
+Origine du bruit :
+Erreurs de transmission d’image 📡
+Capteurs défectueux 📸
+Compression ou stockage de mauvaise qualité 💾
+Dans une matrice grise représentant une image, cela 
+correspond à des 0 (noirs) et 255 (blancs) mal placés.
+
+--- Slide 25 ---
+‹#›
+🧮 2. Le filtre médian
+Le filtre médian est une technique de traitement d’image non linéaire utilisée pour supprimer le bruit tout en préservant les contours.
+Principe : Pour chaque pixel, on remplace sa valeur par la médiane des valeurs de ses voisins dans une fenêtre donnée (souvent 3×3).
+Étapes :
+Sélectionner une fenêtre (par exemple 3×3) autour du pixel central.
+Mettre toutes les valeurs des pixels de cette fenêtre dans une liste.
+Trier la liste.
+Remplacer le pixel central par la valeur médiane de cette liste.
+Exemple :
+Liste des valeurs = [0, 0, 1, 0, 1, 1, 0, 0, 0] → Triée = [0, 0, 0, 0, 0, 1, 1, 1, 1] → Médiane = 0 → Le pixel central devient 0 ✅
+Ainsi, les pixels “anormaux” sont corrigés sans trop flouter l’image.
+
+--- Slide 26 ---
+‹#›
+Écrire un algorithme qui permet de supprimer le bruit “sel et poivre” dans une image représentée par une matrice, en utilisant le filtre médian.
+L’algorithme doit :
+Lire une matrice M des n×m.
+Pour chaque pixel (sauf les bords), créer une fenêtre 3×3 centrée sur ce pixel.
+Calculer la médiane des valeurs de la fenêtre.
+Remplacer le pixel central par cette médiane.
+Afficher la matrice filtrée.
+
+--- Slide 27 ---
+‹#›
+Exercice 2 : Détection de séquences croissantes
+Écrire un algorithme qui permet de déterminer le nombre de sous-suites strictement croissantes dans une série de nombres donnée. L’algorithme doit aussi identifier la plus longue séquence croissante, en affichant :
+son point de départ,
+son point d’arrivée,
+et sa longueur.
+Exemple :
+Entrée : [2, 3, 1, 4, 5, 7, 2, 9]
+Sous-suites croissantes :(2, 3), (1, 4, 5, 7), (2, 9)Résultat :
+Nombre de séquences croissantes = 3 Plus longue séquence = (1, 4, 5, 7) Début = 1, Fin = 7, Longueur = 4
+
+--- Slide 28 ---
+‹#›
+Exercice 3 : Chaîne “spirale alphabétique”
+Écrire un algorithme qui lit une chaîne de caractères et vérifie si les lettres suivent une progression alphabétique circulaire. Autrement dit, après z, on revient à a.
+L’algorithme doit afficher :
+“Chaîne spirale” si la condition est respectée,
+sinon “Non spirale”.
+Exemples :
+“abcde” → spirale ✅
+“xyzab” → spirale ✅
+“acde” → non spirale ❌
+
+--- Slide 29 ---
+‹#›
+🔡 Exercice 4 : Trouver le mot le plus long dans une phrase
+Écrire un algorithme qui lit une phrase et identifie le mot le plus long qu’elle contient, ainsi que sa longueur.
+Exemple : Entrée : “Les algorithmes rendent la logique puissante.” → Mot le plus long : “algorithmes”, longueur = 11
+Indication : Découper la phrase en mots et comparer leurs longueurs à chaque itération.
+
+--- Slide 30 ---
+‹#›
+Exercice 5 : Rotation des anneaux d’une matrice
+
+🎯 Objectif :
+Écrire un algorithme qui effectue une rotation circulaire des anneaux (ou couches) d’une matrice carrée ou rectangulaire de k positions vers la droite.
+
+🧠 Principe :
+Une matrice peut être vue comme un ensemble d’anneaux concentriques :
+L’anneau externe : formé par la première ligne, la dernière colonne, la dernière ligne et la première colonne.
+L’anneau interne : les éléments juste à l’intérieur, et ainsi de suite…
+L’idée est de faire tourner chaque anneau indépendamment de k positions, comme une roue 🚴‍♂️.
+
+
+--- Slide 31 ---
+‹#›
+
+⚙️ Étapes de l’algorithme :
+Lire une matrice MMM de taille n×mn \times mn×m et un entier kkk.
+Pour chaque couche (ou “ring”) :
+Extraire les éléments de l’anneau dans une liste.
+Effectuer une rotation circulaire de cette liste de kkk positions vers la droite.
+Réinsérer les éléments dans la matrice à leurs nouvelles positions.
+Afficher la matrice après rotation.
+
+
+=== FILE: Chapitre 4 allocation dynamique.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 4:
+Pointeurs et allocation dynamique 
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+La mémoire centrale est un ensemble de cellules mémoires organisées en octets.
+Chaque octet est repéré et identifié d’une façon unique par une valeur qu’on appelle adresse.
+Chaque donnée stockée dans la mémoire a une adresse mémoire qui représente le début de cette donnée.
+2
+1. Introduction
+
+--- Slide 3 ---
+Exemple:   x:entier;
+La déclaration de x résulte une réservation d’un espace mémoire. Donc, x a une adresse.
+Supposons que l’adresse de x est 30.
+Alors: on écrit 
+L’adresse de x qu’on note &x=30
+Si x=5, alors le contenu de l’adresse 30, noté: contenu(&30)=5
+3
+
+5
+
+
+
+
+&30
+
+
+--- Slide 4 ---
+
+En résumé:
+Une variable a une adresse mémoire et un contenu.
+Cette adresse peut être manipulée grâce à la notion de pointeur.
+4
+
+--- Slide 5 ---
+
+Un pointeur est une variable qui contient l’adresse d’une autre variable. Cette dernière est appelée la variable pointée ou l’objet pointé.
+Le type d’un pointeur a le même type que la variable pointée. 
+Pour déclarer un pointeur, on écrit:
+
+
+
+
+
+5
+2. Notion de pointeur
+
+--- Slide 6 ---
+Exemple: Soit x une variable entière et p est un pointeur sur un entier. 
+X:entier;
+p: ↑entier;
+Jusqu’à présent, il n’existe aucune relation entre x et p.
+Pour que p puisse pointer sur x, on doit écrire:
+
+Donc, le contenu de l’adresse de x est le contenu de p, on écrit:
+6
+
+--- Slide 7 ---
+7
+La fonction taille fournit la taille d’un type donné en octet. Sa syntaxe est:
+
+
+
+Exemples :   
+  taille(entier)   = 4
+  taille(caractere) = 1
+
+
+3. La fonction taille d’un type:
+
+--- Slide 8 ---
+8
+
+4.1. Affectation d’un pointeur à l’adresse NIL:
+
+L’adresse NIL veut dire « aucune adresse ».
+
+Exemple:
+
+P:↑ entier;
+
+P:=NIL; veut dire que P ne pointe pas sur aucune adresse mémoire.
+
+
+
+4. Quelques opérations sur les pointeurs
+
+--- Slide 9 ---
+9
+4.2. Incrémentation:
+
+L’incrémentation d’un pointeur permet de passer à l’espace mémoire suivant.     
+
+Exemple:
+P:↑ entier;
+P+1 représente l’adresse de l’entier suivant. Donc:
+
+
+--- Slide 10 ---
+10
+
+4.3. Soustraction:
+
+La différence entre deux pointeurs du même type représente le nombre d’éléments situés entre ces deux adresses.
+
+4.4. Comparaison:
+
+Il est possible de comparer deux pointeurs du même type. 
+
+
+--- Slide 11 ---
+11
+
+Dans l’allocation statique, la réservation d’un espace mémoire se fait au moment de la compilation. 
+Cependant, elle n’est pas pratique pour les tableaux car elle nécessite une réservation avant de connaitre la taille réelle d’un tableau (sachant que cette taille est connue pendant l’exécution d’un programme). Donc, ce type d’allocation n’est pas bon pour la bonne gestion de la mémoire.
+
+
+5. Allocation statique et dynamique
+
+--- Slide 12 ---
+12
+
+Pour éviter ce problème, on fait appel à l’allocation dynamique où la réservation d’un espace mémoire se fait pendant l’exécution d’un programme (c’est-à-dire à la demande de l’utilisateur).
+
+
+--- Slide 13 ---
+13
+
+
+6. Quelles sont les étapes de l’allocation dynamique? 
+
+
+--- Slide 14 ---
+14
+6.1. Outils de base
+6.1.1. La fonction d’allocation: allouer
+Pour allouer un espace mémoire dynamiquement, on appelle la fonction allouer. 
+Cette fonction réserve un espace et retourne son adresse de début. 
+Pour allouer un espace mémoire d’un type donné de taille N (N>=1), on écrit:
+
+
+
+--- Slide 15 ---
+15
+6.1.2. La fonction de libération: liberer
+L’un des intérêts essentiels de l’allocation dynamique est de pouvoir récupérer des emplacements dont on a plus besoins. Donc, pour libérer un espace mémoire déjà alloué, on appelle la fonction liberer. 
+
+
+
+--- Slide 16 ---
+16
+6.2. Allocation dynamique pour les tableaux à une seule dimension de taille N:
+1. Déclarer un pointeur vers ce tableau:
+
+
+2.  Lire la taille N.
+3. Réserver un espace mémoire pour tout le tableau et stocker son adresse de début dans le pointeur déclaré:
+
+
+
+
+
+
+--- Slide 17 ---
+17
+4. Vérifier si la réservation a été faite avec succès en comparant la valeur du pointeur avec l’adresse NIL:
+
+5. Faire les traitements nécessaires.
+6. Libérer l’espace réservé pour ce tableau en appelant la fonction liberer:  
+
+
+
+
+
+
+--- Slide 18 ---
+18
+Résumé: les étapes d’allocation dynamique pour un tableau de N entiers sont: 
+
+
+
+ 
+
+
+
+
+
+
+
+--- Slide 19 ---
+19
+
+Notation:
+
+Le pointeur T représente l’adresse du tableau et il représente l’adresse de T[1]. Donc:
+
+
+
+ 
+
+
+
+
+
+
+
+--- Slide 20 ---
+20
+Exercice 1 :
+Ecrire un algorithme qui permet de lire un tableau dynamique de n entiers (n est donné par l’utilisateur et n≥1). Puis, de calculer et d’afficher la plus grande valeur du tableau. 
+
+--- Slide 21 ---
+21
+Exercice 2 :
+Ecrire un algorithme qui permet de lire le tableau dynamique T de N entiers (N étant donné par l’utilisateur où N≥2). Puis, de supprimer toutes les occurrences de la valeur val (val est donnée par l’utilisateur). Enfin, d’afficher T.
+
+Exemple:  val=3
+
+
+--- Slide 22 ---
+22
+Exercice 3:
+Ecrire un algorithme qui permet de lire un tableau dynamique de N entiers (N étant donné par l’utilisateur où N≥2). Puis, de remplacer chaque élément par la somme de tous les éléments qui le précèdent.
+Exemple:
+
+
+--- Slide 23 ---
+23
+6.3. Allocation dynamique pour les matrices 
+
+Pour allouer un espace dynamiquement pour une matrice, on utilise l’une des deux possibilités suivantes:
+
+Possibilité 1: allouer un espace mémoire pour chaque ligne.
+Possibilité 2: allouer un espace pour toute la matrice à la fois.     
+
+
+
+
+
+
+
+--- Slide 24 ---
+24
+
+Pour les deux possibilités, on a la structure suivante:
+
+
+
+
+
+
+On remarque qu’il faut rajouter un tableau où on stocke l’adresse de chaque ligne d’une matrice.
+
+--- Slide 25 ---
+25
+6.3.1. Possibilité 1: Allocation pour chaque ligne
+Etape 1: Déclarer un pointeur vers le tableau d’adresses:
+
+Etape 2: Lire N
+Etape 3: Réserver un espace pour le tableau d’adresses:
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 26 ---
+26
+Etape 4: pour chaque ligne: 
+   - Lire la taille M (si elle se diffère d’une ligne à une autre).
+   - Réserver un espace mémoire et stocker son adresse dans le tableau d’adresse dans la case correspondante:
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 27 ---
+27
+Etape 5: faire les traitements nécessaires 
+Etape 6: Libérer les espaces réservés:
+    1. Libérer l’espace réservé pour chaque ligne:
+
+
+
+      
+     2. Libérer l’espace réservé pour le tableau d’adresses. 
+
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 28 ---
+28
+Résumé: Allouer un espace pour une matrice de N lignes et les colonnes varie d’une ligne à une autre. 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+--- Slide 29 ---
+29
+6.3.2.  Possibilité 2: Allocation pour toute la matrice
+Etape 1: Déclarer un pointeur vers le tableau d’adresses:
+
+Etape 2: Lire N et M.
+Etape 3: Réserver un espace pour le tableau d’adresses. 
+
+Etape 4: Réserver un espace pour toute la matrice:
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 30 ---
+30
+Etape 5: pour chaque ligne: 
+   - Stocker l’adresse de chaque ligne dans le tableau d’adresse dans la case correspondante (exemple dans la  diapositive suivante):
+
+
+Etape 6: Faire les traitements nécessaires.
+Etape 7: Libérer les espaces réservés
+  1. Libérer l’espace réservé pour toute la matrice
+
+   2. Libérer l’espace réservé pour le tableau d’adresses
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 31 ---
+31
+Exemple de calcul des adresses
+
+
+
+
+
+
+
+
+
+
+
+
+--- Slide 32 ---
+32
+Résumé: Allouer un espace pour une matrice de taille N*M du type entier. 
+
+
+
+ 
+
+
+
+
+
+
+
+
+--- Slide 33 ---
+33
+6.4. Avantages et inconvénients des deux méthodes:
+L’allocation d’espace pour toute la matrice à la fois (deuxième méthode) permet de réduire le temps d’accès à la mémoire en appelant la fonction allouer une seule fois. Mais, cette allocation nécessite la disponibilité d’un espace mémoire contigu pour toute la matrice.
+La première méthode fait appel à la fonction libérer plusieurs fois mais pour une matrice de grande taille permet de bien gérer la mémoire en allouant les espaces disponibles dans la mémoire.
+
+
+
+
+
+
+--- Slide 34 ---
+34
+Exercice 4:
+Ecrire un algorithme qui permet de lire une matrice dynamique d’entiers de n lignes et m colonnes (n et m sont donnés par l’utilisateur avec n≥2 et m≥2). Ensuite, de calculer et d’afficher le numéro de la ligne qui donne la plus grande somme.
+
+--- Slide 35 ---
+35
+Exercice 5:
+Soit la matrice dynamique mat du type entier contenant n lignes et m colonnes (n et m sont donnés par l’utilisateur avec n≥2 et m≥2).
+
+Ecrire un algorithme qui permet de lire les m-1 premiers éléments de mat où chaque ligne représente une valeur binaire (le contrôle doit être assuré par l’algorithme). Ensuite, de calculer la valeur décimale correspondante à chaque ligne et de la stocker dans la dernière case. Puis, de trier mat selon l’ordre croissant de la valeur décimale. Enfin, d’afficher mat.
+
+--- Slide 36 ---
+36
+Exemple:
+
+
+
+--- Slide 37 ---
+37
+Exercice 6:
+Ecrire un algorithme qui permet de lire la matrice dynamique A contenant N mots (N est donné par l’utilisateur avec N≥2). Ensuite, d’afficher tous les mots carrés de A.
+Indication: un mot est carré s’il est écrit sous la forme UU.
+Exemple: papa
+
+
+=== FILE: Chapitre 5- Les actions paramétéres 2024 2025.pptx ===
+
+--- Slide 1 ---
+1
+Algo et SDD 2 – 
+Chapitre 1
+Les actions paramétrées (fonctions et les procédures)
+2AP - MI
+
+--- Slide 2 ---
+Un algorithme peut être découpé en plusieurs parties nommées «modules» ou «sous algorithmes» ou «actions paramétrées». Cette programmation dite modulaire et elle se justifie pour plusieurs raisons :
+
+Aborder mieux un problème complexe en le découpant en plusieurs sous problèmes chacun donnera naissance à une ou plusieurs modules.
+La programmation modulaire permet d’éviter les séquences d’instructions répétitives afin de minimiser la taille d’un algorithme.
+Faciliter la maintenance des programmes (correction des erreurs, mise à jour, …).
+Permet de partager les modules sur plusieurs utilisateurs pour les regrouper à la fin. 
+Remarque : 
+Une action paramétrée peut être une fonction ou une procédure.
+
+2
+1. Introduction
+
+--- Slide 3 ---
+
+Une fonction est une action paramétrée (un sous algorithme ) qui a un type, peut recevoir des données d’entrées et peut retourner un ou plusieurs résultats. 
+
+Exemples:
+3
+2. Les fonctions
+P
+
+--- Slide 4 ---
+2.1. Syntaxe de déclaration d’une fonction : 
+4
+La première ligne est appelée: entête de la fonction
+ <liste des paramètres formels> : sont des paramètres d’entrées et de sorties. Chaque paramètre formel se déclare comme suit : 
+Le mode de transmission des paramètres est résumé dans ce tableau:
+
+--- Slide 5 ---
+<Déclaration des variables locales> : sont des variables intermédiaires utilisées par la fonction pour pouvoir effectuer le traitement demandé.
+< traitement de la fonction> : La partie des instructions de la fonction
+<expression> :  c’est le résultat de la fonction, son type = type de la fonction. Elle peut être : une valeur, une variable ou une expression.  exemples: 
+             retourner(12);     retourner (x);     retourner (x+2*y-4);  
+
+Remarque : les parenthèses sont facultatives 
+5
+
+--- Slide 6 ---
+Exemple 1:
+6
+
+--- Slide 7 ---
+Exemple 2:
+7
+Prod (entier)
+Remarque : cette fonction donne deux résultats : la somme et le produit. La somme est stockée dans le nom de la fonction et le produit est stocké dans le paramètre de sortie Prod             
+
+--- Slide 8 ---
+Une fonction peut être appelée par un algorithme ou une autre action paramétrée (fonction ou procédure), comme  suit :
+
+
+
+<variable>: a le même type que le résultat retourné par la fonction.
+<identificateur> : c’est le nom de la fonction
+<liste des paramètres effectifs>: sont les paramètres contenant les données à fournir à la fonction et les sorties (les résultats).
+8
+2.2.  Appel à une fonction
+
+--- Slide 9 ---
+Remarque:
+Les paramètres effectifs doivent respecter les conditions suivantes:
+
+Ils doivent avoir le même nombre que les paramètres formels .
+Ils doivent respecter le même ordre des paramètres formels .
+Ils doivent avoir le même type que les paramètres formels .
+Ils peuvent avoir des noms différents ou les mêmes noms que les paramètres formels .
+9
+
+--- Slide 10 ---
+                   ....
+   va r  S, a , b: entier; // passage par valeur
+            …
+   S:=Somme(a,b); // le résultat sera dans S
+            …  
+10
+                    …
+   T[50] : tableau d’entier;  
+   N, S, P : entier;     
+            …
+   S:=SomProdTableau(T, N, &P);   //La somme sera dans S
+                                                            //Le produit sera dans P 
+Exemple 2 : utilisation à la fonction « SomProdTableau » dans l’algorithme principal
+Exemple 1 : Appel à la fonction « Somme » dans l’algorithme principal
+
+--- Slide 11 ---
+11
+Remarques:
+Les fonctions sont placées avant l’algorithme principal.
+Dans la mémoire centrale, chaque fonction a sa propre zone mémoire. 
+Une fonction peut ne pas avoir des paramètres. C’est un cas rare.
+
+2.3. Mode de Transmission des paramètres
+2.3.1. Transmission par valeur   
+La fonction ne connait pas les adresses mémoires des paramètres transmis par valeur, elle connait seulement leurs valeurs, donc elle ne peut pas les modifier.
+
+2.3.1. Transmission par adresse
+La fonction connait les adresses mémoires des paramètres transmis par adresse, et connait aussi leurs valeurs, donc elle peut les modifier.
+
+ 
+
+--- Slide 12 ---
+Exercice 1: 
+Dérouler l’algorithme suivant 
+pour x=5, y=11, z=4 et w=10.
+12
+
+--- Slide 13 ---
+Exercice 2
+Ecrire la fonction « premier » qui détermine si un nombre entier strictement positif est premier ou non. (ne pas contrôler si l’entier est strictement positif, on laisse ça à l’algorithme).
+Ecrire la fonction factorielle qui permet de calculer la factorielle d’un nombre entier positif. (ne pas contrôler si l’entier est positif, on laisse ça à l’algorithme).
+Ecrire un algorithme qui permet de lire deux entiers strictement positifs x et y avec x ≤ y (à contrôler). Puis, de calculer et d’afficher la factorielle des nombres premiers compris entre x et y (x et y sont inclus).
+13
+
+--- Slide 14 ---
+Exercice 3 : 
+
+Ecrire la fonction somme qui permet de  calculer  la somme des éléments d’un tableau T de N entiers.
+
+Ecrire un algorithme qui permet de lire deux tableaux d’entiers de taille N et M respectivement et d’afficher leurs somme.
+14
+
+--- Slide 15 ---
+
+Une procédure est aussi une action paramétrée qui peut fournir des résultats (un ou plusieurs) ou aucun, mais sans valeur de retour. Les résultats sont stockés dans les paramètres de sorties.  
+
+La différence entre une fonction est une procédure est que :
+
+la fonction possède un type et la procédure ne possède pas.
+la fonction possède à la fin l’instruction « retourner », et la procédure ne la possède pas.
+
+
+
+
+15
+3. Les procédures
+
+--- Slide 16 ---
+16
+3.1. Syntaxe de déclaration d’une procédure
+<Déclaration des variables locales> , <liste des paramètres formels> et  < traitement de la procédure> :  sont déjà expliqués dans la fonction
+
+--- Slide 17 ---
+Exemple 1 :
+17
+
+--- Slide 18 ---
+Exemple 2:
+18
+P (entier)
+Remarque : cette procédure donne deux résultats : la somme et le produit. La somme est stockée dans le paramètre de sortie S et le produit est stocké dans le paramètre de sortie P             
+
+--- Slide 19 ---
+Une procédure peut être appelée par un algorithme ou une autre action paramétrée (fonction ou procédure) ,  comme  suit:
+
+
+
+
+<identificateur> : c’est le nom de la procédure
+<liste des paramètres effectifs> : sont les paramètres réellement                      							    utilisés. 
+19
+3.2.  Appel à une procédure
+
+--- Slide 20 ---
+                   ....
+   va r  S, a , b: entier;
+            …
+   Somme(a, b, &S); // le résultat sera dans S
+            …  
+20
+                    …
+   T[50] : tableau d’entier;
+   N, S, P : entier;
+            …
+   SomProdTableau(T, N, &P, &S); //La somme sera dans S
+                                                            //Le produit sera dans P 
+Exemple 2 : Appel à la procédure « SomProdTableau »
+Exemple 1 : Appel à la procédure « Somme »
+
+--- Slide 21 ---
+Exercice 4 : 
+Ecrire une action paramétrée qui lit un tableau de N entiers.
+
+Ecrire une action paramétrée qui détermine l’indice du minimum ainsi que l’indice du maximum d’un tableau de N entiers. 
+
+Ecrire un algorithme qui permet de lire un tableau de N entiers (N>1 et N<=50). Puis, d’afficher la valeur maximale ainsi que la valeur minimale de ce tableau (utiliser les actions paramétrées précédentes).
+
+Remarque : choisir la bonne action paramétrée (fonction ou procédure).
+21
+
+--- Slide 22 ---
+4. Variables globales VS Variables locales : 
+Les variables globales sont des variables déclarées dans l’algorithme principal, avant la déclaration des actions paramétrées. Ces variables peuvent être utilisées par toutes les actions paramétrées, et par l’algorithme bien sure. 
+Les variables locales sont des variables déclarées localement dans une action paramétrée. Ces variables ne peuvent être utilisées que par cette action paramétrée. 
+Si une variable locale est statique alors elle sera automatiquement supprimée de la mémoire à la fin de l’exécution de l’action paramétrée.  
+Si elle est dynamique, elle ne sera supprimée qu’après une instruction de libération.
+Alors, attention, il ne faut pas retourner l’adresse d’une variable locale statique d’une action paramétrée, car cette variable statique n’existera plus après la fin de l’exécution de l’action paramétrée. 
+22
+
+--- Slide 23 ---
+23
+5. Attention à l’effet de bord !  
+Lorsque une variable x est déclarée comme variable globale, et elle n’est pas transmise comme paramètre à une action paramétrée, alors on peut avoir deux cas  :
+Si x est déclarée aussi localement dans une action paramétrée, dans ce cas pas de problème, on aura deux variables différentes x globale et x locale, donc l’action paramétrée utilise la variable x locale et l’algorithme utilise la variable x globale.
+Si on a oublié de déclarer la variable x localement dans une action paramétrée, alors si cette action paramétrée modifie une variable d’un nom x alors c’est la variable x globale qui sera modifiée, ce qui est appelé l’effet de bord. Il faut faire attention à ce cas. 
+ 
+
+
+--- Slide 24 ---
+Exercice 5 :
+
+Ecrire une action paramétrée qui permet de déterminer l’indice du minimum d’une ligne d’une matrice d’entiers de taille N*M, à partir d’une position donnée.  
+
+Ecrire une action paramétrée qui permet de trier une ligne d’une matrice d’entiers de taille N*M selon l’ordre croissant. 
+
+Ecrire l’algorithme qui permet de lire une matrice d’entiers de taille N*M (1<=N<=50 et 1<=M<=50). Puis, de trier chaque ligne de cette matrice (utiliser les actions paramétrées précédentes). Enfin, de l’afficher.
+24
+
+--- Slide 25 ---
+Exercice 6 : 
+Ecrire une action paramétrée qui détermine si un caractère représente une lettre alphabétique (majuscule ou minuscule) ou non.
+Ecrire une action paramétrée qui détermine si une chaine de caractère contient des lettres alphabétiques seulement.
+Ecrire une action paramétrée qui  détermine si une lettre alphabétique est une voyelle ou non.
+Ecrire un algorithme qui permet de lire un tableau de N mots (1<=N<=50) où chaque mot doit contenir que des lettres alphabétiques. Puis, d’afficher le nombre de voyelles de chaque mot.
+25
+
+
+=== FILE: Chapitre 7 Les fichiers.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 7:
+Les fichiers
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+   Jusqu’à présent, les informations utilisées dans nos algorithmes ou dans nos programmes ne pouvaient provenir que de deux sources : soit elles étaient incluses (initialisées) dans l’algorithme lui-même, soit elles étaient entrées par l’utilisateur pour les stocker dans la mémoire principale (la RAM). Cependant cette mémoire est volatile et ces données sont effacées à la fin de l’exécution d’un programme.
+   Imaginons que l’on veuille écrire un programme pour gérer un carnet d’adresses. D’une exécution à une autre, l’utilisateur doit pouvoir retrouver son carnet à jour, avec les modifications apportées la dernière fois qu’il a exécuté le programme. Les données du carnet d’adresse ne peuvent donc être incluses dans l’algorithme, et encore moins être entrées au clavier à chaque nouvelle exécution !
+1
+1. Introduction
+
+--- Slide 3 ---
+   Donc, la solution à ce problème nécessite le stockage de ces informations dans des structures de données permanentes existantes sur un support de stockage appelé mémoire secondaire (disque dur, clé USB, ….).
+Dans ce chapitre, on utilise une nouvelle structure de donnée permanente appelée fichier. 
+   
+1
+1. Introduction
+
+--- Slide 4 ---
+   Un fichier est une structure de stockage permanente des données sur une mémoire secondaire. 
+   chaque fichier possède un nom sur son support de stockage appelé nom externe ou nom physique.  Ce nom a la forme suivante:
+
+
+Chemin: pour préciser l’endroit d’existence d’un fichier. Il contient l’emplacement  (disque dur D, disque dur C, …) et le répertoire qui contient le fichier s’il existe.
+Nom: est le nom attribué à un fichier.
+Extension: pour préciser le type d’un fichier. 
+1
+2. Définition d’un fichier:
+
+--- Slide 5 ---
+   
+1
+Exemples:
+
+1.   d:\\Structures de données2\\les fichiers.docx
+    Le fichier portant le nom: les fichiers, existe dans le disque dur D et dans le répertoire (dossier) Structures de données2. Son extension est: docx.
+2.  C:\\les enregisterements.pptx
+ Le fichier portant le nom: les enregistrements, existe dans le disque dur C. Son extension est: pptx.
+
+
+--- Slide 6 ---
+   Il existe deux types de fichiers: les fichiers textes et les fichiers binaires.
+
+Les fichiers texte: sont constitués d’une suite de caractères et ils peuvent être manipulés par un éditeur de texte.
+
+Les fichiers binaires: sont des fichiers qui ne sont pas interprétables sous forme de texte  (une image, un son, …) et qui ne peuvent pas être manipulés par un éditeur de texte. Ils sont constitués d’un ensemble d’octets  et ses données sont toutes de même type.
+
+Dans ce chapitre, on s’intéresse à la manipultion des fichiers binaires seulement.
+1
+3. Les types d’un fichier:
+
+--- Slide 7 ---
+  Un fichier peut être manipulé à l’aide d’un algorithme (ou d’un programme) pour pouvoir stocker (écrire) des informations ou de les récupérer (lire son contenu).
+
+   Pour qu’un algorithme puisse manipuler un fichier, il doit passer par les étapes suivantes:
+1. Utiliser un pointeur vers le fichier appelé nom interne.
+2. Ouvrir le fichier pour pouvoir effectuer les opérations suivantes: écriture, lecture, mise à jour.
+3. Fermer le fichier.
+1
+4. Manipulation des fichiers binaires:
+
+--- Slide 8 ---
+  Il faut utiliser un pointeur (une tête de lecture/écriture). Ce pointeur est appelé le nom logique ou le nom interne d’un fichier. Sa déclaration se fait comme suit:
+
+
+
+
+1
+4.1.  Déclaration d’un nom interne:
+
+--- Slide 9 ---
+  pour ouvrir un fichier, on doit établir un lien entre le nom interne d’un fichier et son nom externe en précisant le mode d’ouverture. La syntaxe utilisée est la suivante:
+
+
+Le mode d’ouverture est rajouté pour préciser le type de l’opération à faire sur le fichier. Les modes d’ouvertures sont:
+"ecriture" : pour créer un fichier s’il n’existe pas ou d’écraser son contenu s’il existe déjà.
+"lecture" : pour lire les informations écrites dans le fichier. 
+"mettre à jour" : pour créer un fichier s’il n’existe pas ou de rajouter de nouvelles données à la fin d’un fichier.
+
+
+1
+4.2.  Ouverture d’un fichier:
+
+--- Slide 10 ---
+Remarque:
+Le nom externe d’un fichier peut être une chaine constante (mise entre guillemets) ou stocké dans une variable de type chaine de caractères (donné par l’utilisateur ou initialisé).
+Exemple 1:
+f :  fichier; 
+f:=ouvrir("d:\\notes.dat","ecriture");
+Exemple 2:
+f :  fichier; 
+Chemin [20]: chaine de caractre;
+lire(Chemin)
+f:=ouvrir(Chemin, "mettre a jour");
+1
+
+--- Slide 11 ---
+   Après l’ouverture d’un fichier, il faut s’assurer que l’ouverture a été fait avec succès en testant la valeur de nom interne avec la valeur NIL.
+
+   Les problèmes qui peuvent être apparaitre lors de l’ouverture sont les suivantes:
+ L’accès refusé à un support de stockage.
+ La lecture des données à partir d’un fichier non existant.
+ Le chemin donné n’existe pas.
+
+1
+Remarque:
+
+--- Slide 12 ---
+    Le rôle de la fonction de fermeture d’un fichier est de rompre la liaison établie entre le nom interne et le nom externe. Elle provoque aussi l’écriture sur disque du tampon associé au fichier.
+
+1
+4.3. Fermeture d’un fichier:
+
+--- Slide 13 ---
+5.  Ecriture dans un fichier:
+1
+  Pour pouvoir effectuer une opération d’écriture, le fichier doit être ouvert en mode création (s’il n’existe pas déjà) ou en mode mise à jour.
+ La fonction ecrire permet d’écrire sur un fichier binaire un élément d’une taille donnée (en nombre d’octets) à partir d’une zone mémoire appelée tampon.
+
+
+
+
+
+Ce tampon est une variable qui a le même type de l’information qui va être écrite. Il peut être une variable simple ou une variable de type structuré.
+Fichier
+
+
+
+
+Mémoire tampon
+
+
+--- Slide 14 ---
+5.  Ecriture dans un fichier:
+1
+La syntaxe de la fonction d’écriture est:
+
+--- Slide 15 ---
+5.  Ecriture dans un fichier:
+1
+En résumé, pour créer ou mettre à jour un fichier, on doit suivre les étapes suivantes:
+Déclarer le nom interne.
+Ouvrir le fichier en précisant le mode d’ouverture.
+S’assurer que f est différent de NIL.
+Ecrire les informations.
+Fermer le fichier.
+
+--- Slide 16 ---
+Exercice 1:
+1
+Ecrire un algorithme qui permet d’écrire N nombres entiers dans le fichier portant le nom externe « d:\nombres.dat »   
+
+--- Slide 17 ---
+6.   Lecture:
+1
+Pour pouvoir effectuer une opération de lecture, le fichier doit être ouvert en mode lecture et le fichier doit exister.  Les données doivent être récupérées une par une dans une mémoire tampon en parcourant tout le fichier
+La syntaxe de l’instruction de lecture est:
+
+--- Slide 18 ---
+7.  Parcourir un fichier:
+1
+Le nombre d’éléments d’un fichier n’est pas connu. Mais, un fichier est délimité par une marque de fin de fichier qui est représenté par le caractère finfichier qui se déplace à chaque ajout d’un élément.
+Pour détecter la fin d’un fichier, on fait appel à la fonction fin. Sa syntaxe est la suivante: 
+
+
+
+Cette fonction retourne:
+Vrai: c’est la fin d’un fichier est atteinte.
+Faux: c’est la fin d’un fichier n’est pas atteinte.
+1
+2
+3
+4
+finfichier
+
+fin
+
+
+--- Slide 19 ---
+7.  Parcourir un fichier:
+1
+La lecture des éléments d’un fichier se fait comme suit:
+Au début, la tête de L/E est positionnée sur le premier élément du fichier.
+A chaque lecture d’un élément, la tête se déplace automatiquement vers l’élément suivant.
+La fin est détectée après la lecture du caractère finfichier.
+
+
+
+
+--- Slide 20 ---
+7.  Parcourir un fichier:
+1
+Si on suit l’algorithme de parcours suivant, on va avoir un problème qui sera illustré dans l’exemple donné dans le slide suivant:
+
+
+
+--- Slide 21 ---
+Exemple: le parcours du fichier suivant se fait comme suit pour calculer la somme de ses éléments
+1
+
+--- Slide 22 ---
+7.  Parcourir un fichier:
+1
+On remarque que la dernière valeur est traitée deux fois. Pour éviter ce problème, on doit suivre l’algorithme de parcours suivant:
+
+--- Slide 23 ---
+Exemple: le parcours du fichier suivant se fait comme suit pour calculer la somme de ses éléments
+1
+
+--- Slide 24 ---
+1
+Exercice 2:
+
+  Ecrire un algorithme qui permet de calculer la somme et la moyenne des éléments du fichier dont le nom externe est « d:\nombres.dat »  (créé dans l’exercice 1). 
+
+--- Slide 25 ---
+8.  Les modes d’accès à un fichier:
+1
+A un instant donné, un et un seul élément d’un fichier est accessible, celui pointé par la tête de lecture/écriture (L/E). Il existe deux types d’accès aux éléments d’un fichier : 
+ L’accès séquentiel.
+ L’accès direct (sélectif).
+
+
+--- Slide 26 ---
+8.1.   L’accès séquentiel:
+1
+Les éléments d’un fichier sont accédés l’un à la suite de l’autre  dans l’ordre de leurs stockage, c’est à dire pour accéder à l’élément i d’un fichier, il faut passer par les (i-1) éléments qui le précèdent.
+
+
+--- Slide 27 ---
+8.2.  L’accès direct:
+1
+Permet d’accéder directement à un élément i sans passer par les (i-1) éléments qui le précèdent. Pour cela, il faut connaitre la position de l’élément voulu pour positionner convenablement la tête de L/E sur cet élément en faisant appel à la fonction pointer. A noter que la position du premier élément est 0. 
+Sa syntaxe est la suivante : 
+
+--- Slide 28 ---
+1
+Exercice  3:
+Un employé est défini par les champs suivants: numéro (1 pour le premier, 2 pour le second, 3 pour le troisième …), nom et prénom (des chaines de caractères de taille maximale 25). 
+Les employés d’une société sont stockés dans le fichier «employés.dat»
+On désire stocker le nombre d’heures fait par jour en une semaine dans un tableau (6 jours par semaine) pour chaque employé pour créer le fichier «Heures.dat». Sachant que ce fichier contient le numéro d’un employé et le tableau contenant le nombre d’heures fait en une semaine.
+
+--- Slide 29 ---
+1
+1. Ecrire l’action paramétrée Calculer qui calcule le nombre d’heures fait en une semaine.
+2. Ecrire l’action paramétrée Determiner_Maximum qui détermine le nombre d’heures  maximal à partir du fichier «Heures.dat». Cette action paramétrée a en entrée le nom interne de ce fichier.
+3. Ecrire l’action paramétrée Recuperer_Employe qui récupère toutes les informations d’un employé identifié par son numéro.
+4. Ecrire un algorithme qui permet d’afficher tous les employés qui ont fait un nombre maximal d’heures en une semaine. 
+On suppose que les fichiers utilisés sont déjà créés. 
+
+--- Slide 30 ---
+1
+1. Cas d’usage des fichiers en informatique 
+2. Spécialités au niveau de l’EMP
+3. Outils et langages à maîtriser 
+4. Intelligence artificielle
+5. Anything specific you want to ask for 
+6. Moi	
+
+--- Slide 31 ---
+1
+1. Cas d’usage des fichiers en informatique :
+	-Intégrité des fichiers : comparaison des noms, des tailles, des sommes de contrôles, des signatures, chiffrement d’un fichier, compression d’un fichier
+	- Système de gestion de fichier : 
+		*l'organisation hiérarchique des fichiers au sein d'un système d'exploitation (par exemple NTFS, FAT, FAT32)
+		*Il existe d'autres façons d'organiser les données, par exemple les bases de données (notamment base de données relationnelle) et les fichiers indexés.
+
+--- Slide 32 ---
+1
+1. Cas d’usage des fichiers en informatique :
+
+Dans le cas du système de fichiers FAT, ancien système de fichiers de MS-DOS et de Windows encore largement utilisé sur les supports amovibles comme les clés USB, chaque répertoire contient une table associant les noms de fichiers à leur taille et un index pointant vers la table d'allocation de fichiers, une zone réservée du disque indiquant pour chaque bloc de données l'index du bloc suivant du même fichier.
+
+Exemples des métadonnées les plus courantes sont :
+    -Droits d'accès en lecture, écriture et exécution selon l'utilisateur, le groupe, ou les autres ;
+    -Dates de dernier accès, de modification des métadonnées (inode), de modification des données (block)8 ;
+    -Propriétaire et groupe propriétaire du fichier ;
+    -Taille du fichier ;
+    -Nombre de noms de fichiers (liens) pointant vers l'inode;
+    -Nombre de blocs utilisés par le fichier9 ;
+    -Type de fichier : fichier simple, lien symbolique, répertoire, périphérique, etc.
+
+--- Slide 33 ---
+1
+2. Spécialités au niveau de l’EMP :
+	-Réseau
+	-Sécurité
+	-Science de données
+	-Image et visualisation
+	-Système d’aide à la décision
+
+--- Slide 34 ---
+1
+3. Outils et langages à maîtriser pour tout développeur
+	1. Git [version control and code repository]
+	2. SQL [for Database interaction]
+	3. Python [Coding and Programming]
+	4. Docker [Container]
+	5. Kubernetes [Container Orchastration]
+	6. Text Editors + IDE [NotePad et plus encore VisualStudio Code]
+	7. Linux Commands
+	8. Postman [API Testing]
+	9. Développement web (PHP, HTML, Javascript, CSS)
+	10. Développement d’application Android (Java)
+	
+	
+
+--- Slide 35 ---
+1
+4. Intelligence artificielle
+	
+	
+	
+
+--- Slide 36 ---
+1
+4. Intelligence artificielle
+	
+	
+	
+
+--- Slide 37 ---
+1
+4. Intelligence artificielle
+	
+	
+	
+
+--- Slide 38 ---
+1
+4. Intelligence artificielle
+	
+	
+	
+
+--- Slide 39 ---
+1
+4. Intelligence artificielle
+	
+	
+	
+
+
+=== FILE: Chapitre 8 Les listes chainées.pptx ===
+
+--- Slide 1 ---
+1
+Pour stocker des données en mémoire, nous avons utilisé des variables simples, des tableaux et des structures. Si vous souhaitez stocker une série de données, le plus simple est en général d'utiliser des tableaux.
+
+Toutefois, les tableaux se révèlent parfois assez limités, Par exemple: 
+si vous créez un tableau de 10 cases et que vous vous rendez compte plus tard dans votre programme que vous avez besoin de plus d'espace, il sera impossible d'agrandir ce tableau. 
+Il n'est pas possible d'insérer une case au milieu du tableau.
+1. Problème:
+
+--- Slide 2 ---
+
+Chapitre 8:
+Les listes chainées
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 3 ---
+Une liste chainée est une structure de données contenant des éléments du même type. 
+Chaque élément de cette liste possède:
+3
+2. Les listes chainées: 
+1
+&10
+ &01
+
+--- Slide 4 ---
+4
+Comparant au tableau , les éléments d’une liste sont éparpillés dans la mémoire contrairement  à un tableau où les éléments sont consécutifs
+2. Les listes chainées: 
+Tableau T
+Tableau L
+
+--- Slide 5 ---
+5
+Pour cette raison que la liaison entre les éléments d’une liste doit être assurée par le chainage et elle doit être identifiée par l’adresse de son premier élément.
+Le nombre d’éléments d’une liste chainée peut varier au cours de temps en ajoutant ou en supprimant des éléments. 
+2. Les listes chainées: 
+
+--- Slide 6 ---
+6
+Selon le chainage existant entre les éléments d’une liste, on peut distinguer plusieurs types de listes telles que: 
+
+
+
+
+
+
+
+
+Dans ce cours, on se limite sur les listes simplement chainées.
+3. Les différents types de listes:
+Les listes simplement chainées
+Les listes doublement chainées
+Les listes circulaires 
+Nil
+&01
+&09
+&05
+
+--- Slide 7 ---
+Dans ce type de liste, chaque élément contient l’adresse de l’élément suivant. Puisque le dernier élément n’a pas un élément suivant. Donc, l’adresse de son suivant est: NIL.
+Cette liste est identifiée par l’adresse de son premier élément qui doit être stockée dans un pointeur, appelé tête ou début (par exemple).
+Chaque élément de cette liste possède:
+- Sa partie information.
+- Son adresse. 
+  L’adresse de son élément suivant.
+
+7
+4 Les listes simplement chainées: 
+
+--- Slide 8 ---
+Exemple:
+Supposons que nous avons les éléments suivants dans la mémoire centrale: {1, 2, 3, 7}. Ces éléments sont éparpillés dans la mémoire et sont reliés comme suit:
+8
+
+--- Slide 9 ---
+La liste précédente est représentée comme suit:
+9
+
+--- Slide 10 ---
+10
+Remarque:     
+La partie information peut être du type simple ou du type enregistrement.
+1.1 Déclaration d’une liste simplement chainée:
+
+Une liste est un enregistrement. Elle se déclare comme suit:
+
+--- Slide 11 ---
+11
+Exemple 1:
+
+Une liste simplement chainée dont  la partie information est un entier se 
+déclare comme suit:
+// Structure element
+struct element {
+	int var;
+	struct element * suivant;
+};
+
+--- Slide 12 ---
+12
+Exemple 2:
+
+Une simplement chainée dont  la partie information est une date (jour, 
+mois et année) 
+
+--- Slide 13 ---
+13
+4.2. Déclaration d’un pointeur sur une liste:
+
+
+
+
+
+
+
+Exemple:
+
+P, debut: ↑element;
+
+--- Slide 14 ---
+Chaque élément de la liste est identifié par une adresse. Donc, l’accès à ses différents champs se fait par adresse en utilisant l’une de ces deux possibilités suivantes:
+1. La flèche vers le haut  «↑» et le point «.».
+2. La droite flèche «->» (la plus utilisée).
+Exemple 1:  
+L’accès aux champs de l’exemple 1 se fait comme suit:
+P↑. x;  // ou p -> x
+P↑. suivant; // ou p->suivant
+
+
+
+
+
+
+
+
+
+
+14
+4.3. Manipulation d’une liste:
+
+--- Slide 15 ---
+Dans cette liste, on a:
+
+
+
+
+
+
+
+
+tete=&5                         Q=&20
+tete->suivant=&10        Q -> suivant=&50
+tete ->x=1                      Q -> x=3
+15
+Q
+
+Exemple 2:
+
+--- Slide 16 ---
+Il existe deux méthodes de création d’une liste simplement chainée:
+
+
+
+
+
+
+Dans ce cours, on s’intéresse à la méthode FIFO.
+16
+4.4. Création d’une liste simplement chainée
+2
+La méthode LIFO:
+Last In First Out 
+1
+La méthode FIFO
+First In First Out 
+Tableau T
+
+--- Slide 17 ---
+Dans cette méthode, la création peut se faire à l’aide de ces deux possibilités:
+ Avec deux pointeurs.
+ Avec un seul pointeur.
+17
+4.4. Création d’une liste simplement chainée:
+3.4.1.  La méthode FIFO:
+
+--- Slide 18 ---
+Les instructions de création d’une liste de  5 entiers par exemple sont:
+
+18
+3.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 19 ---
+Les instructions de création d’une liste de  5 entiers par exemple sont:
+
+19
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 20 ---
+Le parcours d’un tableau de taille N se fait à l’aide d’un indice i où i appartient à [1,N] et le passage d’un élément vers un autre se fait avec l’instruction i:i+1.
+Par contre, le parcours d’une liste se fait à l’aide d’un pointeur (p par exemple) où p appartient à [tete, NIL[ et le passage d’un élément vers un autre se fait avec l’instruction: 
+p:=p->suivant;
+20
+3.5. Parcours d’une liste simplement chainée:
+
+--- Slide 21 ---
+Exemple:
+Afficher la liste créée dans l’exemple précédent:
+21
+3.5. Parcours d’une liste simplement chainée:
+
+--- Slide 22 ---
+A la fin des traitements d’une liste simplement chainée, on doit libérer l’espace réservé pour tous ses éléments un par un.
+Les instructions de libération sont les suivantes:
+
+22
+3.6. Libération de l’espace réservé par une liste :
+
+--- Slide 23 ---
+Ecrire un algorithme qui permet de créer une liste d’entiers qui se termine par 0 (0 non inclus dans la liste). Puis, d’afficher tous les éléments pairs de cette liste. Enfin, de libérer l’espace réservé.
+23
+Exercice 1:
+
+--- Slide 24 ---
+ Ecrire l’action paramétrée Creer_Liste qui permet de créer une liste d’entiers qui se termine par 0 (0 non inclus dans la liste).
+
+ Ecrire l’action paramétrée Afficher qui permet d’afficher tous les éléments pairs d’une liste d’entiers. 
+
+3. Ecrire l’action paramétrée Liberer_Liste qui permet de libérer l’espace réservé par une liste d’entiers.
+
+4. Ecrire un algorithme qui permet de créer une liste d’entiers qui se termine par 0 (0 non inclus dans la liste). Puis, d’afficher tous les éléments pairs de cette liste. Enfin, de libérer l’espace réservé (utiliser les actions paramétrées).
+24
+Exercice 2:
+
+--- Slide 25 ---
+Dans cette partie, on présente les opérations de base sur les listes:
+- Insertion d’un élément.
+- Suppression d’un élément.
+- Tri d’une liste.
+25
+3.7. Quelques opérations sur les listes simplement chainées:
+
+--- Slide 26 ---
+Pour insérer un nouvel élément dans une liste, il faut prendre en considération les deux cas suivants:
+ L’insertion au début de la liste.
+ L’insertion au milieu de la liste.
+L’insertion se fait selon un critère. Par exemples: 
+- Respecter le tri d’une liste.
+- L’insertion selon une condition (après  ou avant l’apparition d’une valeur donnée, dans une position donnée, …).
+26
+3.7.1.  L’opération d’insertion:
+
+--- Slide 27 ---
+Cas 1: insertion au début de la liste
+1. Réserver un espace pour cet élément et stocker son adresse dans le pointeur Nouv. Par exemple: Nouv:=&80.
+
+27
+
+    &80                                     &30                             ….
+tete
+Nouv
+9
+
+
+3.7.1.  L’opération d’insertion:
+
+--- Slide 28 ---
+Cas 1: insertion au début de la liste
+2. Mettre à jour son suivant (le suivant de Nouv est tete): Nouv->suivant:=tete;
+
+
+28
+
+    &80                                   &30                             ….
+tete
+Nouv
+9
+&30
+
+3.7.1.  L’opération d’insertion:
+
+--- Slide 29 ---
+Cas 1: insertion au début de la liste
+3. Déplacer la tete vers Nouv: tete:=Nouv
+
+
+29
+
+    &80                                   &30                             ….
+tete
+Nouv
+9
+&30
+
+tete
+
+3.7.1.  L’opération d’insertion:
+
+--- Slide 30 ---
+Cas 1: insertion au début de la liste
+Les instructions nécessaires sont:
+
+
+
+
+
+30
+3.7.1.  L’opération d’insertion:
+
+--- Slide 31 ---
+Cas 2: insertion au milieu
+On suppose qu’on veut insérer un nouvel élément avant l’élément d’adresse p dans cette liste par exemple. 
+
+31
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+3.7.1.  L’opération d’insertion:
+
+--- Slide 32 ---
+Cas 2: insertion au milieu
+Réserver un espace pour cet élément et stocker son adresse dans le pointeur Nouv. Par exemple: Nouv=80. 
+32
+
+&30                              &40                               &50                               &60                      
+tete
+p
+pred
+
+
+3.7.1.  L’opération d’insertion:
+
+--- Slide 33 ---
+Cas 2: insertion au milieu
+33
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+Nouv
+
+
+
+&80
+Mettre à jour le suivant de pred:
+pred->suivant:=Nouv
+3.7.1.  L’opération d’insertion:
+
+--- Slide 34 ---
+Cas 2: insertion au milieu:
+
+34
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+Nouv
+
+&50
+
+&80
+Mettre à jour le suivant de Nouv:
+Nouv->suiv:=p
+3.7.1.  L’opération d’insertion:
+
+--- Slide 35 ---
+Cas 2: insertion au milieu (à l’aide de deux pointeurs)
+Les instructions nécessaires sont:
+
+
+
+
+
+35
+3.7.1.  L’opération d’insertion:
+
+--- Slide 36 ---
+Ecrire l’action paramétrée Inserer_Valeur avant la première apparition de la valeur val dans une liste d’entiers.
+Ecrire l’action paramétrée Inserer_Valeurs_Paires qui insère la valeur val après chaque valeur paire dans une liste d’entiers.
+36
+Exercice 3:
+
+--- Slide 37 ---
+Pour supprimer un élément d’une liste, il faut prendre en considération les deux cas suivants:
+ La suppression au début de la liste.
+ La suppression au milieu de la liste.
+
+
+37
+3.7.2.  L’opération de suppression:
+
+--- Slide 38 ---
+Cas 1: suppression au début de la liste
+1. Stocker l’adresse tete dans un pointeur (par exemple p) avant le déplacement (pour ne pas perdre l’adresse).
+
+
+38
+
+&30                             &40                               &50                               &60                      
+tete
+p
+3.7.2.  L’opération de suppression:
+
+--- Slide 39 ---
+Cas 1: suppression au début de la liste
+2. Déplacer la tete vers l’élément suivant: 
+tete:=tete->suivant;
+39
+
+&30                             &40                               &50                               &60                      
+tete
+p
+tete
+
+
+3.7.2.  L’opération de suppression:
+
+--- Slide 40 ---
+Cas 1: suppression au début de la liste
+3. Libérer l’espace occupé par p: liberer(p).
+40
+
+&40
+
+&30                             &40                               &50                               &60                      
+p
+tete
+
+3.7.2.  L’opération de suppression:
+
+--- Slide 41 ---
+Cas 1: suppression au début de la liste
+Les instructions nécessaires sont:
+
+
+
+
+
+41
+3.7.2.  L’opération de suppression:
+
+--- Slide 42 ---
+Cas 2: Suppression au milieu
+On veut supprimer l’élément d’adresse p dans cette liste par exemple.
+
+42
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+3.7.2.  L’opération de suppression:
+
+--- Slide 43 ---
+Cas 2: Suppression au milieu
+Modifier le suivant de pred: 
+       pred -> suivant:=p -> suivant;
+
+43
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+3.7.2.  L’opération de suppression:
+
+--- Slide 44 ---
+Cas 2: Suppression au milieu
+2. Libérer l’espace occupé par p: liberer(p)
+
+44
+
+&30                             &40                               &50                               &60                      
+tete
+p
+pred
+
+
+3.7.2.  L’opération de suppression:
+
+--- Slide 45 ---
+Cas 2: Suppression au milieu
+Les instructions nécessaires sont:
+
+
+
+
+
+45
+3.7.2.  L’opération de suppression:
+
+--- Slide 46 ---
+Ecrire l’action paramétrée Supprimer_Une_Occurrence qui supprime la première apparition de la valeur val à partir d’une liste d’entiers.
+Ecrire l’action paramétrée Supprimer_Toutes_Occurrences  qui supprime toutes les occurrences de la valeur val à partir d’une liste d’entiers.
+46
+Exercice 4:
+
+--- Slide 47 ---
+Trier une liste veut dire ordonner ses éléments selon un critère en changeant la partie information seulement (sans toucher les adresses).
+L’algorithme de tri par sélection appliqué sur les tableaux est appliqué aussi sur les listes (manipuler les adresses au lieu de manipuler les indices). 
+L’algorithme de tri par insertion n’est pas applicable car il nécessite le retour arrière.
+L’algorithme de tri par permutation peut être applicable mais il nécessite le calcul du nombre d’éléments de la liste d’abord et aussi l’utilisation des indices et des adresses.
+47
+3.7.3.  L’opération de tri:
+
+--- Slide 48 ---
+Ecrire l’action paramétrée Trier_Liste qui permet de trier une liste simplement chainée dont la partie information est un entier, selon l’ordre croissant.
+48
+Exercice 5:
+
+--- Slide 49 ---
+Rappel (pour les enseignants):
+On rajoute aussi le tri par sélection pour un tableau d’entiers de taille N.
+49
+
+--- Slide 50 ---
+50
+3.7.3.  L’opération de tri:
+
+--- Slide 51 ---
+51
+Array vs. Linked List Complexity Comparison
+
+
+--- Slide 52 ---
+Comparaison Tableau VS liste chainée:
+52
+
+--- Slide 53 ---
+Allouer un espace pour le premier élément et stocker son adresse dans le pointeur tete. Ensuite, remplir la partie information.
+Exemple: adresse de tete est 40 et la partie information est un entier. 
+53
+
+tete
+&40
+4.4. Création d’une liste simplement chainée
+	1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 54 ---
+L’élément suivant n’est pas encore créé, on ne peut rien mettre dans tete ->suivant. Puisque la tête pointe toujours sur le premier élément, alors on doit utiliser un autre pointeur pour sauvegarder son adresse (pour mettre à jour le chainage) :
+Q:=tete ;
+54
+
+tete
+&40
+Q
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 55 ---
+Créer le deuxième élément : allouer un espace mémoire et stocker son adresse dans le pointeur P. Ensuite, remplir la partie information. 
+Exemple: P=50  et P ->x=2
+55
+
+tete
+&40                             &50
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 56 ---
+Mettre à jour le chainage : stocker l’adresse P dans:
+ Q->suivant : Q->suivant :=P ;
+Exemple: Q->suivant:=50 
+56
+1
+&50
+
+tete
+&40                             &50
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 57 ---
+De la même manière, stocker l’adresse du l’élément créé pour mettre à jour le chainage. Puisque, on n’aura pas besoin de l’adresse stockée dans Q. Donc : on le déplace : Q:=P (pour mettre à jour le chainage pour le prochain élément)
+57
+1
+&50
+
+tete
+&40                             &50
+Q
+
+P
+Q
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 58 ---
+Créer le troisième élément : allouer un espace mémoire et stocker son adresse dans le pointeur P. Ensuite, remplir la partie information.
+Exemple: P:=60 et P->x:=3 
+58
+1
+&50
+
+tete
+&40                             &50                              &60                
+
+P
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 59 ---
+Mettre à jour le chainage : stocker l’adresse P dans Q->suiv :
+Q->suivant: =P ;
+Exemple: Q->suivant :=60;
+59
+1
+&50
+
+tete
+&40                             &50                              &60                
+2
+&60
+
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 60 ---
+De la même manière, on a besoin de stocker l’adresse du l’élément créé pour mettre à jour le chainage. Puisque, on n’aura pas besoin de l’adresse stockée dans Q, donc : on  déplace le pointeur : Q:=P
+60
+1
+&50
+
+tete
+&40                             &50                             &60                
+2
+&60
+Q
+
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 61 ---
+
+Les mêmes étapes s’appliquent pour les autres éléments.
+61
+1
+&50
+
+tete
+& 40                           &50                           &60                ….                
+2
+& 60
+Q
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 62 ---
+On a terminé la création de la liste. Donc, le suivant du dernier élément contient l’adresse NIL :
+P->suivant :=NIL ou : Q->suivant:=NIL
+62
+1
+& 50
+
+tete
+& 40                       &50                          &60                                 ………….. & 90                
+2
+& 60
+3
+& 70
+Q
+7
+NIL
+
+P
+4.4. Création d’une liste simplement chainée
+1.  La méthode FIFO (avec deux pointeurs):
+
+--- Slide 63 ---
+Allouer un espace pour le premier élément et stocker son adresse dans le pointeur tete. Ensuite, remplir la partie information.
+Exemple: l’adresse de tete est 40
+63
+
+tete
+&40
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO(avec un seul pointeur) :
+
+--- Slide 64 ---
+L’élément suivant n’est pas encore créé, on ne peut rien mettre dans tete ->suivant. Puisque la tete pointe toujours sur le premier élément, alors on doit utiliser un autre pointeur pour sauvegarder son adresse (pour mettre à jour le chainage) :
+Q:=tete ;
+64
+
+tete
+&40
+Q
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 65 ---
+Créer le deuxième élément : allouer un espace mémoire et stocker son adresse directement dans Q->suivant. 
+Exemple: Q->suivant:= 50.
+65
+1
+&50
+
+tete
+&40                             &50
+Q
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 66 ---
+De la même manière, on n’a pas besoin de l’adresse stockée dans Q. On doit le déplacer vers l’élément créé pour remplir sa partie information et aussi pour mettre à jour le chainage : Q:= Q->suivant.
+66
+1
+&50
+
+tete
+&40                            &50
+Q
+Q
+
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 67 ---
+Créer le troisième élément : allouer un espace mémoire et stocker son adresse directement dans Q->suivant. 
+Exemple: Q->suivant:=60.
+67
+1
+&50
+
+tete
+&40                             &50                            &60                
+2
+&60
+
+Q
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 68 ---
+De la même manière, on n’a pas besoin de l’adresse stockée dans Q. On doit le déplacer vers l’élément créé pour remplir sa partie information et aussi pour mettre à jour le chainage : Q:= Q->suivant.
+68
+1
+&50
+
+tete
+&40                             &50                              &60                
+2
+&60
+Q
+
+Q
+
+3.4. Création d’une liste simplement chainée
+2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 69 ---
+
+Les mêmes étapes s’appliquent pour les autres éléments.
+69
+1
+&50
+
+tete
+&40                             &50                              &60                ….                
+2
+&60
+Q
+
+3.4. Création d’une liste simplement chainée
+3.4.2.  La méthode FIFO (avec un seul pointeur) :
+
+--- Slide 70 ---
+On a terminé la création de la liste. Donc, le suivant du dernier élément contient l’adresse NIL :
+ Q->suivant: =NIL
+70
+1
+&50
+
+tete
+&40                             &50                           &60                …………..             &90                
+2
+&60
+3
+&70
+Q
+7
+NIL
+
+3.4. Création d’une liste simplement chainée
+3.4.2.  La méthode FIFO (avec un seul pointeur) :
+
+
+=== FILE: Chapitre 9 Les piles version finale.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 9:
+Les piles
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+2
+Dans quelques applications informatiques, on nécessite le traitement des données dans l’ordre inverse de leur arrivée où la dernière donnée ajoutée sera la première traitée.
+Exemple: dans les appels des actions paramétrées, la dernière action paramétrée appelée sera la première exécutée. Pour les appels suivants
+f1 appelle f2, f2 appelle f3 et f3 appelle f4. Alors, l’ordre de l’exécution est f4, f3, f2 puis f1.
+Donc, il est nécessaire d’utiliser une nouvelle structure de données, appelée pile.
+1. Introduction:
+
+--- Slide 3 ---
+3
+Une pile est une structure de données fondée sur le principe « dernière donnée ajoutée est la première extraite » (LIFO: Last In First Out). Elle contient des données qui sont du même type (simples ou structurées).
+Le premier élément d’une pile est appelé le sommet qui est le seul élément accessible.
+
+
+
+Les opérations appliquées sur les piles sont appelées primitives.  
+2. Définition d’une pile:
+Sommet
+
+--- Slide 4 ---
+4
+Pour les appels précédents des actions paramétrées, on obtient cette pile:
+
+
+
+
+La dernière fonction appelée est f4. Elle se trouve au sommet de la pile et elle sera la première exécutée.
+Exemple:
+
+--- Slide 5 ---
+5
+Compilation d’un programme (par exemple, vérifier si une expression est bien parenthésée).
+Appels des actions paramétrées dans un programme.
+Utilisation des actions paramétrées récursives.
+Evaluation des expressions arithmétiques (va être détaillée à la fin de ce chapitre). 
+ 
+
+3. Les domaines d’application des piles:
+
+--- Slide 6 ---
+
+
+
+
+
+
+
+
+
+
+6
+4. Les primitives de manipulation:
+Pour pouvoir manipuler les piles, on utilise les primitives  suivantes:
+ Initialisation d’une pile.
+ Ajout d’un élément.
+ Retrait d’un élément.
+ Consultation du sommet.
+ Test de l’état de la pile.
+Dans ce qui suit, on va détailler chaque primitive.
+
+
+
+
+ 
+
+--- Slide 7 ---
+
+
+
+
+
+
+
+
+
+
+7
+4.1. Initialisation d’une pile:
+Permet d’ouvrir une pile vide. Sa syntaxe est:
+
+
+Exemple:  pour initialiser la pile P, on écrit:
+
+
+ 
+
+--- Slide 8 ---
+
+
+
+
+
+
+
+
+
+
+8
+4.2. Ajout d’un élément: 
+Permet d’ajouter un élément au sommet de la pile. Sa syntaxe est:
+
+
+Exemple:  soit la pile vide P et les variables entières x=3 et y=4.
+
+
+ 
+
+--- Slide 9 ---
+
+
+
+
+
+
+
+
+
+
+9
+4.3. Retrait d’un élément: 
+Permet de retirer un élément de la pile et de récupérer sa valeur dans une variable (l’élément retiré est supprimé de la pile). Sa syntaxe est:
+
+Exemple:  soit la pile  P suivante:
+
+
+ 
+x=4
+
+x=3
+
+
+--- Slide 10 ---
+
+
+
+
+
+
+
+
+
+
+10
+4.4. Consultation du sommet:
+Permet de consulter ou de récupérer le sommet de la pile dans une variable sans le supprimer. Mais, il faut être sûr que la pile n’est pas vide. Sa syntaxe est:
+
+
+Exemple:  Soit  la pile P. x=SommetPile(P);  
+
+
+ 
+
+x=4
+
+--- Slide 11 ---
+
+
+
+
+
+
+
+
+
+
+11
+4.5. Test de l’état de la pile:
+Permet de vérifier si une pile est vide ou non. Sa syntaxe est:
+
+
+Cette fonction retourne la valeur «vrai» si la pile est vide. Sinon, elle retourne la valeur «faux».
+
+
+--- Slide 12 ---
+12
+Il existe deux types de représentation des piles en mémoire:
+
+ Représentation à l’aide des tableaux.
+ Représentation à l’aide des listes simplement chainées.
+
+Donc, les primitives de manipulation dépendent de la représentation utilisée.  
+Dans ce chapitre, on va voir seulement la représentation d’une pile par une liste simplement chainée.
+5. Représentation des piles en mémoire:
+
+--- Slide 13 ---
+13
+6.1. Déclaration d’une pile:
+
+
+
+
+
+
+
+
+La déclaration d’un élément de la pile se fait comme suit:
+
+
+6. Représentation d’une pile avec une liste simplement chainée:
+
+--- Slide 14 ---
+14
+ 6.2.1. Initialiser_Pile:
+6.2. Les primitives de manipulation:
+On considère que le type de la partie information de la pile est: <type_element> 
+
+--- Slide 15 ---
+L’empilement d’un élément revient à faire une insertion au début de la liste.
+15
+6.1.2. Empiler:
+
+--- Slide 16 ---
+Le dépilement d’un élément revient à faire une suppression au début de la liste en récupérant l’élément supprimé.
+16
+6.1.3. Dépiler:
+
+--- Slide 17 ---
+17
+6.1.4. SommetPile:
+
+--- Slide 18 ---
+18
+6.1.5. PileVide:
+
+--- Slide 19 ---
+Ecrire l’action paramétrée Creation qui permet de créer une pile de N entiers.
+Ecrire l’action paramétrée Recherche qui vérifie l’existence de la valeur val dans une pile d’entiers. 
+Ecrire un algorithme qui permet de créer une pile de N entiers. Puis, de vérifier l’existence de la valeur entière val (val est donnée par l’utilisateur). 
+Remarque: Utiliser les primitives de manipulation des piles.
+19
+Exercice 1:
+
+--- Slide 20 ---
+Une expression arithmétique contient des opérandes, des opérateurs et des parenthèses. Pour l’évaluer, il faut la transformer en forme postfixée et utiliser une pile.
+La forme postfixée est comme suit:
+
+20
+Application aux expressions arithmétiques: 
+
+--- Slide 21 ---
+1. a+b  ---------------  ab+
+2. a+b*c-------------abc*+
+3. (a+b)*c ---------- ab+c*
+4. a+b*2*(c-d) ---------  ab2*cd-*+  
+21
+Exemples
+
+--- Slide 22 ---
+Pour évaluer une expression arithmétique écrite sous la forme infixée, on passe par les deux étapes suivantes:
+Transformer cette expression en forme postfixée et la mettre dans une pile.
+Copier le contenu de la pile dans un tableau de caractères.
+Dans ce qui suit, on donne les algorithmes de transformation en langage naturel.
+22
+Exemples
+
+--- Slide 23 ---
+          
+23
+Algorithme d’évaluation en langage naturel:
+
+--- Slide 24 ---
+          
+24
+Algorithme d’évaluation en langage naturel:
+
+--- Slide 25 ---
+          
+25
+Exemple 1: abc*+   
+
+--- Slide 26 ---
+          
+26
+Exemple 1 (suite):
+
+
+
+
+
+
+
+
+
+--- Slide 27 ---
+          
+27
+Exemple 2: ab2*cd-*+   
+
+--- Slide 28 ---
+          
+28
+
+
+
+
+
+
+
+
+
+=== FILE: Chapitre 9 Les piles version finale2025.pptx ===
+
+--- Slide 1 ---
+
+Chapitre 9:
+Les piles
+Ecole Nationale Préparatoire aux Etudes d’Ingéniorat Badji Mokhtar
+
+Docteur: A. MAHANI
+
+--- Slide 2 ---
+2
+Dans quelques applications informatiques, on nécessite le traitement des données dans l’ordre inverse de leur arrivée où la dernière donnée ajoutée sera la première traitée.
+Exemple: dans les appels des actions paramétrées, la dernière action paramétrée appelée sera la première exécutée. Pour les appels suivants
+f1 appelle f2, f2 appelle f3 et f3 appelle f4. Alors, l’ordre de l’exécution est f4, f3, f2 puis f1.
+Donc, il est nécessaire d’utiliser une nouvelle structure de données, appelée pile.
+1. Introduction:
+
+--- Slide 3 ---
+3
+Une pile est une structure de données fondée sur le principe « dernière donnée ajoutée est la première extraite » (LIFO: Last In First Out). Elle contient des données qui sont du même type (simples ou structurées).
+Le premier élément d’une pile est appelé le sommet qui est le seul élément accessible.
+
+
+
+Les opérations appliquées sur les piles sont appelées primitives.  
+2. Définition d’une pile:
+Sommet
+
+--- Slide 4 ---
+4
+Pour les appels précédents des actions paramétrées, on obtient cette pile:
+
+
+
+
+La dernière fonction appelée est f4. Elle se trouve au sommet de la pile et elle sera la première exécutée.
+Exemple:
+
+--- Slide 5 ---
+5
+Compilation d’un programme (par exemple, vérifier si une expression est bien parenthésée).
+Appels des actions paramétrées dans un programme.
+Utilisation des actions paramétrées récursives.
+Evaluation des expressions arithmétiques (va être détaillée à la fin de ce chapitre). 
+ 
+
+3. Les domaines d’application des piles:
+
+--- Slide 6 ---
+
+
+
+
+
+
+
+
+
+
+6
+4. Les primitives de manipulation:
+Pour pouvoir manipuler les piles, on utilise les primitives  suivantes:
+ Initialisation d’une pile.
+ Ajout d’un élément.
+ Retrait d’un élément.
+ Consultation du sommet.
+ Test de l’état de la pile.
+Dans ce qui suit, on va détailler chaque primitive.
+
+
+
+
+ 
+
+--- Slide 7 ---
+
+
+
+
+
+
+
+
+
+
+7
+4.1. Initialisation d’une pile:
+Permet d’ouvrir une pile vide. Sa syntaxe est:
+
+
+Exemple:  pour initialiser la pile P, on écrit:
+
+
+ 
+
+--- Slide 8 ---
+
+
+
+
+
+
+
+
+
+
+8
+4.2. Ajout d’un élément: 
+Permet d’ajouter un élément au sommet de la pile. Sa syntaxe est:
+
+
+Exemple:  soit la pile vide P et les variables entières x=3 et y=4.
+
+
+ 
+
+--- Slide 9 ---
+
+
+
+
+
+
+
+
+
+
+9
+4.3. Retrait d’un élément: 
+Permet de retirer un élément de la pile et de récupérer sa valeur dans une variable (l’élément retiré est supprimé de la pile). Sa syntaxe est:
+
+Exemple:  soit la pile  P suivante:
+
+
+ 
+x=4
+
+x=3
+
+
+--- Slide 10 ---
+
+
+
+
+
+
+
+
+
+
+10
+4.4. Consultation du sommet:
+Permet de consulter ou de récupérer le sommet de la pile dans une variable sans le supprimer. Mais, il faut être sûr que la pile n’est pas vide. Sa syntaxe est:
+
+
+Exemple:  Soit  la pile P. x=SommetPile(P);  
+
+
+ 
+
+x=4
+
+--- Slide 11 ---
+
+
+
+
+
+
+
+
+
+
+11
+4.5. Test de l’état de la pile:
+Permet de vérifier si une pile est vide ou non. Sa syntaxe est:
+
+
+Cette fonction retourne la valeur «vrai» si la pile est vide. Sinon, elle retourne la valeur «faux».
+
+
+--- Slide 12 ---
+12
+Il existe deux types de représentation des piles en mémoire:
+
+ Représentation à l’aide des tableaux.
+ Représentation à l’aide des listes simplement chainées.
+
+Donc, les primitives de manipulation dépendent de la représentation utilisée.  
+Dans ce chapitre, on va voir seulement la représentation d’une pile par une liste simplement chainée.
+5. Représentation des piles en mémoire:
+
+--- Slide 13 ---
+13
+6.1. Déclaration d’une pile:
+
+
+
+
+
+
+
+
+La déclaration d’un élément de la pile se fait comme suit:
+
+
+6. Représentation d’une pile avec une liste simplement chainée:
+
+--- Slide 14 ---
+14
+ 6.2.1. Initialiser_Pile:
+6.2. Les primitives de manipulation:
+On considère que le type de la partie information de la pile est: <type_element> 
+
+--- Slide 15 ---
+L’empilement d’un élément revient à faire une insertion au début de la liste.
+15
+6.1.2. Empiler:
+
+--- Slide 16 ---
+Le dépilement d’un élément revient à faire une suppression au début de la liste en récupérant l’élément supprimé.
+16
+6.1.3. Dépiler:
+
+--- Slide 17 ---
+17
+6.1.4. SommetPile:
+
+--- Slide 18 ---
+18
+6.1.5. PileVide:
+
+--- Slide 19 ---
+Ecrire l’action paramétrée Creation qui permet de créer une pile de N entiers.
+Ecrire l’action paramétrée Recherche qui vérifie l’existence de la valeur val dans une pile d’entiers. 
+Ecrire un algorithme qui permet de créer une pile de N entiers. Puis, de vérifier l’existence de la valeur entière val (val est donnée par l’utilisateur). 
+Remarque: Utiliser les primitives de manipulation des piles.
+19
+Exercice 1:
+
+--- Slide 20 ---
+Une expression arithmétique contient des opérandes, des opérateurs et des parenthèses. Pour l’évaluer, il faut la transformer en forme postfixée et utiliser une pile.
+La forme postfixée est comme suit:
+
+20
+Application aux expressions arithmétiques: 
+
+--- Slide 21 ---
+1. a+b  ---------------  ab+
+2. a+b*c-------------abc*+
+3. (a+b)*c ---------- ab+c*
+4. a+b*2*(c-d) ---------  ab2*cd-*+  
+21
+Exemples
+
+--- Slide 22 ---
+Pour évaluer une expression arithmétique écrite sous la forme infixée, on passe par les deux étapes suivantes:
+Transformer cette expression en forme postfixée et la mettre dans une pile.
+Copier le contenu de la pile dans un tableau de caractères.
+Dans ce qui suit, on donne les algorithmes de transformation en langage naturel.
+22
+Exemples
+
+--- Slide 23 ---
+          
+23
+Algorithme d’évaluation en langage naturel:
+
+--- Slide 24 ---
+          
+24
+Algorithme d’évaluation en langage naturel:
+
+--- Slide 25 ---
+          
+25
+Exemple 1: abc*+   
+
+--- Slide 26 ---
+          
+26
+Exemple 1 (suite):
+
+
+
+
+
+
+
+
+
+--- Slide 27 ---
+          
+27
+Exemple 2: ab2*cd-*+   
+
+--- Slide 28 ---
+          
+28
+
+
+
+
+
+
+
+
+--- Slide 29 ---
+29
+🎲 On va jouer à un jeu ! 🧠
+
+Je vous donne une liste d'exercices (sur les listes chaînées, piles, files, etc.).📌 Pendant l’affichage, vous choisissez un exercice à tour de rôle.👉 Une fois qu’un exercice est passé, on ne revient plus dessus !
+
+➡️ Le premier qui trouve la bonne solution l’écrit au tableau.	✔️ Si la solution est correcte, il gagne +5 points au contrôle.	❌ Si elle est fausse, celui qui la corrige correctement gagne les +5 points à la place 
+
+--- Slide 30 ---
+30
+💡 Attention, choisissez la bonne stratégie 
+
+Si tu vises les premiers exercices, la concurrence sera rude ! 😈
+Si tu t’attaques aux derniers, il y aura peut-être moins de pression, mais… aura-t-on le temps ? 🕐
+Si tu vas trop vite, tu risques de faire des erreurs ! 😬
+Si tu es trop lent, tu risques de rater ta chance ! 😭
+
+👉 À toi de trouver la meilleure stratégie !Vitesse ? Précision ? Ou coup malin ?
+Prêt(e) à relever le défi ? 😎
+
+--- Slide 31 ---
+31
+🎓 Exercice 1 – Rotation d'une liste chaînée vers la droite
+Étant donnée une liste chaînée et un entier k, effectuez une rotation vers la droite de la liste de k positions.Cela signifie que les k derniers éléments deviennent les premiers, dans l'ordre.
+
+Exemple :Liste : 1 → 2 → 3 → 4 → 5, k = 2Résultat attendu : 4 → 5 → 1 → 2 → 3
+
+--- Slide 32 ---
+32
+🎓 Exercice 2 – Addition de deux nombres représentés par des listes chaînées
+
+Énoncé :Deux nombres sont représentés par des listes chaînées, chaque nœud contenant un seul chiffre, dans l’ordre inverse (le chiffre des unités vient en premier).Additionnez les deux nombres et retournez le résultat sous forme d'une nouvelle liste chaînée.
+
+Exemple :Liste 1 : 2 → 4 → 3 (342)Liste 2 : 5 → 6 → 4 (465)Résultat attendu : 7 → 0 → 8 (807)
+
+--- Slide 33 ---
+33
+🎓 Exercice 3 – Décodage de chaîne avec crochets imbriqués
+
+Énoncé :Décoder une chaîne contenant des expressions avec des crochets. Chaque expression suit le format k[expression] où k est le nombre de répétitions.
+
+Exemple :Entrée : "3[a2[c]]"Interprétation : "a2[c]" devient "acc", répété 3 fois → Résultat : "accaccacc"
+
+--- Slide 34 ---
+34
+🎓 Exercice 4 – Partition d'une liste autour d'une valeur
+
+Énoncé :Réorganisez une liste chaînée de sorte que tous les éléments inférieurs à une valeur x apparaissent avant ceux supérieurs ou égaux à x. L’ordre relatif des éléments doit être conservé.
+
+Exemple :Liste : 1 → 4 → 3 → 2 → 5 → 2, x = 3Résultat attendu : 1 → 2 → 2 → 4 → 3 → 5
+
+--- Slide 35 ---
+35
+🎓 Exercice 5 – Conversion d'un nombre binaire représenté par une liste en entire
+
+Énoncé :Une liste chaînée représente un nombre binaire, chaque nœud contenant 0 ou 1, avec le bit de poids fort en premier. Calculez sa valeur décimale.
+
+Exemple :Liste : 1 → 0 → 1Valeur décimale : 1×2² + 0×2¹ + 1×2⁰ = 5
+
+--- Slide 36 ---
+36
+🎓 Exercice 6 – Miroir d’une file (queue)
+
+Énoncé :Étant donnée une file contenant des éléments, dupliquez-la en ajoutant à la fin une copie en ordre inverse des éléments d’origine.
+
+Exemple :File initiale : [1, 2, 3]File après opération : [1, 2, 3, 3, 2, 1]
+

@@ -1,0 +1,105 @@
+// ================================================================
+// PROBLEME : Ordonnancement de Processus FIFO (Files)
+// ================================================================
+// Ce programme simule un ordonnanceur de système d'exploitation simple
+// où les processus sont exécutés dans leur ordre d'arrivée au CPU.
+// ================================================================
+
+Type Processus = Enregistrement
+Debut
+    pid       : Entier;
+    nom[20]   : Chaine;
+    temps_cpu : Entier; // Temps requis en ms
+Fin;
+
+Type Noeud = Enregistrement
+Debut
+    data : Processus;
+    suiv : ^Noeud;
+Fin;
+
+Type Ordonnanceur = Enregistrement
+Debut
+    prets_tete  : ^Noeud;
+    prets_queue : ^Noeud;
+Fin;
+
+// --- Primitives ---
+
+Procedure Init(Var O : Ordonnanceur)
+Debut
+    O.prets_tete := NIL;
+    O.prets_queue := NIL;
+Fin;
+
+Procedure Soumettre_Processus(Var O : Ordonnanceur, id : Entier, n : Chaine, t : Entier)
+Var nveau : ^Noeud;
+Debut
+    nveau := allouer(taille(Noeud));
+    nveau->data.pid := id;
+    nveau->data.nom := n;
+    nveau->data.temps_cpu := t;
+    nveau->suiv := NIL;
+    
+    Si O.prets_tete = NIL Alors
+        O.prets_tete := nveau;
+    Sinon
+        O.prets_queue->suiv := nveau;
+    Fsi
+    O.prets_queue := nveau;
+    
+    Ecrire("[SYSTEME] Processus "); Ecrire(n); 
+    Ecrire(" (PID: "); Ecrire(id); 
+    Ecrire(") ajoute a la file des prets.\n");
+Fin;
+
+Procedure Executer_Suivant(Var O : Ordonnanceur)
+Var tmp : ^Noeud; proc : Processus;
+Debut
+    Si O.prets_tete = NIL Alors
+        Ecrire("[CPU] Idle - Aucun processus pret.\n");
+    Sinon
+        tmp := O.prets_tete;
+        proc := tmp->data;
+        O.prets_tete := tmp->suiv;
+        
+        Si O.prets_tete = NIL Alors O.prets_queue := NIL; Fsi
+        
+        Ecrire("[CPU] Execution de "); Ecrire(proc.nom);
+        Ecrire(" pendant "); Ecrire(proc.temps_cpu); Ecrire(" ms...\n");
+        Ecrire("[CPU] Processus PID "); Ecrire(proc.pid); Ecrire(" termine.\n");
+        
+        liberer(tmp);
+    Fsi
+Fin;
+
+Algorithme Ordonnanceur_FIFO;
+Var
+    cpu_scheduler : Ordonnanceur;
+
+Debut
+    Init(cpu_scheduler);
+    
+    Ecrire("=== SiMULATION ORDONNANCEUR OS FIFO ===\n\n");
+    
+    // 1. Les processus arrivent dans le systeme
+    Soumettre_Processus(cpu_scheduler, 101, "Navigateur", 250);
+    Soumettre_Processus(cpu_scheduler, 102, "Compilateur", 800);
+    Soumettre_Processus(cpu_scheduler, 103, "Editeur_Texte", 100);
+
+    Ecrire("\nDebut du cycle d'execution CPU :\n");
+    
+    // 2. Execution dans l'ordre FIFO
+    Executer_Suivant(cpu_scheduler);
+    Executer_Suivant(cpu_scheduler);
+    
+    Ecrire("\n[INTERRUPT] Nouveau processus detecte !\n");
+    Soumettre_Processus(cpu_scheduler, 104, "Client_Mail", 150);
+
+    Ecrire("\nReprise du cycle d'execution :\n");
+    Executer_Suivant(cpu_scheduler);
+    Executer_Suivant(cpu_scheduler);
+    Executer_Suivant(cpu_scheduler); // Vide
+
+    Ecrire("\nSimulation d'ordonnancement terminee.\n");
+Fin.

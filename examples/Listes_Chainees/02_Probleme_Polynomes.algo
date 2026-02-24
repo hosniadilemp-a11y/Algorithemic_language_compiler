@@ -1,0 +1,141 @@
+// ================================================================
+// PROBLEME : Addition de Polynômes par Listes Chaînées
+// ================================================================
+// Ce programme représente des polynômes sous forme de listes de
+// monômes (coefficient, exposant) et implémente l'addition de 
+// deux polynômes.
+// P(x) = 3x^4 + 2x^2 + 5
+// ================================================================
+
+Type Monome = Enregistrement
+Debut
+    coeff : Reel;
+    exp   : Entier;
+    suiv  : ^Monome;
+Fin;
+
+// --- 1. Gestion des Monômes ---
+
+Procedure Inserer_Monome(Var P : ^Monome, c : Reel, e : Entier)
+Var m, curr, prev : ^Monome;
+Debut
+    Si c <> 0.0 Alors
+        m := allouer(taille(Monome));
+        m->coeff := c;
+        m->exp := e;
+        m->suiv := NIL;
+        
+        Si P = NIL Alors
+            P := m;
+        Sinon
+            // Insertion triee par exposant decroissant
+            curr := P;
+            prev := NIL;
+            TantQue curr <> NIL Et curr->exp > e Faire
+                prev := curr;
+                curr := curr->suiv;
+            FinTantQue
+            
+            Si prev = NIL Alors
+                m->suiv := P;
+                P := m;
+            Sinon
+                m->suiv := curr;
+                prev->suiv := m;
+            Fsi
+        Fsi
+    Fsi
+Fin;
+
+Procedure Afficher_Polynome(P : ^Monome)
+Var curr : ^Monome;
+Debut
+    curr := P;
+    Si curr = NIL Alors
+        Ecrire("0");
+    Sinon
+        TantQue curr <> NIL Faire
+            Ecrire(curr->coeff);
+            Si curr->exp <> 0 Alors
+                Ecrire("x^"); Ecrire(curr->exp);
+            Fsi
+            
+            curr := curr->suiv;
+            Si curr <> NIL Alors
+                Si curr->coeff > 0 Alors Ecrire(" + "); Fsi
+            Fsi
+        FinTantQue
+    Fsi
+    Ecrire("\n");
+Fin;
+
+// --- 2. Addition de Polynômes ---
+
+Fonction Additionner(P1 : ^Monome, P2 : ^Monome) : ^Monome
+Var R : ^Monome; c1, c2 : ^Monome;
+Debut
+    R := NIL;
+    c1 := P1;
+    c2 := P2;
+    
+    TantQue c1 <> NIL Et c2 <> NIL Faire
+        Si c1->exp > c2->exp Alors
+            Inserer_Monome(R, c1->coeff, c1->exp);
+            c1 := c1->suiv;
+        Sinon
+            Si c1->exp < c2->exp Alors
+                Inserer_Monome(R, c2->coeff, c2->exp);
+                c2 := c2->suiv;
+            Sinon
+                // Memes exposants -> additionner les coeffs
+                Inserer_Monome(R, c1->coeff + c2->coeff, c1->exp);
+                c1 := c1->suiv;
+                c2 := c2->suiv;
+            Fsi
+        Fsi
+    FinTantQue
+    
+    // Ajouter les monomes restants
+    TantQue c1 <> NIL Faire
+        Inserer_Monome(R, c1->coeff, c1->exp);
+        c1 := c1->suiv;
+    FinTantQue
+    
+    TantQue c2 <> NIL Faire
+        Inserer_Monome(R, c2->coeff, c2->exp);
+        c2 := c2->suiv;
+    FinTantQue
+    
+    Retourner(R);
+Fin;
+
+Algorithme Addition_Polynomes_LLC;
+Var
+    Poly1, Poly2, Resultat : ^Monome;
+
+Debut
+    Poly1 := NIL;
+    Poly2 := NIL;
+    
+    Ecrire("=== ADDITION DE POLYNOMES (LLC) ===\n\n");
+    
+    // P1 = 5x^4 + 2x^2 + 1
+    Inserer_Monome(Poly1, 5.0, 4);
+    Inserer_Monome(Poly1, 2.0, 2);
+    Inserer_Monome(Poly1, 1.0, 0);
+    
+    // P2 = 3x^3 + 4x^2 + 2x
+    Inserer_Monome(Poly2, 3.0, 3);
+    Inserer_Monome(Poly2, 4.0, 2);
+    Inserer_Monome(Poly2, 2.0, 1);
+    
+    Ecrire("P1(x) = "); Afficher_Polynome(Poly1);
+    Ecrire("P2(x) = "); Afficher_Polynome(Poly2);
+    
+    Resultat := Additionner(Poly1, Poly2);
+    
+    Ecrire("\nResultat P1(x) + P2(x) :\n");
+    Ecrire("R(x)  = "); Afficher_Polynome(Resultat);
+    
+    Ecrire("\nFin du programme.\n");
+Fin.

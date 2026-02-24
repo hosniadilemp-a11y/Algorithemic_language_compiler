@@ -1,0 +1,164 @@
+Algorithme OperateursEtEntreeSortie;
+// ============================================================
+// Exemple : Operateurs et Instructions de Base
+// Couvre :
+//   - Operateurs arithmetiques : + - * / Div Mod
+//   - Operateurs de comparaison : = <> < <= > >=
+//   - Operateurs logiques      : Et Ou Non
+//   - Instructions Lire / Ecrire
+//   - Expressions complexes combinees
+// ============================================================
+
+Var
+    a, b, c      : Entier;
+    x, y         : Reel;
+    resultat     : Reel;
+    est_vrai     : Booleen;
+    nom[30]      : Chaine;
+
+Debut
+    // ---------------------------------------------------------
+    // 1. INSTRUCTIONS Lire / Ecrire
+    // ---------------------------------------------------------
+    Ecrire("=== Instructions Lire et Ecrire ===\n");
+    Ecrire("Entrez un entier a : ");
+    Lire(a);
+    Ecrire("Entrez un entier b : ");
+    Lire(b);
+    Ecrire("Valeurs lues : a = ");
+    Ecrire(a);
+    Ecrire(", b = ");
+    Ecrire(b);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 2. OPERATEURS ARITHMETIQUES
+    //    + Addition        - Soustraction    * Multiplication
+    //    / Division reelle  Div Division entiere  Mod Reste
+    // ---------------------------------------------------------
+    Ecrire("=== Operateurs Arithmetiques ===\n");
+
+    c := a + b;
+    Ecrire("a + b = ");
+    Ecrire(c);
+    Ecrire("\n");
+
+    c := a - b;
+    Ecrire("a - b = ");
+    Ecrire(c);
+    Ecrire("\n");
+
+    c := a * b;
+    Ecrire("a * b = ");
+    Ecrire(c);
+    Ecrire("\n");
+
+    // Division entiere et reste
+    c := a Div b;
+    Ecrire("a Div b = ");
+    Ecrire(c);
+    Ecrire("  (quotient entier)\n");
+
+    c := a Mod b;
+    Ecrire("a Mod b = ");
+    Ecrire(c);
+    Ecrire("  (reste)\n");
+
+    // Division reelle
+    x := a;
+    y := b;
+    resultat := x / y;
+    Ecrire("a / b (reel) = ");
+    Ecrire(resultat);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 3. OPERATEURS DE COMPARAISON
+    //    = Egal   <> Different   < Inferieur   <= Inf. ou egal
+    //    > Superieur             >= Sup. ou egal
+    // ---------------------------------------------------------
+    Ecrire("=== Operateurs de Comparaison ===\n");
+
+    est_vrai := a = b;
+    Ecrire("a = b  -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := a <> b;
+    Ecrire("a <> b -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := a < b;
+    Ecrire("a < b  -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := a > b;
+    Ecrire("a > b  -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := a <= b;
+    Ecrire("a <= b -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := a >= b;
+    Ecrire("a >= b -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 4. OPERATEURS LOGIQUES : Et  Ou  Non
+    // ---------------------------------------------------------
+    Ecrire("=== Operateurs Logiques ===\n");
+
+    est_vrai := (a > 0) Et (b > 0);
+    Ecrire("(a > 0) Et (b > 0) -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := (a < 0) Ou (b > 0);
+    Ecrire("(a < 0) Ou (b > 0) -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    est_vrai := Non (a = b);
+    Ecrire("Non (a = b)         -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 5. EXPRESSiONS COMPLEXES COMBINEES
+    //    Arithmetiques, comparaisons et logique dans une seule
+    //    expression
+    // ---------------------------------------------------------
+    Ecrire("=== Expressions Complexes ===\n");
+
+    // Expression arithmetique complexe
+    resultat := (a + b) * 2 - (b Mod 3) + (a * a);
+    Ecrire("(a+b)*2 - (b Mod 3) + a*a = ");
+    Ecrire(resultat);
+    Ecrire("\n");
+
+    // Expression logique et comparaison combinee
+    est_vrai := ((a + b) > 10) Et ((a * b) <> 0) Ou (a = 1);
+    Ecrire("((a+b)>10) Et ((a*b)<>0) Ou (a=1) -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n");
+
+    // Priorite des operateurs
+    c := a + b * 2 - 1;         // * avant + selon la priorite
+    Ecrire("a + b*2 - 1 = ");
+    Ecrire(c);
+    Ecrire("  (priorite : * avant +)\n");
+
+    // Expression sur les booleens
+    est_vrai := Non (a < 0) Et (b >= 1) Et ((a Mod 2) = 0);
+    Ecrire("Non(a<0) Et (b>=1) Et (a Mod 2 = 0) -> ");
+    Ecrire(est_vrai);
+    Ecrire("\n\n");
+
+    Ecrire("=== Fin; ===\n");
+Fin.

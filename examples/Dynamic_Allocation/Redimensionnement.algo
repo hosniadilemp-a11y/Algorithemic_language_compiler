@@ -1,0 +1,54 @@
+Algorithme RedimensionnementTableau;
+Var
+    t_ancien : ^Entier;
+    t_nouveau : ^Entier;
+    taille_actuelle, nouvelle_taille, i : Entier;
+
+Debut
+    taille_actuelle := 3;
+    nouvelle_taille := 6;
+    
+    Ecrire("--- Probleme: Redimensionnement d'un tableau (Realloc Simule) ---", "\n");
+    Ecrire("Taille initiale : ", taille_actuelle, "\n");
+    
+    // 1. Allouer le tableau original et le remplir
+    t_ancien := allouer(taille_actuelle * taille(Entier));
+    t_ancien[0] := 111;
+    t_ancien[1] := 222;
+    t_ancien[2] := 333;
+    
+    Ecrire("Contenu initial:", "\n");
+    Pour i := 0 a taille_actuelle-1 Faire
+        Ecrire("t[", i, "] = ", t_ancien[i], "\n");
+    FinPour
+    
+    // 2. Le tableau est "plein". Nous simulons un reaolloc !
+    Ecrire("\nLe tableau est plein. Redimensionnement a la taille ", nouvelle_taille, "...", "\n");
+    
+    // a. Allouer le NOUVEAU tableau plus grand
+    t_nouveau := allouer(nouvelle_taille * taille(Entier));
+    
+    // b. Copier les ANCIENNES valeurs vers le nouveau
+    Pour i := 0 a taille_actuelle-1 Faire
+        t_nouveau[i] := t_ancien[i];
+    FinPour
+    
+    // c. LIBERER l'ancien tableau pour éviter les fuites de mémoire
+    liberer(t_ancien);
+    
+    // d. Pointeur redirecté (t_ancien "pointe sur" le nouveau bloc ! )
+    t_ancien := t_nouveau;
+    
+    // e. Rajouter de nouvelles donnees dans l'espace frais
+    t_ancien[3] := 444;
+    t_ancien[4] := 555;
+    t_ancien[5] := 666;
+    
+    // Affichage post-redimensionnement
+    Ecrire("\nContenu apres le redimensionnement simule:", "\n");
+    Pour i := 0 a nouvelle_taille-1 Faire
+        Ecrire("t_redim[", i, "] = ", t_ancien[i], "\n");
+    FinPour
+    
+    liberer(t_nouveau);
+Fin.

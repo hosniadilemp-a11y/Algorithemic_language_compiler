@@ -1,0 +1,11 @@
+
+Algorithme TestDecay;
+Var
+    phrase[50] : Chaine;
+    ptr_chaine : ^Chaine;
+    temp_chaine[50] : Chaine;
+Debut
+    phrase := "Pointeurs marchent!";
+    ptr_chaine := &phrase;
+    temp_chaine := ptr_chaine^;
+Fin.

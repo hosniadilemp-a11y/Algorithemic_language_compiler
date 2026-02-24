@@ -1,0 +1,33 @@
+Algorithme InversionTableau;
+Var
+    t[7] : Entier;
+    n, i, temp : Entier;
+
+Debut
+    n := 7;
+    t[0] := 1;
+    t[1] := 2;
+    t[2] := 3;
+    t[3] := 4;
+    t[4] := 5;
+    t[5] := 6;
+    t[6] := 7;
+    
+    Ecrire("--- Probleme: Inversion d'un Tableau ---", "\n");
+    Ecrire("Tableau original:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+    
+    // Inverser le tableau sur place
+    Pour i := 0 a (n div 2) - 1 Faire
+        temp := t[i];
+        t[i] := t[n - 1 - i];
+        t[n - 1 - i] := temp;
+    FinPour
+    
+    Ecrire("\nTableau inverse:", "\n");
+    Pour i := 0 a n-1 Faire
+        Ecrire("t[", i, "] = ", t[i], "\n");
+    FinPour
+Fin.

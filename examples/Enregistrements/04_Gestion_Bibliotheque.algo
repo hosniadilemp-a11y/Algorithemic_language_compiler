@@ -1,0 +1,214 @@
+// ================================================================
+// PROBLEME 3 : Système de Gestion de Bibliothèque Municipale
+// ================================================================
+// Ce programme gère un inventaire de livres, des auteurs, des 
+// adhérents et les transactions de prêt. Il utilise plus de 4 
+// structures imbriquées et 11 sous-programmes.
+// ================================================================
+
+Type Auteur = Enregistrement
+Debut
+    identifiant   : Entier;
+    nom_complet[50] : Chaine;
+    nationalite[30] : Chaine;
+    nombre_oeuvres : Entier;
+Fin;
+
+Type Livre = Enregistrement
+Debut
+    isbn[20]      : Chaine;
+    titre[60]     : Chaine;
+    id_auteur     : Entier; // Lien vers Auteur.identifiant
+    annee_pub     : Entier;
+    est_dispo     : Booleen;
+    prix_u        : Reel;
+Fin;
+
+Type Adherent = Enregistrement
+Debut
+    num_carte     : Entier;
+    nom[40]       : Chaine;
+    date_adh      : Chaine; // Format "JJ/MM/AAAA"
+    livres_en_main: Entier;
+    suspendu      : Booleen;
+Fin;
+
+Type Pret = Enregistrement
+Debut
+    id_pret       : Entier;
+    isbn_livre    : Chaine;
+    id_adherent   : Entier;
+    date_depart   : Chaine;
+    rendu         : Booleen;
+    delai_jours   : Entier;
+Fin;
+
+// --- 1. Sous-programmes d'Initialisation ---
+
+Procedure Init_Auteur(Var a : Auteur, id : Entier, nom : Chaine, nat : Chaine)
+Debut
+    a.identifiant := id;
+    a.nom_complet := nom;
+    a.nationalite := nat;
+    a.nombre_oeuvres := 0;
+Fin;
+
+Procedure Init_Livre(Var l : Livre, code : Chaine, tit : Chaine, auth : Entier, y : Entier, p : Reel)
+Debut
+    l.isbn := code;
+    l.titre := tit;
+    l.id_auteur := auth;
+    l.annee_pub := y;
+    l.prix_u := p;
+    l.est_dispo := Vrai;
+Fin;
+
+// --- 2. Fonctions de Vérification ---
+
+Fonction Booleen_Peut_Emprunter(a : Adherent) : Booleen
+Debut
+    Si a.suspendu Alors Retourner(Faux); Fsi
+    Si a.livres_en_main >= 3 Alors Retourner(Faux); Fsi
+    Retourner(Vrai);
+Fin;
+
+Fonction Entier_Chercher_Auteur(catalogue[5] : Auteur, n : Entier, id : Entier) : Entier
+Var i : Entier;
+Debut
+    Pour i := 0 a n - 1 Faire
+        Si catalogue[i].identifiant = id Alors Retourner(i); Fsi
+    FinPour
+    Retourner(-1);
+Fin;
+
+// --- 3. Gestion des Flux (Prêts / Retours) ---
+
+Procedure Enregistrer_Pret(Var p : Pret, Var l : Livre, Var a : Adherent, d : Chaine)
+Debut
+    Si l.est_dispo Et Booleen_Peut_Emprunter(a) Alors
+        p.id_pret := 5000 + a.num_carte; // Generateur simple
+        p.isbn_livre := l.isbn;
+        p.id_adherent := a.num_carte;
+        p.date_depart := d;
+        p.rendu := Faux;
+        p.delai_jours := 15;
+        
+        l.est_dispo := Faux;
+        a.livres_en_main := a.livres_en_main + 1;
+        Ecrire("[SUCCES] Pret enregistre pour "); Ecrire(a.nom); Ecrire("\n");
+    Sinon
+        Ecrire("[ERREUR] Impossible d'emprunter "); Ecrire(l.titre); Ecrire("\n");
+    Fsi
+Fin;
+
+Procedure Traiter_Retour(Var p : Pret, Var l : Livre, Var a : Adherent)
+Debut
+    Si p.rendu = Faux Alors
+        p.rendu := Vrai;
+        l.est_dispo := Vrai;
+        a.livres_en_main := a.livres_en_main - 1;
+        Ecrire("[RETOUR] Livre "); Ecrire(l.titre); Ecrire(" rendu par "); Ecrire(a.nom); Ecrire("\n");
+    Fsi
+Fin;
+
+// --- 4. Affichage et Statistiques ---
+
+Procedure Afficher_Details_Livre(l : Livre, cat_auth[5] : Auteur, n_auth : Entier)
+Var idx : Entier;
+Debut
+    idx := Entier_Chercher_Auteur(cat_auth, n_auth, l.id_auteur);
+    Ecrire("* TITRE : "); Ecrire(l.titre);
+    Ecrire(" (ISBN: "); Ecrire(l.isbn); Ecrire(")\n");
+    Si idx <> -1 Alors
+        Ecrire("  AUTEUR: "); Ecrire(cat_auth[idx].nom_complet); 
+        Ecrire(" ["); Ecrire(cat_auth[idx].nationalite); Ecrire("]\n");
+    Fsi
+    Ecrire("  ETAT  : ");
+    Si l.est_dispo Alors Ecrire("DISPONIBLE\n"); Sinon Ecrire("EMPRUNTE\n"); Fsi
+Fin;
+
+Procedure Afficher_Bilan_Adherent(a : Adherent)
+Debut
+    Ecrire("Adherent : "); Ecrire(a.nom);
+    Ecrire(" (Carte n°"); Ecrire(a.num_carte); Ecrire(")\n");
+    Ecrire("   Livres actifs : "); Ecrire(a.livres_en_main); Ecrire("\n");
+    Si a.suspendu Alors Ecrire("   *** STATUT : SUSPENDU ***\n"); Fsi
+Fin;
+
+Fonction Reel_Calculer_Valeur_Stock(stock[10] : Livre, n : Entier) : Reel
+Var i : Entier; total : Reel;
+Debut
+    total := 0.0;
+    Pour i := 0 a n - 1 Faire
+        total := total + stock[i].prix_u;
+    FinPour
+    Retourner(total);
+Fin;
+
+Procedure Rechercher_Par_Auteur(auth_nom : Chaine, stock[10] : Livre, n : Entier, cat_auth[5] : Auteur, na : Entier)
+Var i, id_a, idx_a : Entier;
+Debut
+    Ecrire("\nResultats pour l'auteur : "); Ecrire(auth_nom); Ecrire("\n");
+    Pour i := 0 a na - 1 Faire
+        Si cat_auth[i].nom_complet = auth_nom Alors 
+            id_a := cat_auth[i].identifiant;
+            Pour j := 0 a n - 1 Faire
+                Si stock[j].id_auteur = id_a Alors
+                    Ecrire("  - "); Ecrire(stock[j].titre); Ecrire("\n");
+                Fsi
+            FinPour
+        Fsi
+    FinPour
+Fin;
+
+Algorithme Gestion_Bibliotheque_Municipale;
+Var
+    les_auteurs[5] : Auteur;
+    le_stock[10]   : Livre;
+    les_membres[5] : Adherent;
+    les_prets[10]  : Pret;
+    
+    valeur_totale : Reel;
+    i : Entier;
+
+Debut
+    // --- Phase 1 : Initialisation des donnees ---
+    Init_Auteur(les_auteurs[0], 1, "Victor Hugo", "Francais");
+    Init_Auteur(les_auteurs[1], 2, "Albert Camus", "Francais");
+    Init_Auteur(les_auteurs[2], 3, "Kateb Yacine", "Algerien");
+
+    Init_Livre(le_stock[0], "978-2070409", "Les Miserables", 1, 1862, 25.50);
+    Init_Livre(le_stock[1], "978-2070360", "L'Etranger", 2, 1942, 12.00);
+    Init_Livre(le_stock[2], "978-2020228", "Nedjma", 3, 1956, 18.00);
+    Init_Livre(le_stock[3], "978-2070410", "Notre-Dame de Paris", 1, 1831, 22.00);
+
+    les_membres[0].num_carte := 1001; les_membres[0].nom := "Samy"; les_membres[0].livres_en_main := 0; les_membres[0].suspendu := Faux;
+    les_membres[1].num_carte := 1002; les_membres[1].nom := "Amine"; les_membres[1].livres_en_main := 2; les_membres[1].suspendu := Vrai;
+
+    Ecrire("=== LOGICIEL DE GESTION DE BIBLIOTHEQUE ===\n");
+    
+    // --- Phase 2 : Consultation ---
+    Ecrire("\nInventaire actuel :\n");
+    Afficher_Details_Livre(le_stock[0], les_auteurs, 3);
+    Afficher_Details_Livre(le_stock[1], les_auteurs, 3);
+    Afficher_Details_Livre(le_stock[2], les_auteurs, 3);
+
+    // --- Phase 3 : Operations de pret ---
+    Ecrire("\n--- Simulation de transaction ---\n");
+    // Samy (1001) veut emprunter "Les Miserables" (0)
+    Enregistrer_Pret(les_prets[0], le_stock[0], les_membres[0], "23/02/2026");
+    
+    // Amine (1002) veut emprunter "Nedjma" (2) -> Echec car suspendu
+    Enregistrer_Pret(les_prets[1], le_stock[2], les_membres[1], "23/02/2026");
+
+    // --- Phase 4 : Recherche et Bilan ---
+    Rechercher_Par_Auteur("Victor Hugo", le_stock, 4, les_auteurs, 3);
+    
+    Ecrire("\nBilan Adherent Samy :\n");
+    Afficher_Bilan_Adherent(les_membres[0]);
+
+    valeur_totale := Reel_Calculer_Valeur_Stock(le_stock, 4);
+    Ecrire("\nValeur patrimoniale de la bibliotheque : "); Ecrire(valeur_totale); Ecrire(" Euros\n");
+
+    Ecrire("\nExécution terminée.\n");
+Fin.

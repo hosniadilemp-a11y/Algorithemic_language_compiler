@@ -1,0 +1,41 @@
+Algorithme Tutoriel_Tableaux;
+Var
+    // 1. Déclaration de Tableaux
+    // Un tableau stocke plusieurs éléments du même type.
+    // Syntaxe : nomDuTableau[Taille] : Type;
+    notes[5] : Entier;
+    i : Entier;
+    somme : Entier;
+    moyenne : Reel;
+
+Debut
+    Ecrire("=== 📊 Tutoriel : Les Tableaux ===\n");
+    Ecrire("\n");
+
+    // 2. Initialisation des éléments
+    notes[0] <- 12;
+    notes[1] <- 15;
+    notes[2] <- 8;
+    notes[3] <- 19;
+    notes[4] <- 10;
+    
+    Ecrire("Nous avons un tableau 'notes' contenant 5 notes.\n");
+    
+    // 3. Parcours d'un tableau
+    Ecrire("Voici les notes : \n");
+    somme <- 0;
+    
+    Pour i <- 0 a 4 Faire
+        Ecrire("Note ", i + 1, " : ", notes[i], "\n");
+        somme <- somme + notes[i];
+    FinPour
+    
+    // 4. Calculs sur les tableaux
+    moyenne <- somme / 5;
+    Ecrire("\n");
+    Ecrire("Somme des notes : ", somme, "\n");
+    Ecrire("Moyenne : ", moyenne, "\n");
+
+    Ecrire("\n");
+    Ecrire("Fin; du tutoriel sur les tableaux.\n");
+Fin.

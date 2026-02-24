@@ -1,0 +1,35 @@
+Algorithme MinMaxTableauPointeurs;
+Var
+    t[5] : Entier;
+    ptr : ^Entier;
+    i, min_val, max_val : Entier;
+
+Debut
+    t[0] := 34;
+    t[1] := 12;
+    t[2] := 89;
+    t[3] := 5;
+    t[4] := 42;
+    
+    // Le pointeur prend l'adresse du premier élément du tableau
+    ptr := &t[0];
+    
+    min_val := ptr^;
+    max_val := ptr^;
+    
+    Ecrire("--- Probleme: Min/Max via Arithmetique des Pointeurs ---", "\n");
+    
+    Pour i := 1 a 4 Faire
+        // Accès aux éléments en utilisant l'arithmétique des pointeurs
+        Si (ptr + i)^ < min_val Alors
+            min_val := (ptr + i)^;
+        Fsi
+        
+        Si (ptr + i)^ > max_val Alors
+            max_val := (ptr + i)^;
+        Fsi
+    FinPour
+    
+    Ecrire("\nValeur minimale : ", min_val, "\n");
+    Ecrire("Valeur maximale : ", max_val, "\n");
+Fin.

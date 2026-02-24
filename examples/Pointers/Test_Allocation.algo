@@ -1,0 +1,30 @@
+Algorithme TestAllocation;
+Var 
+    t : ^^Entier;
+    n, m, i, j : Entier;
+Debut
+    n := 2;
+    m := 3;
+    
+    // Allocation for the array of pointers
+    t := allouer(n * taille(^Entier));
+    
+    Pour i := 0 a n-1 Faire
+        t[i] := allouer(m * taille(Entier));
+        Pour j := 0 a m-1 Faire
+            t[i][j] := i + j;
+        FinPour
+    FinPour
+    
+    // Indexing allocated space using pointers vs arrays
+    Ecrire("t[0][0] = ", t[0][0], "\n");
+    Ecrire("((t+1)^+1)^ = ", ((t+1)^+1)^, "\n");
+    
+    // Free the dynamically allocated sub arrays
+    Pour i := 0 a n-1 Faire
+        liberer(t[i]);
+    FinPour
+    
+    // Free the main array
+    liberer(t);
+Fin.

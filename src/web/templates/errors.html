@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dracula">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation des Erreurs - AlgoCompiler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #282a36;
+            color: #f8f8f2;
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Scroll is handled by child panels */
+            font-size: 14px;
+            /* Reduced base font size */
+        }
+
+        /* Beautiful scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #21222c;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #6272a4;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #bd93f9;
+        }
+
+        .navbar-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1e1f29;
+            border-bottom: 2px solid #bd93f9;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .navbar-custom h1 {
+            color: #ff79c6;
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .btn-custom {
+            background-color: #bd93f9;
+            color: #282a36;
+            border: none;
+            font-weight: bold;
+            padding: 6px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-custom:hover {
+            background-color: #ff79c6;
+            color: #fff;
+        }
+
+        .layout-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: #21222c;
+            border-right: 1px solid #44475a;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            flex-shrink: 0;
+            z-index: 5;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #6272a4;
+            background-color: #282a36;
+            color: #f8f8f2;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: #8be9fd;
+            box-shadow: 0 0 5px rgba(139, 233, 253, 0.3);
+        }
+
+        .outline {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .outline li {
+            margin-bottom: 4px;
+        }
+
+        .outline-title {
+            color: #bd93f9;
+            font-weight: bold;
+            font-size: 13px;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .outline-title:first-child {
+            margin-top: 0;
+        }
+
+        .outline a {
+            color: #f8f8f2;
+            text-decoration: none;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: background 0.2s, color 0.2s;
+            border-left: 2px solid transparent;
+        }
+
+        .outline a:hover,
+        .outline a.active {
+            background-color: #44475a;
+            color: #8be9fd;
+            border-left-color: #8be9fd;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px 40px;
+            overflow-y: auto;
+            background-color: #282a36;
+            scroll-behavior: smooth;
+        }
+
+        .error-section {
+            margin-bottom: 40px;
+        }
+
+        .error-section h2 {
+            font-size: 1.5rem;
+            color: #bd93f9;
+            border-bottom: 1px solid #44475a;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .error-card {
+            background-color: #44475a;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #ff5555;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .error-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-card.syntax {
+            border-left-color: #f1fa8c;
+        }
+
+        .error-card.lexical {
+            border-left-color: #ffb86c;
+        }
+
+        .error-card.semantic {
+            border-left-color: #ff5555;
+        }
+
+        .error-card.execution {
+            border-left-color: #ff922b;
+        }
+
+        .error-card h3 {
+            color: #8be9fd;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .error-code {
+            background-color: #6272a4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-desc {
+            line-height: 1.6;
+            font-size: 13.5px;
+            color: #e6edf3;
+        }
+
+        .error-desc strong {
+            color: #50fa7b;
+        }
+
+        .error-desc ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        .error-desc li {
+            margin-bottom: 4px;
+        }
+
+        pre {
+            background-color: #21222c;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 15px;
+            border: 1px solid #191a21;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+        }
+
+        .error-fix {
+            margin-top: 15px;
+            background-color: #21222c;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #50fa7b;
+            font-size: 13.5px;
+            border-left: 4px solid #50fa7b;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar-custom">
+        <h1>Documentation Hôpital des Erreurs</h1>
+        <a href="/" class="btn-custom">&larr; Retour à l'Éditeur</a>
+    </div>
+
+    <div class="layout-container">
+        <!-- Sidebar Outline -->
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Chercher une erreur (ex: E3.2, boucle)..."
+                    autocomplete="off">
+            </div>
+            <ul class="outline" id="outlineList">
+                <span class="outline-title">Lexicales (E1.x)</span>
+                <li><a href="#E1.1" data-target="E1.1">E1.1 - Caractère Inconnu</a></li>
+
+                <span class="outline-title">Syntaxiques (E2.x)</span>
+                <li><a href="#E2.1" data-target="E2.1">E2.1 - Erreur Grammaticale</a></li>
+                <li><a href="#E2.2" data-target="E2.2">E2.2 - Fin de Fichier (EOF)</a></li>
+                <li><a href="#E2.3" data-target="E2.3">E2.3 - Boucle Pour ('a')</a></li>
+                <li><a href="#E2.4" data-target="E2.4">E2.4 - Déclaration Incomplète</a></li>
+
+                <span class="outline-title">Sémantiques (E3.x)</span>
+                <li><a href="#E3.1" data-target="E3.1">E3.1 - Non Initialisée</a></li>
+                <li><a href="#E3.2" data-target="E3.2">E3.2 - Allocation Mémoire</a></li>
+                <li><a href="#E3.3" data-target="E3.3">E3.3 - Assignation Chaîne</a></li>
+                <li><a href="#E3.4" data-target="E3.4">E3.4 - Déjà Déclarée</a></li>
+
+                <span class="outline-title">Exécution (E4.x)</span>
+                <li><a href="#E4.1" data-target="E4.1">E4.1 - Boucle Infinie (Timeout)</a></li>
+                <li><a href="#E4.2" data-target="E4.2">E4.2 - Récursion Infinie</a></li>
+                <li><a href="#E4.3" data-target="E4.3">E4.3 - Mémoire Pleine (OOM)</a></li>
+                <li><a href="#E4.4" data-target="E4.4">E4.4 - Hors Limites</a></li>
+                <li><a href="#E4.5" data-target="E4.5">E4.5 - Division par Zéro</a></li>
+
+                <span class="outline-title">Flux (E5.x)</span>
+                <li><a href="#E5.1" data-target="E5.1">E5.1 - Retourner Invalide</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+
+            <div class="error-section" id="sec-e1">
+                <h2>Erreurs Lexicales (E1.x)</h2>
+                <div id="E1.1" class="error-card lexical">
+                    <h3><span class="error-code">E1.1</span> Caractère Illégal Inconnu</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Le compilateur a rencontré un symbole ou un caractère qu'il ne
+                        reconnaît pas dans son dictionnaire lexical. L'analyseur (lexer) ne parvient pas à associer ce
+                        caractère à un mot-clé, un opérateur ou un identifiant valide.
+                        <br><br>
+                        <strong>Causes communes :</strong>
+                        <ul>
+                            <li>L'utilisation de guillemets typographiques (<code>« »</code> ou <code>“ ”</code>) au
+                                lieu de guillemets droits (<code>" "</code>).</li>
+                            <li>La présence de caractères spéciaux non supportés par le langage Algo (comme
+                                <code>$</code>, <code>`</code>, <code>~</code>, <code>#</code>, <code>@</code>).</li>
+                            <li>Un copier-coller depuis un document Word ou un PDF qui a inséré des espaces invisibles
+                                ou des tirets longs (<code>—</code> au lieu de <code>-</code>).</li>
+                        </ul>
+                    </div>
+                    <pre><code><span style="color:red">~</span>ma_variable := 10; <span style="color:gray">// Le caractère '~' n'existe pas dans la syntaxe Algo</span>
+chaine := <span style="color:red">«</span>Bonjour<span style="color:red">»</span>; <span style="color:gray">// Guillemets typographiques invalides</span></code></pre>
+                    <div class="error-fix">Solution : Remplacez les caractères problématiques par leurs équivalents
+                        standards (ex: remplacez les guillemets obliques par des guillemets droits <code>"</code>).
+                        Supprimez tout caractère spécial inutile dans vos variables.</div>
+                </div>
+            </div>
+
+            <div class="error-section" id="sec-e2">
+                <h2>Erreurs Syntaxiques (E2.x)</h2>
+                <div id="E2.1" class="error-card syntax">
+                    <h3><span class="error-code">E2.1</span> Erreur de Syntaxe Grammaticale</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> La structure de votre algorithme ne respecte pas les règles
+                        grammaticales attendues par l'analyseur syntaxique (parser). Le compilateur a trouvé un "jeton"
+                        (token) inattendu par rapport à ce qu'il anticipait.
+                        <br><br>
+                        <strong>Causes communes :</strong>
+                        <ul>
+                            <li>L'oubli d'un point-virgule (<code>;</code>) à la fin d'une instruction.</li>
+                            <li>Des parenthèses <code>()</code>, crochets <code>[]</code> ou accolades <code>{}</code>
+                                non équilibrés ou mal refermés.</li>
+                            <li>L'utilisation d'un mot-clé réservé au mauvais endroit (par exemple, <code>Alors</code>
+                                sans <code>Si</code>, ou <code>Faire</code> au lieu de <code>Alors</code>).</li>
+                        </ul>
+                    </div>
+                    <pre><code>Si a = b <span style="color:red">Faire</span> <span style="color:gray">// Erreur : 'Faire' appartient à 'TantQue'. 'Si' nécessite 'Alors'</span>
+    Ecrire(a);
+Fin Si
+
+x := (a + b * c; <span style="color:gray">// Erreur : parenthèse fermante manquante</span></code></pre>
+                    <div class="error-fix">Solution : Contrôlez la ligne indiquée. Avez-vous oublié un point-virgule
+                        (;), refermé une parenthèse ou mal orthographié une instruction ? Assurez-vous que les blocs
+                        sont correctement structurés.</div>
+                </div>
+                <div id="E2.2" class="error-card syntax">
+                    <h3><span class="error-code">E2.2</span> Fin de Fichier Inattendue (EOF)</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> L'algorithme s'est terminé brusquement avant de trouver la balise
+                        de fin globale attendue (<code>Fin.</code> avec le point final) ou la fin correcte d'un bloc de
+                        contrôle.
+                        <br><br>
+                        <strong>Causes communes :</strong>
+                        <ul>
+                            <li>Le fichier ne se termine pas par <code>Fin.</code></li>
+                            <li>Un bloc <code>Si ... Alors</code>, <code>TantQue ... Faire</code>, ou
+                                <code>Pour ... Faire</code> a été ouvert mais jamais clôturé par <code>Fin Si</code>,
+                                <code>FinTantQue</code>, etc.</li>
+                        </ul>
+                    </div>
+                    <pre><code>Algorithme MonAlgo;
+Debut
+    Ecrire("Bonjour");
+<span style="color:red">&lt;fin du fichier ici sans 'Fin.'&gt;</span></code></pre>
+                    <div class="error-fix">Solution : Vous avez probablement oublié d'écrire <code>Fin.</code> à la
+                        toute fin de l'Algo. Sinon, comptez minutieusement vos structures de contrôle et assurez-vous
+                        qu'elles possèdent toutes leur mot-clé de clôture respectif.</div>
+                </div>
+                <div id="E2.3" class="error-card syntax">
+                    <h3><span class="error-code">E2.3</span> Omission de 'a' dans la boucle Pour</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> La définition d'une boucle itérative <code>Pour</code> est mal
+                        formatée. Le compilateur attend spécifiquement l'intervalle avec le mot de liaison
+                        <code>a</code>.
+                    </div>
+                    <pre><code>Pour i <- 1 <span style="color:red">jusqua</span> n Faire <span style="color:gray">// Grammaire non reconnue</span>
+Pour j <- 1 <span style="color:red">to</span> 10 Faire <span style="color:gray">// Erreur : 'to' est du Pascal, pas de l'Algo strict</span></code></pre>
+                    <div class="error-fix">Solution : Utilisez la syntaxe exacte et stricte :
+                        <code>Pour i <- 1 a n Faire</code> (sans accent sur le 'a').</div>
+                </div>
+                <div id="E2.4" class="error-card syntax">
+                    <h3><span class="error-code">E2.4</span> Déclaration de Variable Incomplète ou Malformée</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Dans le bloc de l'en-tête (<code>Var</code> ou
+                        <code>Const</code>), la déclaration manque d'informations cruciales ou est mal formatée.
+                        Une Chaîne de caractères notamment, nécessite obligatoirement de spécifier sa capacité maximale
+                        en mémoire à la compilation via des crochets.
+                    </div>
+                    <pre><code>Var s : <span style="color:red">Chaine</span>; <span style="color:gray">// Erreur : Taille non spécifiée (combien de caractères maximum ?)</span>
+Var x, y <span style="color:red">Entier</span>; <span style="color:gray">// Erreur : Oubli des deux-points ':' séparateurs</span></code></pre>
+                    <div class="error-fix">Solution : Pour les chaînes et les tableaux, déclarez avec des crochets
+                        indiquant la taille : <code>Var s[50] : Chaine;</code>. N'oubliez pas les <code>:</code> entre
+                        le nom et le type.</div>
+                </div>
+            </div>
+
+            <div class="error-section" id="sec-e3">
+                <h2>Erreurs Sémantiques (E3.x)</h2>
+                <div id="E3.1" class="error-card semantic">
+                    <h3><span class="error-code">E3.1</span> Variable non initialisée dans la zone (Scope)</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Vous tentez d'utiliser (lire, écrire, ou assigner) une variable
+                        qui n'a pas été déclarée au préalable dans le dictionnaire des symboles. Dans ce compilateur, le
+                        typage statique strict oblige chaque variable à exister avant son utilisation.
+                    </div>
+                    <pre><code>Debut
+    <span style="color:red">compteur</span> <- 0; <span style="color:gray">// 'compteur' n'existe pas dans le bloc Var</span></code></pre>
+                    <div class="error-fix">Solution : Déclarez-la impérativement en haut de votre algorithme (ou de
+                        votre sous-programme) sous le mot-clé <code>Var</code>: <br><code>Var compteur : Entier;</code>
+                    </div>
+                </div>
+                <div id="E3.2" class="error-card semantic">
+                    <h3><span class="error-code">E3.2</span> Mismatch Logique d'Allocation Mémoire</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> L'allocation dynamique vérifie strictement le type demandé. Vous
+                        tentez d'allouer une taille de dimension (grâce à la macro <code>taille(...)</code>) qui n'est
+                        pas cohérente avec le niveau d'indirection du pointeur récepteur. L'espace physique alloué ne
+                        logera pas les dimensions de la structure et corrompra le Tas.
+                        <br><br>
+                        <strong>Exemple classique :</strong> Un pointeur vers un pointeur d'Entier
+                        (<code>^^Entier</code>) a besoin d'adresses pointant sur des <code>^Entier</code>, pas sur des
+                        <code>Entier</code> bruts.
+                    </div>
+                    <pre><code>Var matrice_dyn : ^^Reel;
+Debut
+    matrice_dyn := allouer(taille(<span style="color:red">Reel</span>)); <span style="color:gray">// Erreur : Le pointeur source attend l'adresse d'un ^Reel car il s'agit d'une matrice (2 dimensions), pas la taille d'un Réel scalaire (1 dimension)</span></code></pre>
+                    <div class="error-fix">Solution : Assurez-vous d'allouer le type équivalent (c'est-à-dire moins 1
+                        niveau de pointeur globalement). Pour la variable <code>^^Reel</code>, instanciez sa base avec
+                        <code>taille(^Reel)</code>.</div>
+                </div>
+                <div id="E3.3" class="error-card semantic">
+                    <h3><span class="error-code">E3.3</span> Assignation de Chaîne Invalide (Tableau de Char vs Chaine)
+                    </h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> L'affectation d'un élément individuel dans un tableau de
+                        caractères (ou le changement d'une lettre dans une <code>Chaine</code>, ex:
+                        <code>maChaine[2]</code>) attend strictement un litéral de type <code>Caractere</code> en
+                        mémoire, mais une référence lourde de type <code>Chaine</code> a été fournie. En langage
+                        algorithmique bas-niveau, un caractère n'est pas équivalent à une chaîne de taille 1.
+                    </div>
+                    <pre><code>Var s[10] : Chaine;
+Debut
+    s <- "Bonjour";
+    s[0] <- <span style="color:red">"A"</span>; <span style="color:gray">// "A" est une Chaîne. Les caractères élémentaires utilisent des guillemets simples !</span></code></pre>
+                    <div class="error-fix">Solution : Utilisez des guillemets simples pour isoler la valeur ASCII
+                        assignée : <code>s[0] <- 'A'</code>.</div>
+                </div>
+                <div id="E3.4" class="error-card semantic">
+                    <h3><span class="error-code">E3.4</span> Variable Déjà Déclarée</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Le compilateur a détecté que vous avez re-défini le même nom
+                        d'identifiant pour des variables différentes dans le même bloc de déclaration (ou que
+                        l'identifiant est en conflit avec un identifiant global de même portée). L'analyseur stoppe car
+                        il est incapable de résoudre cette ambiguïté.
+                    </div>
+                    <pre><code>Var i, n : Entier;
+Var somme, <span style="color:red">i</span> : Reel; <span style="color:gray">// Conflit : 'i' est déjà alloué</span></code></pre>
+                    <div class="error-fix">Solution : Supprimez ou fusionnez les définitions redondantes, ou renommez la
+                        seconde variable avec un nom unique (ex: <code>i_float</code>).</div>
+                </div>
+            </div>
+
+            <div class="error-section" id="sec-e4">
+                <h2>Erreurs d'Exécution et Limitations (E4.x)</h2>
+                <div id="E4.1" class="error-card execution">
+                    <h3><span class="error-code">E4.1</span> Boucle Infinie Détectée (Timeout)</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Le moteur sandbox a détecté que votre algorithme a exécuté plus
+                        de <code>1 000 000</code> d'instructions sans jamais s'arrêter ou atteindre sa condition de
+                        sortie. Pour éviter un blocage total des processeurs du serveur ou du navigateur, l'exécution a
+                        été suspendue.
+                        <br><br>
+                        Cela se produit presque systématiquement dans un <code>TantQue</code> dont le code interne
+                        oublie de faire avancer l'itérateur de la condition.
+                    </div>
+                    <pre><code>i := 1;
+TantQue i < 10 Faire
+    Ecrire("i vaut ", i);
+    <span style="color:gray">// Oubli de "i := i + 1;" : i vaudra perpetuellement 1, la boucle ne finira jamais !</span>
+FinTantQue</code></pre>
+                    <div class="error-fix">Solution : Assurez-vous que les variables conditionnant vos boucles itèrent
+                        et évoluent vers un état "faux" correctement à chaque passage (ex: un compteur incrémental ou un
+                        drapeau booléen qui bascule).</div>
+                </div>
+                <div id="E4.2" class="error-card execution">
+                    <h3><span class="error-code">E4.2</span> Récursion Infinie (Débordement de pile / Stack Overflow)
+                    </h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Un sous-programme (Fonction ou Procédure) s'est appelé lui-même
+                        (récursivité) de manière incontrôlable sans atteindre de condition d'arrêt fonctionnelle, ce qui
+                        a déclenché une explosion de la pile d'appels maximale allouée à votre processus Web.
+                    </div>
+                    <pre><code>Fonction Infini(n : Entier) : Entier
+Debut
+    Retourner Infini(n); <span style="color:gray">// Erreur : L'algo s'enfonce dans les appels infiniment sans porte de sortie.</span>
+Fin;</code></pre>
+                    <div class="error-fix">Solution : Toute fonction architecturée de manière récursive <strong>doit
+                            inclure un cas de base qui arrête l'empilement</strong>. (Ex:
+                        <code>Si n = 0 Alors Retourner 1;</code>).</div>
+                </div>
+                <div id="E4.3" class="error-card execution">
+                    <h3><span class="error-code">E4.3</span> Dépassement de Capacité Mémoire (OOM / Out of Memory)</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> L'algorithme a appelé les procédures dynamiques de type
+                        <code>allouer(...)</code> pour allouer manuellement de la mémoire dans le Tas (Heap)
+                        d'innombrables fois de suite sans jamais les nettoyer, ou tente d'instancier en dur un bloc
+                        tableau statique d'une taille logiquement ingérable, limitant ainsi la capacité allouée par
+                        l'environnement Web (Memory Leak).
+                    </div>
+                    <pre><code>TantQue i < 100000 Faire
+    p := allouer(taille(EnregistrementLourd));
+    <span style="color:gray">// Erreur : La mémoire est vampirisée sans appel compensatoire au garbage collector manuel.</span>
+FinTantQue</code></pre>
+                    <div class="error-fix">Solution : Dans les contextes manipulant des structures pointer, nettoyez
+                        activement la mémoire orpheline avec la procédure destructrice <code>liberer(ptr);</code> à
+                        chaque fois qu'un nœud est jeté. Évitez les tableaux de dimensions de l'ordre de milliards de
+                        cellules.</div>
+                </div>
+                <div id="E4.4" class="error-card execution">
+                    <h3><span class="error-code">E4.4</span> Accès au Tableau / Pointeur Hors Limites (IndexError)</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Violation de segmentation contrôlée (Seugfault simulée).
+                        L'algorithme lit ou écrase l'espace d'une zone mémoire en utilisant un index localisant une
+                        position qui s'étend en dehors de l'allocation d'origine formelle du tableau. Cela corrompt la
+                        RAM de l'OS. Le superviseur du backend est intervenu et a tué l'assignation fautive avant
+                        défaillance.
+                    </div>
+                    <pre><code>Var T[5] : Tableau...  <span style="color:gray">// Capacité de 5 éléments. Index disponibles (1..5) ou (0..4).</span>
+Debut
+    <span style="color:red">T[10]</span> := 0; <span style="color:gray">// Erreur fatale : l'index 10 est très au-delà de la capacité spatiale 5 de ce conteneur.</span></code></pre>
+                    <div class="error-fix">Solution : Auditez strictement les équations de vos compteurs/calculs de
+                        boucle lors de l'indexation de matrices et de tableaux (en particulier les boucles "Pour").
+                    </div>
+                </div>
+                <div id="E4.5" class="error-card execution">
+                    <h3><span class="error-code">E4.5</span> Division par Zéro Mathématique</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> Une instruction algébrique a tenté de diviser une variable par un
+                        dénominateur dont la valeur finale s'est retranchée à <code>0</code>, provoquant une exception
+                        incalculable au sein de la ligne d'UAL informatique.
+                    </div>
+                    <pre><code>calcul := num / <span style="color:red">diviseur</span>; <span style="color:gray">// 'diviseur' vaut 0, l'opération crashe.</span></code></pre>
+                    <div class="error-fix">Solution : Toujours appliquer une vérification
+                        <code>Si (diviseur &lt;&gt; 0) Alors</code> avant de libérer le calcul dans le flux principal.
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-section" id="sec-e5">
+                <h2>Erreurs Sémantiques de Flux (E5.x)</h2>
+                <div id="E5.1" class="error-card semantic">
+                    <h3><span class="error-code">E5.1</span> 'Retourner' Invalide de Portée</h3>
+                    <div class="error-desc">
+                        <strong>Description :</strong> L'entité grammaticale de flux <code>Retourner</code> a été
+                        croisée de manière inappropriée à l'intérieur du programme d'amorce globale principal, ou
+                        dissimulée au cœur d'une <code>Procédure</code> (qui par sa définition stricte architecturale ne
+                        peut et ne doit pas exporter une donnée via retour).
+                    </div>
+                    <pre><code>Algorithme Principal;
+Debut
+    <span style="color:red">Retourner</span> 0; <span style="color:gray">// Erreur : Le programme principal n'est pas une Fonction, il se termine juste après ses appels avec 'Fin.'</span>
+Fin.</code></pre>
+                    <div class="error-fix">Solution : Le mot-clé syntaxique <code>Retourner</code> est logiquement lié
+                        de manière inviolable aux blocs encapsulés des déclarations de "Fonctions". Pour quitter le bloc
+                        global principal, menez le pointeur d'instruction jusqu'au tag <code>Fin.</code> final. </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const outlineLinks = document.querySelectorAll('.outline a');
+            const errorCards = document.querySelectorAll('.error-card');
+            const errorSections = document.querySelectorAll('.error-section');
+            const outlineTitles = document.querySelectorAll('.outline-title');
+
+            // Smooth scrolling and highlighting active link
+            outlineLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    outlineLinks.forEach(l => l.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    // Smooth scroll is handled natively via CSS scroll-behavior: smooth on main-content
+                });
+            });
+
+            // Search filtering logic
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+
+                // Filter main cards
+                errorCards.forEach(card => {
+                    const textContent = card.innerText.toLowerCase();
+                    const cardId = card.id;
+                    const correspondingLink = document.querySelector(`.outline a[data-target="${cardId}"]`);
+
+                    if (textContent.includes(term)) {
+                        card.style.display = 'block';
+                        if (correspondingLink) correspondingLink.parentElement.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                        if (correspondingLink) correspondingLink.parentElement.style.display = 'none';
+                    }
+                });
+
+                // Hide empty sections in the main content
+                errorSections.forEach(section => {
+                    const visibleCards = section.querySelectorAll('.error-card[style="display: block;"], .error-card:not([style*="display: none"])');
+                    section.style.display = visibleCards.length > 0 ? 'block' : 'none';
+                });
+
+                // Hide empty sections in the outline sidebar
+                outlineTitles.forEach(title => {
+                    let current = title.nextElementSibling;
+                    let hasVisible = false;
+
+                    while (current && current.tagName === 'LI') {
+                        if (current.style.display !== 'none') {
+                            hasVisible = true;
+                            break;
+                        }
+                        current = current.nextElementSibling;
+                    }
+
+                    title.style.display = hasVisible ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,145 @@
+Algorithme ManipulationChaines;
+// ============================================================
+// Exemple : Chaines de Caracteres et Tableau de Mots
+// Couvre :
+//   - Declaration et initialisation d'une chaine fixe
+//   - Longueur (s'arrete au marqueur de Fin; #0)
+//   - Acces et modification d'un caractere (index base 0)
+//   - Marqueur de Fin; #0 pour couper une chaine
+//   - Concatenation avec Concat()
+//   - Tableau 2D de mots : mots[N][L]
+// ============================================================
+
+Var
+    // --- Chaines simples ---
+    prenom[30]  : Chaine;
+    nom[30]     : Chaine;
+    complet[60] : Chaine;
+    lens        : Entier;
+    c           : Caractere;
+
+    // --- Tableau de mots : 5 mots de 20 caracteres max ---
+    mots[5][20] : Chaine;
+    n           : Entier;
+    i           : Entier;
+
+Debut
+    // ---------------------------------------------------------
+    // 1. INITIALISATION ET AFFICHAGE
+    // ---------------------------------------------------------
+    Ecrire("=== Chaines de Caracteres ===\n\n");
+
+    prenom := "Alice";
+    nom    := "Martin";
+
+    Ecrire("Prenom : ");
+    Ecrire(prenom);
+    Ecrire("\nNom    : ");
+    Ecrire(nom);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 2. LONGUEUR (s'arrete au marqueur de Fin; #0)
+    // ---------------------------------------------------------
+    lens := Longueur(prenom);
+    Ecrire("Longueur de '");
+    Ecrire(prenom);
+    Ecrire("' = ");
+    Ecrire(lens);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 3. ACCES A UN CARACTERE (index commence a 0)
+    // ---------------------------------------------------------
+    c := prenom[0];
+    Ecrire("Premier caractere de '");
+    Ecrire(prenom);
+    Ecrire("' : ");
+    Ecrire(c);
+    Ecrire("\n");
+
+    c := prenom[Longueur(prenom) - 1];
+    Ecrire("Dernier  caractere de '");
+    Ecrire(prenom);
+    Ecrire("' : ");
+    Ecrire(c);
+    Ecrire("\n\n");
+
+    // ---------------------------------------------------------
+    // 4. MODIFICATION D'UN CARACTERE
+    // ---------------------------------------------------------
+    prenom[0] := 'a';   // remplace 'A' par 'a'
+    Ecrire("Apres prenom[0] := 'a' : ");
+    Ecrire(prenom);
+    Ecrire("\n\n");
+
+    // Restauration
+    prenom[0] := 'A';
+
+    // ---------------------------------------------------------
+    // 5. MARQUEUR DE Fin; #0 (couper une chaine)
+    //    Placer #0 a l'index k coupe la chaine apres k chars
+    // ---------------------------------------------------------
+    Ecrire("Avant coupure : '");
+    Ecrire(prenom);
+    Ecrire("' (longueur = ");
+    Ecrire(Longueur(prenom));
+    Ecrire(")\n");
+
+    prenom[3] := #0;   // conserve seulement "Ali"
+
+    Ecrire("Apres prenom[3] := #0 : '");
+    Ecrire(prenom);
+    Ecrire("' (longueur = ");
+    Ecrire(Longueur(prenom));
+    Ecrire(")\n\n");
+
+    // ---------------------------------------------------------
+    // 6. CONCATENATION
+    // ---------------------------------------------------------
+    prenom := "Alice";
+    complet := Concat(prenom, Concat(" ", nom));
+    Ecrire("Concat(prenom, ' ', nom) = '");
+    Ecrire(complet);
+    Ecrire("'\n\n");
+
+    // ---------------------------------------------------------
+    // 7. TABLEAU DE MOTS : mots[5][20]
+    //    10 mots, chaque mot <= 19 caracteres + #0
+    // ---------------------------------------------------------
+    Ecrire("=== Tableau de Mots (mots[5][20]) ===\n");
+    n := 4;
+
+    mots[0] := "Bonjour";
+    mots[1] := "le";
+    mots[2] := "monde";
+    mots[3] := "!";
+
+    Pour i := 0 a n-1 Faire
+        Ecrire("  mots[");
+        Ecrire(i);
+        Ecrire("] = '");
+        Ecrire(mots[i]);
+        Ecrire("'  (longueur = ");
+        Ecrire(Longueur(mots[i]));
+        Ecrire(")\n");
+    FinPour
+
+    // Modification d'un caractere dans un mot du tableau
+    Ecrire("\nmodification : mots[0][0] := 'b'\n");
+    mots[0][0] := 'b';
+    Ecrire("  mots[0] = '");
+    Ecrire(mots[0]);
+    Ecrire("'\n");
+
+    // Couper le mot 2 avec #0
+    Ecrire("\nCoupure : mots[2][3] := #0  (garde 'mon')\n");
+    mots[2][3] := #0;
+    Ecrire("  mots[2] = '");
+    Ecrire(mots[2]);
+    Ecrire("'  (longueur = ");
+    Ecrire(Longueur(mots[2]));
+    Ecrire(")\n\n");
+
+    Ecrire("=== Fin; ===\n");
+Fin.

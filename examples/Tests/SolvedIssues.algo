@@ -1,0 +1,24 @@
+Algorithme SolvedIssues;
+Var
+    b : Entier;
+    mots[5][20] : Chaine;
+    p : ^Entier;
+    valeur : Entier;
+Debut
+    // Issue 1: Type checking for Lire
+    Ecrire("Issue 1: Enter 2.5 for an Entier variable:");
+    Lire(b);
+    
+    // Issue 2: Matrix of characters assignment
+    Ecrire("Issue 2: Assigning string to a character slot");
+    // mots[0][0] := "Bonjour"; // This should trigger a semantic error
+    
+    // Issue 3: Syntactic error reading pointer content
+    Ecrire("Issue 3: Reading into pointer content");
+    p := Allouer(taille(Entier));
+    lire(p^);
+    
+    // Issue 4: Debugger representation
+    valeur <- 42;
+    p^ <- 100;
+Fin.

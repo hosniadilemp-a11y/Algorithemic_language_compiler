@@ -1,0 +1,40 @@
+Algorithme AdditionMatrices;
+Var
+    A[2][2] : Entier;
+    B[2][2] : Entier;
+    C[2][2] : Entier;
+    i, j : Entier;
+
+Debut
+    Ecrire("--- Probleme: Addition de Matrices 2x2 ---", "\n");
+    
+    // Initialisation
+    A[0][0] := 1; A[0][1] := 2;
+    A[1][0] := 3; A[1][1] := 4;
+    
+    B[0][0] := 5; B[0][1] := 6;
+    B[1][0] := 7; B[1][1] := 8;
+    
+    // Calcul de l'addition: C = A + B
+    Pour i := 0 a 1 Faire
+        Pour j := 0 a 1 Faire
+            C[i][j] := A[i][j] + B[i][j];
+        FinPour
+    FinPour
+    
+    // Affichage des resultats
+    Ecrire("Matrice A:", "\n");
+    Pour i := 0 a 1 Faire
+        Ecrire("[ ", A[i][0], " , ", A[i][1], " ]", "\n");
+    FinPour
+    
+    Ecrire("\nMatrice B:", "\n");
+    Pour i := 0 a 1 Faire
+        Ecrire("[ ", B[i][0], " , ", B[i][1], " ]", "\n");
+    FinPour
+    
+    Ecrire("\nMatrice Resultante C (A + B):", "\n");
+    Pour i := 0 a 1 Faire
+        Ecrire("[ ", C[i][0], " , ", C[i][1], " ]", "\n");
+    FinPour
+Fin.

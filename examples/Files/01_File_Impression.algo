@@ -1,0 +1,100 @@
+// ================================================================
+// PROBLEME : Simulation d'une File d'Impression (Files)
+// ================================================================
+// Ce programme simule un serveur d'impression où les documents
+// sont traités dans l'ordre de leur arrivée (FIFO).
+// ================================================================
+
+Type Document = Enregistrement
+Debut
+    id_doc    : Entier;
+    nom_doc[40]: Chaine;
+    nb_pages  : Entier;
+Fin;
+
+Type Element = Enregistrement
+Debut
+    data : Document;
+    suiv : ^Element;
+Fin;
+
+Type Spooler = Enregistrement
+Debut
+    tete  : ^Element;
+    queue : ^Element;
+Fin;
+
+// --- Primitives de Base ---
+
+Procedure Init(Var S : Spooler)
+Debut
+    S.tete := NIL;
+    S.queue := NIL;
+Fin;
+
+Procedure Ajouter_Document(Var S : Spooler, id : Entier, nom : Chaine, p : Entier)
+Var n : ^Element;
+Debut
+    n := allouer(taille(Element));
+    n->data.id_doc := id;
+    n->data.nom_doc := nom;
+    n->data.nb_pages := p;
+    n->suiv := NIL;
+    
+    Si S.tete = NIL Alors
+        S.tete := n; S.queue := n;
+    Sinon
+        S.queue->suiv := n;
+        S.queue := n;
+    Fsi
+    Ecrire("[SPOOL] Ajout du document : "); Ecrire(nom); Ecrire("\n");
+Fin;
+
+Procedure Imprimer(Var S : Spooler)
+Var tmp : ^Element; doc : Document;
+Debut
+    Si S.tete = NIL Alors
+        Ecrire("[SERVEUR] Aucun document en attente.\n");
+    Sinon
+        tmp := S.tete;
+        doc := tmp->data;
+        S.tete := tmp->suiv;
+        
+        Si S.tete = NIL Alors S.queue := NIL; Fsi
+        
+        Ecrire("[SERVEUR] Impression de : "); Ecrire(doc.nom_doc);
+        Ecrire(" (ID: "); Ecrire(doc.id_doc); 
+        Ecrire(", Pages: "); Ecrire(doc.nb_pages); Ecrire(")\n");
+        
+        liberer(tmp);
+    Fsi
+Fin;
+
+Algorithme Simulation_Impression_FIFO;
+Var
+    mon_spooler : Spooler;
+
+Debut
+    Init(mon_spooler);
+    
+    Ecrire("=== SERVEUR D'IMPRESSiON RESEAU ===\n\n");
+    
+    // 1. Arrivee des documents
+    Ajouter_Document(mon_spooler, 1, "Rapport_Final.pdf", 12);
+    Ajouter_Document(mon_spooler, 2, "Photo_Vacances.jpg", 1);
+    Ajouter_Document(mon_spooler, 3, "CV_Etudiant.docx", 2);
+
+    Ecrire("\nLancement du traitement des impressions :\n");
+    
+    // 2. Traitement FIFO
+    Imprimer(mon_spooler);
+    Imprimer(mon_spooler);
+    
+    Ajouter_Document(mon_spooler, 4, "Facture_EDF.pdf", 3);
+    
+    Imprimer(mon_spooler);
+    Imprimer(mon_spooler);
+    Imprimer(mon_spooler); // Queue vide ici
+
+    Ecrire("\nFin de simulation.\n");
+Fin.

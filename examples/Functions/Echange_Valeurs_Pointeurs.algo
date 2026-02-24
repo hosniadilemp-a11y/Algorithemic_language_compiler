@@ -1,0 +1,26 @@
+// Procedure qui echange deux entiers en utilisant des pointeurs
+// Le passage par reference se fait en envoyant l adresse (&variable)
+Procedure Echanger(pa : ^Entier, pb : ^Entier);
+Var
+    temp : Entier;
+Debut
+    temp := pa^;  // temp prend la valeur pointée par pa
+    pa^ := pb^;   // la valeur pointée par pa prend la valeur pointée par pb
+    pb^ := temp;  // la valeur pointée par pb prend temp
+Fin;
+
+Algorithme Echange_Valeurs_Pointeurs;
+Var
+    x, y : Entier;
+
+Debut
+    x := 10;
+    y := 20;
+    
+    Ecrire("Avant echange : x = ", x, ", y = ", y, "\n");
+    
+    // Appel de la procedure en envoyant les adresses de x et y
+    Echanger(&x, &y);
+    
+    Ecrire("Apres echange : x = ", x, ", y = ", y, "\n");
+Fin.

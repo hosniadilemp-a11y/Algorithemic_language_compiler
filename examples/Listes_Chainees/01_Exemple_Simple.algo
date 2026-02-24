@@ -1,0 +1,64 @@
+// ================================================================
+// PROBLEME 2 : Liste chainee simple avec des Enregistrements
+// ================================================================
+// On cree une liste chainee de noeuds entiers via des pointeurs
+// vers des enregistrements. On insere en tete, on parcourt,
+// on recherche une valeur, puis on libere la memoire.
+// ================================================================
+
+Type Noeud = Enregistrement
+Debut
+    valeur  : Entier;
+    suivant : ^Noeud;
+Fin;
+
+Procedure Afficher_Liste(p : ^Noeud)
+Debut
+    Tant Que p <> NIL Faire
+        Ecrire(p->valeur); Ecrire(" -> ");
+        p := p->suivant;
+    FinTantQue
+    Ecrire("NIL\n");
+Fin;
+
+Algorithme Liste_Chainee_Simple;
+Var
+    tete, courant, nouveau : ^Noeud;
+    i, val                 : Entier;
+
+Debut
+    tete := NIL;
+
+    // Insertion de 5 valeurs en tete
+    Pour i := 1 a 5 Faire
+        nouveau := allouer(taille(Noeud));
+        nouveau->valeur  := i * 10;
+        nouveau->suivant := tete;
+        tete := nouveau;
+    FinPour
+
+    // Affichage
+    Ecrire("Liste chainee : ");
+    Afficher_Liste(tete);
+
+    // Recherche d'une valeur
+    val := 30;
+    courant := tete;
+    Tant Que courant <> NIL Faire
+        Si courant->valeur = val Alors
+            Ecrire("Valeur "); Ecrire(val); Ecrire(" trouvee dans la liste.\n");
+            courant := NIL;
+        Sinon
+            courant := courant->suivant;
+        Fsi
+    FinTantQue
+
+    // Liberation de la memoire
+    courant := tete;
+    Tant Que courant <> NIL Faire
+        nouveau  := courant->suivant;
+        Liberer(courant);
+        courant := nouveau;
+    FinTantQue
+    Ecrire("Memoire liberee.\n");
+Fin.

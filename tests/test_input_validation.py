@@ -42,7 +42,7 @@ class TestInputValidation(unittest.TestCase):
             print(f"\nCaught expected error: {e}")
             self.assertIn("Type mismatch", str(e))
             self.assertIn("adel", str(e))
-            self.assertIn("Integer", str(e))
+            self.assertIn("Entier", str(e))
             return
 
         self.fail("Did not raise ValueError for invalid integer input")
@@ -68,7 +68,7 @@ class TestInputValidation(unittest.TestCase):
         except ValueError as e:
             print(f"\nCaught expected error: {e}")
             self.assertIn("Type mismatch", str(e))
-            self.assertIn("Boolean", str(e))
+            self.assertIn("Booleen", str(e))
             return
 
         self.fail("Did not raise ValueError for invalid boolean input")

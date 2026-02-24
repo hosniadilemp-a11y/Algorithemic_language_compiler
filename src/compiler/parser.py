@@ -440,7 +440,10 @@ def p_program(p):
     code += "            return current_val\n"
     code += "        return str(input_val)\n"
     code += "    if 'BOOLEEN' in t or isinstance(current_val, bool):\n"
-    code += "        return str(input_val).lower() in ['vrai', 'true', '1']\n"
+    code += "        s = str(input_val).lower()\n"
+    code += "        if s in ['vrai', 'true', '1']: return True\n"
+    code += "        if s in ['faux', 'false', '0']: return False\n"
+    code += "        raise ValueError(f\"Type mismatch: '{input_val}' n'est pas un Booleen valide.\")\n"
     code += "    elif 'ENTIER' in t or isinstance(current_val, int):\n"
     code += "        try: return int(input_val)\n"
     code += "        except:\n"
@@ -758,14 +761,14 @@ def p_var_list_array_multiple(p):
         alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
         mem_alloc.allocate(alloc_name, 'CHAINE', count=size)
         code = f"{get_indent()}{var_name} = ['\\0'] * {size}\n{prev_code}"
-        p[0] = (code, 'CHAINE')
+        p[0] = (code, type_name)
     else:
         arr_type = f"TABLEAU_{type_name}_{size}"
         add_variable(var_name, arr_type)
         alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
         mem_alloc.allocate(alloc_name, type_name, count=size)
         code = f"{get_indent()}{var_name} = [None] * {size}\n{prev_code}"
-        p[0] = (code, arr_type)
+        p[0] = (code, type_name)
 
 
 def p_var_list_tableau(p):
@@ -777,7 +780,27 @@ def p_var_list_tableau(p):
     alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
     mem_alloc.allocate(alloc_name, p[5], count=1) # Treat as pointer to array?
     
-    p[0] = (f"{get_indent()}{var_name} = []", arr_type)
+    p[0] = (f"{get_indent()}{var_name} = []", p[5])
+
+def p_var_list_matrix_multiple(p):
+    '''var_list : ID LBRACKET NUMBER RBRACKET LBRACKET NUMBER RBRACKET COMMA var_list'''
+    var_name = p[1]
+    rows = int(p[3])
+    cols = int(p[6])
+    prev_code, type_name = p[9]
+    
+    mat_type = f"MATRICE_{type_name}"
+    add_variable(var_name, mat_type)
+    
+    # Allocate memory for matrix (rows * cols)
+    size = rows * cols
+    alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
+    mem_alloc.allocate(alloc_name, type_name, count=size)
+    
+    # Initialize with None
+    code = f"{get_indent()}{var_name} = [[None] * {cols} for _ in range({rows})]\n{prev_code}"
+    
+    p[0] = (code, type_name)
 
 def p_var_list_matrix(p):
     '''var_list : ID LBRACKET NUMBER RBRACKET LBRACKET NUMBER RBRACKET COLON type'''
@@ -794,7 +817,7 @@ def p_var_list_matrix(p):
     # Initialize with None
     code = f"{get_indent()}{var_name} = [[None] * {p[6]} for _ in range({p[3]})]"
     
-    p[0] = (code, mat_type)
+    p[0] = (code, var_type)
 
 def p_var_list_record(p):
     '''var_list : ID COLON type'''
@@ -838,20 +861,20 @@ def p_var_list_record_array(p):
         mem_alloc.allocate(alloc_name, var_type, count=size)
         init_expr = _build_record_init(var_type)
         code = f"{get_indent()}{var_name} = [{init_expr} for _ in range({size})] # Tableau de {var_type}"
-        p[0] = (code, f"TABLEAU_{var_type}")
+        p[0] = (code, var_type)
     elif var_type.upper() in ('CHAINE', 'CHAINE_TYPE'):
         add_variable(var_name, 'CHAINE')
         alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
         mem_alloc.allocate(alloc_name, var_type, count=size)
         code = f"{get_indent()}{var_name} = [None] * {size}"
-        p[0] = (code, 'CHAINE')
+        p[0] = (code, var_type)
     else:
         final_type = f"TABLEAU_{var_type}"
         add_variable(var_name, final_type)
         alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
         mem_alloc.allocate(alloc_name, var_type, count=size)
         code = f"{get_indent()}{var_name} = [None] * {size}"
-        p[0] = (code, final_type)
+        p[0] = (code, var_type)
 
 def p_const_list(p):
     '''const_list : ID EQUALS value'''

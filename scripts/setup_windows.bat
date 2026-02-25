@@ -13,31 +13,65 @@ echo  ^|    AlgoCompiler -- Windows Setup Script     ^|
 echo  +==============================================+
 echo.
 
-REM --- Step 1: Check for Python ---
-echo [1/4] Checking Python installation...
+REM --- Step 1: Find Python ---
+echo [1/4] Searching for Python installation...
+
+SET PYTHON_EXE=
+
+REM Try python in PATH first
 python --version >nul 2>&1
-IF ERRORLEVEL 1 (
-    echo.
-    echo  ERROR: Python is not installed or not in your PATH!
-    echo.
-    echo  Please follow these steps:
-    echo    1. Go to: https://www.python.org/downloads/
-    echo    2. Download Python 3 (e.g. Python 3.12.x)
-    echo    3. Run the installer.
-    echo    4. IMPORTANT: Check the box "Add Python to PATH" during installation!
-    echo    5. Restart your computer, then run this script again.
-    echo.
-    pause
-    exit /b 1
+IF NOT ERRORLEVEL 1 (
+    SET PYTHON_EXE=python
+    GOTO :python_found
 )
 
-python --version
-echo  [OK] Python found.
+REM Try py launcher (standard Python installs)
+py --version >nul 2>&1
+IF NOT ERRORLEVEL 1 (
+    SET PYTHON_EXE=py
+    GOTO :python_found
+)
+
+REM Search common Anaconda / Miniconda locations
+FOR %%P IN (
+    "%USERPROFILE%\anaconda3\python.exe"
+    "%USERPROFILE%\miniconda3\python.exe"
+    "%LOCALAPPDATA%\anaconda3\python.exe"
+    "%LOCALAPPDATA%\miniconda3\python.exe"
+    "C:\ProgramData\Anaconda3\python.exe"
+    "C:\ProgramData\Miniconda3\python.exe"
+    "C:\Anaconda3\python.exe"
+    "C:\Miniconda3\python.exe"
+    "%USERPROFILE%\AppData\Local\Programs\Python\Python313\python.exe"
+    "%USERPROFILE%\AppData\Local\Programs\Python\Python312\python.exe"
+    "%USERPROFILE%\AppData\Local\Programs\Python\Python311\python.exe"
+    "%USERPROFILE%\AppData\Local\Programs\Python\Python310\python.exe"
+) DO (
+    IF EXIST %%P (
+        SET PYTHON_EXE=%%P
+        GOTO :python_found
+    )
+)
+
+REM Python not found anywhere
+echo.
+echo  ERROR: Python could not be found on this system!
+echo.
+echo  Please install Python 3 from https://www.python.org/downloads/
+echo  or install Anaconda from https://www.anaconda.com/
+echo  Then re-run this script.
+echo.
+pause
+exit /b 1
+
+:python_found
+echo  [OK] Python found: %PYTHON_EXE%
+%PYTHON_EXE% --version
 echo.
 
 REM --- Step 2: Check Python version is 3.x ---
 echo [2/4] Verifying Python version...
-python -c "import sys; exit(0 if sys.version_info.major >= 3 else 1)"
+%PYTHON_EXE% -c "import sys; exit(0 if sys.version_info.major >= 3 else 1)"
 IF ERRORLEVEL 1 (
     echo  ERROR: Python 3 is required. You appear to have Python 2.
     echo  Please install Python 3 from https://www.python.org/downloads/
@@ -52,7 +86,7 @@ echo [3/4] Creating Python virtual environment in .\venv ...
 cd /d "%~dp0\.."
 
 IF NOT EXIST "venv\" (
-    python -m venv venv
+    %PYTHON_EXE% -m venv venv
     IF ERRORLEVEL 1 (
         echo  ERROR: Failed to create virtual environment.
         pause

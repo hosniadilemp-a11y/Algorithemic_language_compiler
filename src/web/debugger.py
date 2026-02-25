@@ -136,14 +136,14 @@ class TraceRunner:
                 var_size = '-'
                 try:
                     # Use simulated taille for sizes
-                    if algo_type == 'Entier': var_size = 4
-                    elif algo_type == 'Reel': var_size = 8
+                    if algo_type == 'Entier': var_size = 1
+                    elif algo_type == 'Reel': var_size = 1
                     elif algo_type == 'Booleen': var_size = 1
                     elif algo_type == 'Caractere': var_size = 1
                     elif isinstance(v, list) and 'Chaine' in algo_type:
                         var_size = len(v) * 1  # 1 byte per character slot
                     elif isinstance(v, list) and 'Tableau' in algo_type:
-                        var_size = len(v) * 4  # default 4 bytes per element
+                        var_size = len(v) * 1  # 1 address unit per element
                     elif isinstance(v, str):
                         if '#0' in v:
                             var_size = v.index('#0')  # length up to null terminator
@@ -216,10 +216,10 @@ class TraceRunner:
                         elem_size = 1
                     elif 'ENTIER' in base_type.upper():
                         dyn_type = "Entier"
-                        elem_size = 4
+                        elem_size = 1
                     elif 'REEL' in base_type.upper():
                         dyn_type = "Reel"
-                        elem_size = 8
+                        elem_size = 1
                     elif 'BOOLEEN' in base_type.upper():
                         dyn_type = "Booleen"
                         elem_size = 1

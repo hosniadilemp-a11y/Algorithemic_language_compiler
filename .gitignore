@@ -38,6 +38,10 @@ Thumbs.db      # Windows
 *.log
 *.tmp
 nul
+examples/Tests/
+verify_sizes.py
+test_*.py
+verify_sizes.py 
 generated_lire.py
 output.py
 debug_output.py

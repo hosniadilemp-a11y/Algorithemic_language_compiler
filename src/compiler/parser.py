@@ -481,12 +481,12 @@ def p_program(p):
         if _seen is None:
             _seen = set()
         t = type_str.upper()
-        if t in ('ENTIER', 'ENTIER_TYPE'): return 4
-        if t in ('REEL', 'REEL_TYPE'): return 8
+        if t in ('ENTIER', 'ENTIER_TYPE'): return 1
+        if t in ('REEL', 'REEL_TYPE'): return 1
         if t in ('BOOLEEN', 'BOOLEEN_TYPE'): return 1
         if t in ('CARACTERE', 'CARACTERE_TYPE'): return 1
-        # Pointer types (POINTEUR_X or ^ prefix) — architectural pointer width
-        if t.startswith('POINTEUR_') or t.startswith('^'): return 8
+        # Pointer types (POINTEUR_X or ^ prefix) — algorithmic address unit size
+        if t.startswith('POINTEUR_') or t.startswith('^'): return 1
         # Chaine[N] or TABLEAU_Chaine_N  → N bytes
         if t.startswith('TABLEAU_CHAINE_'):
             try: return int(t.split('_')[-1])
@@ -516,9 +516,9 @@ def p_program(p):
     code += f"_algo_record_sizes = {record_sizes!r}\n\n"
     code += "def _algo_taille(type_name):\n"
     code += "    t = type_name.lower()\n"
-    code += "    if 'pointeur' in t or t.startswith('^'): return 8\n"
-    code += "    if 'entier' in t: return 4\n"
-    code += "    if 'reel' in t: return 8\n"
+    code += "    if 'pointeur' in t or t.startswith('^'): return 1\n"
+    code += "    if 'entier' in t: return 1\n"
+    code += "    if 'reel' in t: return 1\n"
     code += "    if 'booleen' in t: return 1\n"
     code += "    if 'caractere' in t: return 1\n"
     code += "    if 'chaine' in t: return 1\n"
@@ -670,11 +670,11 @@ class MemoryAllocator:
         
         # 2. Handle pointer types
         if t.startswith('POINTEUR') or t.startswith('^'):
-            return 8 # Architectural pointer size
+            return 1 # Algorithmic address unit
             
         # 3. Handle base types
-        if t in ('ENTIER', 'ENTIER_TYPE'): return 4
-        if t in ('REEL', 'REEL_TYPE'): return 8
+        if t in ('ENTIER', 'ENTIER_TYPE'): return 1
+        if t in ('REEL', 'REEL_TYPE'): return 1
         if t in ('BOOLEEN', 'BOOLEEN_TYPE'): return 1
         if t in ('CARACTERE', 'CARACTERE_TYPE'): return 1
         
@@ -1144,7 +1144,7 @@ def p_statement_assign_field(p):
     rec_code, rec_type = p[1]
     field_name = p[3]
     val_code, val_type = p[5]
-    p[0] = f"{get_indent()}{rec_code}['{field_name}'] = ({val_code})._clone() if hasattr({val_code}, '_clone') else {val_code}"
+    p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}{rec_code}['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 def p_statement_assign_arrow_field(p):
     '''statement : expression ARROW ID ASSIGN expression SEMICOLON'''
@@ -1152,7 +1152,7 @@ def p_statement_assign_arrow_field(p):
     field_name = p[3]
     val_code, val_type = p[5]
     # ptr->field := val  is  ptr._get()['field'] = val
-    p[0] = f"{get_indent()}({ptr_code})._get()['{field_name}'] = ({val_code})._clone() if hasattr({val_code}, '_clone') else {val_code}"
+    p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}({ptr_code})._get()['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 def p_statements(p):
     '''statements : statements statement
@@ -1689,7 +1689,7 @@ def p_statement_assign_array(p):
             # allouer(...) or pointer — store as-is
             p[0] = f"{get_indent()}{var_name}[{idx_code}] = ({val_code})._clone() if hasattr({val_code}, '_clone') else {val_code}"
     else:
-        p[0] = f"{get_indent()}{var_name}[{idx_code}] = ({val_code})._clone() if hasattr({val_code}, '_clone') else {val_code}"
+        p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}{var_name}[{idx_code}] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 def p_statement_assign_matrix(p):
     '''statement : ID LBRACKET expression RBRACKET LBRACKET expression RBRACKET ASSIGN expression SEMICOLON'''
@@ -1728,7 +1728,7 @@ def p_statement_assign_matrix(p):
             # set a character in the dynamically allocated word
             p[0] = f"{get_indent()}_algo_set_char({var_name}[{idx1}], {idx2}, {val})"
     else:
-        p[0] = f"{get_indent()}{var_name}[{idx1}][{idx2}] = ({val})._clone() if hasattr({val}, '_clone') else {val}"
+        p[0] = f"{get_indent()}_tmp_val = {val}\n{get_indent()}{var_name}[{idx1}][{idx2}] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 # Error tracking
 parser_errors = []

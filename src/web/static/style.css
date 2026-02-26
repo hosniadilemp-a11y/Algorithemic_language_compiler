@@ -14,6 +14,56 @@
     --shadow-glow: 0 0 15px rgba(88, 166, 255, 0.2);
 }
 
+body.light-theme {
+    --bg-color: #f4f8ff;
+    --pane-bg: rgba(255, 255, 255, 0.88);
+    --accent: #1f6feb;
+    --accent-hover: #174ea6;
+    --text-primary: #1f2a38;
+    --text-secondary: #5a6a80;
+    --border: #d5deea;
+    --console-bg: #ffffff;
+    --shadow-glow: 0 0 15px rgba(31, 111, 235, 0.18);
+}
+
+body.light-theme {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(31, 111, 235, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(88, 166, 255, 0.08) 0%, transparent 25%);
+}
+
+body.light-theme header,
+body.light-theme .pane,
+body.light-theme .pane-header,
+body.light-theme .editor-toolbar,
+body.light-theme .editor-status-bar,
+body.light-theme .console,
+body.light-theme #execution-output,
+body.light-theme #transpiled-output,
+body.light-theme #variables-pane,
+body.light-theme .examples-sidebar,
+body.light-theme .examples-header,
+body.light-theme .examples-content {
+    background-color: #ffffff !important;
+    color: var(--text-primary) !important;
+}
+
+body.light-theme #code-editor,
+body.light-theme #input-data {
+    background-color: #ffffff !important;
+    color: var(--text-primary) !important;
+}
+
+body.light-theme .btn.secondary {
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+body.light-theme .btn.secondary:hover {
+    background-color: #eaf1fb;
+    color: #1f2a38;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

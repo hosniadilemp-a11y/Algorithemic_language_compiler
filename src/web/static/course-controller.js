@@ -96,7 +96,8 @@ class CourseController {
         this.courseData.chapters.forEach((chapter, index) => {
             const item = document.createElement('div');
             item.className = 'course-chapter-item';
-            item.innerHTML = `<i class="fas fa-book-open"></i> ${chapter.title}`;
+            const iconClass = chapter.icon || 'fas fa-book-open';
+            item.innerHTML = `<i class="${iconClass}"></i> ${chapter.title}`;
             item.dataset.index = index;
             item.onclick = () => {
                 this.currentChapterIndex = index;
@@ -158,10 +159,10 @@ class CourseController {
         this.contentArea.innerHTML = `
             <div class="fade-in">
                 <div class="course-header-meta">${chapter.id.toUpperCase()}</div>
-                <h1>${chapter.title}</h1>
+                <h1><i class="${chapter.icon || 'fas fa-book-open'}"></i> ${chapter.title}</h1>
                 ${chapter.sections.map(section => `
                     <section class="course-section">
-                        <h3>${section.title}</h3>
+                        <h3><i class="${section.icon || 'fas fa-angle-right'}"></i> ${section.title}</h3>
                         <div class="course-text">${this.formatContent(section.content)}</div>
                         ${section.code ? this.renderCodeBlock(section.code) : ''}
                     </section>

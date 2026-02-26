@@ -169,6 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         editor.setSize("100%", null); // Let flex handle height
 
+        function applyEditorThemeFromBody() {
+            if (!editor) return;
+            const isLight = document.body.classList.contains('light-theme');
+            editor.setOption('theme', isLight ? 'default' : 'dracula');
+        }
+        applyEditorThemeFromBody();
+        window.addEventListener('themechange', applyEditorThemeFromBody);
+
         // If code was requested from the standalone course page, inject it on load.
         try {
             const pendingCourseCode = localStorage.getItem('algocompiler.pendingCourseCode');

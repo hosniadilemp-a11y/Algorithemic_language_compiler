@@ -13,7 +13,12 @@
     <div class="course-page-shell">
         <div class="course-page-topbar">
             <div class="course-page-brand"><i class="fas fa-graduation-cap"></i> Cours d'algorithmique</div>
-            <a href="/" class="course-back-btn"><i class="fas fa-code"></i> Retour au compilateur</a>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                    <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+                </button>
+                <a href="/" class="course-back-btn"><i class="fas fa-code"></i> Retour au compilateur</a>
+            </div>
         </div>
 
         <div class="course-container course-standalone-container">
@@ -34,6 +39,7 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='theme.js') }}?v=1"></script>
     <script src="{{ url_for('static', filename='course-controller.js') }}?v=3"></script>
 </body>
 

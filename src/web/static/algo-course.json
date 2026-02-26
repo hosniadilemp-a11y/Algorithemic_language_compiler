@@ -3,66 +3,77 @@
     {
       "id": "intro",
       "title": "Chapitre 1: Introduction à l'Algorithmique",
+      "icon": "fas fa-compass",
       "file": "/static/course-chapters/chapter-1-intro.json",
       "sections": []
     },
     {
       "id": "tableaux",
       "title": "Chapitre 2: Tableaux et Matrices",
+      "icon": "fas fa-table",
       "file": "/static/course-chapters/chapter-2-tableaux.json",
       "sections": []
     },
     {
       "id": "chaines",
       "title": "Chapitre 3: Chaînes de Caractères",
+      "icon": "fas fa-font",
       "file": "/static/course-chapters/chapter-3-chaines.json",
       "sections": []
     },
     {
       "id": "allocation",
       "title": "Chapitre 4: Allocation Dynamique",
+      "icon": "fas fa-memory",
       "file": "/static/course-chapters/chapter-4-allocation.json",
       "sections": []
     },
     {
       "id": "actions",
       "title": "Chapitre 5: Actions Paramétrées",
+      "icon": "fas fa-puzzle-piece",
       "file": "/static/course-chapters/chapter-5-actions.json",
       "sections": []
     },
     {
       "id": "enregistrements",
       "title": "Chapitre 6: Les Enregistrements",
+      "icon": "fas fa-id-card",
       "file": "/static/course-chapters/chapter-6-enregistrements.json",
       "sections": []
     },
     {
       "id": "fichiers",
       "title": "Chapitre 7: Les Fichiers",
+      "icon": "fas fa-folder-open",
       "file": "/static/course-chapters/chapter-7-fichiers.json",
       "sections": []
     },
     {
       "id": "listes",
       "title": "Chapitre 8: Listes Chaînées",
+      "icon": "fas fa-link",
       "file": "/static/course-chapters/chapter-8-listes.json",
       "sections": []
     },
     {
       "id": "piles",
       "title": "Chapitre 9: Les Piles (Stacks)",
+      "icon": "fas fa-layer-group",
       "file": "/static/course-chapters/chapter-9-piles.json",
       "sections": []
     },
     {
       "id": "files",
       "title": "Chapitre 10: Les Files (Queues)",
+      "icon": "fas fa-people-arrows",
       "file": "/static/course-chapters/chapter-10-files.json",
       "sections": []
     },
     {
       "id": "tutorial",
       "title": "Guide d'utilisation de l'App",
+      "icon": "fas fa-laptop-code",
       "file": "/static/course-chapters/chapter-11-tutorial.json",
       "sections": []
     }

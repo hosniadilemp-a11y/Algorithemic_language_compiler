@@ -32,17 +32,17 @@
     },
     {
       "title": "Boucles: vue d'ensemble",
-      "content": "On utilise une boucle pour répéter un bloc d'instructions.\n\nLes trois familles classiques:\n- `Pour` : nombre d'itérations connu.\n- `Tant Que` : répétition tant qu'une condition reste vraie.\n- `Repeter ... Jusqua` : exécute au moins une fois, puis teste la condition d'arrêt."
+      "content": "On utilise une boucle pour répéter un bloc d'instructions.\n\nLes trois familles classiques:\n- `Pour` : nombre d'itérations connu.\n- `Tantque` : répétition tant qu'une condition reste vraie.\n- `Repeter ... Jusqua` : exécute au moins une fois, puis teste la condition d'arrêt."
     },
     {
       "title": "Boucle Pour: quand et comment",
       "content": "La boucle `Pour` est adaptée aux comptages et parcours bornés (`1..N`, `0..N-1`).\n\nAvantage: simple, lisible, borne explicite.",
-      "code": "Var\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i de 1 a 10 Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(somme);\nFin."
+      "code": "Var\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i := 1 a 10 Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(somme);\nFin."
     },
     {
-      "title": "Boucle Tant Que: contrôle par condition",
-      "content": "`Tant Que` teste la condition au début de chaque tour.\n\nElle peut ne jamais s'exécuter si la condition est fausse dès le départ.\n\nUtile quand on ne connaît pas à l'avance le nombre d'itérations.",
-      "code": "Var\n    x : Entier;\nDebut\n    Lire(x);\n    Tant Que x < 100 Faire\n        x := x * 2;\n    Fin Tant Que;\n    Ecrire(x);\nFin."
+      "title": "Boucle Tantque: contrôle par condition",
+      "content": "`Tantque` teste la condition au début de chaque tour.\n\nElle peut ne jamais s'exécuter si la condition est fausse dès le départ.\n\nUtile quand on ne connaît pas à l'avance le nombre d'itérations.",
+      "code": "Var\n    x : Entier;\nDebut\n    Lire(x);\n    Tantque x < 100 Faire\n        x := x * 2;\n    Fin Tantque;\n    Ecrire(x);\nFin."
     },
     {
       "title": "Boucle Repeter ... Jusqua: au moins une exécution",
@@ -51,12 +51,12 @@
     },
     {
       "title": "Différences entre les boucles",
-      "content": "### Résumé décisionnel\n- `Pour` : utiliser quand les bornes sont connues.\n- `Tant Que` : utiliser quand la condition d'arrêt est dynamique et testée avant.\n- `Repeter ... Jusqua` : utiliser quand au moins un passage est nécessaire.\n\nComplexité temporelle : dépend du nombre de tours, pas du mot-clé lui-même."
+      "content": "### Résumé décisionnel\n- `Pour` : utiliser quand les bornes sont connues.\n- `Tantque` : utiliser quand la condition d'arrêt est dynamique et testée avant.\n- `Repeter ... Jusqua` : utiliser quand au moins un passage est nécessaire.\n\nComplexité temporelle : dépend du nombre de tours, pas du mot-clé lui-même."
     },
     {
       "title": "Exemple global combiné",
       "content": "Exemple réunissant déclarations, constantes, conditions et boucles.",
-      "code": "Algorithme BilanClasse;\nConst\n    SEUIL = 10;\nVar\n    i, n, nbAdmis : Entier;\n    note : Reel;\nDebut\n    Lire(n);\n    nbAdmis := 0;\n    Pour i de 1 a n Faire\n        Lire(note);\n        Si note >= SEUIL Alors\n            nbAdmis := nbAdmis + 1;\n        Fin Si;\n    Fin Pour;\n    Ecrire(\"Admis: \", nbAdmis);\nFin."
+      "code": "Algorithme BilanClasse;\nConst\n    SEUIL = 10;\nVar\n    i, n, nbAdmis : Entier;\n    note : Reel;\nDebut\n    Lire(n);\n    nbAdmis := 0;\n    Pour i := 1 a n Faire\n        Lire(note);\n        Si note >= SEUIL Alors\n            nbAdmis := nbAdmis + 1;\n        Fin Si;\n    Fin Pour;\n    Ecrire(\"Admis: \", nbAdmis);\nFin."
     },
     {
       "title": "Erreurs fréquentes au début",

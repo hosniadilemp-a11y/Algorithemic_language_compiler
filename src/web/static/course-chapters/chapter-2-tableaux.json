@@ -14,32 +14,32 @@
     {
       "title": "Parcours d'un tableau et d'une matrice",
       "content": "Le parcours séquentiel est la base de la plupart des algorithmes.\n\nPour une matrice, on utilise généralement une boucle externe sur les lignes et une boucle interne sur les colonnes.",
-      "code": "// Parcours tableau\nPour i de 0 a 9 Faire\n    Ecrire(T[i]);\nFin Pour;\n\n// Parcours matrice\nPour i de 0 a 2 Faire\n    Pour j de 0 a 3 Faire\n        Ecrire(M[i][j]);\n    Fin Pour;\nFin Pour;"
+      "code": "// Parcours tableau\nPour i := 0 a 9 Faire\n    Ecrire(T[i]);\nFin Pour;\n\n// Parcours matrice\nPour i := 0 a 2 Faire\n    Pour j := 0 a 3 Faire\n        Ecrire(M[i][j]);\n    Fin Pour;\nFin Pour;"
     },
     {
       "title": "Recherche séquentielle (linéaire)",
       "content": "La recherche séquentielle vérifie les éléments un par un jusqu'à trouver la valeur cible ou atteindre la fin.\n\n### Complexité\n- Meilleur cas : `O(1)` (élément trouvé au début).\n- Pire cas : `O(n)` (élément absent ou en fin).\n- Cas moyen : `O(n)`.\n\nAvantage : fonctionne même si le tableau n'est pas trié.",
-      "code": "Fonction RechercheSeq(T[100] : Entier; n, x : Entier) : Entier\nVar\n    i : Entier;\nDebut\n    Pour i de 0 a n-1 Faire\n        Si T[i] = x Alors\n            Retourner i;\n        Fin Si;\n    Fin Pour;\n    Retourner -1;\nFin;"
+      "code": "Fonction RechercheSeq(T[100] : Entier; n, x : Entier) : Entier\nVar\n    i : Entier;\nDebut\n    Pour i := 0 a n-1 Faire\n        Si T[i] = x Alors\n            Retourner i;\n        Fin Si;\n    Fin Pour;\n    Retourner -1;\nFin;"
     },
     {
       "title": "Recherche dichotomique (binaire)",
       "content": "La recherche dichotomique divise l'intervalle en deux à chaque étape.\n\nPrécondition obligatoire : le tableau doit être **trié**.\n\n### Complexité\n- Meilleur cas : `O(1)` (trouvé au milieu).\n- Pire cas : `O(log2 n)`.\n\nElle est très efficace sur grands tableaux triés.",
-      "code": "Fonction RechercheDicho(T[100] : Entier; n, x : Entier) : Entier\nVar\n    g, d, m : Entier;\nDebut\n    g := 0;\n    d := n - 1;\n\n    Tant Que g <= d Faire\n        m := (g + d) div 2;\n        Si T[m] = x Alors\n            Retourner m;\n        Sinon\n            Si x < T[m] Alors\n                d := m - 1;\n            Sinon\n                g := m + 1;\n            Fin Si;\n        Fin Si;\n    Fin Tant Que;\n\n    Retourner -1;\nFin;"
+      "code": "Fonction RechercheDicho(T[100] : Entier; n, x : Entier) : Entier\nVar\n    g, d, m : Entier;\nDebut\n    g := 0;\n    d := n - 1;\n\n    Tantque g <= d Faire\n        m := (g + d) div 2;\n        Si T[m] = x Alors\n            Retourner m;\n        Sinon\n            Si x < T[m] Alors\n                d := m - 1;\n            Sinon\n                g := m + 1;\n            Fin Si;\n        Fin Si;\n    Fin Tantque;\n\n    Retourner -1;\nFin;"
     },
     {
       "title": "Tri par sélection (Selection Sort)",
       "content": "Principe : à chaque position `i`, chercher le plus petit élément dans la partie non triée puis l'échanger avec `T[i]`.\n\nCaractéristiques :\n- simple à comprendre,\n- peu d'échanges,\n- non stable dans sa forme classique.\n\n### Complexité\n- Comparaisons : `O(n^2)`\n- Échanges : `O(n)`",
-      "code": "Procedure TriSelection(Var T[100] : Entier; n : Entier)\nVar\n    i, j, imin, tmp : Entier;\nDebut\n    Pour i de 0 a n-2 Faire\n        imin := i;\n        Pour j de i+1 a n-1 Faire\n            Si T[j] < T[imin] Alors\n                imin := j;\n            Fin Si;\n        Fin Pour;\n\n        tmp := T[i];\n        T[i] := T[imin];\n        T[imin] := tmp;\n    Fin Pour;\nFin;"
+      "code": "Procedure TriSelection(Var T[100] : Entier; n : Entier)\nVar\n    i, j, imin, tmp : Entier;\nDebut\n    Pour i := 0 a n-2 Faire\n        imin := i;\n        Pour j := i+1 a n-1 Faire\n            Si T[j] < T[imin] Alors\n                imin := j;\n            Fin Si;\n        Fin Pour;\n\n        tmp := T[i];\n        T[i] := T[imin];\n        T[imin] := tmp;\n    Fin Pour;\nFin;"
     },
     {
       "title": "Tri par insertion (Insertion Sort)",
       "content": "Principe : on maintient une partie gauche triée, puis on insère chaque nouvel élément à sa bonne place.\n\nCaractéristiques :\n- très bon sur tableaux presque triés,\n- stable,\n- facile à implémenter.\n\n### Complexité\n- Meilleur cas : `O(n)` (déjà trié).\n- Pire/Moyen : `O(n^2)`.",
-      "code": "Procedure TriInsertion(Var T[100] : Entier; n : Entier)\nVar\n    i, j, cle : Entier;\nDebut\n    Pour i de 1 a n-1 Faire\n        cle := T[i];\n        j := i - 1;\n\n        Tant Que (j >= 0) Et (T[j] > cle) Faire\n            T[j+1] := T[j];\n            j := j - 1;\n        Fin Tant Que;\n\n        T[j+1] := cle;\n    Fin Pour;\nFin;"
+      "code": "Procedure TriInsertion(Var T[100] : Entier; n : Entier)\nVar\n    i, j, cle : Entier;\nDebut\n    Pour i := 1 a n-1 Faire\n        cle := T[i];\n        j := i - 1;\n\n        Tantque (j >= 0) Et (T[j] > cle) Faire\n            T[j+1] := T[j];\n            j := j - 1;\n        Fin Tantque;\n\n        T[j+1] := cle;\n    Fin Pour;\nFin;"
     },
     {
       "title": "Tri à bulles (Bubble Sort)",
       "content": "Principe : comparer les éléments voisins et permuter s'ils sont mal ordonnés.\n\nAprès chaque passage, le plus grand élément remonte vers la fin.\n\nVersion optimisée : arrêt anticipé si aucun échange n'a lieu pendant un passage.\n\n### Complexité\n- Meilleur cas (optimisé): `O(n)`\n- Pire/Moyen : `O(n^2)`.",
-      "code": "Procedure TriBulles(Var T[100] : Entier; n : Entier)\nVar\n    i, j, tmp : Entier;\n    permute : Booleen;\nDebut\n    Pour i de 0 a n-2 Faire\n        permute := Faux;\n        Pour j de 0 a n-2-i Faire\n            Si T[j] > T[j+1] Alors\n                tmp := T[j];\n                T[j] := T[j+1];\n                T[j+1] := tmp;\n                permute := Vrai;\n            Fin Si;\n        Fin Pour;\n\n        Si permute = Faux Alors\n            Retourner;\n        Fin Si;\n    Fin Pour;\nFin;"
+      "code": "Procedure TriBulles(Var T[100] : Entier; n : Entier)\nVar\n    i, j, tmp : Entier;\n    permute : Booleen;\nDebut\n    Pour i := 0 a n-2 Faire\n        permute := Faux;\n        Pour j := 0 a n-2-i Faire\n            Si T[j] > T[j+1] Alors\n                tmp := T[j];\n                T[j] := T[j+1];\n                T[j+1] := tmp;\n                permute := Vrai;\n            Fin Si;\n        Fin Pour;\n\n        Si permute = Faux Alors\n            Retourner;\n        Fin Si;\n    Fin Pour;\nFin;"
     },
     {
       "title": "Comparatif des complexités",

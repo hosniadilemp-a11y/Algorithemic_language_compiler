@@ -1,0 +1,43 @@
+Type Point = Enregistrement
+    x: Entier;
+    y: Entier;
+    name[10]: Chaine;
+Fin;
+
+Algorithme VerifMemoire;
+Var
+    e: Entier;
+    r: Reel;
+    c: Caractere;
+    p: ^Entier;
+    pt: Point;
+    pp: ^Point;
+Debut
+    Ecrire("Taille Entier: ", taille(Entier), "\n");
+    Ecrire("Taille Reel: ", taille(Reel), "\n");
+    Ecrire("Taille Caractere: ", taille(Caractere), "\n");
+    Ecrire("Taille Pointeur: ", taille(^Entier), "\n");
+    Ecrire("Taille Record Point (4+4+10=18): ", taille(Point), "\n");
+    
+    // Allocation valide (multiple de 4)
+    p <- allouer(4);
+    p^ := 123; // Test assignment
+    Ecrire("Allocation 4 octets pour p (1 element OK), p^ = ", p^, "\n");
+    
+    Liberer(p);
+    
+    p <- allouer(8);
+    p[0] := 456;
+    p[1] := 789;
+    Ecrire("Allocation 8 octets pour p (2 elements OK), p[0]=", p[0], ", p[1]=", p[1], "\n");
+    
+    // Allocation d'un record
+    pp <- allouer(taille(Point));
+    Ecrire("Allocation record pp (OK)\n");
+    
+    // Test multiple (Ceci devrait provoquer une erreur semantique)
+    // p <- allouer(6); // Error: 6 is not a multiple of 4
+    
+    Liberer(p);
+    Liberer(pp);
+Fin.

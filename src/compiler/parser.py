@@ -64,7 +64,7 @@ def get_default_value(type_name):
     if t == 'chaine': return '""'
     if t == 'booleen': return 'False'
     if t == 'caractere': return "''"
-    if 'pointeur' in t or t.startswith('pointeur_'): return 'None'  # NIL pointer
+    if 'pointeur' in t or t.startswith('pointeur_') or t.startswith('^'): return 'None'  # NIL pointer
     # User-defined record type — emit empty dict initialiser
     if type_name in record_types:
         return _build_record_init(type_name)
@@ -87,8 +87,8 @@ def check_type_compatibility(var_type, expr_type):
     v_type = var_type.lower()
     e_type = expr_type.lower()
     
-    # Allow NIL (POINTEUR) to be assigned to any pointer type
-    if v_type.startswith('pointeur_') and e_type == 'pointeur':
+    # Allow NIL (POINTEUR) or ALLOUER_CALL to be assigned to any pointer type
+    if v_type.startswith('pointeur_') and (e_type == 'pointeur' or e_type == 'allouer_call'):
         return True
     
     # Exact match (case-insensitive)
@@ -257,7 +257,7 @@ class Pointer:
             if lookup_name in _algo_vars_info:
                 info = _algo_vars_info[lookup_name]
                 base = info['addr']
-                stride = info.get('element_size', 4)
+                stride = info.get('element_size', 1)
                 addr = base + (self.index * stride)
                 return f"@{addr}"
             else:
@@ -458,12 +458,14 @@ def p_program(p):
     # 7. memory allocation helpers
     code += "_algo_heap = {}\n"
     code += "_algo_heap_next_addr = 50000\n\n"
-    code += "def _algo_allouer(size_in_bytes):\n"
+    code += "def _algo_allouer(size_in_bytes, element_size=1):\n"
     code += "    global _algo_heap_next_addr\n"
     code += "    addr = _algo_heap_next_addr\n"
     code += "    _algo_heap_next_addr += size_in_bytes\n"
-    code += "    allocated_list = [None] * max(1, size_in_bytes)\n"
+    code += "    num_elements = size_in_bytes // element_size if element_size > 0 else size_in_bytes\n"
+    code += "    allocated_list = [None] * max(1, num_elements)\n"
     code += "    _algo_heap[addr] = allocated_list\n"
+    code += "    _algo_vars_info[f'_heap_{addr}'] = {'addr': addr, 'size': size_in_bytes, 'element_size': element_size}\n"
     code += "    ptr = Pointer(var_name=f'_heap_{addr}', namespace=_algo_heap, index=0, base_var=allocated_list)\n"
     code += "    ptr._heap_addr = addr\n"
     code += "    return ptr\n\n"
@@ -481,8 +483,8 @@ def p_program(p):
         if _seen is None:
             _seen = set()
         t = type_str.upper()
-        if t in ('ENTIER', 'ENTIER_TYPE'): return 1
-        if t in ('REEL', 'REEL_TYPE'): return 1
+        if t in ('ENTIER', 'ENTIER_TYPE'): return 4
+        if t in ('REEL', 'REEL_TYPE'): return 8
         if t in ('BOOLEEN', 'BOOLEEN_TYPE'): return 1
         if t in ('CARACTERE', 'CARACTERE_TYPE'): return 1
         # Pointer types (POINTEUR_X or ^ prefix) — algorithmic address unit size
@@ -517,8 +519,8 @@ def p_program(p):
     code += "def _algo_taille(type_name):\n"
     code += "    t = type_name.lower()\n"
     code += "    if 'pointeur' in t or t.startswith('^'): return 1\n"
-    code += "    if 'entier' in t: return 1\n"
-    code += "    if 'reel' in t: return 1\n"
+    code += "    if 'entier' in t: return 4\n"
+    code += "    if 'reel' in t: return 8\n"
     code += "    if 'booleen' in t: return 1\n"
     code += "    if 'caractere' in t: return 1\n"
     code += "    if 'chaine' in t: return 1\n"
@@ -673,8 +675,8 @@ class MemoryAllocator:
             return 1 # Algorithmic address unit
             
         # 3. Handle base types
-        if t in ('ENTIER', 'ENTIER_TYPE'): return 1
-        if t in ('REEL', 'REEL_TYPE'): return 1
+        if t in ('ENTIER', 'ENTIER_TYPE'): return 4
+        if t in ('REEL', 'REEL_TYPE'): return 8
         if t in ('BOOLEEN', 'BOOLEEN_TYPE'): return 1
         if t in ('CARACTERE', 'CARACTERE_TYPE'): return 1
         
@@ -740,7 +742,7 @@ def p_var_list_multiple(p):
     alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
     mem_alloc.allocate(alloc_name, type_name)
     
-    if type_name.upper().startswith('POINTEUR_') or type_name.upper() == 'POINTEUR':
+    if type_name.upper().startswith('POINTEUR_') or type_name.upper() == 'POINTEUR' or type_name.startswith('^'):
         ns = "locals()" if is_local_scope() else "globals()"
         init_val = f"Pointer(\"{var_name}\", {ns})"
     else:
@@ -842,11 +844,11 @@ def p_var_list_record(p):
         add_variable(var_name, var_type)
         alloc_name = f"{scope_stack[-1]}.{var_name}" if is_local_scope() else var_name
         mem_alloc.allocate(alloc_name, var_type)
-        if var_type.upper().startswith('POINTEUR_') or var_type.upper() == 'POINTEUR':
+        if var_type.upper().startswith('POINTEUR_') or var_type.upper() == 'POINTEUR' or var_type.startswith('^'):
             ns = "locals()" if is_local_scope() else "globals()"
             code = f"{get_indent()}{var_name} = Pointer(\"{var_name}\", {ns}) # {var_type}"
         else:
-            code = f"{get_indent()}{var_name} = None # {var_type}"
+            code = f"{get_indent()}{var_name} = {get_default_value(var_type)} # {var_type}"
         p[0] = (code, var_type)
 
 def p_var_list_record_array(p):
@@ -1168,19 +1170,22 @@ def p_statement_expression(p):
     p[0] = f"{get_indent()}{expr_code}"
 
 def check_allocation_semantic(p, var_name, expr_code, is_array_access=False):
-    if '_algo_allouer(' in expr_code and '_algo_taille(' in expr_code:
+    if '_algo_allouer(' in expr_code:
+        var_type, _ = find_variable(var_name)
+        if var_type == 'UNKNOWN': return
+        var_type = var_type.upper()
+        
+        # Try to infer the base type we're alllocating for
+        alloc_base = 'UNKNOWN'
         import re
         m = re.search(r"_algo_taille\('([^']+)'\)", expr_code)
         if m:
             alloc_type = m.group(1).upper()
-            var_type, _ = find_variable(var_name)
-            if var_type == 'UNKNOWN': return
-            var_type = var_type.upper()
+            alloc_base = alloc_type.replace('^', '').replace('POINTEUR_', '').replace('_TYPE', '').upper()
             
             var_ptr_count = var_type.count('^') + var_type.count('POINTEUR_')
             var_base = var_type.replace('^', '').replace('POINTEUR_', '').replace('_TYPE', '').upper()
             alloc_ptr_count = alloc_type.count('^') + alloc_type.count('POINTEUR_')
-            alloc_base = alloc_type.replace('^', '').replace('POINTEUR_', '').replace('_TYPE', '').upper()
             
             expected_diff = 2 if is_array_access else 1
             if var_base != alloc_base or var_ptr_count != alloc_ptr_count + expected_diff:
@@ -1192,6 +1197,37 @@ def check_allocation_semantic(p, var_name, expr_code, is_array_access=False):
                     "type": "Semantic Error",
                     "error_code": "E3.2"
                 })
+        
+        # Multiple check (even if taille() wasn't used)
+        # Determine the stride from the variable's type
+        # var_type can be POINTEUR_ENTIER or TABLEAU_ENTIER etc.
+        base_type = var_type
+        if var_type.startswith('POINTEUR_'):
+            base_type = var_type[9:]
+        elif var_type.startswith('TABLEAU_'):
+            parts = var_type.split('_')
+            if len(parts) >= 2: base_type = parts[1]
+        
+        stride = mem_alloc.get_type_size(base_type)
+        if stride == 4 and 'UNKNOWN' in base_type: stride = 1 # Be conservative
+        
+        try:
+            m_size = re.search(r"_algo_allouer\((.+)\)", expr_code)
+            if m_size:
+                size_expr = m_size.group(1).strip()
+                if size_expr.isdigit():
+                    size_val = int(size_expr)
+                    if size_val % stride != 0:
+                        error_msg = f"Erreur semantique: La taille allouee ({size_val}) pour {var_name} doit etre un multiple de taille({base_type})={stride}"
+                        parser_errors.append({
+                            "line": p.lineno(1),
+                            "column": 0,
+                            "message": error_msg,
+                            "type": "Semantic Error",
+                            "error_code": "E3.4"
+                        })
+        except:
+            pass
 
 def p_statement_assign(p):
     '''statement : ID ASSIGN expression SEMICOLON'''
@@ -1219,12 +1255,8 @@ def p_statement_assign(p):
     
     # Special handling for fixed strings to preserve list reference and enforce size
     if var_type == 'CHAINE':
-         # If the RHS is a pointer to a string (ptr^), we want the raw pointer object 
-         # passed into `_algo_assign_fixed_string` so it can slice it from the index onwards.
-         # So we intercept the `._get()` call if it was an assignment from a dereferenced pointer.
+         # ... existing handling ...
          if '._get_string()' in expr_code:
-             # Match: ((ptr_chaine)._get_string() if hasattr(...) else (ptr_chaine)._get())
-             # To bypass this entire wrapper and just pass the pointer for direct slicing in `_algo_assign...`
              raw_expr = expr_code.split(')._get_string()')[0]
              if raw_expr.startswith('(('): raw_expr = raw_expr[2:]
              elif raw_expr.startswith('('): raw_expr = raw_expr[1:]
@@ -1235,8 +1267,16 @@ def p_statement_assign(p):
              p[0] = f"{get_indent()}{var_name} = _algo_assign_fixed_string({var_name}, {raw_expr})"
          else:
              p[0] = f"{get_indent()}{var_name} = _algo_assign_fixed_string({var_name}, {expr_code})"
-    elif 'POINTEUR' in var_type:
+    elif 'POINTEUR' in var_type.upper() or var_type.startswith('^'):
          ns = "locals()" if is_local_scope() else "globals()"
+         
+         if '_algo_allouer(' in expr_code:
+             # Inject element_size into the call even if embedded in complex expression
+             base_t = var_type.replace('POINTEUR_', '', 1).replace('^', '', 1)
+             stride = mem_alloc.get_type_size(base_t)
+             import re
+             # Match _algo_allouer(size) and append element_size=stride. Handles one level of balanced parens.
+             expr_code = re.sub(r"(_algo_allouer\((?:[^()]|\([^()]*\))+)\)", rf"\1, element_size={stride})", expr_code)
          
          if expr_type.startswith('TABLEAU_') or expr_type == 'CHAINE':
              # Array decay: assign array to pointer directly
@@ -1589,7 +1629,7 @@ def p_expression_allouer(p):
             init_expr = _build_record_init(type_name)
             p[0] = (f"_algo_allouer_record({init_expr})", f"POINTEUR_{type_name}")
             return
-    p[0] = (f"_algo_allouer({size_code})", 'POINTEUR')
+    p[0] = (f"_algo_allouer({size_code})", 'ALLOUER_CALL')
 
 def p_expression_taille(p):
     '''expression : TAILLE LPAREN type RPAREN'''
@@ -1663,6 +1703,17 @@ def p_statement_assign_array(p):
     var_type, _ = find_variable(var_name)
     
     check_allocation_semantic(p, var_name, val_code, is_array_access=True)
+
+    if '_algo_allouer(' in val_code:
+        # Inject element_size into the call
+        # var_type can be POINTEUR_POINTEUR_ENTIER
+        base_t = var_type.replace('POINTEUR_', '', 1).replace('^', '', 1)
+        if base_t.startswith('POINTEUR_'): base_t = base_t[9:]
+        elif base_t.startswith('^'): base_t = base_t[1:]
+        stride = mem_alloc.get_type_size(base_t)
+        import re
+        # Handles one level of balanced parens inside allouer
+        val_code = re.sub(r"(_algo_allouer\((?:[^()]|\([^()]*\))+)\)", rf"\1, element_size={stride})", val_code)
 
     if var_type.upper() in ['CHAINE', 'CHAINE_TYPE']:
         # Single string var: character assignment

@@ -128,6 +128,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 "F11": function (cm) {                // Fullscreen
                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                },
+                "Enter": function (cm) {
+                    if (cm.getOption("disableInput")) return CodeMirror.Pass;
+                    const cursor = cm.getCursor();
+                    const line = cm.getLine(cursor.line);
+                    const trimmedLine = line.trim();
+
+                    // Auto-semicolon logic:
+                    // If line is not empty, not a comment, doesn't end in punctuation that doesn't need a semicolon,
+                    // and doesn't end in keywords that start/end blocks.
+                    if (trimmedLine.length > 0 &&
+                        !trimmedLine.startsWith("//") &&
+                        !/[;:\.\,\{\[\(\^]$/.test(trimmedLine) &&
+                        !/^(Algorithme|Var|Const|Debut|Alors|Faire|Sinon|Repeter|Type|Enregistrement|Fin|FinSi|FinPour|FinTantQue)/i.test(trimmedLine) &&
+                        !/\s+(Alors|Faire)$/i.test(trimmedLine)
+                    ) {
+                        // Insert semicolon at the end of the line if the cursor is at or after the last non-space character
+                        const lastCharIdx = line.search(/\S\s*$/);
+                        if (cursor.ch > lastCharIdx) {
+                            cm.replaceRange(";", { line: cursor.line, ch: line.length });
+                        }
+                    }
+                    return CodeMirror.Pass;
                 }
             },
 
@@ -185,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Code formatting function for Algo
+    // Code formatting function for Algo - Refined for structural alignment
     function formatAlgoCode(cm) {
         var code = cm.getValue();
         var lines = code.split('\n');
@@ -196,8 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i].trim();
 
-            // Decrease indent before these keywords
-            if (/^(Fin|Sinon|Fin Si|Fin Pour|Fin Tant Que)/i.test(line)) {
+            // Decrease indent BEFORE the line for block-closing or section-switching keywords
+            // These keywords should shift back out to the same level as their header
+            if (/^(Fin|Sinon|Jusqua|Debut|Var|Const|Type)/i.test(line)) {
                 indentLevel = Math.max(0, indentLevel - 1);
             }
 
@@ -208,14 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 formatted.push('');
             }
 
-            // Increase indent after these keywords
-            if (/^(Algorithme|Var|Const|Debut|Si|Alors|Sinon|Pour.*Faire|Tant Que.*Faire)/i.test(line)) {
+            // Increase indent AFTER the line for block-opening keywords
+            // Note: Algorithme, Fonction, Procedure themselves don't increase indent
+            // because the next line is usually Var/Debut which will handle its own indent.
+            if (/^(Var|Const|Debut|Si|Sinon|Pour\s|Tant\s*Que\s|Repeter|Type|Enregistrement)/i.test(line) ||
+                /\s+(Alors|Faire|Enregistrement)$/i.test(line)) {
                 indentLevel++;
-            }
-
-            // Decrease after Debut (special case)
-            if (/^Debut/i.test(line)) {
-                indentLevel = Math.max(0, indentLevel - 1);
             }
         }
 

@@ -136,8 +136,8 @@ class TraceRunner:
                 var_size = '-'
                 try:
                     # Use simulated taille for sizes
-                    if algo_type == 'Entier': var_size = 1
-                    elif algo_type == 'Reel': var_size = 1
+                    if algo_type == 'Entier': var_size = 4
+                    elif algo_type == 'Reel': var_size = 8
                     elif algo_type == 'Booleen': var_size = 1
                     elif algo_type == 'Caractere': var_size = 1
                     elif isinstance(v, list) and 'Chaine' in algo_type:
@@ -203,29 +203,28 @@ class TraceRunner:
             
             ptr_types = algo_heap_types
 
+            vars_info = frame.f_globals.get('_algo_vars_info', {})
+
             for heap_addr, heap_list in algo_heap.items():
                 heap_addr_int = int(heap_addr)
                 
                 dyn_type = "Dynamique"
-                elem_size = 1 # default bytes for unknown
+                # Use stored element_size if available in vars_info
+                info = vars_info.get(f'_heap_{heap_addr}', {})
+                elem_size = info.get('element_size', 1)
                 
                 if heap_addr_int in ptr_types:
                     base_type = ptr_types[heap_addr_int]
                     if base_type.upper().startswith('POINTEUR_'):
                         dyn_type = "^" + base_type.replace('POINTEUR_', '')
-                        elem_size = 1
                     elif 'ENTIER' in base_type.upper():
                         dyn_type = "Entier"
-                        elem_size = 1
                     elif 'REEL' in base_type.upper():
                         dyn_type = "Reel"
-                        elem_size = 1
                     elif 'BOOLEEN' in base_type.upper():
                         dyn_type = "Booleen"
-                        elem_size = 1
                     elif 'CARACTERE' in base_type.upper():
                         dyn_type = "Caractere"
-                        elem_size = 1
 
                 # -----------------------------------------------
                 # Record-backed heap entry (dict from allouer_record)
@@ -259,9 +258,9 @@ class TraceRunner:
                     }
                     continue
                 
-                # Truncate Python list back to logical element count (size // elem_size)
-                logical_count = len(heap_list) // elem_size if elem_size > 0 else len(heap_list)
-                display_list = heap_list[:logical_count]
+                # Use the actual list length as logical count since _algo_allouer now handles this
+                logical_count = len(heap_list)
+                display_list = heap_list # No need to truncate as it's already logical count
                 
                 # Treat Array of Characters as a visible array
                 if dyn_type == "Caractere":
@@ -279,7 +278,7 @@ class TraceRunner:
                     'value': display_val,
                     'address': f"@{heap_addr}",
                     'type': display_type,
-                    'size': len(heap_list) # Show exact simulated byte size
+                    'size': len(heap_list) * elem_size # Show exact simulated byte size
                 }
 
 

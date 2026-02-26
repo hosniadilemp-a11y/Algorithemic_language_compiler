@@ -1,0 +1,184 @@
+/* Algo Course Section Styling */
+
+.course-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #c9d1d9;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.course-container {
+    width: 90%;
+    height: 90%;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.course-sidebar {
+    width: 300px;
+    background: #0d1117;
+    border-right: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.course-sidebar-header h4 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #58a6ff;
+}
+
+.course-outline {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.course-chapter-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95em;
+    border-left: 3px solid transparent;
+}
+
+.course-chapter-item:hover {
+    background: rgba(88, 166, 255, 0.1);
+}
+
+.course-chapter-item.active {
+    background: rgba(88, 166, 255, 0.15);
+    color: #58a6ff;
+    border-left-color: #58a6ff;
+    font-weight: 600;
+}
+
+.course-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0d1117;
+}
+
+.course-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    line-height: 1.6;
+}
+
+.course-content h1,
+.course-content h2 {
+    color: #58a6ff;
+    margin-top: 0;
+}
+
+.course-content h3 {
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 10px;
+    margin-top: 30px;
+}
+
+.course-code-block {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    position: relative;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.course-code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.8em;
+    color: #8b949e;
+}
+
+.course-code-body {
+    white-space: pre;
+    color: #d1d5db;
+    overflow-x: auto;
+}
+
+.course-exec-btn {
+    background: #238636;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.2s;
+}
+
+.course-exec-btn:hover {
+    background: #2ea043;
+}
+
+.course-nav-footer {
+    padding: 20px 40px;
+    border-top: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #161b22;
+}
+
+.course-pagination {
+    color: #8b949e;
+    font-size: 0.9em;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar styling for course */
+.course-content::-webkit-scrollbar,
+.course-outline::-webkit-scrollbar {
+    width: 8px;
+}
+
+.course-content::-webkit-scrollbar-thumb,
+.course-outline::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 4px;
+}

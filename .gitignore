@@ -1,7 +1,8 @@
 # ============================================================
 # AlgoCompiler — .gitignore
 # ============================================================
-
+docs/CoursAlgo
+examples/Tests
 # --- Python cache ---
 __pycache__/
 *.py[cod]

@@ -574,7 +574,7 @@ def start_execution():
                 elif isinstance(e, MemoryError):
                     err_msg = "[E4.3] Dépassement de capacité mémoire (Trop d'allocations)."
                     
-                session.output_queue.put({'type': 'error', 'data': f"Erreur d'exécution: {err_msg}"})
+                session.output_queue.put({'type': 'error', 'data': f"Erreur d'exécution ({error_type}): {err_msg}"})
             finally:
                 # If we stopped manually, we might have already sent 'stopped'
                 # But to be safe, let's mark finished if we were running

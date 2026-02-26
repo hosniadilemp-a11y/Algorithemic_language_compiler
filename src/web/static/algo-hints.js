@@ -41,8 +41,16 @@
 
     // Snippet templates with visual indicators
     var snippets = {
+        "algorithme": {
+            text: "Algorithme NomAlgorithme;\nVar\n    i, j : Entier;\nDebut\n    Ecrire(\"Debut de l'algorithme\");\n    \nFin.",
+            displayText: "Algorithme (full structure)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
         "pour": {
-            text: "Pour i := 0 a 10 Faire\n    \nFinPour;",
+            text: "Pour i := 0 a 10 Faire\n    // Code ici\nFinPour;",
             displayText: "Pour ... Faire (loop)",
             className: "hint-snippet",
             render: function (element, self, data) {
@@ -50,7 +58,7 @@
             }
         },
         "si": {
-            text: "Si condition Alors\n    \nFin Si;",
+            text: "Si condition Alors\n    // Code ici\nFin Si;",
             displayText: "Si ... Alors (if)",
             className: "hint-snippet",
             render: function (element, self, data) {
@@ -58,32 +66,48 @@
             }
         },
         "tantque": {
-            text: "TantQue condition Faire\n    \nFinTantQue;",
+            text: "TantQue condition Faire\n    // Code ici\nFinTantQue;",
             displayText: "TantQue ... Faire (while)",
             className: "hint-snippet",
             render: function (element, self, data) {
                 element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
             }
         },
-        "var": {
-            text: "Var \n    nom : Entier;",
-            displayText: "Var (variable declaration)",
+        "tanque": {
+            text: "TantQue condition Faire\n    // Code ici\nFinTantQue;",
+            displayText: "Tanque (alias for TantQue)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
+        "repeter": {
+            text: "Repeter\n    // Code ici\nJusqua condition;",
+            displayText: "Repeter ... Jusqua (loop)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
+        "repre": {
+            text: "Repeter\n    // Code ici\nJusqua condition;",
+            displayText: "Repre (alias for Repeter)",
             className: "hint-snippet",
             render: function (element, self, data) {
                 element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
             }
         },
         "ecrire": {
-            text: "Ecrire();",
-            displayText: "Ecrire() (print)",
+            text: "Ecrire(\"\");",
+            displayText: "Ecrire(\"\") (print)",
             className: "hint-snippet",
             render: function (element, self, data) {
                 element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
             }
         },
         "lire": {
-            text: "Lire();",
-            displayText: "Lire() (read)",
+            text: "Lire(\"\");",
+            displayText: "Lire(\"\") (read)",
             className: "hint-snippet",
             render: function (element, self, data) {
                 element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
@@ -92,6 +116,30 @@
         "type": {
             text: "Type NomType = Enregistrement\nDebut\n    champ : Entier;\nFin;",
             displayText: "Type ... = Enregistrement (record)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
+        "enregistrement": {
+            text: "Enregistrement\nDebut\n    champ : Entier;\nFin;",
+            displayText: "Enregistrement (record body)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
+        "fonction": {
+            text: "Fonction NomFonction(param : Entier) : Entier\nVar\n    res : Entier;\nDebut\n    // Code ici\n    Retourner res;\nFin;",
+            displayText: "Fonction ... (function)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+            }
+        },
+        "procedure": {
+            text: "Procedure NomProcedure(param : Entier)\nVar\n    \nDebut\n    // Code ici\nFin;",
+            displayText: "Procedure ... (procedure)",
             className: "hint-snippet",
             render: function (element, self, data) {
                 element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
@@ -301,6 +349,17 @@
             if (rt.text.toLowerCase().indexOf(word) === 0) {
                 suggestions.push(rt);
             }
+        });
+
+        // Remove duplications where a keyword has a matching snippet
+        var snippetKeys = Object.keys(snippets);
+        suggestions = suggestions.filter(function (item) {
+            if (item.type === "keyword") {
+                var kw = item.text.toLowerCase();
+                // If there's a snippet for this keyword, remove the plain keyword suggestion
+                if (snippetKeys.indexOf(kw) !== -1) return false;
+            }
+            return true;
         });
 
         // Remove duplicates and sort

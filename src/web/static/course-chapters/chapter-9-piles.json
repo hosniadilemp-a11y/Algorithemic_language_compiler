@@ -1,0 +1,31 @@
+{
+  "id": "piles",
+  "title": "Chapitre 9: Les Piles (Stacks)",
+  "sections": [
+    {
+      "title": "Principe LIFO",
+      "content": "Une pile suit le principe Last In, First Out : le dernier ajouté est le premier retiré.\n\nUsages : annuler/rétablir, appels imbriqués, évaluation d'expressions."
+    },
+    {
+      "title": "Primitives",
+      "content": "Primitives usuelles : `InitialiserPile`, `Empiler`, `Depiler`, `Sommet`, `PileVide`.\n\nToujours tester la vacuité avant consultation et retrait."
+    },
+    {
+      "title": "Implémentation chaînée",
+      "content": "Une pile chaînée utilise la tête comme sommet. Empiler et dépiler se font donc en tête.",
+      "code": "Procedure Empiler(Var P : ^Pile; x : Entier)\nVar\n    nouveau : ^Pile;\nDebut\n    nouveau := allouer(taille(Pile));\n    Si nouveau <> NIL Alors\n        nouveau^.val := x;\n        nouveau^.suiv := P;\n        P := nouveau;\n    Fin Si;\nFin;"
+    },
+    {
+      "title": "Consultation sécurisée",
+      "content": "`Sommet(P)` lit sans retirer. `Depiler(P, x)` retire et renvoie la valeur.\n\nLa précondition est `PileVide(P)=Faux`."
+    },
+    {
+      "title": "Erreurs fréquentes",
+      "content": "- Dépiler une pile vide.\n- Oublier de libérer l'élément retiré.\n- Confondre LIFO avec FIFO.\n\nDocumenter les invariants évite ces erreurs."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Empiler `1,2,3,4,5`, puis dépiler jusqu'à pile vide en affichant chaque valeur.\n\n### Résultat attendu\nAffichage inverse : `5,4,3,2,1`."
+    }
+  ]
+}

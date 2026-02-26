@@ -1,0 +1,30 @@
+{
+  "id": "tutorial",
+  "title": "Guide d'utilisation de l'App",
+  "sections": [
+    {
+      "title": "Organisation de l'interface",
+      "content": "L'IDE comporte l'éditeur, la console et l'inspecteur de variables.\n\nLe panneau `Cours` donne un accès structuré aux chapitres théoriques et exemples."
+    },
+    {
+      "title": "Workflow recommandé",
+      "content": "1. Écrire ou charger un algorithme.\n2. Formater le code.\n3. Exécuter.\n4. Lire la console.\n5. Vérifier l'inspecteur.\n6. Corriger et relancer.\n\nCe cycle court accélère la correction."
+    },
+    {
+      "title": "IntelliSense et raccourcis",
+      "content": "Raccourcis utiles :\n- `Ctrl+Space` : suggestions.\n- Snippets (`pour`, `si`, `fonction`) + Tab.\n- `Ctrl+F` / `Ctrl+H` : rechercher/remplacer.\n- `F5` ou `Ctrl+Enter` : exécuter."
+    },
+    {
+      "title": "Entrée, exécution et débogage",
+      "content": "Le bouton `Entrée` charge un fichier pour simuler `Lire(...)`.\n\nPendant l'exécution, comparez sortie console et état des variables pour localiser rapidement l'erreur logique."
+    },
+    {
+      "title": "Erreurs fréquentes dans l'usage",
+      "content": "- Oublier `Fin.`.\n- Variables non déclarées.\n- Incohérences de type.\n- Bornes de boucle incorrectes.\n\nCorriger une erreur à la fois est plus efficace que des modifications massives."
+    },
+    {
+      "title": "Checklist finale",
+      "content": "Avant livraison d'un exercice :\n- code formaté,\n- cas limites testés,\n- sortie validée,\n- noms de variables lisibles,\n- logique cohérente avec le chapitre ciblé."
+    }
+  ]
+}

@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize CodeMirror with sophisticated IDE features
     if (codeEditorElement) {
-        editor = CodeMirror.fromTextArea(codeEditorElement, {
+        window.editor = CodeMirror.fromTextArea(codeEditorElement, {
             mode: "algo", // Use custom mode from algo-mode.js
             theme: "dracula",
             lineNumbers: true,
@@ -168,6 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         editor.setSize("100%", "100%");
+
+        // If code was requested from the standalone course page, inject it on load.
+        try {
+            const pendingCourseCode = localStorage.getItem('algocompiler.pendingCourseCode');
+            if (pendingCourseCode) {
+                editor.setValue(pendingCourseCode);
+                localStorage.removeItem('algocompiler.pendingCourseCode');
+            }
+        } catch (error) {
+            console.warn("Unable to read pending course code from storage:", error);
+        }
 
         // Auto-trigger autocomplete after typing
         let typingTimer;

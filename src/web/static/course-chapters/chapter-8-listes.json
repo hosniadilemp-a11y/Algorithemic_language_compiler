@@ -1,0 +1,32 @@
+{
+  "id": "listes",
+  "title": "Chapitre 8: Listes Chaînées",
+  "sections": [
+    {
+      "title": "Motivation",
+      "content": "Les tableaux sont limités quand la taille varie. Les listes chaînées apportent de la flexibilité pour les insertions et suppressions.\n\nLes maillons sont reliés par adresses et peuvent être dispersés en mémoire."
+    },
+    {
+      "title": "Structure d'un maillon",
+      "content": "Un maillon contient une information et un pointeur vers le suivant.\n\nLa liste est repérée par `tete`, et le dernier maillon pointe vers `NIL`.",
+      "code": "Type Maillon = Enregistrement\nDebut\n    val : Entier;\n    suiv : ^Maillon;\nFin;"
+    },
+    {
+      "title": "Opérations de base",
+      "content": "- Insertion en tête.\n- Parcours séquentiel.\n- Suppression d'un maillon.\n\nLe parcours se fait avec `p := p^.suiv` jusqu'à `NIL`."
+    },
+    {
+      "title": "Insertion en tête",
+      "content": "Créer un maillon, le chaîner à l'ancienne tête, puis déplacer `tete`.",
+      "code": "Algorithme InsertionTete;\nVar\n    tete, nouveau : ^Maillon;\nDebut\n    tete := NIL;\n    nouveau := allouer(taille(Maillon));\n    Si nouveau <> NIL Alors\n        nouveau^.val := 10;\n        nouveau^.suiv := tete;\n        tete := nouveau;\n    Fin Si;\nFin."
+    },
+    {
+      "title": "Erreurs courantes",
+      "content": "- Perdre la tête de liste.\n- Casser le chaînage lors d'une insertion/suppression.\n- Oublier de libérer un maillon supprimé.\n\nVérifier l'invariant de liste après chaque opération."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Construire une liste de 5 entiers saisis puis afficher la somme.\n\n### Variante\nSupprimer la première occurrence d'une valeur donnée."
+    }
+  ]
+}

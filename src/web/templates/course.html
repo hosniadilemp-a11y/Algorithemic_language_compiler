@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoCompiler - Cours</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-shell">
+        <div class="course-page-topbar">
+            <div class="course-page-brand"><i class="fas fa-graduation-cap"></i> Cours d'algorithmique</div>
+            <a href="/" class="course-back-btn"><i class="fas fa-code"></i> Retour au compilateur</a>
+        </div>
+
+        <div class="course-container course-standalone-container">
+            <aside class="course-sidebar">
+                <div class="course-sidebar-header">
+                    <h4><i class="fas fa-list-ul"></i> Sommaire</h4>
+                </div>
+                <nav id="course-outline" class="course-outline"></nav>
+            </aside>
+            <main class="course-main">
+                <div id="course-content" class="course-content"></div>
+                <footer class="course-nav-footer">
+                    <button id="course-prev-btn" class="btn secondary"><i class="fas fa-arrow-left"></i> Précédent</button>
+                    <div id="course-pagination" class="course-pagination">1 / 10</div>
+                    <button id="course-next-btn" class="btn secondary">Suivant <i class="fas fa-arrow-right"></i></button>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='course-controller.js') }}?v=3"></script>
+</body>
+
+</html>

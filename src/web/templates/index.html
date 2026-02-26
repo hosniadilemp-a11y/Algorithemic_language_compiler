@@ -19,7 +19,6 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='intellisense-icons.css') }}?v=9">
     <link rel="stylesheet" href="{{ url_for('static', filename='editor-enhancements.css') }}?v=9">
-    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}?v=1">
 
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -74,9 +73,9 @@
                     <i class="fas fa-book"></i> Exemples
                 </button>
                 <div class="separator"></div>
-                <button id="open-course-btn" class="btn secondary highlight" title="Ouvrir le cours d'algorithmique">
+                <a href="/course" class="btn secondary highlight" title="Ouvrir le cours d'algorithmique">
                     <i class="fas fa-graduation-cap"></i> Cours
-                </button>
+                </a>
                 <div class="separator"></div>
                 <button id="input-file-btn" class="btn secondary" title="Charger un fichier d'entrée (stdin)">
                     <i class="fas fa-file-import"></i> Entrée
@@ -292,37 +291,9 @@ Fin.</textarea>
     </div>
     <div id="examples-overlay" class="examples-overlay"></div>
 
-    <!-- Course Overlay -->
-    <div id="course-overlay" class="course-overlay" style="display:none;">
-        <div class="course-container">
-            <aside class="course-sidebar">
-                <div class="course-sidebar-header">
-                    <h4><i class="fas fa-list-ul"></i> Sommaire</h4>
-                    <button id="close-course-btn" class="icon-btn"><i class="fas fa-times"></i></button>
-                </div>
-                <nav id="course-outline" class="course-outline">
-                    <!-- Chapters injected by JS -->
-                </nav>
-            </aside>
-            <main class="course-main">
-                <div id="course-content" class="course-content">
-                    <!-- Content injected by JS -->
-                </div>
-                <footer class="course-nav-footer">
-                    <button id="course-prev-btn" class="btn secondary"><i class="fas fa-arrow-left"></i>
-                        Précédent</button>
-                    <div id="course-pagination" class="course-pagination">1 / 10</div>
-                    <button id="course-next-btn" class="btn secondary">Suivant <i
-                            class="fas fa-arrow-right"></i></button>
-                </footer>
-            </main>
-        </div>
-    </div>
-
     <script src="{{ url_for('static', filename='algo-mode.js') }}?v=10"></script>
     <script src="{{ url_for('static', filename='algo-hints.js') }}?v=10"></script>
     <script src="{{ url_for('static', filename='algo-fold.js') }}?v=10"></script>
-    <script src="{{ url_for('static', filename='course-controller.js') }}?v=1"></script>
     <script src="{{ url_for('static', filename='script.js') }}?v=11"></script>
 </body>
 

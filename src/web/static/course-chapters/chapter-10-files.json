@@ -1,0 +1,31 @@
+{
+  "id": "files",
+  "title": "Chapitre 10: Les Files (Queues)",
+  "sections": [
+    {
+      "title": "Principe FIFO",
+      "content": "Une file suit le principe First In, First Out : premier entré, premier sorti.\n\nUsages : impression, ordonnancement, files d'attente applicatives."
+    },
+    {
+      "title": "Primitives de file",
+      "content": "Primitives : `InitialiserFile`, `Enfiler`, `Defiler`, `TeteFile`, `FileVide`.\n\n`TeteFile` consulte sans retirer; `Defiler` retire l'élément de tête."
+    },
+    {
+      "title": "Représentation mémoire",
+      "content": "Le cours présente tableau et liste chaînée. Ici, la représentation chaînée avec `tete` et `queue` est privilégiée.\n\nElle simplifie ajout en queue et retrait en tête."
+    },
+    {
+      "title": "Déclaration type",
+      "content": "Exemple de types pour file chaînée d'entiers.",
+      "code": "Type ElementFile = Enregistrement\nDebut\n    x : Entier;\n    suivant : ^ElementFile;\nFin;\n\nType File = Enregistrement\nDebut\n    tete : ^ElementFile;\n    queue : ^ElementFile;\nFin;"
+    },
+    {
+      "title": "Invariants et pièges",
+      "content": "Invariants :\n- file vide => `tete = NIL` et `queue = NIL`;\n- après premier `Enfiler`, `tete` et `queue` visent le même maillon.\n\nPièges : oublier de réinitialiser `queue` quand le dernier élément est défilié."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Enfiler `10,20,30`, puis défiler trois fois.\n\n### Résultat attendu\nSortie : `10,20,30` (même ordre que l'entrée)."
+    }
+  ]
+}

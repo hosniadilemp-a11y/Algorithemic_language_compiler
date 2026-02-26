@@ -1,0 +1,31 @@
+{
+  "id": "fichiers",
+  "title": "Chapitre 7: Les Fichiers",
+  "sections": [
+    {
+      "title": "Pourquoi les fichiers ?",
+      "content": "Les fichiers assurent la persistance des données entre exécutions.\n\nIls sont utiles pour l'archivage, l'import/export et le traitement de lots."
+    },
+    {
+      "title": "Cycle de traitement",
+      "content": "Séquence obligatoire : `ouvrir` -> `lire/ecrire` -> `fermer`.\n\nNe pas fermer un fichier peut corrompre le flux de travail."
+    },
+    {
+      "title": "Exemple d'écriture",
+      "content": "Écriture simple d'une valeur entière dans un fichier.",
+      "code": "Algorithme GestionFichier;\nVar\n    f : Fichier;\n    n : Entier;\nDebut\n    f := ouvrir(\"scores.dat\", \"ecriture\");\n    n := 100;\n    ecrire(f, n);\n    fermer(f);\nFin."
+    },
+    {
+      "title": "Lecture jusqu'à fin de fichier",
+      "content": "`fin(f)` indique si la fin du fichier est atteinte.\n\nSchéma classique : ouvrir, boucle tant que non fin, lire, traiter, fermer."
+    },
+    {
+      "title": "Erreurs fréquentes",
+      "content": "- Mauvais mode d'ouverture.\n- Type lu différent du type écrit.\n- Oubli de `fermer`.\n- Fichier absent non géré.\n\nToujours prévoir des messages d'erreur explicites."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Écrire les 10 premiers entiers dans un fichier, puis les relire pour calculer leur somme.\n\n### Extension\nFiltrer les enregistrements selon une condition (ex: moyenne >= 10)."
+    }
+  ]
+}

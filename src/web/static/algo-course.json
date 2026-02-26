@@ -1,131 +1,70 @@
 {
-    "chapters": [
-        {
-            "id": "intro",
-            "title": "Chapitre 1: Introduction à l'Algorithmique",
-            "sections": [
-                {
-                    "title": "Définitions",
-                    "content": "Un algorithme est un nombre fini d'instructions à appliquer dans un ordre déterminé à un nombre fini de données permettant d'atteindre un résultat correct.\n\n### Propriétés :\n1. **Justesse** : Donne toujours le bon résultat.\n2. **Clarté** : Facile à lire et à modifier.\n3. **Efficacité** : Utilise le moins d'espace et de temps possible."
-                },
-                {
-                    "title": "Structure Générale",
-                    "content": "Un algorithme suit toujours cette structure :",
-                    "code": "Algorithme MonProg;\nVar\n    // Déclarations\nDebut\n    // Instructions\nFin."
-                }
-            ]
-        },
-        {
-            "id": "tableaux",
-            "title": "Chapitre 2: Tableaux et Matrices",
-            "sections": [
-                {
-                    "title": "Les Tableaux (Vecteurs)",
-                    "content": "Un tableau est une suite d'éléments de même type rangés en mémoire.",
-                    "code": "Var\n    T[10] : Entier;\n    i : Entier;\nDebut\n    Pour i de 0 a 9 Faire\n        T[i] := i * 2;\n    Fin Pour;\nFin."
-                }
-            ]
-        },
-        {
-            "id": "chaines",
-            "title": "Chapitre 3: Chaînes de Caractères",
-            "sections": [
-                {
-                    "title": "Manipulation de texte",
-                    "content": "Le type `Chaine` permet de stocker du texte. On peut utiliser `Concat()` pour joindre des chaînes et `Longueur()` pour obtenir leur taille.",
-                    "code": "Var\n    nom : Chaine;\nDebut\n    nom := \"Algo\";\n    Ecrire(\"Longueur: \", Longueur(nom));\nFin."
-                }
-            ]
-        },
-        {
-            "id": "allocation",
-            "title": "Chapitre 4: Allocation Dynamique",
-            "sections": [
-                {
-                    "title": "Pointeurs et Allouer",
-                    "content": "L'allocation dynamique permet de réserver de la mémoire pendant l'exécution.",
-                    "code": "Var\n    p : ^Entier;\nDebut\n    p := allouer(4);\n    p^ := 100;\n    Ecrire(p^);\n    liberer(p);\nFin."
-                }
-            ]
-        },
-        {
-            "id": "actions",
-            "title": "Chapitre 5: Actions Paramétrées",
-            "sections": [
-                {
-                    "title": "Fonctions et Procédures",
-                    "content": "Utilisez des fonctions pour retourner une valeur et des procédures pour effectuer des actions.",
-                    "code": "Fonction Somme(a, b : Entier) : Entier\nDebut\n    Retourner a + b;\nFin;\n\nAlgorithme Test;\nDebut\n    Ecrire(Somme(5, 10));\nFin."
-                }
-            ]
-        },
-        {
-            "id": "enregistrements",
-            "title": "Chapitre 6: Les Enregistrements",
-            "sections": [
-                {
-                    "title": "Structures hétérogènes",
-                    "content": "Un enregistrement regroupe des données de types différents (champs).",
-                    "code": "Enregistrement Etudiant\n    nom : Chaine;\n    age : Entier;\nFin;\n\nAlgorithme Test;\nVar\n    e : Etudiant;\nDebut\n e.nom := \"Adil\";\n e.age := 20;\n Ecrire(e.nom, \" a \", e.age, \" ans\");\nFin."
-                }
-            ]
-        },
-        {
-            "id": "fichiers",
-            "title": "Chapitre 7: Les Fichiers",
-            "sections": [
-                {
-                    "title": "Stockage permanent",
-                    "content": "Les fichiers permettent de sauvegarder des données sur le disque dur.",
-                    "code": "Var\n    f : Fichier;\n    n : Entier;\nDebut\n    f := ouvrir(\"data.dat\", \"ecriture\");\n    n := 42;\n    ecrire(f, n);\n    fermer(f);\nFin."
-                }
-            ]
-        },
-        {
-            "id": "listes",
-            "title": "Chapitre 8: Listes Chaînées",
-            "sections": [
-                {
-                    "title": "Structures de données dynamiques",
-                    "content": "Une liste est une suite de maillons reliés par des pointeurs.",
-                    "code": "Enregistrement Maillon\n    val : Entier;\n    suiv : ^Maillon;\nFin;\n\nAlgorithme Listes;\nVar\n    tete : ^Maillon;\nDebut\n    tete := NIL;\n    // Création de maillon ici\nFin."
-                }
-            ]
-        },
-        {
-            "id": "piles",
-            "title": "Chapitre 9: Les Piles (Stacks)",
-            "sections": [
-                {
-                    "title": "Principe LIFO",
-                    "content": "Last In, First Out. Le dernier élément ajouté est le premier retiré.",
-                    "code": "// Exemple de primitive Empiler\nProcedure Empiler(Var P : ^Pile; x : Entier)\nVar\n    nouveau : ^Pile;\nDebut\n    nouveau := allouer(taille(Pile));\n    nouveau^.val := x;\n    nouveau^.suiv := P;\n    P := nouveau;\nFin;"
-                }
-            ]
-        },
-        {
-            "id": "files",
-            "title": "Chapitre 10: Les Files (Queues)",
-            "sections": [
-                {
-                    "title": "Principe FIFO",
-                    "content": "First In, First Out. Le premier arrivé est le premier servi."
-                }
-            ]
-        },
-        {
-            "id": "tutorial",
-            "title": "Guide d'utilisation de l'App",
-            "sections": [
-                {
-                    "title": "IntelliSense & Autocomplete",
-                    "content": "L'éditeur propose une autocomplétion intelligente.\n- **Ctrl+Space**: Déclenche manuellement les suggestions.\n- **Snippets**: Tapez `pour`, `si`, ou `fonction` puis Tab pour insérer un modèle complet."
-                },
-                {
-                    "title": "Raccourcis Clavier",
-                    "content": "- **F5**: Exécuter le code.\n- **Ctrl+S**: Sauvegarder.\n- **Ctrl+Shift+F**: Formater le code automatiquement."
-                }
-            ]
-        }
-    ]
+  "chapters": [
+    {
+      "id": "intro",
+      "title": "Chapitre 1: Introduction à l'Algorithmique",
+      "file": "/static/course-chapters/chapter-1-intro.json",
+      "sections": []
+    },
+    {
+      "id": "tableaux",
+      "title": "Chapitre 2: Tableaux et Matrices",
+      "file": "/static/course-chapters/chapter-2-tableaux.json",
+      "sections": []
+    },
+    {
+      "id": "chaines",
+      "title": "Chapitre 3: Chaînes de Caractères",
+      "file": "/static/course-chapters/chapter-3-chaines.json",
+      "sections": []
+    },
+    {
+      "id": "allocation",
+      "title": "Chapitre 4: Allocation Dynamique",
+      "file": "/static/course-chapters/chapter-4-allocation.json",
+      "sections": []
+    },
+    {
+      "id": "actions",
+      "title": "Chapitre 5: Actions Paramétrées",
+      "file": "/static/course-chapters/chapter-5-actions.json",
+      "sections": []
+    },
+    {
+      "id": "enregistrements",
+      "title": "Chapitre 6: Les Enregistrements",
+      "file": "/static/course-chapters/chapter-6-enregistrements.json",
+      "sections": []
+    },
+    {
+      "id": "fichiers",
+      "title": "Chapitre 7: Les Fichiers",
+      "file": "/static/course-chapters/chapter-7-fichiers.json",
+      "sections": []
+    },
+    {
+      "id": "listes",
+      "title": "Chapitre 8: Listes Chaînées",
+      "file": "/static/course-chapters/chapter-8-listes.json",
+      "sections": []
+    },
+    {
+      "id": "piles",
+      "title": "Chapitre 9: Les Piles (Stacks)",
+      "file": "/static/course-chapters/chapter-9-piles.json",
+      "sections": []
+    },
+    {
+      "id": "files",
+      "title": "Chapitre 10: Les Files (Queues)",
+      "file": "/static/course-chapters/chapter-10-files.json",
+      "sections": []
+    },
+    {
+      "id": "tutorial",
+      "title": "Guide d'utilisation de l'App",
+      "file": "/static/course-chapters/chapter-11-tutorial.json",
+      "sections": []
+    }
+  ]
 }

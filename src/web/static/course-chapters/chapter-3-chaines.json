@@ -1,0 +1,31 @@
+{
+  "id": "chaines",
+  "title": "Chapitre 3: Chaînes de Caractères",
+  "sections": [
+    {
+      "title": "Notions de base",
+      "content": "Le type `Chaine` représente du texte. Les caractères obéissent généralement à l'ordre ASCII pour les comparaisons.\n\nLes chaînes sont essentielles pour les entrées utilisateur et le formatage d'affichage."
+    },
+    {
+      "title": "Fonctions utiles",
+      "content": "Fonctions usuelles : `Longueur(ch)`, `Concat(ch1, ch2)`, `ConvCh(val)`.\n\nCes fonctions couvrent la plupart des besoins d'introduction : mesurer, assembler, convertir."
+    },
+    {
+      "title": "Exemple guidé",
+      "content": "Assembler deux chaînes et afficher la longueur du résultat.",
+      "code": "Algorithme TestChaines;\nVar\n    ch1, ch2, res : Chaine;\nDebut\n    ch1 := \"Algo\";\n    ch2 := \"Compiler\";\n    res := Concat(ch1, ch2);\n    Ecrire(\"Resultat: \", res);\n    Ecrire(\"Longueur: \", Longueur(res));\nFin."
+    },
+    {
+      "title": "Validation de texte",
+      "content": "Contrôles typiques :\n- chaîne non vide,\n- longueur minimale,\n- présence d'un caractère donné.\n\nPour des comparaisons robustes, normaliser la casse avant test."
+    },
+    {
+      "title": "Erreurs courantes",
+      "content": "- Mélanger `Caractere` et `Chaine` sans conversion.\n- Comparer des chaînes sans gérer la casse.\n- Construire des chaînes trop longues sans contrôle.\n\nDécouper les traitements en fonctions améliore la fiabilité."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Lire `nomComplet`, afficher sa longueur et produire le message : `Bonjour <nomComplet>`.\n\n### Extension\nCompter le nombre d'espaces pour estimer le nombre de mots."
+    }
+  ]
+}

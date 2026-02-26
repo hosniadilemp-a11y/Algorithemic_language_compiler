@@ -182,6 +182,18 @@ header {
     color: var(--text-primary);
 }
 
+.btn.highlight {
+    background: rgba(88, 166, 255, 0.1) !important;
+    color: #58a6ff !important;
+    border: 1px solid rgba(88, 166, 255, 0.4) !important;
+    box-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+}
+
+.btn.highlight:hover {
+    background: rgba(88, 166, 255, 0.2) !important;
+    border-color: #58a6ff !important;
+}
+
 .output-pane {
     background-color: var(--pane-bg);
     border-left: 1px solid var(--border);

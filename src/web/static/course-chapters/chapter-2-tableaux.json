@@ -1,0 +1,31 @@
+{
+  "id": "tableaux",
+  "title": "Chapitre 2: Tableaux et Matrices",
+  "sections": [
+    {
+      "title": "Définition et usages",
+      "content": "Un tableau est une structure homogène : même type pour tous les éléments.\n\nIl est adapté aux traitements séquentiels (somme, recherche, comptage, tri) et à l'accès direct par indice."
+    },
+    {
+      "title": "Déclaration et bornes",
+      "content": "### Syntaxe\n`T[N] : Type;`\n\n### Convention d'indices\nLe support de cours peut utiliser `0..N-1` ou `1..N`. Choisir et respecter une seule convention.\n\n### Matrices\nUne matrice est un tableau 2D : `M[L][C] : Type;`."
+    },
+    {
+      "title": "Parcours et calculs",
+      "content": "Le schéma classique : saisie, traitement, affichage.\n\nToujours initialiser les accumulateurs et vérifier les bornes.",
+      "code": "Algorithme SommeTableau;\nVar\n    T[5] : Entier;\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i de 0 a 4 Faire\n        Lire(T[i]);\n        somme := somme + T[i];\n    Fin Pour;\n    Ecrire(\"Somme = \", somme);\nFin."
+    },
+    {
+      "title": "Opérations courantes",
+      "content": "- Recherche d'un élément.\n- Calcul du maximum/minimum.\n- Comptage conditionnel (pairs, positifs, etc.).\n\nChaque opération repose sur un parcours complet ou partiel du tableau."
+    },
+    {
+      "title": "Erreurs fréquentes",
+      "content": "- Débordement d'indice.\n- Mélange des conventions 0-based et 1-based.\n- Variable non initialisée.\n- Confusion entre `/` et `div`.\n\nLa plupart de ces erreurs se détectent avec des tests de petite taille."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Lire `N` notes, calculer la moyenne, puis afficher le nombre de notes supérieures à la moyenne.\n\n### Piste\nFaire deux parcours : un pour la somme, un pour le comptage."
+    }
+  ]
+}

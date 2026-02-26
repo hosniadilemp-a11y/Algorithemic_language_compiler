@@ -1,0 +1,31 @@
+{
+  "id": "allocation",
+  "title": "Chapitre 4: Allocation Dynamique",
+  "sections": [
+    {
+      "title": "Pourquoi l'allocation dynamique ?",
+      "content": "L'allocation dynamique réserve de la mémoire à l'exécution, selon le besoin réel.\n\nElle est indispensable pour les structures de taille variable (listes, piles, files)."
+    },
+    {
+      "title": "Pointeurs et notations",
+      "content": "Un pointeur stocke une adresse mémoire.\n\nNotations : `p^` (déréférencement), `p^.champ` / `p->champ` (champ d'un enregistrement pointé), `NIL` (adresse nulle).\n\nToujours tester `NIL` avant accès."
+    },
+    {
+      "title": "Cycle allouer-utiliser-libérer",
+      "content": "Cycle recommandé : allouer, initialiser, utiliser, libérer.\n\nIgnorer la libération provoque des fuites mémoire.",
+      "code": "Algorithme TestPointeur;\nVar\n    p : ^Entier;\nDebut\n    p := allouer(4);\n    Si p <> NIL Alors\n        p^ := 42;\n        Ecrire(\"Valeur pointee: \", p^);\n        liberer(p);\n    Sinon\n        Ecrire(\"Allocation echouee\");\n    Fin Si;\nFin."
+    },
+    {
+      "title": "Lien avec les structures chaînées",
+      "content": "Chaque maillon d'une liste chaînée est alloué dynamiquement.\n\nCette approche permet des insertions/suppressions sans redimensionner un tableau fixe."
+    },
+    {
+      "title": "Pièges à éviter",
+      "content": "- Déréférencer `NIL`.\n- Double libération.\n- Perte d'adresse (fuite).\n- Usage après libération.\n\nAprès `liberer(p)`, remettre `p := NIL` quand possible."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Allouer un entier, lire sa valeur, afficher son carré, puis libérer la mémoire.\n\n### Variante\nUtiliser un enregistrement `Point(x,y)` et afficher `x*x + y*y`."
+    }
+  ]
+}

@@ -20,6 +20,10 @@ FIXTURES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 def index():
     return render_template('index.html')
 
+@app.route('/course')
+def course():
+    return render_template('course.html')
+
 @app.after_request
 def add_header(r):
     """

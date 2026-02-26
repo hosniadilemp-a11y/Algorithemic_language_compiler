@@ -1,0 +1,31 @@
+{
+  "id": "actions",
+  "title": "Chapitre 5: Actions Paramétrées",
+  "sections": [
+    {
+      "title": "But des actions paramétrées",
+      "content": "Les actions paramétrées permettent de modulariser les algorithmes et de réutiliser des blocs logiques.\n\n`Procedure` agit sans retour, `Fonction` renvoie une valeur."
+    },
+    {
+      "title": "Design des paramètres",
+      "content": "Passer uniquement les données nécessaires limite le couplage.\n\nDocumenter les préconditions et les effets de bord rend les appels plus sûrs."
+    },
+    {
+      "title": "Exemple fonction + appel",
+      "content": "Exemple simple de fonction de calcul utilisée dans un algorithme principal.",
+      "code": "Fonction Carre(n : Entier) : Entier\nDebut\n    Retourner n * n;\nFin;\n\nAlgorithme TestCalcul;\nVar\n    x : Entier;\nDebut\n    Lire(x);\n    Ecrire(\"Carre = \", Carre(x));\nFin."
+    },
+    {
+      "title": "Valeur vs référence",
+      "content": "Par valeur : copie locale du paramètre.\nPar référence : modification de la variable appelante.\n\nLe cours peut montrer des styles mixtes. Conserver une convention unique dans chaque solution."
+    },
+    {
+      "title": "Qualité et test",
+      "content": "- Une fonction, une responsabilité.\n- Noms explicites (`EstPair`, `CalculerMoyenne`).\n- Tester cas limites et entrées invalides.\n\nSéparer lecture/affichage de la logique métier facilite les tests."
+    },
+    {
+      "title": "Mini-exercice",
+      "content": "Implémenter `Max2(a,b)` puis `Echanger(Var a, Var b)`.\n\n### Piste\nUtiliser une variable temporaire pour l'échange."
+    }
+  ]
+}

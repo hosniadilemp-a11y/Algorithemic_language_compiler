@@ -1,0 +1,71 @@
+{
+  "id": "enregistrements",
+  "title": "Chapitre 6: Les Enregistrements",
+  "sections": [
+    {
+      "title": "Introduction: pourquoi les enregistrements ?",
+      "content": "Un `Tableau` regroupe plusieurs valeurs de **même type**.\n\n### Limite des tableaux\nDans les problèmes réels, on manipule souvent des objets composés de données **hétérogènes**.\n\nExemple : un étudiant possède un nom, un prénom, un âge et une moyenne.\n\n### Solution\n[[DEF]] Un enregistrement est une structure logique qui regroupe des champs de types potentiellement différents sous une même entité.\n\nUtiliser une structure logique appelée **Enregistrement** (souvent comparée à `struct`)."
+    },
+    {
+      "title": "Concept d'entité logique",
+      "content": "Un enregistrement est une entité qui regroupe plusieurs données appelées **champs**.\n\nChaque champ possède :\n- un identificateur (nom),\n- un type (`Entier`, `Reel`, `Chaine`, `Tableau`, ou même un autre enregistrement).\n\nAvant de déclarer une variable de ce type, on doit d'abord **définir le type**.\n\n### Note\nOn passe ici des types primitifs à des **types utilisateur** adaptés au domaine métier."
+    },
+    {
+      "title": "Syntaxe de définition d'un type enregistrement",
+      "content": "La définition se place dans la partie `Type` de l'algorithme, avant `Var`.",
+      "code": "Type <Nom_Type> = Enregistrement\nDebut\n    <Champ_1> : <Type_1>;\n    <Champ_2> : <Type_2>;\n    ...\n    <Champ_N> : <Type_N>;\nFin;"
+    },
+    {
+      "title": "Exemple complet: type Date",
+      "content": "Une date contient trois champs : jour, mois, année.\n\nLes champs de même type peuvent être regroupés sur une même ligne.",
+      "code": "Type Date = Enregistrement\nDebut\n    jour : Entier;\n    mois : Chaine[12];\n    annee : Entier;\nFin;\n\n// Variante compacte\nType Date = Enregistrement\nDebut\n    jour, annee : Entier;\n    mois : Chaine[12];\nFin;"
+    },
+    {
+      "title": "Déclaration de variables enregistrement",
+      "content": "Une fois le type défini, la déclaration suit la même logique que les types simples.",
+      "code": "Var\n    d1, d2 : Date;\n    date_naissance : Date;"
+    },
+    {
+      "title": "Accès aux champs: notation pointée",
+      "content": "L'accès à un champ se fait par `variable.champ`.\n\nExemples :\n- `d1.jour`\n- `d1.mois`\n- `d1.annee`\n\nCette notation s'utilise en lecture et en écriture.",
+      "code": "d1.jour := 26;\nd1.mois := \"Fevrier\";\nd1.annee := 2026;\nEcrire(d1.jour, \"/\", d1.mois, \"/\", d1.annee);"
+    },
+    {
+      "title": "Exercice 1: gestion du temps",
+      "content": "Soit le type `Temps(heure, minute, seconde)`.\n\nObjectif :\n1. définir le type,\n2. lire une variable `T`,\n3. afficher la conversion en secondes totales.\n\n### Formule\n`total := T.heure * 3600 + T.minute * 60 + T.seconde`\n\n### Vérification recommandée\nValider `0 <= minute < 60` et `0 <= seconde < 60`."
+    },
+    {
+      "title": "Opération d'affectation",
+      "content": "On peut affecter un enregistrement entier à un autre **du même type**.\n\nCette opération copie tous les champs automatiquement.",
+      "code": "Var\n    d1, d2 : Date;\nDebut\n    d1 := d2;\n    // Equivalent a :\n    // d1.jour := d2.jour;\n    // d1.mois := d2.mois;\n    // d1.annee := d2.annee;\nFin."
+    },
+    {
+      "title": "Opération de comparaison",
+      "content": "[[ALERT]] La comparaison directe de deux enregistrements (`d1 = d2`) est interdite dans ce cadre pédagogique.\n\n### Approche correcte\nComparer **champ par champ**.",
+      "code": "// Interdit\n// Si d1 = d2 Alors ...\n\n// Correct\nSi (d1.jour = d2.jour) ET\n   (d1.mois = d2.mois) ET\n   (d1.annee = d2.annee) Alors\n    Ecrire(\"Dates egales\");\nFin Si;"
+    },
+    {
+      "title": "Tableaux d'enregistrements",
+      "content": "Chaque case d'un tableau peut être un enregistrement complet.\n\nC'est utile pour représenter une classe, une liste de produits, un catalogue, etc.",
+      "code": "Type Etudiant = Enregistrement\nDebut\n    matricule : Entier;\n    nom, prenom : Chaine[25];\nFin;\n\nVar\n    Classe[50] : Tableau De Etudiant;\n\n// Acces au nom du 5eme etudiant\nEcrire(Classe[5].nom);"
+    },
+    {
+      "title": "Champs de type tableau",
+      "content": "Un champ d'enregistrement peut lui-même être un tableau.\n\nExemple : stocker les notes d'un étudiant directement dans sa structure.",
+      "code": "Type Etudiant = Enregistrement\nDebut\n    nom, prenom : Chaine[25];\n    notes : Tableau[8] De Reel;\nFin;\n\nVar E : Etudiant;\n\n// 3eme note\nEcrire(E.notes[3]);"
+    },
+    {
+      "title": "Enregistrements imbriqués",
+      "content": "Un champ peut être un autre enregistrement.\n\nExemple : `Personne` contient une `Date` de naissance et une `Adresse`.\n\n### Règle de modélisation\nDéfinir d'abord les types de base (`Date`, `Adresse`), puis le type composé (`Personne`).",
+      "code": "Type Date = Enregistrement\nDebut\n    jour, mois, annee : Entier;\nFin;\n\nType Adresse = Enregistrement\nDebut\n    commune, wilaya : Chaine[20];\nFin;\n\nType Personne = Enregistrement\nDebut\n    nom : Chaine[25];\n    ne_le : Date;\n    adr : Adresse;\nFin;\n\nVar P : Personne;"
+    },
+    {
+      "title": "Manipulation des structures imbriquées",
+      "content": "La manipulation suit l'arborescence des champs avec la notation pointée répétée.\n\nExemples :\n- `P.ne_le.jour`\n- `P.adr.wilaya`\n\n### Bonnes pratiques\n- Garder des noms de champs explicites.\n- Initialiser tous les champs obligatoires avant usage.\n- Regrouper les vérifications dans des procédures dédiées."
+    },
+    {
+      "title": "Points d'attention et erreurs fréquentes",
+      "content": "[[NOTE]] Vérifiez toujours la cohérence de votre modèle avant de coder les opérations.\n\n- Oublier de définir un type avant de l'utiliser dans `Var`.\n- Confondre comparaison globale et comparaison champ par champ.\n- Mélanger les conventions d'indexation dans les champs tableau.\n- Oublier d'initialiser certains champs d'un enregistrement composé.\n\n### Mini-checklist\n1. Type défini ?\n2. Variables déclarées ?\n3. Champs initialisés ?\n4. Comparaisons faites champ par champ ?"
+    }
+  ]
+}

@@ -300,6 +300,53 @@ body.light-theme.course-standalone-body {
     color: #d29922;
 }
 
+.course-exercise {
+    margin: 14px 0 16px;
+    border: 1px solid var(--course-line);
+    border-radius: 10px;
+    padding: 12px;
+    background: rgba(88, 166, 255, 0.06);
+}
+
+.course-exercise-title {
+    font-weight: 700;
+    color: var(--course-accent);
+    margin-bottom: 8px;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.course-solution-space {
+    width: 100%;
+    min-height: 120px;
+    background: var(--course-code-bg);
+    color: var(--course-code-ink);
+    border: 1px solid var(--course-line);
+    border-radius: 8px;
+    padding: 10px;
+    resize: vertical;
+    margin-top: 8px;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+.course-solution-details {
+    margin-top: 10px;
+    border-top: 1px dashed var(--course-line);
+    padding-top: 8px;
+}
+
+.course-solution-details summary {
+    cursor: pointer;
+    color: var(--course-accent);
+    font-weight: 600;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.course-solution-content {
+    margin-top: 8px;
+    color: var(--course-ink);
+}
+
 .course-section {
     margin-bottom: 34px;
 }
@@ -329,6 +376,37 @@ body.light-theme.course-standalone-body {
     overflow-x: auto;
     font-size: 0.92rem;
     line-height: 1.52;
+}
+
+.course-solution-code {
+    white-space: pre;
+    overflow-x: auto;
+    border: 1px solid var(--course-line);
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--course-code-bg);
+    color: var(--course-code-ink);
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.algo-kw {
+    color: #79c0ff;
+    font-weight: 600;
+}
+
+.algo-str {
+    color: #a5d6ff;
+}
+
+.algo-cmt {
+    color: #8b949e;
+    font-style: italic;
+}
+
+.algo-num {
+    color: #d2a8ff;
 }
 
 .course-header-meta {

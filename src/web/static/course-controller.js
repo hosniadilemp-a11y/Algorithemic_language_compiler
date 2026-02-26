@@ -191,6 +191,10 @@ class CourseController {
                 this.executeCode(code);
             };
         });
+
+        this.contentArea.querySelectorAll('.course-solution-code').forEach((pre) => {
+            pre.innerHTML = this.highlightAlgoCode(pre.textContent || '');
+        });
     }
 
     formatContent(text) {
@@ -209,7 +213,12 @@ class CourseController {
             .map((block) => {
                 const normalized = block.trim();
                 if (!normalized) return '';
-                if (normalized.startsWith('<div class="course-callout') || normalized.startsWith('<h4 ')) {
+                if (
+                    normalized.startsWith('<div class="course-callout') ||
+                    normalized.startsWith('<div class="course-exercise') ||
+                    normalized.startsWith('<details') ||
+                    normalized.startsWith('<h4 ')
+                ) {
                     return normalized;
                 }
                 return `<p>${normalized.replace(/\n/g, '<br>')}</p>`;
@@ -218,15 +227,35 @@ class CourseController {
     }
 
     renderCodeBlock(code) {
+        const highlightedCode = this.highlightAlgoCode(code);
         return `
             <div class="course-code-block">
                 <div class="course-code-header">
                     <span><i class="fas fa-terminal"></i> Exemple d'algorithme</span>
                     <button class="course-exec-btn"><i class="fas fa-play"></i> Charger & Formater</button>
                 </div>
-                <div class="course-code-body">${code}</div>
+                <div class="course-code-body">${highlightedCode}</div>
             </div>
         `;
+    }
+
+    escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    highlightAlgoCode(code) {
+        const escaped = this.escapeHtml(code);
+        return escaped
+            .replace(/(\/\/.*)$/gm, '<span class="algo-cmt">$1</span>')
+            .replace(/(\"(?:[^\"\\\\]|\\\\.)*\")/g, '<span class="algo-str">$1</span>')
+            .replace(/('(?:[^'\\\\]|\\\\.)*')/g, '<span class="algo-str">$1</span>')
+            .replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="algo-num">$1</span>')
+            .replace(/\b(Algorithme|Const|Var|Type|Enregistrement|Debut|Fin|Fonction|Procedure|Retourner|Si|Sinon|Alors|Fin Si|Pour|Fin Pour|Tantque|Fin Tantque|Repeter|Jusqua|Lire|Ecrire|Vrai|Faux|NIL|allouer|liberer|taille|Entier|Reel|Chaine|Caractere|Booleen|Tableau|De|Et|Ou|Non)\b/g, '<span class="algo-kw">$1</span>');
     }
 
     executeCode(code) {

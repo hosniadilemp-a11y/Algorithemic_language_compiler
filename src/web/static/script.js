@@ -22,6 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let eventSource = null;
     let editor = null;
 
+    console.log("Script initialization started");
+    console.log("Essential elements found:", {
+        runBtn: !!runBtn,
+        codeEditorElement: !!codeEditorElement,
+        consoleLogs: !!consoleLogs,
+        openExamplesBtn: !!openExamplesBtn,
+        examplesContent: !!examplesContent
+    });
+
     // Initialize CodeMirror with sophisticated IDE features
     if (codeEditorElement) {
         window.editor = CodeMirror.fromTextArea(codeEditorElement, {
@@ -500,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear Console
     if (clearConsoleBtn) {
         clearConsoleBtn.addEventListener('click', () => {
-            consoleLogs.innerHTML = '';
+            if (consoleLogs) consoleLogs.innerHTML = '';
             updateVariables({});
         });
     }
@@ -739,7 +748,7 @@ Fin.`);
 
     if (formatBtn && editor) {
         formatBtn.addEventListener('click', () => {
-            formatCode();
+            formatAlgoCode(editor);
         });
     }
 
@@ -803,15 +812,16 @@ Fin.`);
     // Load Examples into Sidebar
     async function loadExamples() {
         try {
-            console.log("Fetching examples...");
+            console.log("loadExamples: Fetching examples...");
             const response = await fetch('/examples');
+            console.log("loadExamples: HTTP Status", response.status);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
             console.log("Examples loaded:", data);
 
             // Clear loading placeholder
-            examplesContent.innerHTML = '';
+            if (examplesContent) examplesContent.innerHTML = '';
 
             // Define category order
             const order = ["Basics", "Arrays", "Strings", "Pointers", "Dynamic Allocation", "Functions"];
@@ -876,13 +886,15 @@ Fin.`);
                     categoryDiv.appendChild(btn);
                 });
 
-                examplesContent.appendChild(categoryDiv);
+                if (examplesContent) examplesContent.appendChild(categoryDiv);
             }
         } catch (e) {
             console.error("Failed to load examples", e);
-            examplesContent.innerHTML = `<div class="text-danger p-3"><i class="fas fa-exclamation-triangle"></i> Erreur lors du chargement des exemples.</div>`;
-            statusBadge.textContent = "Err Exemples";
-            statusBadge.style.backgroundColor = "#da3633";
+            if (examplesContent) examplesContent.innerHTML = `<div class="text-danger p-3"><i class="fas fa-exclamation-triangle"></i> Erreur lors du chargement des exemples.</div>`;
+            if (statusBadge) {
+                statusBadge.textContent = "Err Exemples";
+                statusBadge.style.backgroundColor = "#da3633";
+            }
         }
     }
     loadExamples();
@@ -904,7 +916,7 @@ Fin.`);
                 const data = await response.json();
                 if (editor) {
                     editor.setValue(data.code);
-                } else {
+                } else if (codeEditorElement) {
                     codeEditorElement.value = data.code;
                 }
 
@@ -913,8 +925,10 @@ Fin.`);
                 fileHandle = null;
                 isModified = false;
                 updateTitle();
-                statusBadge.textContent = "Exemple chargé";
-                statusBadge.style.backgroundColor = "#28a745";
+                if (statusBadge) {
+                    statusBadge.textContent = "Exemple chargé";
+                    statusBadge.style.backgroundColor = "#28a745";
+                }
 
                 // Close the sidebar immediately on selection for better UX
                 closeSidebar();
@@ -926,18 +940,16 @@ Fin.`);
         }
     }
 
-    // Toggle Python Code Visibility - Functionality Removed
-
-
     // Update Variable Table
     function updateVariables(vars) {
         const variablesBody = document.getElementById('variables-body');
+        if (!variablesBody) return;
         const variablesTable = variablesBody.closest('table');
         const thead = variablesTable.querySelector('thead tr');
 
         // Ensure Type and Size headers exist
         const requiredHeaders = ['Nom', 'Valeur', 'Adresse', 'Type', 'Taille'];
-        if (thead.children.length < requiredHeaders.length) {
+        if (thead && thead.children.length < requiredHeaders.length) {
             thead.innerHTML = ''; // Rebuild headers
             requiredHeaders.forEach(text => {
                 const th = document.createElement('th');
@@ -948,7 +960,7 @@ Fin.`);
 
         variablesBody.innerHTML = '';
         if (!vars || Object.keys(vars).length === 0) {
-            variablesBody.innerHTML = '<tr><td colspan="4" class="placeholder-text">Aucune donnée</td></tr>';
+            variablesBody.innerHTML = '<tr><td colspan="5" class="placeholder-text">Aucune donnée</td></tr>';
             return;
         }
 
@@ -1004,26 +1016,35 @@ Fin.`);
 
     // Execution Logic
     function startLogic(btn) {
+        console.log("startLogic triggered", { btnText: btn.innerText });
         // Get code from CodeMirror if active
         const code = editor ? editor.getValue() : codeEditorElement.value;
+        console.log("Code length:", code.length);
 
         if (btn.innerText.includes('Arrêter')) {
+            console.log("Stopping execution...");
             stopExecution();
             return;
         }
 
         // UI Reset
         btn.innerHTML = '<i class="fas fa-stop"></i> Arrêter';
-        consoleLogs.innerHTML = '';
+        if (consoleLogs) consoleLogs.innerHTML = '';
         updateVariables({});
-        statusBadge.textContent = "Exécution...";
-        statusBadge.style.backgroundColor = "#d29922";
-        consoleInputContainer.style.display = 'none';
+        if (statusBadge) {
+            statusBadge.textContent = "Exécution...";
+            statusBadge.style.backgroundColor = "#d29922";
+        }
+        if (consoleInputContainer) consoleInputContainer.style.display = 'none';
 
-        if (eventSource) eventSource.close();
+        if (eventSource) {
+            console.log("Closing existing EventSource");
+            eventSource.close();
+        }
 
         // Get Input File Content if any
         const inputFileContent = window.inputFileContent || "";
+        console.log("Input file content length:", inputFileContent.length);
 
         runExecution(code, inputFileContent);
     }
@@ -1051,7 +1072,7 @@ Fin.`);
                         } else {
                             span.textContent = `[${err.type}] ${loc}: ${err.message}\n`;
                         }
-                        document.getElementById('console-logs').appendChild(span);
+                        if (consoleLogs) consoleLogs.appendChild(span);
                     });
                 } else {
                     appendToConsole(data.error, 'error');
@@ -1065,7 +1086,6 @@ Fin.`);
 
             eventSource.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
-                // console.log("Stream msg:", msg); // Verbose logging
 
                 if (msg.type === 'stdout') {
                     appendToConsole(msg.data);
@@ -1077,24 +1097,26 @@ Fin.`);
                 } else if (msg.type === 'error') {
                     appendToConsole('\n' + msg.data, 'error');
                 } else if (msg.type === 'finished') {
-                    statusBadge.textContent = "Terminé";
-                    statusBadge.style.backgroundColor = "#238636";
-                    eventSource.close();
+                    if (statusBadge) {
+                        statusBadge.textContent = "Terminé";
+                        statusBadge.style.backgroundColor = "#238636";
+                    }
+                    if (eventSource) eventSource.close();
                     finishExecution();
                 } else if (msg.type === 'stopped') {
-                    statusBadge.textContent = "Arrêté";
-                    statusBadge.style.backgroundColor = "#cf222e";
+                    if (statusBadge) {
+                        statusBadge.textContent = "Arrêté";
+                        statusBadge.style.backgroundColor = "#cf222e";
+                    }
                     appendToConsole('\n' + (msg.data || "Arrêt"), 'error');
-                    eventSource.close();
+                    if (eventSource) eventSource.close();
                     finishExecution(true);
                 }
             };
 
             eventSource.onerror = (e) => {
                 console.error("Stream error", e);
-                // Don't finish immediately, maybe just connection hiccup?
-                // But for SSE usually it means end.
-                if (eventSource.readyState === EventSource.CLOSED) {
+                if (eventSource && eventSource.readyState === EventSource.CLOSED) {
                     finishExecution();
                 }
             };
@@ -1112,8 +1134,10 @@ Fin.`);
             eventSource = null;
         }
 
-        statusBadge.textContent = "Arrêt en cours...";
-        statusBadge.style.backgroundColor = "#cf222e";
+        if (statusBadge) {
+            statusBadge.textContent = "Arrêt en cours...";
+            statusBadge.style.backgroundColor = "#cf222e";
+        }
 
         try {
             await fetch('/stop_execution', { method: 'POST' });
@@ -1126,24 +1150,22 @@ Fin.`);
 
     function finishExecution(stopped = false) {
         const btn = document.getElementById('run-btn');
-        btn.innerHTML = '<i class="fas fa-play"></i> Exécuter';
+        if (btn) btn.innerHTML = '<i class="fas fa-play"></i> Exécuter';
 
         if (eventSource) {
             eventSource.close();
             eventSource = null;
         }
-        consoleInputContainer.style.display = 'none';
+        if (consoleInputContainer) consoleInputContainer.style.display = 'none';
 
         if (stopped) {
-            statusBadge.textContent = "Arrêté";
-            statusBadge.style.backgroundColor = "#cf222e";
+            if (statusBadge) {
+                statusBadge.textContent = "Arrêté";
+                statusBadge.style.backgroundColor = "#cf222e";
+            }
             appendToConsole("\n[Exécution interrompue par l'utilisateur]", 'error');
         } else {
-            // If not manually stopped, it's finished successfully (or error handled elsewhere)
-            // But if we are here via finishExecution() called generally, we might want to keep the "Terminé" or "Erreur" state set by the stream.
-            // Only reset to "Prêt" if we want to auto-reset. 
-            // Let's keep the last state for clarity.
-            if (statusBadge.textContent === "Exécution...") {
+            if (statusBadge && statusBadge.textContent === "Exécution...") {
                 statusBadge.textContent = "Terminé";
                 statusBadge.style.backgroundColor = "#238636";
             }
@@ -1155,7 +1177,6 @@ Fin.`);
 
         let container = consoleInputContainer;
         if (!container) {
-            console.warn("consoleInputContainer lost, re-querying");
             container = document.getElementById('console-input-container');
         }
 
@@ -1164,54 +1185,46 @@ Fin.`);
             return;
         }
 
-        // Force header update to indicate waiting
-        statusBadge.textContent = "Attente saisie...";
-        statusBadge.style.backgroundColor = "#1f6feb";
+        if (statusBadge) {
+            statusBadge.textContent = "Attente saisie...";
+            statusBadge.style.backgroundColor = "#1f6feb";
+        }
 
-        // Use direct style property
         container.style.display = 'flex';
-        // Also try legacy
-        container.setAttribute('style', 'display: flex !important; background-color: #0d1117;');
+        container.setAttribute('style', 'display: flex !important;');
 
         if (consoleInput) {
             consoleInput.value = '';
             consoleInput.focus();
         }
 
-        // Scroll to bottom
-        const logsElement = document.getElementById('console-logs');
-        if (logsElement) logsElement.scrollTop = logsElement.scrollHeight;
-        consoleInput.value = '';
-        consoleInput.focus();
-        statusBadge.textContent = "Attente saisie...";
-        statusBadge.style.backgroundColor = "#1f6feb";
-
-        // Scroll to bottom of logs
-        const logs = document.getElementById('console-logs');
-        if (logs) logs.scrollTop = logs.scrollHeight;
+        if (consoleLogs) consoleLogs.scrollTop = consoleLogs.scrollHeight;
     }
 
     // Console Helper
     function appendToConsole(text, type = 'normal') {
+        if (!consoleLogs) return;
         const span = document.createElement('span');
         span.textContent = text;
         if (type === 'error') span.style.color = '#da3633';
         if (type === 'input') span.style.color = '#238636';
         consoleLogs.appendChild(span);
-        // Auto scroll
         consoleLogs.scrollTop = consoleLogs.scrollHeight;
-        document.getElementById('execution-output').scrollTop = document.getElementById('execution-output').scrollHeight;
+        const execOutput = document.getElementById('execution-output');
+        if (execOutput) execOutput.scrollTop = execOutput.scrollHeight;
     }
 
     if (consoleInput) {
         consoleInput.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent default submission
+                e.preventDefault();
                 const text = consoleInput.value;
                 appendToConsole(text + '\n', 'input');
-                consoleInputContainer.style.display = 'none';
-                statusBadge.textContent = "Exécution...";
-                statusBadge.style.backgroundColor = "#d29922";
+                if (consoleInputContainer) consoleInputContainer.style.display = 'none';
+                if (statusBadge) {
+                    statusBadge.textContent = "Exécution...";
+                    statusBadge.style.backgroundColor = "#d29922";
+                }
 
                 console.log("Sending input to server:", text);
 
@@ -1222,7 +1235,6 @@ Fin.`);
                         body: JSON.stringify({ input: text })
                     });
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    console.log("Input sent successfully");
                 } catch (err) {
                     console.error("Failed to send input", err);
                     appendToConsole(`Erreur envoi: ${err.message}\n`, 'error');
@@ -1244,7 +1256,7 @@ Fin.`);
 
     if (inputFileBtn) {
         inputFileBtn.addEventListener('click', () => {
-            inputFileSelect.click();
+            if (inputFileSelect) inputFileSelect.click();
         });
     }
 
@@ -1255,9 +1267,11 @@ Fin.`);
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     window.inputFileContent = e.target.result;
-                    inputFileStatus.style.display = 'inline';
-                    inputFileStatus.textContent = file.name;
-                    inputFileStatus.title = "Fichier d'entrée chargé pour la prochaine exécution";
+                    if (inputFileStatus) {
+                        inputFileStatus.style.display = 'inline';
+                        inputFileStatus.textContent = file.name;
+                        inputFileStatus.title = "Fichier d'entrée chargé pour la prochaine exécution";
+                    }
                 };
                 reader.readAsText(file);
             }

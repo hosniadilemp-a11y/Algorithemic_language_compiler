@@ -4,28 +4,44 @@
   "sections": [
     {
       "title": "Pourquoi l'allocation dynamique ?",
-      "content": "L'allocation dynamique réserve de la mémoire à l'exécution, selon le besoin réel.\n\nElle est indispensable pour les structures de taille variable (listes, piles, files)."
+      "content": "[[DEF]] L'allocation dynamique consiste à réserver de la mémoire pendant l'exécution, selon le besoin réel du programme.\n\nElle est indispensable quand la taille des données n'est pas connue à la compilation, ou quand elle varie dans le temps (listes, piles, files, structures évolutives).\n\nAvantage principal : flexibilité.\n\nRisques principaux : fuite mémoire, accès invalide, complexité de gestion."
     },
     {
-      "title": "Pointeurs et notations",
-      "content": "Un pointeur stocke une adresse mémoire.\n\nNotations : `p^` (déréférencement), `p^.champ` / `p->champ` (champ d'un enregistrement pointé), `NIL` (adresse nulle).\n\nToujours tester `NIL` avant accès."
+      "title": "Notion d'adresse et variable pointeur",
+      "content": "Une variable classique stocke une valeur.\nUne variable pointeur stocke une **adresse mémoire** (l'emplacement d'une valeur).\n\nExemple conceptuel:\n- `x : Entier` contient `25`\n- `p : ^Entier` contient l'adresse de `x` (ex: `0x1000`)\n- `p^` lit/écrit la valeur située à cette adresse (`25`)\n\n[[NOTE]] Le pointeur ne contient pas la donnée elle-même, il contient l'adresse de la donnée."
     },
     {
-      "title": "Cycle allouer-utiliser-libérer",
-      "content": "Cycle recommandé : allouer, initialiser, utiliser, libérer.\n\nIgnorer la libération provoque des fuites mémoire.",
-      "code": "Algorithme TestPointeur;\nVar\n    p : ^Entier;\nDebut\n    p := allouer(4);\n    Si p <> NIL Alors\n        p^ := 42;\n        Ecrire(\"Valeur pointee: \", p^);\n        liberer(p);\n    Sinon\n        Ecrire(\"Allocation echouee\");\n    Fin Si;\nFin."
+      "title": "Opérations de base sur pointeurs",
+      "content": "Notations usuelles du cours :\n- `p^` : déréférencement (accès à la valeur pointée),\n- `NIL` : pointeur nul (aucune adresse valide),\n- `p^.champ` ou `p->champ` : accès à un champ d'un enregistrement pointé.\n\n[[ALERT]] Toujours tester `p <> NIL` avant de faire `p^` ou `p^.champ`.",
+      "code": "Algorithme PointeurBase;\nVar\n    p : ^Entier;\nDebut\n    p := allouer(taille(Entier));\n\n    Si p <> NIL Alors\n        p^ := 42;\n        Ecrire(\"Valeur pointee: \", p^);\n    Sinon\n        Ecrire(\"Echec allocation\");\n    Fin Si;\nFin."
     },
     {
-      "title": "Lien avec les structures chaînées",
-      "content": "Chaque maillon d'une liste chaînée est alloué dynamiquement.\n\nCette approche permet des insertions/suppressions sans redimensionner un tableau fixe."
+      "title": "Fonctions clés: allouer, taille, liberer",
+      "content": "### `allouer(...)`\nRéserve une zone mémoire et retourne son adresse.\n\n### `taille(Type)`\nDonne la taille mémoire du type demandé (ou d'une structure).\n\n### `liberer(p)`\nLibère la zone mémoire pointée par `p`.\n\nCycle correct:\n1. allouer,\n2. initialiser,\n3. utiliser,\n4. libérer,\n5. remettre le pointeur à `NIL`.",
+      "code": "Algorithme CycleAllocation;\nVar\n    p : ^Entier;\nDebut\n    p := allouer(taille(Entier));\n\n    Si p <> NIL Alors\n        p^ := 10;\n        Ecrire(p^);\n        liberer(p);\n        p := NIL;\n    Fin Si;\nFin."
     },
     {
-      "title": "Pièges à éviter",
-      "content": "- Déréférencer `NIL`.\n- Double libération.\n- Perte d'adresse (fuite).\n- Usage après libération.\n\nAprès `liberer(p)`, remettre `p := NIL` quand possible."
+      "title": "Allocation dynamique d'un tableau",
+      "content": "Pour un tableau dynamique de `n` éléments de type `Entier`, on réserve `n * taille(Entier)` octets.\n\nPuis on accède aux éléments via l'indexation.\n\n[[ALERT]] Vérifier les bornes (`0..n-1` ou `1..n`) selon la convention choisie.",
+      "code": "Algorithme TableauDynamique;\nVar\n    T : ^Entier;\n    n, i : Entier;\nDebut\n    Lire(n);\n    T := allouer(n * taille(Entier));\n\n    Si T <> NIL Alors\n        Pour i := 0 a n-1 Faire\n            // Selon implementation, T[i] represente l'element i\n            T[i] := i * 2;\n        Fin Pour;\n\n        Pour i := 0 a n-1 Faire\n            Ecrire(T[i]);\n        Fin Pour;\n\n        liberer(T);\n        T := NIL;\n    Fin Si;\nFin."
     },
     {
-      "title": "Mini-exercice",
-      "content": "Allouer un entier, lire sa valeur, afficher son carré, puis libérer la mémoire.\n\n### Variante\nUtiliser un enregistrement `Point(x,y)` et afficher `x*x + y*y`."
+      "title": "Allocation dynamique d'une matrice: méthode 1 (bloc contigu)",
+      "content": "Méthode 1: allouer un seul bloc pour `L*C` éléments.\n\nAvantages:\n- allocation unique,\n- bonne localité mémoire,\n- libération simple (un seul `liberer`).\n\nAccès logique à l'élément `(i,j)` via l'index linéaire: `i*C + j`.",
+      "code": "Algorithme MatriceContigue;\nVar\n    M : ^Entier;\n    L, C, i, j : Entier;\nDebut\n    Lire(L); Lire(C);\n    M := allouer(L * C * taille(Entier));\n\n    Si M <> NIL Alors\n        Pour i := 0 a L-1 Faire\n            Pour j := 0 a C-1 Faire\n                M[i*C + j] := i + j;\n            Fin Pour;\n        Fin Pour;\n\n        liberer(M);\n        M := NIL;\n    Fin Si;\nFin."
+    },
+    {
+      "title": "Allocation dynamique d'une matrice: méthode 2 (tableau de lignes)",
+      "content": "Méthode 2: allouer d'abord un tableau de pointeurs de lignes, puis allouer chaque ligne séparément.\n\nAvantages:\n- dimensions de lignes potentiellement différentes (jagged),\n- flexibilité fine.\n\nInconvénient:\n- plusieurs allocations/libérations à gérer.",
+      "code": "Algorithme MatriceParLignes;\nVar\n    M : ^^Entier;\n    L, C, i, j : Entier;\nDebut\n    Lire(L); Lire(C);\n\n    // Allocation du tableau des pointeurs de lignes\n    M := allouer(L * taille(^Entier));\n\n    Si M <> NIL Alors\n        Pour i := 0 a L-1 Faire\n            M[i] := allouer(C * taille(Entier));\n        Fin Pour;\n\n        Pour i := 0 a L-1 Faire\n            Pour j := 0 a C-1 Faire\n                M[i][j] := i * j;\n            Fin Pour;\n        Fin Pour;\n\n        // Liberation ligne par ligne\n        Pour i := 0 a L-1 Faire\n            liberer(M[i]);\n            M[i] := NIL;\n        Fin Pour;\n\n        liberer(M);\n        M := NIL;\n    Fin Si;\nFin."
+    },
+    {
+      "title": "Pièges fréquents et discipline mémoire",
+      "content": "Erreurs classiques:\n- déréférencer `NIL`,\n- oublier `liberer` (fuite),\n- libérer deux fois la même zone,\n- continuer à utiliser un pointeur après libération,\n- perdre l'adresse d'une zone allouée (plus de référence).\n\n[[NOTE]] Règle pratique: après chaque `liberer(p)`, faire `p := NIL`."
+    },
+    {
+      "title": "Exercices pratiques (4)",
+      "content": "<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 1: entier dynamique</div>\n<p>Allouer dynamiquement un entier, lire sa valeur, afficher son carré, puis libérer correctement.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\">\n<summary>Voir solution</summary>\n<div class=\"course-solution-content\">\n<code class=\"course-inline-code\">p := allouer(taille(Entier)); Si p<>NIL Alors Lire(p^); Ecrire(p^*p^); liberer(p); p:=NIL; Fin Si;</code>\n</div>\n</details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 2: tableau dynamique</div>\n<p>Lire <code class=\"course-inline-code\">n</code>, allouer un tableau dynamique de <code class=\"course-inline-code\">n</code> entiers, remplir puis calculer la somme.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\">\n<summary>Voir solution</summary>\n<div class=\"course-solution-content\">\n<code class=\"course-inline-code\">T:=allouer(n*taille(Entier)); Pour i:=0 a n-1 Faire Lire(T[i]); somme:=somme+T[i]; Fin Pour; liberer(T); T:=NIL;</code>\n</div>\n</details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 3: matrice contiguë</div>\n<p>Allouer une matrice <code class=\"course-inline-code\">LxC</code> en bloc unique, remplir, puis afficher la diagonale principale.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\">\n<summary>Voir solution</summary>\n<div class=\"course-solution-content\">\n<code class=\"course-inline-code\">M:=allouer(L*C*taille(Entier)); M[i*C+j]:=...; diag: M[i*C+i]; liberer(M);</code>\n</div>\n</details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 4: matrice par lignes</div>\n<p>Allouer une matrice par tableau de lignes, calculer la somme de chaque ligne, puis libérer ligne par ligne.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\">\n<summary>Voir solution</summary>\n<div class=\"course-solution-content\">\n<code class=\"course-inline-code\">M:=allouer(L*taille(^Entier)); Pour i:=0 a L-1 Faire M[i]:=allouer(C*taille(Entier)); ... Fin Pour; Pour i:=0 a L-1 Faire liberer(M[i]); Fin Pour; liberer(M);</code>\n</div>\n</details>\n</div>"
     }
   ]
 }

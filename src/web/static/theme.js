@@ -2,7 +2,11 @@
     const STORAGE_KEY = 'algocompiler.theme';
 
     function currentTheme() {
-        return localStorage.getItem(STORAGE_KEY) || 'dark';
+        try {
+            return localStorage.getItem(STORAGE_KEY) || 'dark';
+        } catch (error) {
+            return 'dark';
+        }
     }
 
     function applyTheme(theme) {
@@ -21,21 +25,38 @@
             btn.title = isLight ? 'Passer en mode sombre' : 'Passer en mode clair';
         });
 
-        window.dispatchEvent(new CustomEvent('themechange', {
-            detail: { theme }
-        }));
+        try {
+            if (typeof CustomEvent === 'function') {
+                window.dispatchEvent(new CustomEvent('themechange', {
+                    detail: { theme }
+                }));
+            } else {
+                window.dispatchEvent(new Event('themechange'));
+            }
+        } catch (error) {
+            // Theme change notification is optional.
+        }
     }
 
     function toggleTheme() {
         const next = currentTheme() === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(STORAGE_KEY, next);
+        try {
+            localStorage.setItem(STORAGE_KEY, next);
+        } catch (error) {
+            // Ignore storage failures (private mode/restrictions).
+        }
         applyTheme(next);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        applyTheme(currentTheme());
-        document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
-            btn.addEventListener('click', toggleTheme);
-        });
+        try {
+            applyTheme(currentTheme());
+            document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+                btn.addEventListener('click', toggleTheme);
+            });
+        } catch (error) {
+            // Never block app initialization if theme setup fails.
+            console.warn('Theme initialization skipped:', error);
+        }
     });
 })();

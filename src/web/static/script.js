@@ -222,10 +222,198 @@ document.addEventListener('DOMContentLoaded', () => {
         cm.setValue(formatted.join('\n'));
     }
 
+    // ═══════════════════════════════════════════════════════════
+    // STATUS BAR — live cursor position, char count, line count
+    // ═══════════════════════════════════════════════════════════
+    const statusCursor = document.getElementById('status-cursor');
+    const statusChars = document.getElementById('status-chars');
+    const statusLines = document.getElementById('status-lines');
+    const statusFontSize = document.getElementById('status-fontsize');
+
+    function updateStatusBar() {
+        if (!editor) return;
+        const cursor = editor.getCursor();
+        const line = cursor.line + 1;
+        const col = cursor.ch + 1;
+        const text = editor.getValue();
+        const charCount = text.length;
+        const lineCount = editor.lineCount();
+
+        if (statusCursor) statusCursor.innerHTML = `<i class="fas fa-map-pin"></i> Ln ${line}, Col ${col}`;
+        if (statusChars) statusChars.innerHTML = `<i class="fas fa-font"></i> ${charCount.toLocaleString()} car.`;
+        if (statusLines) statusLines.innerHTML = `<i class="fas fa-list-ol"></i> ${lineCount} lignes`;
+    }
+
+    if (editor) {
+        editor.on('cursorActivity', updateStatusBar);
+        editor.on('change', updateStatusBar);
+        updateStatusBar(); // initial
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // FONT SIZE ZOOM — buttons + Ctrl+= / Ctrl+-
+    // ═══════════════════════════════════════════════════════════
+    let currentFontSize = 14;
+    const MIN_FONT = 10;
+    const MAX_FONT = 24;
+    const DEFAULT_FONT = 14;
+
+    function applyFontSize(size) {
+        currentFontSize = Math.min(MAX_FONT, Math.max(MIN_FONT, size));
+        if (editor) {
+            editor.getWrapperElement().style.fontSize = currentFontSize + 'px';
+            editor.refresh();
+        }
+        if (statusFontSize) statusFontSize.textContent = currentFontSize + 'px';
+    }
+
+    const fontIncBtn = document.getElementById('font-increase-btn');
+    const fontDecBtn = document.getElementById('font-decrease-btn');
+    const fontResetBtn = document.getElementById('font-reset-btn');
+
+    if (fontIncBtn) fontIncBtn.addEventListener('click', () => applyFontSize(currentFontSize + 1));
+    if (fontDecBtn) fontDecBtn.addEventListener('click', () => applyFontSize(currentFontSize - 1));
+    if (fontResetBtn) fontResetBtn.addEventListener('click', () => applyFontSize(DEFAULT_FONT));
+
+    // Ctrl+= to increase, Ctrl+- to decrease
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && (e.key === '=' || e.key === '+')) {
+            e.preventDefault();
+            applyFontSize(currentFontSize + 1);
+        }
+        if (e.ctrlKey && e.key === '-') {
+            e.preventDefault();
+            applyFontSize(currentFontSize - 1);
+        }
+        if (e.ctrlKey && e.key === '0') {
+            e.preventDefault();
+            applyFontSize(DEFAULT_FONT);
+        }
+        // F5 to run
+        if (e.key === 'F5') {
+            e.preventDefault();
+            runBtn && runBtn.click();
+        }
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // WORD WRAP TOGGLE
+    // ═══════════════════════════════════════════════════════════
+    let wordWrapEnabled = false;
+    const wordWrapBtn = document.getElementById('wordwrap-btn');
+
+    function toggleWordWrap() {
+        wordWrapEnabled = !wordWrapEnabled;
+        if (editor) editor.setOption('lineWrapping', wordWrapEnabled);
+        if (wordWrapBtn) wordWrapBtn.classList.toggle('active', wordWrapEnabled);
+    }
+
+    if (wordWrapBtn) wordWrapBtn.addEventListener('click', toggleWordWrap);
+
+    // ═══════════════════════════════════════════════════════════
+    // FULLSCREEN BUTTON (in pane header)
+    // ═══════════════════════════════════════════════════════════
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (fullscreenBtn && editor) {
+        fullscreenBtn.addEventListener('click', () => {
+            const isFS = editor.getOption('fullScreen');
+            editor.setOption('fullScreen', !isFS);
+            fullscreenBtn.title = isFS ? 'Plein Écran (F11)' : 'Quitter le plein écran (F11)';
+            fullscreenBtn.innerHTML = isFS
+                ? '<i class="fas fa-expand"></i>'
+                : '<i class="fas fa-compress"></i>';
+        });
+        // Also update button icon when F11 is used
+        editor.on('optionChange', (cm, opt) => {
+            if (opt === 'fullScreen' && fullscreenBtn) {
+                const isFS = cm.getOption('fullScreen');
+                fullscreenBtn.innerHTML = isFS
+                    ? '<i class="fas fa-compress"></i>'
+                    : '<i class="fas fa-expand"></i>';
+            }
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // KEYBOARD SHORTCUTS MODAL
+    // ═══════════════════════════════════════════════════════════
+    const shortcutsBtn = document.getElementById('shortcuts-btn');
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    const shortcutsOverlay = document.getElementById('shortcuts-overlay');
+    const closeShortcutsBtn = document.getElementById('close-shortcuts-btn');
+
+    function openShortcutsModal() {
+        shortcutsModal.style.display = 'block';
+        shortcutsOverlay.style.display = 'block';
+    }
+
+    function closeShortcutsModal() {
+        shortcutsModal.style.display = 'none';
+        shortcutsOverlay.style.display = 'none';
+    }
+
+    if (shortcutsBtn) shortcutsBtn.addEventListener('click', openShortcutsModal);
+    if (closeShortcutsBtn) closeShortcutsBtn.addEventListener('click', closeShortcutsModal);
+    if (shortcutsOverlay) shortcutsOverlay.addEventListener('click', closeShortcutsModal);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && shortcutsModal && shortcutsModal.style.display !== 'none') {
+            closeShortcutsModal();
+        }
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // RESIZABLE PANE SPLITTER
+    // ═══════════════════════════════════════════════════════════
+    const splitter = document.getElementById('pane-splitter');
+    const editorPane = document.querySelector('.editor-pane');
+    const outputPane = document.querySelector('.output-pane');
+    const editorLayout = document.querySelector('.editor-layout');
+
+    if (splitter && editorPane && outputPane) {
+        let isResizing = false;
+        let startX = 0;
+        let startEditorWidth = 0;
+
+        splitter.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startEditorWidth = editorPane.getBoundingClientRect().width;
+            splitter.classList.add('dragging');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const layoutWidth = editorLayout.getBoundingClientRect().width;
+            const delta = e.clientX - startX;
+            let newEditorWidth = startEditorWidth + delta;
+            // Enforce min/max: each pane must be at least 250px
+            newEditorWidth = Math.max(250, Math.min(layoutWidth - 255, newEditorWidth));
+            const newOutputWidth = layoutWidth - newEditorWidth - 5; // 5 = splitter width
+            editorPane.style.flex = 'none';
+            editorPane.style.width = newEditorWidth + 'px';
+            outputPane.style.flex = 'none';
+            outputPane.style.width = newOutputWidth + 'px';
+            if (editor) editor.refresh();
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                splitter.classList.remove('dragging');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+    }
+
     // File management variables
     let currentFileName = "programme.algo";
     let isModified = false;
     let fileHandle = null; // Store the file handle for File System Access API
+
 
     // Track modifications
     if (editor) {

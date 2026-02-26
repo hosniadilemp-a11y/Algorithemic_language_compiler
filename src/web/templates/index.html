@@ -89,9 +89,13 @@
             <div class="pane editor-pane">
                 <div class="pane-header">
                     <span><i class="fas fa-code"></i> Algorithme</span>
-                    <div>
+                    <div style="display:flex;gap:6px;align-items:center">
                         <span id="file-state" class="badge" style="display: none;">Modifié</span>
                         <span class="lang-badge">ALGO</span>
+                        <button id="fullscreen-btn" class="toolbar-btn" title="Plein Écran (F11)"><i
+                                class="fas fa-expand"></i></button>
+                        <button id="shortcuts-btn" class="toolbar-btn" title="Raccourcis clavier"><i
+                                class="fas fa-keyboard"></i></button>
                     </div>
                 </div>
                 <!-- Editor Toolbar -->
@@ -148,7 +152,36 @@ Debut
     
     Ecrire("Programme termine!");
 Fin.</textarea>
+
+                <!-- Status Bar -->
+                <div id="editor-status-bar" class="editor-status-bar">
+                    <div class="status-left">
+                        <span id="status-cursor" class="status-item" title="Ligne et Colonne"><i
+                                class="fas fa-map-pin"></i> Ln 1, Col 1</span>
+                        <span class="status-sep">|</span>
+                        <span id="status-chars" class="status-item" title="Caractères totaux"><i
+                                class="fas fa-font"></i> 0 car.</span>
+                        <span class="status-sep">|</span>
+                        <span id="status-lines" class="status-item" title="Lignes totales"><i
+                                class="fas fa-list-ol"></i> 0 lignes</span>
+                    </div>
+                    <div class="status-right">
+                        <button id="wordwrap-btn" class="status-btn" title="Activer/Désactiver le retour à la ligne"><i
+                                class="fas fa-text-width"></i> Wrap</button>
+                        <span class="status-sep">|</span>
+                        <button id="font-decrease-btn" class="status-btn" title="Réduire la taille du texte (Ctrl+-)"><i
+                                class="fas fa-minus"></i></button>
+                        <span id="status-fontsize" class="status-item">14px</span>
+                        <button id="font-increase-btn" class="status-btn"
+                            title="Augmenter la taille du texte (Ctrl+=)"><i class="fas fa-plus"></i></button>
+                        <button id="font-reset-btn" class="status-btn" title="Réinitialiser la taille"><i
+                                class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
             </div>
+
+            <!-- Resizable Drag Splitter -->
+            <div id="pane-splitter" class="pane-splitter" title="Redimensionner"></div>
 
             <div class="pane output-pane">
                 <!-- Console Section -->
@@ -195,6 +228,47 @@ Fin.</textarea>
             </div>
         </main>
     </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcuts-modal" class="shortcuts-modal" style="display:none;">
+        <div class="shortcuts-modal-content">
+            <div class="shortcuts-modal-header">
+                <h3><i class="fas fa-keyboard"></i> Raccourcis Clavier</h3>
+                <button id="close-shortcuts-btn" class="icon-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="shortcuts-grid">
+                <div class="shortcuts-col">
+                    <div class="shortcuts-section-title">Fichier</div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>S</kbd><span>Sauvegarder</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>O</kbd><span>Ouvrir</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>N</kbd><span>Nouveau</span></div>
+                    <div class="shortcuts-section-title">Édition</div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Z</kbd><span>Annuler</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Y</kbd><span>Rétablir</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>/</kbd><span>Commenter/Décommenter</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd><span>Dupliquer la
+                            ligne</span></div>
+                    <div class="shortcut-row"><kbd>Alt</kbd>+<kbd>↑/↓</kbd><span>Déplacer la ligne</span></div>
+                </div>
+                <div class="shortcuts-col">
+                    <div class="shortcuts-section-title">Navigation</div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>F</kbd><span>Rechercher</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>H</kbd><span>Remplacer</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>G</kbd><span>Aller à la ligne</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>D</kbd><span>Sélection multiple</span></div>
+                    <div class="shortcuts-section-title">Affichage</div>
+                    <div class="shortcut-row"><kbd>F11</kbd><span>Plein écran</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>=</kbd><span>Zoom avant</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>-</kbd><span>Zoom arrière</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Space</kbd><span>Autocomplétion</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd><span>Formater le code</span>
+                    </div>
+                    <div class="shortcut-row"><kbd>F5</kbd><span>Exécuter</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="shortcuts-overlay" class="shortcuts-overlay" style="display:none;"></div>
 
     <!-- Off-Canvas Examples Sidebar (Barre Coulissante) -->
     <div id="examples-sidebar" class="examples-sidebar">

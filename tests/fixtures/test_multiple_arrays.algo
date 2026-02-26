@@ -1,0 +1,11 @@
+Algorithme TestMultipleArrays;
+Var
+    A[10], B[10] : Entier;
+    C[20][20], D[20][20] : Entier;
+Debut
+    A[1] <- 1;
+    B[1] <- 2;
+    C[10][10] <- 3;
+    D[10][10] <- 4;
+    Ecrire(A[1], B[1], C[10][10], D[10][10]);
+Fin.

@@ -3,29 +3,64 @@
   "title": "Chapitre 1: Introduction à l'Algorithmique",
   "sections": [
     {
-      "title": "Définition et objectifs",
-      "content": "[[DEF]] Un algorithme est une suite finie et ordonnée d'instructions qui transforme des données d'entrée en résultats corrects.\n\n### Pourquoi apprendre l'algorithmique ?\n- Structurer la résolution de problèmes.\n- Préparer une implémentation fiable dans n'importe quel langage.\n- Réduire les erreurs logiques avant la programmation.\n\nUn bon algorithme n'est pas seulement correct : il doit aussi être lisible et efficace."
+      "title": "Définition et rôle d'un algorithme",
+      "content": "[[DEF]] Un algorithme est une suite finie, ordonnée et non ambiguë d'instructions qui transforme des entrées en sorties correctes.\n\nObjectifs d'un bon algorithme:\n- justesse (résultat correct),\n- clarté (facilité de lecture),\n- efficacité (temps et mémoire maîtrisés),\n- terminaison (l'algorithme doit finir)."
     },
     {
-      "title": "Propriétés fondamentales",
-      "content": "### Justesse\nUn algorithme juste produit le bon résultat pour tous les cas valides.\n\n### Clarté\nUn algorithme clair peut être relu, maintenu et modifié sans ambiguïté.\n\n### Efficacité\nOn compare les solutions selon le temps d'exécution et la mémoire.\n\n### Terminaison\nChaque traitement doit finir après un nombre fini d'étapes."
+      "title": "Structure générale d'un programme algorithmique",
+      "content": "Le schéma classique du cours est :\n1. titre de l'algorithme,\n2. `Const` (optionnel),\n3. `Var` (optionnel),\n4. `Debut ... Fin.` pour les instructions.",
+      "code": "Algorithme ExempleStructure;\nConst\n    TVA = 0.19;\nVar\n    prixHT, prixTTC : Reel;\nDebut\n    Lire(prixHT);\n    prixTTC := prixHT + prixHT * TVA;\n    Ecrire(\"TTC = \", prixTTC);\nFin."
     },
     {
-      "title": "Structure générale d'un algorithme",
-      "content": "La structure du cours suit : déclarations (`Const`, `Var`) puis bloc d'instructions entre `Debut` et `Fin.`.\n\n### Convention retenue\nNous utilisons `:=` pour l'affectation sur tous les chapitres.",
-      "code": "Algorithme StructureGenerale;\nConst\n    N = 10;\nVar\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i de 1 a N Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(\"Somme = \", somme);\nFin."
+      "title": "Variables et constantes",
+      "content": "### Variable\nUne variable peut changer de valeur durant l'exécution.\n\n### Constante\nUne constante garde la même valeur pendant tout le programme.\n\n[[NOTE]] Utiliser des constantes pour les valeurs fixes (taux, seuil, capacité max) rend le code plus lisible et plus sûr.",
+      "code": "Const\n    NMAX = 100;\n    PI = 3.14159;\nVar\n    rayon : Reel;\n    surface : Reel;\nDebut\n    Lire(rayon);\n    surface := PI * rayon * rayon;\n    Ecrire(surface);\nFin."
     },
     {
-      "title": "Identificateurs, constantes et variables",
-      "content": "### Identificateur\nCommence par une lettre, sans espace, et ne doit pas être un mot clé.\n\n### Constante\nValeur fixée à la déclaration et non modifiable ensuite.\n\n### Variable\nValeur modifiable pendant l'exécution.\n\nDes noms significatifs (`somme_notes`, `nb_etudiants`) améliorent la compréhension."
+      "title": "Types de données de base",
+      "content": "Types les plus utilisés :\n- `Entier` : valeurs entières (`-2`, `0`, `25`).\n- `Reel` : valeurs décimales (`3.14`, `-0.5`).\n- `Caractere` : un seul symbole (`'A'`, `'7'`).\n- `Chaine` : texte (`\"Bonjour\"`).\n- `Booleen` : `Vrai` ou `Faux`.\n\nLe choix du type influence les opérations autorisées et le comportement de comparaison/calcul."
     },
     {
-      "title": "Types et opérateurs",
-      "content": "Types de base : `Entier`, `Reel`, `Caractere`, `Booleen`, `Chaine`.\n\nOpérateurs arithmétiques : `+`, `-`, `*`, `/`, `div`, `mod`.\nOpérateurs logiques : `non`, `et`, `ou`.\n\n### Priorités\n1. Parenthèses\n2. `*`, `/`, `div`, `mod`\n3. `+`, `-`\n4. `non`, puis `et`, puis `ou`"
+      "title": "Déclarations: règles et bonnes pratiques",
+      "content": "Une déclaration précise le nom et le type.\n\n### Règles importantes\n- le nom commence par une lettre,\n- pas d'espace dans le nom,\n- éviter les mots-clés (`Debut`, `Fin`, `Si`, etc.),\n- préférer des noms explicites (`moyenneClasse` au lieu de `x1`).",
+      "code": "Var\n    age : Entier;\n    moyenne : Reel;\n    lettre : Caractere;\n    nomComplet : Chaine;\n    estAdmis : Booleen;"
     },
     {
-      "title": "Ambiguïtés à clarifier",
-      "content": "[[ALERT]] Ne mélangez jamais `0..N-1` et `1..N` dans un même algorithme.\n\n### Indexation\nLe cours contient `0..N-1` et `1..N`. Toujours annoncer votre convention.\n\n### Paramètres\nCertaines sources mélangent styles de passage de paramètres. Gardez une convention unique dans un même algorithme.\n\n### Mini-exercice\nLire deux entiers, afficher le maximum et l'écart absolu."
+      "title": "Conditions et expressions logiques",
+      "content": "Les conditions orientent le flux du programme.\n\nOpérateurs de comparaison : `=`, `<>`, `<`, `<=`, `>`, `>=`.\n\nOpérateurs logiques : `non`, `et`, `ou`.\n\n[[ALERT]] Toujours parenthéser les expressions logiques complexes pour éviter les ambiguïtés de priorité.",
+      "code": "Si (note >= 10) Et (absence = Faux) Alors\n    Ecrire(\"Admis\");\nSinon\n    Ecrire(\"Non admis\");\nFin Si;"
+    },
+    {
+      "title": "Boucles: vue d'ensemble",
+      "content": "On utilise une boucle pour répéter un bloc d'instructions.\n\nLes trois familles classiques:\n- `Pour` : nombre d'itérations connu.\n- `Tant Que` : répétition tant qu'une condition reste vraie.\n- `Repeter ... Jusqua` : exécute au moins une fois, puis teste la condition d'arrêt."
+    },
+    {
+      "title": "Boucle Pour: quand et comment",
+      "content": "La boucle `Pour` est adaptée aux comptages et parcours bornés (`1..N`, `0..N-1`).\n\nAvantage: simple, lisible, borne explicite.",
+      "code": "Var\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i de 1 a 10 Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(somme);\nFin."
+    },
+    {
+      "title": "Boucle Tant Que: contrôle par condition",
+      "content": "`Tant Que` teste la condition au début de chaque tour.\n\nElle peut ne jamais s'exécuter si la condition est fausse dès le départ.\n\nUtile quand on ne connaît pas à l'avance le nombre d'itérations.",
+      "code": "Var\n    x : Entier;\nDebut\n    Lire(x);\n    Tant Que x < 100 Faire\n        x := x * 2;\n    Fin Tant Que;\n    Ecrire(x);\nFin."
+    },
+    {
+      "title": "Boucle Repeter ... Jusqua: au moins une exécution",
+      "content": "`Repeter ... Jusqua` exécute d'abord le bloc, puis vérifie la condition de sortie.\n\nC'est utile pour les boucles de saisie/validation où une première lecture est obligatoire.",
+      "code": "Var\n    note : Entier;\nDebut\n    Repeter\n        Ecrire(\"Donner une note entre 0 et 20:\");\n        Lire(note);\n    Jusqua (note >= 0) Et (note <= 20);\nFin."
+    },
+    {
+      "title": "Différences entre les boucles",
+      "content": "### Résumé décisionnel\n- `Pour` : utiliser quand les bornes sont connues.\n- `Tant Que` : utiliser quand la condition d'arrêt est dynamique et testée avant.\n- `Repeter ... Jusqua` : utiliser quand au moins un passage est nécessaire.\n\nComplexité temporelle : dépend du nombre de tours, pas du mot-clé lui-même."
+    },
+    {
+      "title": "Exemple global combiné",
+      "content": "Exemple réunissant déclarations, constantes, conditions et boucles.",
+      "code": "Algorithme BilanClasse;\nConst\n    SEUIL = 10;\nVar\n    i, n, nbAdmis : Entier;\n    note : Reel;\nDebut\n    Lire(n);\n    nbAdmis := 0;\n    Pour i de 1 a n Faire\n        Lire(note);\n        Si note >= SEUIL Alors\n            nbAdmis := nbAdmis + 1;\n        Fin Si;\n    Fin Pour;\n    Ecrire(\"Admis: \", nbAdmis);\nFin."
+    },
+    {
+      "title": "Erreurs fréquentes au début",
+      "content": "- variable utilisée sans déclaration,\n- confusion entre `=` (comparaison) et `:=` (affectation),\n- condition de boucle qui ne change jamais (boucle infinie),\n- bornes incorrectes (`0..N` au lieu de `0..N-1`).\n\n[[ALERT]] Tester toujours avec de petits cas (`N=0`, `N=1`, valeurs limites) avant les grands jeux de données."
     }
   ]
 }

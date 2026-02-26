@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        editor.setSize("100%", "100%");
+        editor.setSize("100%", null); // Let flex handle height
 
         // If code was requested from the standalone course page, inject it on load.
         try {

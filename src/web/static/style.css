@@ -303,7 +303,8 @@ header {
 
 /* CodeMirror Customization */
 .CodeMirror {
-    height: 100%;
+    flex: 1;
+    height: auto !important;
     font-family: 'Fira Code', 'Consolas', monospace;
     font-size: 14px;
     line-height: 1.6;

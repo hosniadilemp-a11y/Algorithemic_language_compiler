@@ -3,29 +3,49 @@
   "title": "Chapitre 3: Chaînes de Caractères",
   "sections": [
     {
-      "title": "Notions de base",
-      "content": "Le type `Chaine` représente du texte. Les caractères obéissent généralement à l'ordre ASCII pour les comparaisons.\n\nLes chaînes sont essentielles pour les entrées utilisateur et le formatage d'affichage."
+      "title": "Définition et représentation",
+      "content": "[[DEF]] Une `Chaine` est une suite ordonnée de caractères.\n\nReprésentation logique : collection de symboles (`A`, `b`, `7`, espace, etc.).\n\nReprésentation mémoire : suite de codes (ASCII/Unicode selon le contexte).\n\nUn `Caractere` est une unité, une `Chaine` en contient plusieurs."
     },
     {
-      "title": "Fonctions utiles",
-      "content": "Fonctions usuelles : `Longueur(ch)`, `Concat(ch1, ch2)`, `ConvCh(val)`.\n\nCes fonctions couvrent la plupart des besoins d'introduction : mesurer, assembler, convertir."
+      "title": "Comment les chaînes sont représentées en mémoire",
+      "content": "Dans beaucoup de langages, une chaîne est stockée comme un tableau/séquence de caractères.\n\nExemple conceptuel : `\"ALGO\"` -> `[A][L][G][O]`.\n\nEn langage C classique, la chaîne est terminée par un caractère nul (`\\0`).\n\n[[NOTE]] La représentation mémoire influence les performances (concaténation, découpage, comparaison)."
     },
     {
-      "title": "Exemple guidé",
-      "content": "Assembler deux chaînes et afficher la longueur du résultat.",
-      "code": "Algorithme TestChaines;\nVar\n    ch1, ch2, res : Chaine;\nDebut\n    ch1 := \"Algo\";\n    ch2 := \"Compiler\";\n    res := Concat(ch1, ch2);\n    Ecrire(\"Resultat: \", res);\n    Ecrire(\"Longueur: \", Longueur(res));\nFin."
+      "title": "Déclaration de chaînes dans différents langages",
+      "content": "Même idée, syntaxes différentes.\n\n### En algorithmique (cours)\n`Var nom : Chaine;`\n\n### En C\n`char nom[30];`\n\n### En C++\n`string nom;`\n\n### En Java\n`String nom;`\n\n### En Python\n`nom = \"Ali\"`\n\n### En JavaScript\n`let nom = \"Ali\";`",
+      "code": "// Algo\nVar\n    nom : Chaine;\n\n// C\nchar nom[30];\n\n// Java\nString nom;\n\n// Python\nnom = \"Ali\""
     },
     {
-      "title": "Validation de texte",
-      "content": "Contrôles typiques :\n- chaîne non vide,\n- longueur minimale,\n- présence d'un caractère donné.\n\nPour des comparaisons robustes, normaliser la casse avant test."
+      "title": "Lecture et affichage des chaînes",
+      "content": "En algorithmique :\n- lecture : `Lire(ch)`\n- affichage : `Ecrire(ch)`\n\nEn pratique, les chaînes peuvent contenir des espaces. Selon le langage, il faut parfois des fonctions spécifiques pour lire une ligne complète.",
+      "code": "Algorithme LireAfficherChaine;\nVar\n    nomComplet : Chaine;\nDebut\n    Ecrire(\"Entrez votre nom complet:\");\n    Lire(nomComplet);\n    Ecrire(\"Bonjour \", nomComplet);\nFin."
     },
     {
-      "title": "Erreurs courantes",
-      "content": "- Mélanger `Caractere` et `Chaine` sans conversion.\n- Comparer des chaînes sans gérer la casse.\n- Construire des chaînes trop longues sans contrôle.\n\nDécouper les traitements en fonctions améliore la fiabilité."
+      "title": "Fonctions de manipulation les plus utiles",
+      "content": "Fonctions importantes du cours :\n- `Longueur(ch)`\n- `Concat(ch1, ch2)`\n- `ConvCh(val)`\n\nOpérations courantes en plus :\n- extraction de sous-chaîne,\n- recherche d'un caractère,\n- normalisation (majuscule/minuscule),\n- suppression d'espaces inutiles.",
+      "code": "Algorithme DemoFonctions;\nVar\n    a, b, c : Chaine;\nDebut\n    a := \"Algo\";\n    b := \"Compiler\";\n    c := Concat(a, b);\n    Ecrire(c);\n    Ecrire(Longueur(c));\nFin."
     },
     {
-      "title": "Mini-exercice",
-      "content": "Lire `nomComplet`, afficher sa longueur et produire le message : `Bonjour <nomComplet>`.\n\n### Extension\nCompter le nombre d'espaces pour estimer le nombre de mots."
+      "title": "Organisation ASCII et comparaison des caractères",
+      "content": "Les comparaisons de caractères reposent sur leur **code** ASCII.\n\nOrdre partiel important :\n`\"0\"..\"9\"` puis `\"A\"..\"Z\"` puis `\"a\"..\"z\"`.\n\nCela explique pourquoi `\"A\" < \"a\"` est vrai en ASCII.\n\n[[ALERT]] L'ordre alphabétique humain n'est pas toujours le même que l'ordre des codes machine.",
+      "code": "ASCII (extrait simplifie)\n+------+-----------+--------------------------+\n| Code | Caractere | Observation              |\n+------+-----------+--------------------------+\n|  48  |     0     | debut des chiffres       |\n|  57  |     9     | fin des chiffres         |\n|  65  |     A     | debut des majuscules     |\n|  90  |     Z     | fin des majuscules       |\n|  97  |     a     | debut des minuscules     |\n| 122  |     z     | fin des minuscules       |\n+------+-----------+--------------------------+\n\nExemples:\n'B' > 'A'   // vrai\n'a' > 'Z'   // vrai (97 > 90)\n'9' < 'A'   // vrai (57 < 65)"
+    },
+    {
+      "title": "Comparaison de chaînes",
+      "content": "La comparaison de chaînes est lexicographique : on compare caractère par caractère jusqu'à la première différence.\n\nExemple : `\"ALGO\" < \"ALPHA\"` dépend du premier caractère différent (`G` vs `P`).\n\nPour les tests fonctionnels (emails, noms, codes), il est souvent utile de normaliser la casse avant comparaison."
+    },
+    {
+      "title": "Validation de chaînes et nettoyage",
+      "content": "Contrôles typiques :\n- chaîne non vide,\n- longueur min/max,\n- caractères autorisés (lettres, chiffres),\n- présence d'un séparateur (`@`, `-`, `_`).\n\nBonnes pratiques :\n- retirer les espaces en trop au début/fin,\n- uniformiser la casse si nécessaire,\n- refuser explicitement les formats invalides."
+    },
+    {
+      "title": "Exemple complet: saisie, validation et affichage",
+      "content": "Exemple pédagogique combinant lecture, test de longueur et affichage.",
+      "code": "Algorithme ValidationNom;\nVar\n    nom : Chaine;\nDebut\n    Ecrire(\"Entrez un nom:\");\n    Lire(nom);\n\n    Si Longueur(nom) = 0 Alors\n        Ecrire(\"Nom vide\");\n    Sinon\n        Ecrire(\"Nom valide: \", nom);\n        Ecrire(\"Taille: \", Longueur(nom));\n    Fin Si;\nFin."
+    },
+    {
+      "title": "Erreurs fréquentes",
+      "content": "- confondre `Caractere` et `Chaine`,\n- comparer sans tenir compte de la casse,\n- ignorer les espaces dans les entrées utilisateur,\n- supposer un ordre différent de l'ordre ASCII,\n- concaténer dans une boucle sans réfléchir au coût.\n\n[[NOTE]] Toujours tester avec des cas limites : chaîne vide, un seul caractère, accents, espaces, mélange chiffres/lettres."
     }
   ]
 }

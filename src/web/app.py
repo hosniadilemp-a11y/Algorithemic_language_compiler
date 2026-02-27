@@ -45,7 +45,11 @@ def list_examples():
             "Strings": [],
             "Functions": [],
             "Pointers": [],
-            "Dynamic_Allocation": []
+            "Dynamic_Allocation": [],
+            "Enregistrements": [],
+            "Listes_Chainees": [],
+            "Piles": [],
+            "Files": []
         }
 
         # Helper to categorize based on filename
@@ -53,12 +57,20 @@ def list_examples():
             if is_fixture:
                 return "Fixtures"
             
-            dirname = os.path.dirname(filepath)
+            dirname = os.path.dirname(filepath).replace('\\', '/')
             if dirname:
                 cat = dirname.replace('Allocation', ' Allocation').replace('_', ' ').replace('  ', ' ')
                 # normalize common case
                 if "dynamic" in cat.lower() and "alloc" in cat.lower():
                     cat = "Dynamic Allocation"
+                if "enregistr" in cat.lower():
+                    return "Enregistrements"
+                if "pile" in cat.lower() or "stack" in cat.lower():
+                    return "Piles"
+                if "file" in cat.lower() or "queue" in cat.lower():
+                    return "Files"
+                if "liste" in cat.lower() or "chain" in cat.lower():
+                    return "Listes_Chainees"
                 return cat
 
             name = filepath.lower()
@@ -66,8 +78,16 @@ def list_examples():
                 return "Dynamic Allocation"
             if name.startswith("str_") or "string" in name or "chaine" in name:
                 return "Strings"
-            if "ptr" in name or "pointer" in name or "linked" in name:
+            if "ptr" in name or "pointer" in name:
                 return "Pointers"
+            if "liste" in name or "chain" in name or "linked" in name:
+                return "Listes_Chainees"
+            if "pile" in name or "stack" in name:
+                return "Piles"
+            if "file" in name or "queue" in name:
+                return "Files"
+            if "record" in name or "enregistr" in name:
+                return "Enregistrements"
             if "func" in name or "fonction" in name or "proc" in name:
                 return "Functions"
             if "array" in name or "tableau" in name:

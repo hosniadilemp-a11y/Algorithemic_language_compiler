@@ -3,68 +3,39 @@
   "title": "Chapitre 1: Introduction à l'Algorithmique",
   "sections": [
     {
-      "title": "Définition et rôle d'un algorithme",
-      "content": "[[DEF]] Un algorithme est une suite finie, ordonnée et non ambiguë d'instructions qui transforme des entrées en sorties correctes.\n\nObjectifs d'un bon algorithme:\n- justesse (résultat correct),\n- clarté (facilité de lecture),\n- efficacité (temps et mémoire maîtrisés),\n- terminaison (l'algorithme doit finir)."
+      "title": "Qu'est-ce qu'un Algorithme ?",
+      "content": "[[DEF]] Un **algorithme** est une suite finie, ordonnée et non ambiguë d'instructions permettant de résoudre un problème ou d'obtenir un résultat précis.\n\n### Exemples dans la vie réelle\nUn algorithme n'est pas forcément informatique :\n- **Une recette de cuisine** : des ingrédients (entrées), des étapes (instructions), et un plat fini (sortie).\n- **Un plan de montage Meuble** : des pièces, des étapes visuelles, et un meuble monté.\n- **Le GPS** : votre position actuelle et destination (entrées), calcul de l'itinéraire (algorithme), trajet affiché (sortie).\n\n### Ce qui n'est PAS un algorithme\nUne liste de souhaits (\"Je veux être riche\") n'est pas un algorithme car elle ne définit pas les instructions précises et ordonnées pour y parvenir."
     },
     {
-      "title": "Structure générale d'un programme algorithmique",
-      "content": "Le schéma classique du cours est :\n1. titre de l'algorithme,\n2. `Const` (optionnel),\n3. `Var` (optionnel),\n4. `Debut ... Fin.` pour les instructions.",
-      "code": "Algorithme ExempleStructure;\nConst\n    TVA = 0.19;\nVar\n    prixHT, prixTTC : Reel;\nDebut\n    Lire(prixHT);\n    prixTTC := prixHT + prixHT * TVA;\n    Ecrire(\"TTC = \", prixTTC);\nFin."
+      "title": "Les 4 Piliers d'un Bon Algorithme",
+      "content": "Pour être efficace, un algorithme doit respecter quatre critères fondamentaux :\n\n[[STYLISH_EX]]\n- **Justesse** : L'algorithme doit produire le résultat correct pour toutes les données d'entrée valides.\n- **Clarté** : Il doit être facile à lire et à comprendre par un humain (pas seulement par la machine).\n- **Efficacité** : Il doit utiliser le moins de temps (CPU) et de mémoire (RAM) possible.\n- **Terminaison** : Il doit impérativement s'arrêter après un nombre fini d'étapes (pas de boucles infinies)."
     },
     {
-      "title": "Variables et constantes",
-      "content": "### Variable\nUne variable peut changer de valeur durant l'exécution.\n\n### Constante\nUne constante garde la même valeur pendant tout le programme.\n\n[[NOTE]] Utiliser des constantes pour les valeurs fixes (taux, seuil, capacité max) rend le code plus lisible et plus sûr.",
-      "code": "Const\n    NMAX = 100;\n    PI = 3.14159;\nVar\n    rayon : Reel;\n    surface : Reel;\nDebut\n    Lire(rayon);\n    surface := PI * rayon * rayon;\n    Ecrire(surface);\nFin."
+      "title": "Variables, Constantes et la Mémoire RAM",
+      "content": "Imaginez que la mémoire de votre ordinateur (RAM) est une immense armoire avec des milliers de tiroirs numérotés.\n\n### La Variable\nUne **variable** est un tiroir sur lequel on colle une étiquette (le nom). Ce tiroir possède :\n- **Un Nom** : pour l'identifier facilement.\n- **Une Valeur** : ce qu'il y a dedans (peut changer).\n- **Une Adresse** : son emplacement exact dans l'armoire (ex: `0x7FFF12`).\n- **Un Type** : définit la taille du tiroir.\n\n### La Constante\nC'est un tiroir que l'on verrouille après y avoir mis une valeur : elle ne peut plus changer pendant toute l'exécution du programme.\n\n[[NOTE]] Déclarer une constante (ex: `PI = 3.14`) évite les erreurs de saisie et rend le code plus professionnel."
     },
     {
-      "title": "Types de données de base",
-      "content": "Types les plus utilisés :\n- `Entier` : valeurs entières (`-2`, `0`, `25`).\n- `Reel` : valeurs décimales (`3.14`, `-0.5`).\n- `Caractere` : un seul symbole (`'A'`, `'7'`).\n- `Chaine` : texte (`\"Bonjour\"`).\n- `Booleen` : `Vrai` ou `Faux`.\n\nLe choix du type influence les opérations autorisées et le comportement de comparaison/calcul."
+      "title": "Types de Données et Empreinte Mémoire",
+      "content": "Le type détermine la quantité de mémoire consommée :\n\n| Type | Usage | Taille Typique |\n| :--- | :--- | :--- |\n| **Entier** | Nombres sans virgule | 4 octets |\n| **Reel** | Nombres à virgule | 8 octets |\n| **Caractere** | Une seule lettre ('A') | 1 octet |\n| **Booleen** | Vrai ou Faux | 1 octet |\n| **Chaine** | Texte | Variable (1 octet par car.) |\n\n[[ALERT]] Choisir le bon type est crucial pour l'efficacité mémoire de vos programmes."
     },
     {
-      "title": "Déclarations: règles et bonnes pratiques",
-      "content": "Une déclaration précise le nom et le type.\n\n### Règles importantes\n- le nom commence par une lettre,\n- pas d'espace dans le nom,\n- éviter les mots-clés (`Debut`, `Fin`, `Si`, etc.),\n- préférer des noms explicites (`moyenneClasse` au lieu de `x1`).",
-      "code": "Var\n    age : Entier;\n    moyenne : Reel;\n    lettre : Caractere;\n    nomComplet : Chaine;\n    estAdmis : Booleen;"
+      "title": "Conditions et Expressions Logiques",
+      "content": "Les conditions permettent à l'algorithme de prendre des décisions.\n\n[[DEF]] Une structure **Si...Alors...Sinon** exécute un bloc de code uniquement si une condition est Vraie.\n\n### Opérateurs de Comparaison\n- `=` (égal), `<>` (différent)\n- `<` (inférieur), `>` (supérieur)\n- `<=` (inférieur ou égal), `>=` (supérieur ou égal)\n\n### Opérateurs Logiques\n- **Et** : les deux conditions doivent être vraies.\n- **Ou** : au moins une condition doit être vraie.\n- **Non** : inverse le résultat d'une condition.",
+      "code": "Si (age >= 18) Alors\n    Ecrire(\"Majeur\");\nSinon\n    Ecrire(\"Mineur\");\nFin Si;"
     },
     {
-      "title": "Conditions et expressions logiques",
-      "content": "Les conditions orientent le flux du programme.\n\nOpérateurs de comparaison : `=`, `<>`, `<`, `<=`, `>`, `>=`.\n\nOpérateurs logiques : `non`, `et`, `ou`.\n\n[[ALERT]] Toujours parenthéser les expressions logiques complexes pour éviter les ambiguïtés de priorité.",
-      "code": "Si (note >= 10) Et (absence = Faux) Alors\n    Ecrire(\"Admis\");\nSinon\n    Ecrire(\"Non admis\");\nFin Si;"
+      "title": "Les Boucles : Répéter des Instructions",
+      "content": "Les boucles évitent de réécrire plusieurs fois les mêmes instructions.\n\n### 1. La boucle Pour\nUtilisée quand on connaît à l'avance le nombre de répétitions.\n```\nPour i := 1 a 10 Faire ... Fin Pour;\n```\n\n### 2. La boucle TantQue\nElle répète tant qu'une condition reste vraie. Elle teste la condition **AVANT** d'entrer.\n```\nTantQue (condition) Faire ... Fin TantQue;\n```\n\n### 3. La boucle Repeter\nElle répète jusqu'à ce qu'une condition devienne vraie. Elle exécute le bloc **AU MOINS UNE FOIS** car elle teste à la fin.\n```\nRepeter ... Jusqua (condition);\n```",
+      "code": "// Exemple de somme des 10 premiers nombres\nsomme := 0;\nPour i := 1 a 10 Faire\n    somme := somme + i;\nFin Pour;"
     },
     {
-      "title": "Boucles: vue d'ensemble",
-      "content": "On utilise une boucle pour répéter un bloc d'instructions.\n\nLes trois familles classiques:\n- `Pour` : nombre d'itérations connu.\n- `Tantque` : répétition tant qu'une condition reste vraie.\n- `Repeter ... Jusqua` : exécute au moins une fois, puis teste la condition d'arrêt."
+      "title": "Affectation et Swap de Valeurs",
+      "content": "L'affectation `:=` stocke une valeur dans une variable.\n\n### Le Swap (Échange)\nPour échanger deux valeurs A et B sans en perdre une, on utilise souvent une troisième variable 'Temp'.\n\n[[STYLISH_EX]]\n1. `Temp := A;` (on sauvegarde A)\n2. `A := B;` (B écrase A, mais A est sauvé dans Temp)\n3. `B := Temp;` (Temp redonne l'ancienne valeur de A à B)",
+      "code": "// Méthode sans variable temporaire (Arithmétique)\nA := A + B;\nB := A - B;\nA := A - B;"
     },
     {
-      "title": "Boucle Pour: quand et comment",
-      "content": "La boucle `Pour` est adaptée aux comptages et parcours bornés (`1..N`, `0..N-1`).\n\nAvantage: simple, lisible, borne explicite.",
-      "code": "Var\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i := 1 a 10 Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(somme);\nFin."
-    },
-    {
-      "title": "Boucle Tantque: contrôle par condition",
-      "content": "`Tantque` teste la condition au début de chaque tour.\n\nElle peut ne jamais s'exécuter si la condition est fausse dès le départ.\n\nUtile quand on ne connaît pas à l'avance le nombre d'itérations.",
-      "code": "Var\n    x : Entier;\nDebut\n    Lire(x);\n    Tantque x < 100 Faire\n        x := x * 2;\n    Fin Tantque;\n    Ecrire(x);\nFin."
-    },
-    {
-      "title": "Boucle Repeter ... Jusqua: au moins une exécution",
-      "content": "`Repeter ... Jusqua` exécute d'abord le bloc, puis vérifie la condition de sortie.\n\nC'est utile pour les boucles de saisie/validation où une première lecture est obligatoire.",
-      "code": "Var\n    note : Entier;\nDebut\n    Repeter\n        Ecrire(\"Donner une note entre 0 et 20:\");\n        Lire(note);\n    Jusqua (note >= 0) Et (note <= 20);\nFin."
-    },
-    {
-      "title": "Différences entre les boucles",
-      "content": "### Résumé décisionnel\n- `Pour` : utiliser quand les bornes sont connues.\n- `Tantque` : utiliser quand la condition d'arrêt est dynamique et testée avant.\n- `Repeter ... Jusqua` : utiliser quand au moins un passage est nécessaire.\n\nComplexité temporelle : dépend du nombre de tours, pas du mot-clé lui-même."
-    },
-    {
-      "title": "Exemple global combiné",
-      "content": "Exemple réunissant déclarations, constantes, conditions et boucles.",
-      "code": "Algorithme BilanClasse;\nConst\n    SEUIL = 10;\nVar\n    i, n, nbAdmis : Entier;\n    note : Reel;\nDebut\n    Lire(n);\n    nbAdmis := 0;\n    Pour i := 1 a n Faire\n        Lire(note);\n        Si note >= SEUIL Alors\n            nbAdmis := nbAdmis + 1;\n        Fin Si;\n    Fin Pour;\n    Ecrire(\"Admis: \", nbAdmis);\nFin."
-    },
-    {
-      "title": "Erreurs fréquentes au début",
-      "content": "- variable utilisée sans déclaration,\n- confusion entre `=` (comparaison) et `:=` (affectation),\n- condition de boucle qui ne change jamais (boucle infinie),\n- bornes incorrectes (`0..N` au lieu de `0..N-1`).\n\n[[ALERT]] Tester toujours avec de petits cas (`N=0`, `N=1`, valeurs limites) avant les grands jeux de données."
-    },
-    {
-      "title": "Exercices pratiques (4)",
-      "content": "<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 1: variables et constantes</div>\n<p>Déclarer deux constantes (<code class=\"course-inline-code\">TVA</code>, <code class=\"course-inline-code\">SEUIL</code>) et trois variables adaptées (<code class=\"course-inline-code\">prixHT</code>, <code class=\"course-inline-code\">prixTTC</code>, <code class=\"course-inline-code\">estValide</code>).</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\"><summary>Voir solution</summary><div class=\"course-solution-content\"><pre class=\"course-solution-code\">Const\n    TVA = 0.19;\n    SEUIL = 10;\nVar\n    prixHT, prixTTC : Reel;\n    estValide : Booleen;</pre></div></details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 2: condition simple</div>\n<p>Lire une note et afficher <code class=\"course-inline-code\">Admis</code> si la note est supérieure ou égale à 10, sinon <code class=\"course-inline-code\">Non admis</code>.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\"><summary>Voir solution</summary><div class=\"course-solution-content\"><pre class=\"course-solution-code\">Var\n    note : Reel;\nDebut\n    Lire(note);\n    Si note >= 10 Alors\n        Ecrire(\"Admis\");\n    Sinon\n        Ecrire(\"Non admis\");\n    Fin Si;\nFin.</pre></div></details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 3: boucle Pour</div>\n<p>Calculer la somme des entiers de 1 à 100 avec une boucle <code class=\"course-inline-code\">Pour</code>.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\"><summary>Voir solution</summary><div class=\"course-solution-content\"><pre class=\"course-solution-code\">Var\n    i, somme : Entier;\nDebut\n    somme := 0;\n    Pour i := 1 a 100 Faire\n        somme := somme + i;\n    Fin Pour;\n    Ecrire(somme);\nFin.</pre></div></details>\n</div>\n\n<div class=\"course-exercise\">\n<div class=\"course-exercise-title\"><i class=\"fas fa-pen\"></i> Exercice 4: boucle Tantque + validation</div>\n<p>Lire un entier positif. Tant que la valeur est négative, redemander la saisie.</p>\n<textarea class=\"course-solution-space\" placeholder=\"Écris ta solution ici...\"></textarea>\n<details class=\"course-solution-details\"><summary>Voir solution</summary><div class=\"course-solution-content\"><pre class=\"course-solution-code\">Var\n    n : Entier;\nDebut\n    Lire(n);\n    Tantque n < 0 Faire\n        Ecrire(\"Valeur invalide, recommencez:\");\n        Lire(n);\n    Fin Tantque;\n    Ecrire(\"Valeur valide: \", n);\nFin.</pre></div></details>\n</div>"
+      "title": "Exercices du Chapitre 1",
+      "content": "<div class=\"course-exercise\">\n    <div class=\"course-exercise-title\"><i class=\"fas fa-puzzle-piece\"></i> Exo 1 : Pair ou Impair ?</div>\n    <p>Écrivez un algorithme qui demande un nombre et affiche s'il est Pair ou Impair (Utilisez le Modulo <code class=\"course-inline-code\">%</code>).</p>\n    <button class=\"course-try-btn\" data-code=\"Algorithme Parite;\\nVar\\n    n : Entier;\\nDebut\\n    Ecrire('Entrez un nombre :');\\n    Lire(n);\\n    Si (n % 2 = 0) Alors\\n        Ecrire('Pair');\\n    Sinon\\n        Ecrire('Impair');\\n    Fin Si;\\nFin.\">Lancer dans l'éditeur</button>\n    <details class=\"course-solution-details\"><summary>Voir la solution</summary>\n    <pre class=\"course-solution-code\">Si (n % 2 = 0) Alors Ecrire(\"Pair\"); Sinon Ecrire(\"Impair\"); Fin Si;</pre>\n    </details>\n</div>\n\n<div class=\"course-exercise\">\n    <div class=\"course-exercise-title\"><i class=\"fas fa-calculator\"></i> Exo 2 : Somme Cumulative</div>\n    <p>Calculez la somme des nombres de 1 jusqu'à N (N est saisi par l'utilisateur).</p>\n    <button class=\"course-try-btn\" data-code=\"Algorithme SommeN;\\nVar\\n    n, i, s : Entier;\\nDebut\\n    Ecrire('Donnez N :');\\n    Lire(n);\\n    s := 0;\\n    Pour i := 1 a n Faire\\n        s := s + i;\\n    Fin Pour;\\n    Ecrire('Somme = ', s);\\nFin.\">Lancer dans l'éditeur</button>\n    <details class=\"course-solution-details\"><summary>Voir la solution</summary>\n    <pre class=\"course-solution-code\">s := 0; Pour i := 1 a n Faire s := s + i; Fin Pour;</pre>\n    </details>\n</div>\n\n<div class=\"course-exercise\">\n    <div class=\"course-exercise-title\"><i class=\"fas fa-star-half-alt\"></i> Exo 3 : Appréciation</div>\n    <p>Demandez une note. Si &ge; 16 affichez 'TB', si &ge; 14 'B', si &ge; 10 'Passable', sinon 'Insuffisant'.</p>\n    <button class=\"course-try-btn\" data-code=\"Algorithme Appreciations;\\nVar\\n    note : Reel;\\nDebut\\n    Lire(note);\\n    Si note >= 16 Alors Ecrire('TB');\\n    Sinon Si note >= 14 Alors Ecrire('B');\\n    Sinon Si note >= 10 Alors Ecrire('Passable');\\n    Sinon Ecrire('Insuffisant');\\n    Fin Si; Fin Si; Fin Si;\\nFin.\">Lancer dans l'éditeur</button>\n    <details class=\"course-solution-details\"><summary>Voir la solution</summary>\n    <pre class=\"course-solution-code\">Si note >= 16 Alors Ecrire(\"TB\"); Sinon Si note >= 14 Alors Ecrire(\"B\"); Sinon Si note >= 10 Alors Ecrire(\"Passable\"); Sinon Ecrire(\"Insuffisant\"); Fin Si; Fin Si; Fin Si;</pre>\n    </details>\n</div>\n\n<div class=\"course-exercise\">\n    <div class=\"course-exercise-title\"><i class=\"fas fa-search\"></i> Exo 4 : Recherche de Zero</div>\n    <p>Lisez une suite de nombres. Arrêtez-vous dès que l'utilisateur saisit un 0 (utilisez <code class=\"course-inline-code\">Repeter</code>).</p>\n    <button class=\"course-try-btn\" data-code=\"Algorithme ChercheZero;\\nVar\\n    x : Entier;\\nDebut\\n    Repeter\\n        Lire(x);\\n    Jusqua x = 0;\\n    Ecrire('Fini !');\\nFin.\">Lancer dans l'éditeur</button>\n    <details class=\"course-solution-details\"><summary>Voir la solution</summary>\n    <pre class=\"course-solution-code\">Repeter Lire(x); Jusqua x = 0;</pre>\n    </details>\n</div>"
     }
   ]
 }

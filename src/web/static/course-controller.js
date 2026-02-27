@@ -1,26 +1,13 @@
-/**
- * Algo Course Controller
- * Handles navigation, rendering, and interactivity for the course section.
- */
-
 class CourseController {
     constructor() {
         this.courseData = null;
         this.currentChapterIndex = 0;
-        this.chapterCache = new Map();
-        this.renderRequestId = 0;
+        this.isStandalonePage = !!document.getElementById('course-outline');
 
-        // DOM Elements
-        this.overlay = document.getElementById('course-overlay');
-        this.outline = document.getElementById('course-outline');
+        this.sidebar = document.getElementById('course-outline');
         this.contentArea = document.getElementById('course-content');
-        this.pagination = document.getElementById('course-pagination');
-
-        this.prevBtn = document.getElementById('course-prev-btn');
-        this.nextBtn = document.getElementById('course-next-btn');
-        this.closeBtn = document.getElementById('close-course-btn');
-        this.openBtn = document.getElementById('open-course-btn');
-        this.isStandalonePage = !this.overlay;
+        this.prevBtn = document.getElementById('prev-chapter');
+        this.nextBtn = document.getElementById('next-chapter');
 
         this.init();
     }
@@ -29,160 +16,125 @@ class CourseController {
         try {
             const response = await fetch('/static/algo-course.json');
             this.courseData = await response.json();
-            this.renderOutline();
+            this.loadState();
+            await this.renderOutline();
             this.bindEvents();
             if (this.isStandalonePage) {
                 this.renderCurrentChapter();
             }
         } catch (error) {
-            console.error("Error loading course data:", error);
+            console.error("Failed to initialize course controller:", error);
         }
     }
 
     bindEvents() {
-        if (this.openBtn) {
-            this.openBtn.addEventListener('click', () => this.show());
-        }
-        if (this.closeBtn) {
-            this.closeBtn.addEventListener('click', () => this.hide());
-        }
+        if (this.prevBtn) this.prevBtn.onclick = () => this.navigate(-1);
+        if (this.nextBtn) this.nextBtn.onclick = () => this.navigate(1);
 
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => this.navigate(-1));
-        }
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.navigate(1));
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            const isCourseVisible = this.isStandalonePage || (this.overlay && this.overlay.style.display === 'flex');
-            if (isCourseVisible) {
-                if (e.key === 'ArrowLeft') this.navigate(-1);
-                if (e.key === 'ArrowRight') this.navigate(1);
-                if (e.key === 'Escape') this.hide();
+        window.onpopstate = (e) => {
+            if (e.state && e.state.chapterIndex !== undefined) {
+                this.currentChapterIndex = e.state.chapterIndex;
+                this.renderCurrentChapter();
+                this.updateOutlineActiveState();
             }
-        });
-    }
-
-    show() {
-        if (!this.overlay) {
-            return;
-        }
-        this.overlay.style.display = 'flex';
-        this.overlay.classList.add('fade-in');
-        this.renderCurrentChapter();
-    }
-
-    hide() {
-        if (!this.overlay) {
-            return;
-        }
-        this.overlay.style.display = 'none';
+        };
     }
 
     navigate(direction) {
         const nextIndex = this.currentChapterIndex + direction;
         if (nextIndex >= 0 && nextIndex < this.courseData.chapters.length) {
             this.currentChapterIndex = nextIndex;
+            this.saveState();
             this.renderCurrentChapter();
             this.updateOutlineActiveState();
         }
     }
 
-    renderOutline() {
-        if (!this.outline) return;
-        this.outline.innerHTML = '';
+    async renderOutline() {
+        if (!this.sidebar) return;
+        this.sidebar.innerHTML = '';
+
         this.courseData.chapters.forEach((chapter, index) => {
             const item = document.createElement('div');
-            item.className = 'course-chapter-item';
-            const iconClass = chapter.icon || 'fas fa-book-open';
-            item.innerHTML = `<i class="${iconClass}"></i> ${chapter.title}`;
+            item.className = 'outline-item' + (index === this.currentChapterIndex ? ' active' : '');
+            item.innerHTML = `<i class="${chapter.icon || 'fas fa-book'}"></i> <span>${chapter.title}</span>`;
             item.dataset.index = index;
             item.onclick = () => {
                 this.currentChapterIndex = index;
+                this.saveState();
                 this.renderCurrentChapter();
                 this.updateOutlineActiveState();
             };
-            this.outline.appendChild(item);
+            this.sidebar.appendChild(item);
         });
-        this.updateOutlineActiveState();
     }
 
     updateOutlineActiveState() {
-        if (!this.outline) return;
-        const items = this.outline.querySelectorAll('.course-chapter-item');
-        items.forEach((item, index) => {
-            if (index === this.currentChapterIndex) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
+        if (!this.sidebar) return;
+        this.sidebar.querySelectorAll('.outline-item').forEach((item, index) => {
+            item.classList.toggle('active', index === this.currentChapterIndex);
         });
     }
 
-    async loadChapter(chapter) {
-        if (!chapter || !chapter.file) return chapter;
-
-        if (this.chapterCache.has(chapter.file)) {
-            return this.chapterCache.get(chapter.file);
-        }
-
-        try {
-            const response = await fetch(chapter.file);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${chapter.file}: ${response.status}`);
-            }
-            const loadedChapter = await response.json();
-            const mergedChapter = {
-                ...chapter,
-                ...loadedChapter,
-                sections: Array.isArray(loadedChapter.sections)
-                    ? loadedChapter.sections
-                    : (chapter.sections || [])
-            };
-            this.chapterCache.set(chapter.file, mergedChapter);
-            return mergedChapter;
-        } catch (error) {
-            console.error("Error loading chapter file:", chapter.file, error);
-            return chapter;
-        }
-    }
-
     async renderCurrentChapter() {
-        const requestId = ++this.renderRequestId;
-        const baseChapter = this.courseData.chapters[this.currentChapterIndex];
-        const chapter = await this.loadChapter(baseChapter);
-        if (requestId !== this.renderRequestId) return;
-        if (!this.contentArea) return;
+        if (!this.contentArea || !this.courseData) return;
+
+        const chapterInfo = this.courseData.chapters[this.currentChapterIndex];
+        const response = await fetch(chapterInfo.file);
+        const chapter = await response.json();
 
         this.contentArea.innerHTML = `
-            <div class="fade-in">
-                <div class="course-header-meta">${chapter.id.toUpperCase()}</div>
-                <h1><i class="${chapter.icon || 'fas fa-book-open'}"></i> ${chapter.title}</h1>
-                ${chapter.sections.map(section => `
-                    <section class="course-section">
-                        <h3><i class="${section.icon || 'fas fa-angle-right'}"></i> ${section.title}</h3>
-                        <div class="course-text">${this.formatContent(section.content)}</div>
-                        ${section.code ? this.renderCodeBlock(section.code) : ''}
-                    </section>
-                `).join('')}
-                <div class="course-footer-spacer"></div>
-            </div>
+            <h1 class="course-h1">${chapter.title}</h1>
         `;
 
-        this.contentArea.scrollTop = 0;
-        if (this.pagination) {
-            this.pagination.innerText = `${this.currentChapterIndex + 1} / ${this.courseData.chapters.length}`;
+        if (chapter.sections) {
+            chapter.sections.forEach(section => {
+                const sectionEl = document.createElement('section');
+                sectionEl.className = 'course-section';
+
+                if (section.title) {
+                    const h3 = document.createElement('h3');
+                    h3.className = 'course-h3';
+                    h3.textContent = section.title;
+                    sectionEl.appendChild(h3);
+                }
+
+                if (section.content) {
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'course-text';
+                    contentDiv.innerHTML = this.formatContent(section.content);
+                    sectionEl.appendChild(contentDiv);
+                }
+
+                if (section.code) {
+                    const codeBlock = this.createCodeBlock(section.code);
+                    sectionEl.appendChild(codeBlock);
+                }
+
+                this.contentArea.appendChild(sectionEl);
+            });
         }
 
-        if (this.prevBtn) {
-            this.prevBtn.disabled = this.currentChapterIndex === 0;
-        }
-        if (this.nextBtn) {
-            this.nextBtn.disabled = this.currentChapterIndex === this.courseData.chapters.length - 1;
+        this.bindSectionEvents();
+
+        // Restore scroll position
+        const savedScroll = localStorage.getItem('algocompiler.scrollTop');
+        if (savedScroll !== null) {
+            this.contentArea.scrollTop = parseInt(savedScroll, 10);
+            localStorage.removeItem('algocompiler.scrollTop');
+        } else {
+            this.contentArea.scrollTop = 0;
         }
 
+        this.updateNavButtons();
+    }
+
+    updateNavButtons() {
+        if (this.prevBtn) this.prevBtn.disabled = this.currentChapterIndex === 0;
+        if (this.nextBtn) this.nextBtn.disabled = this.currentChapterIndex === this.courseData.chapters.length - 1;
+    }
+
+    bindSectionEvents() {
         // Add listeners to "Executer" buttons
         this.contentArea.querySelectorAll('.course-exec-btn').forEach(btn => {
             btn.onclick = (e) => {
@@ -192,51 +144,74 @@ class CourseController {
             };
         });
 
+        // Add listeners to "Try in Editor" buttons (Exercises)
+        this.contentArea.querySelectorAll('.course-try-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                const code = e.target.getAttribute('data-code').replace(/\\n/g, '\n');
+                this.executeCode(code, true);
+            };
+        });
+
         this.contentArea.querySelectorAll('.course-solution-code').forEach((pre) => {
             pre.innerHTML = this.highlightAlgoCode(pre.textContent || '');
         });
     }
 
+    saveState() {
+        localStorage.setItem('algocompiler.currentChapter', this.currentChapterIndex);
+        localStorage.setItem('algocompiler.scrollTop', this.contentArea.scrollTop);
+    }
+
+    loadState() {
+        const saved = localStorage.getItem('algocompiler.currentChapter');
+        if (saved !== null) {
+            this.currentChapterIndex = parseInt(saved, 10);
+        }
+    }
+
     formatContent(text) {
         if (!text) return '';
-        const html = text
+        let html = text
             .replace(/\[\[DEF\]\]\s*(.*?)(\n|$)/g, '<div class="course-callout course-callout-def"><div class="course-callout-title">Définition</div><p>$1</p></div>')
             .replace(/\[\[ALERT\]\]\s*(.*?)(\n|$)/g, '<div class="course-callout course-callout-alert"><div class="course-callout-title">Alerte</div><p>$1</p></div>')
             .replace(/\[\[NOTE\]\]\s*(.*?)(\n|$)/g, '<div class="course-callout course-callout-note"><div class="course-callout-title">Note</div><p>$1</p></div>')
+            .replace(/\[\[STYLISH_EX\]\]/g, '<div class="stylish-lesson-intro"><i class="fas fa-star"></i> Objectifs pédagogiques</div>')
             .replace(/### (.*?)\n/g, '<h4 class="course-h4">$1</h4>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/`(.*?)`/g, '<code class="course-inline-code">$1</code>');
+            .replace(/`(.*?)`/g, '<code class="course-inline-code">$1</code>')
+            .replace(/^- (.*?)(\n|$)/gm, '<li>$1</li>');
 
-        return html
-            .split(/\n\n+/)
-            .map((block) => {
-                const normalized = block.trim();
-                if (!normalized) return '';
-                if (
-                    normalized.startsWith('<div class="course-callout') ||
-                    normalized.startsWith('<div class="course-exercise') ||
-                    normalized.startsWith('<details') ||
-                    normalized.startsWith('<h4 ')
-                ) {
-                    return normalized;
-                }
-                return `<p>${normalized.replace(/\n/g, '<br>')}</p>`;
-            })
-            .join('');
+        if (html.includes('<li>')) {
+            html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
+        }
+
+        return html.split(/\n\n+/).map(block => {
+            const normalized = block.trim();
+            if (!normalized) return '';
+            if (normalized.startsWith('<div') || normalized.startsWith('<h4') || normalized.startsWith('<ul') || normalized.startsWith('<details')) {
+                return normalized;
+            }
+            return `<p>${normalized.replace(/\n/g, '<br>')}</p>`;
+        }).join('');
     }
 
-    renderCodeBlock(code) {
-        const highlightedCode = this.highlightAlgoCode(code);
-        return `
-            <div class="course-code-block">
-                <div class="course-code-header">
-                    <span><i class="fas fa-terminal"></i> Exemple d'algorithme</span>
-                    <button class="course-exec-btn"><i class="fas fa-play"></i> Charger & Formater</button>
-                </div>
-                <div class="course-code-body">${highlightedCode}</div>
-            </div>
-        `;
+    createCodeBlock(code) {
+        const div = document.createElement('div');
+        div.className = 'course-code-block';
+
+        const header = document.createElement('div');
+        header.className = 'course-code-header';
+        header.innerHTML = `<span><i class="fas fa-terminal"></i> Exemple d'algorithme</span>
+                           <button class="course-exec-btn"><i class="fas fa-play"></i> Charger & Formater</button>`;
+
+        const body = document.createElement('div');
+        body.className = 'course-code-body';
+        body.innerHTML = this.highlightAlgoCode(code);
+
+        div.appendChild(header);
+        div.appendChild(body);
+        return div;
     }
 
     escapeHtml(text) {
@@ -258,27 +233,24 @@ class CourseController {
             .replace(/\b(Algorithme|Const|Var|Type|Enregistrement|Debut|Fin|Fonction|Procedure|Retourner|Si|Sinon|Alors|Fin Si|Pour|Fin Pour|Tantque|Fin Tantque|Repeter|Jusqua|Lire|Ecrire|Vrai|Faux|NIL|allouer|liberer|taille|Entier|Reel|Chaine|Caractere|Booleen|Tableau|De|Et|Ou|Non)\b/g, '<span class="algo-kw">$1</span>');
     }
 
-    executeCode(code) {
+    executeCode(code, fromExercise = false) {
         if (window.editor) {
             window.editor.setValue(code);
-            this.hide();
-
-            // Auto-format after loading
             if (typeof formatAlgoCode === 'function') {
                 formatAlgoCode(window.editor);
             }
         } else {
-            try {
-                localStorage.setItem('algocompiler.pendingCourseCode', code);
-            } catch (error) {
-                console.warn("Unable to cache code for compiler redirect:", error);
+            localStorage.setItem('algocompiler.pendingCourseCode', code);
+            if (fromExercise) {
+                localStorage.setItem('algocompiler.fromExercise', 'true');
             }
+            // Save scroll position before leaving
+            this.saveState();
             window.location.href = '/';
         }
     }
 }
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.courseController = new CourseController();
 });

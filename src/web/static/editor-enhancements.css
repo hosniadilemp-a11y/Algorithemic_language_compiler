@@ -34,8 +34,16 @@
     background: rgba(255, 255, 255, 0.05) !important;
 }
 
+.light-theme .CodeMirror-activeline-background {
+    background: rgba(0, 0, 0, 0.04) !important;
+}
+
 .CodeMirror-activeline-gutter {
     background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.light-theme .CodeMirror-activeline-gutter {
+    background: rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Search dialog styling */
@@ -150,11 +158,20 @@
     border-right: 1px solid #333;
 }
 
+.light-theme .CodeMirror-gutters {
+    background: #f8f9fa;
+    border-right: 1px solid #ddd;
+}
+
 .CodeMirror-linenumber {
     color: #858585;
     padding: 0 8px 0 5px;
     min-width: 30px;
     text-align: right;
+}
+
+.light-theme .CodeMirror-linenumber {
+    color: #6e7781;
 }
 
 /* Cursor improvements */
@@ -196,49 +213,4 @@
 
 .editor-status-bar span {
     margin-right: 16px;
-}
-
-/* Keyboard shortcuts help overlay */
-.shortcuts-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #2b2b2b;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    max-width: 600px;
-    display: none;
-}
-
-.shortcuts-overlay.visible {
-    display: block;
-}
-
-.shortcuts-overlay h3 {
-    margin-top: 0;
-    color: #e0e0e0;
-    border-bottom: 1px solid #444;
-    padding-bottom: 12px;
-}
-
-.shortcuts-overlay table {
-    width: 100%;
-    color: #e0e0e0;
-}
-
-.shortcuts-overlay td {
-    padding: 8px;
-}
-
-.shortcuts-overlay kbd {
-    background: #1e1e1e;
-    border: 1px solid #555;
-    border-radius: 3px;
-    padding: 2px 6px;
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 12px;
 }

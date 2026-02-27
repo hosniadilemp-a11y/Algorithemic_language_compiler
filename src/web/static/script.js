@@ -188,9 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // If code was requested from the standalone course page, inject it on load.
         try {
             const pendingCourseCode = localStorage.getItem('algocompiler.pendingCourseCode');
+            const fromExercise = localStorage.getItem('algocompiler.fromExercise');
+
             if (pendingCourseCode) {
                 editor.setValue(pendingCourseCode);
                 localStorage.removeItem('algocompiler.pendingCourseCode');
+                localStorage.removeItem('algocompiler.fromExercise');
+
+                // Add "Back to Course" notification
+                showCourseReturnNotification(!!fromExercise);
             }
         } catch (error) {
             console.warn("Unable to read pending course code from storage:", error);
@@ -215,6 +221,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // (Removed editor-only fullscreen option mapping)
     }
 
+    function showCourseReturnNotification(isExercise) {
+        const notify = document.createElement('div');
+        notify.className = 'course-return-notification';
+        notify.innerHTML = `
+            <div class="course-notify-content">
+                <i class="fas fa-graduation-cap"></i>
+                <span>${isExercise ? 'Exercice chargé ! Bonne chance.' : 'Exemple chargé dans l\'éditeur.'}</span>
+                <a href="/course" class="course-return-link">Retourner au cours</a>
+                <button class="course-notify-close"><i class="fas fa-times"></i></button>
+            </div>
+        `;
+        document.body.appendChild(notify);
+
+        const closeBtn = notify.querySelector('.course-notify-close');
+        closeBtn.onclick = () => notify.remove();
+
+        // Auto remove after 10s
+        setTimeout(() => { if (notify.parentNode) notify.remove(); }, 10000);
+    }
+
     // ═══════════════════════════════════════════════════════════
     // FULLSCREEN LOGIC (IDE-WIDE)
     // ═══════════════════════════════════════════════════════════
@@ -237,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('fullscreenchange', () => {
         const isFS = !!document.fullscreenElement;
+        console.log("Fullscreen changed. State:", isFS);
         if (fullscreenBtn) {
             fullscreenBtn.title = isFS ? 'Quitter le plein écran (F11)' : 'Plein Écran (F11)';
             fullscreenBtn.innerHTML = isFS
@@ -245,7 +272,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Force editor refresh on transition
         if (editor) {
-            setTimeout(() => editor.refresh(), 100);
+            setTimeout(() => {
+                editor.refresh();
+                console.log("Editor refreshed after fullscreen change");
+            }, 150);
+        }
+    });
+
+    // Global keyboard listener for shortcuts (like F11)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F11') {
+            e.preventDefault();
+            console.log("F11 pressed globally - toggling IDE fullscreen");
+            toggleIDEFullscreen();
         }
     });
 
@@ -375,41 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // (IDE-wide fullscreen logic moved above)
 
-    // ═══════════════════════════════════════════════════════════
-    // KEYBOARD SHORTCUTS MODAL
-    // ═══════════════════════════════════════════════════════════
-    const shortcutsBtn = document.getElementById('shortcuts-btn');
-    const shortcutsModal = document.getElementById('shortcuts-modal');
-    const shortcutsOverlay = document.getElementById('shortcuts-overlay');
-    const closeShortcutsBtn = document.getElementById('close-shortcuts-btn');
-
-    function openShortcutsModal() {
-        shortcutsModal.style.display = 'block';
-        shortcutsOverlay.style.display = 'block';
-    }
-
-    function closeShortcutsModal(e) {
-        if (e) e.stopPropagation();
-        shortcutsModal.style.display = 'none';
-        shortcutsOverlay.style.display = 'none';
-    }
-
-    if (shortcutsBtn) shortcutsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openShortcutsModal();
-    });
-    if (closeShortcutsBtn) closeShortcutsBtn.addEventListener('click', closeShortcutsModal);
-    if (shortcutsOverlay) shortcutsOverlay.addEventListener('click', closeShortcutsModal);
-
-    // Prevent clicks inside the modal from closing it via overlay listener
-    if (shortcutsModal) {
-        shortcutsModal.addEventListener('click', (e) => e.stopPropagation());
-    }
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && shortcutsModal && shortcutsModal.style.display !== 'none') {
-            closeShortcutsModal();
-        }
-    });
 
     // ═══════════════════════════════════════════════════════════
     // RESIZABLE PANE SPLITTER
@@ -824,7 +828,7 @@ Fin.`);
             if (examplesContent) examplesContent.innerHTML = '';
 
             // Define category order
-            const order = ["Basics", "Arrays", "Strings", "Pointers", "Dynamic Allocation", "Functions"];
+            const order = ["Basics", "Arrays", "Strings", "Pointers", "Dynamic Allocation", "Functions", "Enregistrements", "Listes_Chainees", "Piles", "Files"];
 
             // Map categories to icons and localized names
             const categoryMeta = {
@@ -834,7 +838,7 @@ Fin.`);
                 "Pointers": { icon: "fas fa-bullseye", label: "Pointeurs" },
                 "Dynamic Allocation": { icon: "fas fa-link", label: "Allocation Dynamique" },
                 "Functions": { icon: "fas fa-cogs", label: "Fonctions & Procédures" },
-                "Enregistrements": { icon: "fas fa-id-badge", label: "Enregistrements (Struct)" },
+                "Enregistrements": { icon: "fas fa-id-card", label: "Enregistrements (Struct)" },
                 "Listes_Chainees": { icon: "fas fa-project-diagram", label: "Listes Chaînées" },
                 "Piles": { icon: "fas fa-layer-group", label: "Piles (Stack)" },
                 "Files": { icon: "fas fa-stream", label: "Files (Queue)" }

@@ -103,8 +103,6 @@
                         <span class="lang-badge">ALGO</span>
                         <button id="fullscreen-btn" class="toolbar-btn" title="Plein Écran (F11)"><i
                                 class="fas fa-expand"></i></button>
-                        <button id="shortcuts-btn" class="toolbar-btn" title="Raccourcis clavier"><i
-                                class="fas fa-keyboard"></i></button>
                     </div>
                 </div>
                 <div class="editor-toolbar">
@@ -124,42 +122,61 @@
                     <button id="format-btn" class="toolbar-btn" title="Formater le code"><i
                             class="fas fa-align-left"></i></button>
                 </div>
-                <textarea id="code-editor" spellcheck="false">
+                <textarea id="code-editor" spellcheck="false">Algorithme DemoComplete;
 
-Algorithme DemoComplete;
+// Definition d'un type Enregistrement
+Type
+    Etudiant = Enregistrement
+        nom : Chaine;
+        note : Reel;
+    FinEnregistrement;
+
 Var
     i, n : Entier;
     somme : Reel;
-
+    e : Etudiant;
     continuer : Booleen;
 
 Debut
     Ecrire("=== Demo Progressive AlgoCompiler ===\n");
     
-    // 1. Boucle Pour (Comptage)
+    // 1. Initialisation d'un Enregistrement
+    e.nom := "Adel";
+    e.note := 15.5;
+    
+    Si e.note >= 10 Alors
+        Ecrire(e.nom, " est admis avec ", e.note, "/20\n");
+    Sinon
+        Ecrire(e.nom, " est ajourne\n");
+    Finsi;
+
+    // 2. Boucle Pour (Comptage vers l'avant)
     Ecrire("\nDepart imminent :\n");
-    Pour i := 3 a 1 Faire
+    Pour i := 1 a 3 Faire
         Ecrire(i, "... ");
     FinPour;
     Ecrire("Decollage !\n");
 
-    // 2. Boucle Tant Que (Sommatoire)
+    // 3. Boucle Tant Que (Sommatoire)
     somme := 0;
     i := 1;
     TantQue i <= 5 Faire
         somme := somme + i;
         i := i + 1;
     FinTantQue;
-    Ecrire("\nSomme des 5 premiers entiers : ", somme, "\n");
+    Ecrire("Somme des entiers de 1 a 5 = ", somme, "\n");
 
-    // 3. Boucle Repeter (Saisie controlee simulée)
+    // 4. Boucle Repeter (Conditionnelle)
     n := 0;
     Repeter
         n := n + 1;
-        Ecrire("Iteration de controle : ", n, "\n");
-    Jusqua n >= 2;
+        Ecrire("Passage numero : ", n, "\n");
+    Jusqua n >= 3;
 
-    Ecrire("\nDemo terminee avec succes.");
+    continuer := Vrai;
+    Si continuer Alors
+        Ecrire("Programme termine avec succes.\n");
+    Finsi;
 Fin.</textarea>
 
                 <div id="editor-status-bar" class="editor-status-bar">
@@ -231,37 +248,6 @@ Fin.</textarea>
             </div>
         </main>
 
-        <div id="shortcuts-modal" class="shortcuts-modal" style="display:none;">
-            <div class="shortcuts-modal-header">
-                <h3><i class="fas fa-keyboard"></i> Raccourcis Clavier</h3>
-                <button id="close-shortcuts-btn" class="icon-btn" title="Fermer"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="shortcuts-grid">
-                <div class="shortcuts-col">
-                    <div class="shortcuts-section-title">Fichier</div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>S</kbd><span>Sauvegarder</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>O</kbd><span>Ouvrir</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>N</kbd><span>Nouveau</span></div>
-                    <div class="shortcuts-section-title">Édition</div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Z</kbd><span>Annuler</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Y</kbd><span>Rétablir</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>/</kbd><span>Commenter</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd><span>Dupliquer</span></div>
-                    <div class="shortcut-row"><kbd>Alt</kbd>+<kbd>↑/↓</kbd><span>Bouger ligne</span></div>
-                </div>
-                <div class="shortcuts-col">
-                    <div class="shortcuts-section-title">Général</div>
-                    <div class="shortcut-row"><kbd>F5</kbd><span>Exécuter</span></div>
-                    <div class="shortcut-row"><kbd>F11</kbd><span>Plein écran</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>F</kbd><span>Rechercher</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>H</kbd><span>Remplacer</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Space</kbd><span>Auto-complétion</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Plus/Moins</kbd><span>Zoom</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd><span>Formater</span></div>
-                </div>
-            </div>
-        </div>
-        <div id="shortcuts-overlay" class="shortcuts-overlay" style="display:none;"></div>
 
         <div id="examples-sidebar" class="examples-sidebar">
             <div class="examples-header">

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "C:\Users\adel\Documents\Python Codes\PjojectAlgo\Algorithemic_language_compiler\src\compiler\parser.py", line 1863, in compile_algo
+    result = parser.parse(code, lexer=lexer)
+  File "C:\ProgramData\anaconda3\Lib\site-packages\ply\yacc.py", line 333, in parse
+    return self.parseopt_notrack(input, lexer, debug, tracking, tokenfunc)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\site-packages\ply\yacc.py", line 1120, in parseopt_notrack
+    p.callable(pslice)
+    ~~~~~~~~~~^^^^^^^^
+  File "C:\Users\adel\Documents\Python Codes\PjojectAlgo\Algorithemic_language_compiler\src\compiler\parser.py", line 1655, in p_value
+    if p[1].lower() == 'vrai':
+       ^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'lower'

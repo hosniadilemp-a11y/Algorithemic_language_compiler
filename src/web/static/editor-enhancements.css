@@ -122,15 +122,19 @@
     background: rgba(255, 0, 0, 0.2);
 }
 
-/* Fullscreen mode */
-.CodeMirror-fullscreen {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100% !important;
-    z-index: 9999;
+/* IDE-wide Fullscreen */
+.container:fullscreen {
+    background-color: var(--bg-main) !important;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Ensure editor fills space in fullscreen */
+.container:fullscreen .editor-layout {
+    height: calc(100vh - 60px);
+    /* Adjust based on header height */
 }
 
 /* Line wrapping indicator */

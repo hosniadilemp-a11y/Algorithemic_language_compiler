@@ -16,6 +16,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
     <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/display/fullscreen.min.css">
+    <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='intellisense-icons.css') }}?v=9">
     <link rel="stylesheet" href="{{ url_for('static', filename='editor-enhancements.css') }}?v=9">
@@ -68,7 +70,6 @@
                     <i class="fas fa-save"></i>
                 </button>
                 <div class="separator"></div>
-                <!-- Sliding Examples Panel Button -->
                 <button id="open-examples-btn" class="btn secondary" title="Ouvrir la bibliothèque d'exemples">
                     <i class="fas fa-book"></i> Exemples
                 </button>
@@ -106,62 +107,61 @@
                                 class="fas fa-keyboard"></i></button>
                     </div>
                 </div>
-                <!-- Editor Toolbar -->
                 <div class="editor-toolbar">
-                    <button id="undo-btn" class="toolbar-btn" title="Annuler (Ctrl+Z)">
-                        <i class="fas fa-undo"></i>
-                    </button>
-                    <button id="redo-btn" class="toolbar-btn" title="Refaire (Ctrl+Y)">
-                        <i class="fas fa-redo"></i>
-                    </button>
+                    <button id="undo-btn" class="toolbar-btn" title="Annuler (Ctrl+Z)"><i
+                            class="fas fa-undo"></i></button>
+                    <button id="redo-btn" class="toolbar-btn" title="Refaire (Ctrl+Y)"><i
+                            class="fas fa-redo"></i></button>
                     <div class="toolbar-separator"></div>
-                    <button id="comment-btn" class="toolbar-btn" title="Commenter/Décommenter (Ctrl+/)">
-                        <i class="fas fa-comment-slash"></i>
-                    </button>
+                    <button id="comment-btn" class="toolbar-btn" title="Commenter/Décommenter (Ctrl+/)"><i
+                            class="fas fa-comment-slash"></i></button>
                     <div class="toolbar-separator"></div>
-                    <button id="search-btn" class="toolbar-btn" title="Rechercher (Ctrl+F)">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button id="replace-btn" class="toolbar-btn" title="Remplacer (Ctrl+H)">
-                        <i class="fas fa-exchange-alt"></i>
-                    </button>
+                    <button id="search-btn" class="toolbar-btn" title="Rechercher (Ctrl+F)"><i
+                            class="fas fa-search"></i></button>
+                    <button id="replace-btn" class="toolbar-btn" title="Remplacer (Ctrl+H)"><i
+                            class="fas fa-exchange-alt"></i></button>
                     <div class="toolbar-separator"></div>
-                    <button id="format-btn" class="toolbar-btn" title="Formater le code">
-                        <i class="fas fa-align-left"></i>
-                    </button>
+                    <button id="format-btn" class="toolbar-btn" title="Formater le code"><i
+                            class="fas fa-align-left"></i></button>
                 </div>
-                <!-- Editor placeholder -->
-                <textarea id="code-editor" spellcheck="false">Algorithme ExempleComplet;
+                <textarea id="code-editor" spellcheck="false">
+
+Algorithme DemoComplete;
 Var
-    nom : Chaine;
-    age : Entier;
-    i : Entier;
+    i, n : Entier;
+    somme : Reel;
+
+    continuer : Booleen;
+
 Debut
-    Ecrire("=== Programme de Démonstration ===");
+    Ecrire("=== Demo Progressive AlgoCompiler ===\n");
     
-    // Lecture des données
-    Ecrire("Entrez votre nom:");
-    Lire(nom);
-    Ecrire("Entrez votre age:");
-    Lire(age);
-    
-    // Condition
-    Si age >= 18 Alors
-        Ecrire("Bonjour ", nom, ", vous etes majeur!");
-    Sinon
-        Ecrire("Bonjour ", nom, ", vous etes mineur.");
-    Fin Si;
-    
-    // Boucle
-    Ecrire("Comptage de 1 a 5:");
-    Pour i de 1 a 5 Faire
-        Ecrire("Nombre: ", i);
-    Fin Pour;
-    
-    Ecrire("Programme termine!");
+    // 1. Boucle Pour (Comptage)
+    Ecrire("\nDepart imminent :\n");
+    Pour i := 3 a 1 Faire
+        Ecrire(i, "... ");
+    FinPour;
+    Ecrire("Decollage !\n");
+
+    // 2. Boucle Tant Que (Sommatoire)
+    somme := 0;
+    i := 1;
+    TantQue i <= 5 Faire
+        somme := somme + i;
+        i := i + 1;
+    FinTantQue;
+    Ecrire("\nSomme des 5 premiers entiers : ", somme, "\n");
+
+    // 3. Boucle Repeter (Saisie controlee simulée)
+    n := 0;
+    Repeter
+        n := n + 1;
+        Ecrire("Iteration de controle : ", n, "\n");
+    Jusqua n >= 2;
+
+    Ecrire("\nDemo terminee avec succes.");
 Fin.</textarea>
 
-                <!-- Status Bar -->
                 <div id="editor-status-bar" class="editor-status-bar">
                     <div class="status-left">
                         <span id="status-cursor" class="status-item" title="Ligne et Colonne"><i
@@ -188,17 +188,14 @@ Fin.</textarea>
                 </div>
             </div>
 
-            <!-- Resizable Drag Splitter -->
             <div id="pane-splitter" class="pane-splitter" title="Redimensionner"></div>
 
             <div class="pane output-pane">
-                <!-- Console Section -->
                 <div class="pane-header">
                     <span><i class="fas fa-desktop"></i> Sortie (Console)</span>
                     <div style="display: flex; gap: 5px; align-items: center;">
-                        <button id="clear-console-btn" class="icon-btn" title="Effacer la console">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                        <button id="clear-console-btn" class="icon-btn" title="Effacer la console"><i
+                                class="fas fa-trash-alt"></i></button>
                         <span id="status-badge" class="badge">Prêt</span>
                     </div>
                 </div>
@@ -210,7 +207,6 @@ Fin.</textarea>
                     </div>
                 </div>
 
-                <!-- Variable Inspector Section -->
                 <div class="pane-header">
                     <span><i class="fas fa-search"></i> Inspecteur de Variables (Trace)</span>
                 </div>
@@ -221,28 +217,24 @@ Fin.</textarea>
                                 <th>Variable</th>
                                 <th>Valeur</th>
                                 <th>Adresse</th>
+                                <th>Type</th>
+                                <th>Taille</th>
                             </tr>
                         </thead>
                         <tbody id="variables-body">
-                            <!-- Variables will appear here -->
                             <tr>
-                                <td colspan="2" class="placeholder-text">Aucune donnée</td>
+                                <td colspan="5" class="placeholder-text">Aucune donnée</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Transpiled Output Removed -->
             </div>
         </main>
-    </div>
 
-    <!-- Keyboard Shortcuts Modal -->
-    <div id="shortcuts-modal" class="shortcuts-modal" style="display:none;">
-        <div class="shortcuts-modal-content">
+        <div id="shortcuts-modal" class="shortcuts-modal" style="display:none;">
             <div class="shortcuts-modal-header">
                 <h3><i class="fas fa-keyboard"></i> Raccourcis Clavier</h3>
-                <button id="close-shortcuts-btn" class="icon-btn"><i class="fas fa-times"></i></button>
+                <button id="close-shortcuts-btn" class="icon-btn" title="Fermer"><i class="fas fa-times"></i></button>
             </div>
             <div class="shortcuts-grid">
                 <div class="shortcuts-col">
@@ -253,47 +245,37 @@ Fin.</textarea>
                     <div class="shortcuts-section-title">Édition</div>
                     <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Z</kbd><span>Annuler</span></div>
                     <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Y</kbd><span>Rétablir</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>/</kbd><span>Commenter/Décommenter</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd><span>Dupliquer la
-                            ligne</span></div>
-                    <div class="shortcut-row"><kbd>Alt</kbd>+<kbd>↑/↓</kbd><span>Déplacer la ligne</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>/</kbd><span>Commenter</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd><span>Dupliquer</span></div>
+                    <div class="shortcut-row"><kbd>Alt</kbd>+<kbd>↑/↓</kbd><span>Bouger ligne</span></div>
                 </div>
                 <div class="shortcuts-col">
-                    <div class="shortcuts-section-title">Navigation</div>
+                    <div class="shortcuts-section-title">Général</div>
+                    <div class="shortcut-row"><kbd>F5</kbd><span>Exécuter</span></div>
+                    <div class="shortcut-row"><kbd>F11</kbd><span>Plein écran</span></div>
                     <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>F</kbd><span>Rechercher</span></div>
                     <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>H</kbd><span>Remplacer</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>G</kbd><span>Aller à la ligne</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>D</kbd><span>Sélection multiple</span></div>
-                    <div class="shortcuts-section-title">Affichage</div>
-                    <div class="shortcut-row"><kbd>F11</kbd><span>Plein écran</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>=</kbd><span>Zoom avant</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>-</kbd><span>Zoom arrière</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Space</kbd><span>Autocomplétion</span></div>
-                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd><span>Formater le code</span>
-                    </div>
-                    <div class="shortcut-row"><kbd>F5</kbd><span>Exécuter</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Space</kbd><span>Auto-complétion</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Plus/Moins</kbd><span>Zoom</span></div>
+                    <div class="shortcut-row"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd><span>Formater</span></div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="shortcuts-overlay" class="shortcuts-overlay" style="display:none;"></div>
+        <div id="shortcuts-overlay" class="shortcuts-overlay" style="display:none;"></div>
 
-    <!-- Off-Canvas Examples Sidebar (Barre Coulissante) -->
-    <div id="examples-sidebar" class="examples-sidebar">
-        <div class="examples-header">
-            <h3><i class="fas fa-book"></i> Bibliothèque d'Exemples</h3>
-            <button id="close-examples-btn" class="icon-btn" title="Fermer">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="examples-content" class="examples-content">
-            <!-- Example categories and buttons will be injected here by Javascript -->
-            <div class="placeholder-text text-center mt-5">
-                <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Chargement des exemples...
+        <div id="examples-sidebar" class="examples-sidebar">
+            <div class="examples-header">
+                <h3><i class="fas fa-book"></i> Bibliothèque d'Exemples</h3>
+                <button id="close-examples-btn" class="icon-btn" title="Fermer"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="examples-content" class="examples-content">
+                <div class="placeholder-text text-center mt-5">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Chargement...
+                </div>
             </div>
         </div>
+        <div id="examples-overlay" class="examples-overlay"></div>
     </div>
-    <div id="examples-overlay" class="examples-overlay"></div>
 
     <script src="{{ url_for('static', filename='algo-mode.js') }}?v=10"></script>
     <script src="{{ url_for('static', filename='algo-hints.js') }}?v=10"></script>

@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const runBtn = document.getElementById('run-btn');
-    const downloadBtn = document.getElementById('download-btn');
     const clearConsoleBtn = document.getElementById('clear-console-btn');
     const filenameInput = document.getElementById('filename-input');
     const codeEditorElement = document.getElementById('code-editor');
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize CodeMirror with sophisticated IDE features
     if (codeEditorElement) {
-        window.editor = CodeMirror.fromTextArea(codeEditorElement, {
+        editor = CodeMirror.fromTextArea(codeEditorElement, {
             mode: "algo", // Use custom mode from algo-mode.js
             theme: "dracula",
             lineNumbers: true,
@@ -136,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cm.indentSelection("subtract");
                 },
                 "F11": function (cm) {                // Fullscreen
-                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    toggleIDEFullscreen();
                 },
                 "Enter": function (cm) {
                     if (cm.getOption("disableInput")) return CodeMirror.Pass;
@@ -213,28 +212,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Fullscreen mode handler
-        editor.on("optionChange", function (cm, option) {
-            if (option === "fullScreen") {
-                var wrap = cm.getWrapperElement();
-                if (cm.getOption("fullScreen")) {
-                    wrap.style.position = "fixed";
-                    wrap.style.top = "0";
-                    wrap.style.left = "0";
-                    wrap.style.right = "0";
-                    wrap.style.bottom = "0";
-                    wrap.style.zIndex = "9999";
-                } else {
-                    wrap.style.position = "";
-                    wrap.style.top = "";
-                    wrap.style.left = "";
-                    wrap.style.right = "";
-                    wrap.style.bottom = "";
-                    wrap.style.zIndex = "";
-                }
-            }
-        });
+        // (Removed editor-only fullscreen option mapping)
     }
+
+    // ═══════════════════════════════════════════════════════════
+    // FULLSCREEN LOGIC (IDE-WIDE)
+    // ═══════════════════════════════════════════════════════════
+    function toggleIDEFullscreen() {
+        const container = document.querySelector('.container');
+        if (!document.fullscreenElement) {
+            container.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                // Fallback to editor-only if IDE-wide fails? No, user wants IDE-wide.
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', toggleIDEFullscreen);
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+        const isFS = !!document.fullscreenElement;
+        if (fullscreenBtn) {
+            fullscreenBtn.title = isFS ? 'Quitter le plein écran (F11)' : 'Plein Écran (F11)';
+            fullscreenBtn.innerHTML = isFS
+                ? '<i class="fas fa-compress"></i>'
+                : '<i class="fas fa-expand"></i>';
+        }
+        // Force editor refresh on transition
+        if (editor) {
+            setTimeout(() => editor.refresh(), 100);
+        }
+    });
 
     // Code formatting function for Algo - Refined for structural alignment
     function formatAlgoCode(cm) {
@@ -360,29 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (wordWrapBtn) wordWrapBtn.addEventListener('click', toggleWordWrap);
 
-    // ═══════════════════════════════════════════════════════════
-    // FULLSCREEN BUTTON (in pane header)
-    // ═══════════════════════════════════════════════════════════
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    if (fullscreenBtn && editor) {
-        fullscreenBtn.addEventListener('click', () => {
-            const isFS = editor.getOption('fullScreen');
-            editor.setOption('fullScreen', !isFS);
-            fullscreenBtn.title = isFS ? 'Plein Écran (F11)' : 'Quitter le plein écran (F11)';
-            fullscreenBtn.innerHTML = isFS
-                ? '<i class="fas fa-expand"></i>'
-                : '<i class="fas fa-compress"></i>';
-        });
-        // Also update button icon when F11 is used
-        editor.on('optionChange', (cm, opt) => {
-            if (opt === 'fullScreen' && fullscreenBtn) {
-                const isFS = cm.getOption('fullScreen');
-                fullscreenBtn.innerHTML = isFS
-                    ? '<i class="fas fa-compress"></i>'
-                    : '<i class="fas fa-expand"></i>';
-            }
-        });
-    }
+    // (IDE-wide fullscreen logic moved above)
 
     // ═══════════════════════════════════════════════════════════
     // KEYBOARD SHORTCUTS MODAL
@@ -397,14 +388,23 @@ document.addEventListener('DOMContentLoaded', () => {
         shortcutsOverlay.style.display = 'block';
     }
 
-    function closeShortcutsModal() {
+    function closeShortcutsModal(e) {
+        if (e) e.stopPropagation();
         shortcutsModal.style.display = 'none';
         shortcutsOverlay.style.display = 'none';
     }
 
-    if (shortcutsBtn) shortcutsBtn.addEventListener('click', openShortcutsModal);
+    if (shortcutsBtn) shortcutsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openShortcutsModal();
+    });
     if (closeShortcutsBtn) closeShortcutsBtn.addEventListener('click', closeShortcutsModal);
     if (shortcutsOverlay) shortcutsOverlay.addEventListener('click', closeShortcutsModal);
+
+    // Prevent clicks inside the modal from closing it via overlay listener
+    if (shortcutsModal) {
+        shortcutsModal.addEventListener('click', (e) => e.stopPropagation());
+    }
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && shortcutsModal && shortcutsModal.style.display !== 'none') {
             closeShortcutsModal();
@@ -833,7 +833,11 @@ Fin.`);
                 "Strings": { icon: "fas fa-language", label: "Chaînes de Caractères" },
                 "Pointers": { icon: "fas fa-bullseye", label: "Pointeurs" },
                 "Dynamic Allocation": { icon: "fas fa-link", label: "Allocation Dynamique" },
-                "Functions": { icon: "fas fa-cogs", label: "Fonctions & Procédures" }
+                "Functions": { icon: "fas fa-cogs", label: "Fonctions & Procédures" },
+                "Enregistrements": { icon: "fas fa-id-badge", label: "Enregistrements (Struct)" },
+                "Listes_Chainees": { icon: "fas fa-project-diagram", label: "Listes Chaînées" },
+                "Piles": { icon: "fas fa-layer-group", label: "Piles (Stack)" },
+                "Files": { icon: "fas fa-stream", label: "Files (Queue)" }
             };
 
             // Process predefined tracked categories
@@ -1010,6 +1014,12 @@ Fin.`);
             row.appendChild(addrCell);
             row.appendChild(typeCell);
             row.appendChild(sizeCell);
+
+            // Add data-type for CSS styling
+            if (info && info.type) {
+                row.setAttribute('data-type', info.type.toUpperCase());
+            }
+
             variablesBody.appendChild(row);
         }
     }

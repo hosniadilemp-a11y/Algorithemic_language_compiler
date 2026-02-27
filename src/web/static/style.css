@@ -1,29 +1,30 @@
 :root {
-    --bg-color: #0d1117;
-    /* Deep space background */
-    --pane-bg: rgba(22, 27, 34, 0.8);
-    /* Glass effect */
+    --bg-color: #05070a;
+    /* Ultra deep night background */
+    --pane-bg: rgba(13, 17, 23, 0.9);
+    /* Darker glass effect */
     --accent: #58a6ff;
     --accent-hover: #1f6feb;
     --text-primary: #c9d1d9;
     --text-secondary: #8b949e;
-    --border: #30363d;
-    --console-bg: #0d1117;
+    --border: #21262d;
+    --console-bg: #010409;
     --font-mono: 'Fira Code', monospace;
     --font-sans: 'Inter', sans-serif;
-    --shadow-glow: 0 0 15px rgba(88, 166, 255, 0.2);
+    --shadow-glow: 0 0 20px rgba(0, 0, 0, 0.6);
 }
 
 body.light-theme {
-    --bg-color: #f4f8ff;
-    --pane-bg: rgba(255, 255, 255, 0.88);
-    --accent: #1f6feb;
-    --accent-hover: #174ea6;
-    --text-primary: #1f2a38;
-    --text-secondary: #5a6a80;
-    --border: #d5deea;
+    --bg-color: #f7f9fc;
+    --pane-bg: rgba(255, 255, 255, 0.95);
+    --accent: #0969da;
+    --accent-hover: #0550ae;
+    --text-primary: #1f2328;
+    --text-secondary: #444d56;
+    /* Darker for better contrast */
+    --border: #d0d7de;
     --console-bg: #ffffff;
-    --shadow-glow: 0 0 15px rgba(31, 111, 235, 0.18);
+    --shadow-glow: 0 0 15px rgba(9, 105, 218, 0.15);
 }
 
 body.light-theme {
@@ -367,6 +368,20 @@ header {
     border-right: 1px solid var(--border) !important;
 }
 
+body.light-theme .CodeMirror {
+    color: #24292f !important;
+}
+
+body.light-theme .CodeMirror-gutters {
+    background-color: #f6f8fa !important;
+    border-right: 1px solid #d0d7de !important;
+}
+
+body.light-theme .CodeMirror-linenumber {
+    color: #57606a !important;
+    opacity: 1;
+}
+
 /* Syntax Highlighting overrides for 'algo' mode if needed */
 .cm-s-dracula .cm-keyword {
     color: #79c0ff !important;
@@ -478,12 +493,111 @@ th {
 }
 
 td {
-    color: #e6edf3;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Variable Inspector Specifics */
+#variables-table {
+    border-spacing: 0;
+    font-size: 12.5px;
+}
+
+#variables-table th {
+    background-color: #161b22;
+    /* Slightly lighter than the pane bg for depth */
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 12px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme #variables-table th {
+    background-color: #f1f4f9;
+    box-shadow: none;
+}
+
+#variables-table td {
+    padding: 10px 15px;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid var(--border);
+}
+
+#variables-table tr:last-child td {
+    border-bottom: none;
+}
+
+#variables-table tr:hover td {
+    background-color: rgba(88, 166, 255, 0.08);
+}
+
+body.light-theme #variables-table tr:hover td {
+    background-color: rgba(9, 105, 218, 0.05);
+}
+
+/* Value Coloring based on content (simulated simple highlighting) */
+.font-mono {
     font-family: var(--font-mono);
 }
 
-tr:hover td {
-    background-color: rgba(88, 166, 255, 0.1);
+/* Address column styling */
+td:nth-child(3) {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* Type column styling - Harmonious Colors */
+td:nth-child(4) {
+    font-weight: 600;
+    font-size: 11px;
+}
+
+/* Color coding based on type */
+/* Pointers */
+[data-type*="POINTEUR"] td:nth-child(4),
+[data-type*="Pointeur"] td:nth-child(4) {
+    color: #d2a8ff;
+}
+
+/* Strings */
+[data-type*="CHAINE"] td:nth-child(4),
+[data-type*="Chaine"] td:nth-child(4) {
+    color: #7ee787;
+}
+
+/* Numbers */
+[data-type*="ENTIER"] td:nth-child(4),
+[data-type*="REEL"] td:nth-child(4) {
+    color: #a5d6ff;
+}
+
+/* Booleans */
+[data-type*="BOOLEEN"] td:nth-child(4) {
+    color: #ffab70;
+}
+
+body.light-theme td:nth-child(4) {
+    opacity: 0.9;
+}
+
+body.light-theme [data-type*="POINTEUR"] td:nth-child(4) {
+    color: #8250df;
+}
+
+body.light-theme [data-type*="CHAINE"] td:nth-child(4) {
+    color: #1a7f37;
+}
+
+body.light-theme [data-type*="ENTIER"] td:nth-child(4) {
+    color: #0969da;
+}
+
+body.light-theme [data-type*="BOOLEEN"] td:nth-child(4) {
+    color: #bc4c00;
 }
 
 .placeholder-text {
@@ -688,6 +802,47 @@ tr:hover td {
     letter-spacing: 0.5px;
 }
 
+body.light-theme .examples-header h3 {
+    color: #0969da;
+}
+
+body.light-theme .example-category-title {
+    color: #57606a;
+    border-bottom-color: #d0d7de;
+}
+
+/* Category Specific Colors in Light Mode */
+body.light-theme .example-category:nth-of-type(1) .example-category-title i {
+    color: #1a7f37;
+}
+
+/* Basics - Green */
+body.light-theme .example-category:nth-of-type(2) .example-category-title i {
+    color: #0969da;
+}
+
+/* Arrays - Blue */
+body.light-theme .example-category:nth-of-type(3) .example-category-title i {
+    color: #9a6700;
+}
+
+/* Strings - Yellow/Gold */
+body.light-theme .example-category:nth-of-type(4) .example-category-title i {
+    color: #8250df;
+}
+
+/* Pointers - Purple */
+body.light-theme .example-category:nth-of-type(5) .example-category-title i {
+    color: #cf222e;
+}
+
+/* Dynamic - Red */
+body.light-theme .example-category:nth-of-type(6) .example-category-title i {
+    color: #bf3989;
+}
+
+/* Functions - Pink */
+
 .example-btn {
     display: block;
     width: 100%;
@@ -721,6 +876,24 @@ tr:hover td {
     width: 16px;
     text-align: center;
     color: #8b949e;
+}
+
+body.light-theme .example-btn {
+    color: #24292f;
+}
+
+body.light-theme .example-btn i {
+    color: #57606a;
+}
+
+body.light-theme .example-btn:hover {
+    background-color: #f6f8fa;
+    color: #0969da;
+    border-color: #0969da;
+}
+
+body.light-theme .example-btn.tutorial {
+    color: #0969da;
 }
 
 .examples-overlay {

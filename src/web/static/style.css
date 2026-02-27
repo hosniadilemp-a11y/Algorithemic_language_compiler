@@ -55,6 +55,28 @@ body.light-theme #input-data {
     color: var(--text-primary) !important;
 }
 
+body.light-theme #execution-output {
+    background-color: #f7fbff !important;
+    color: #1f2328 !important;
+}
+
+body.light-theme #console-logs {
+    color: #1f2328 !important;
+}
+
+body.light-theme #console-input-container {
+    background-color: #f7fbff !important;
+    border-top: 1px solid #d0d7de !important;
+}
+
+body.light-theme #console-input {
+    color: #1f2328 !important;
+}
+
+body.light-theme .prompt {
+    color: #0550ae !important;
+}
+
 body.light-theme .btn.secondary {
     border-color: var(--border);
     color: var(--text-secondary);

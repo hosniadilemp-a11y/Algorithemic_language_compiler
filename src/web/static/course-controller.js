@@ -2,19 +2,27 @@ class CourseController {
     constructor() {
         this.courseData = null;
         this.currentChapterIndex = 0;
+        this.contentVersion = '13';
         this.isStandalonePage = !!document.getElementById('course-outline');
 
         this.sidebar = document.getElementById('course-outline');
         this.contentArea = document.getElementById('course-content');
-        this.prevBtn = document.getElementById('prev-chapter');
-        this.nextBtn = document.getElementById('next-chapter');
+        this.prevBtn = document.getElementById('course-prev-btn');
+        this.nextBtn = document.getElementById('course-next-btn');
+        this.paginationLabel = document.getElementById('course-pagination');
+
+        // Initialize Quiz System
+        if (typeof QuizController !== 'undefined') {
+            this.quiz = new QuizController(this);
+            window.quizController = this.quiz; // Export globally for HTML inline onclick
+        }
 
         this.init();
     }
 
     async init() {
         try {
-            const response = await fetch('/static/algo-course.json');
+            const response = await fetch(`/static/algo-course.json?v=${this.contentVersion}`);
             this.courseData = await response.json();
             this.loadState();
             await this.renderOutline();
@@ -80,7 +88,8 @@ class CourseController {
         if (!this.contentArea || !this.courseData) return;
 
         const chapterInfo = this.courseData.chapters[this.currentChapterIndex];
-        const response = await fetch(chapterInfo.file);
+        const sep = chapterInfo.file.includes('?') ? '&' : '?';
+        const response = await fetch(`${chapterInfo.file}${sep}v=${this.contentVersion}`);
         const chapter = await response.json();
 
         this.contentArea.innerHTML = `
@@ -115,6 +124,30 @@ class CourseController {
             });
         }
 
+        // --- Add Quiz Button if applicable ---
+        if (this.quiz && chapterInfo.id) {
+            const quizDiv = document.createElement('div');
+            quizDiv.className = 'course-section';
+            quizDiv.style.textAlign = 'center';
+            quizDiv.style.marginTop = '40px';
+            quizDiv.style.paddingTop = '20px';
+            quizDiv.style.borderTop = '1px solid var(--course-line)';
+
+            // Escape quotes to avoid breaking HTML rendering
+            const safeTitle = chapterInfo.title.replace(/'/g, "\\'");
+
+            quizDiv.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">Avez-vous tout compris ?</h3>
+                    <p style="color: var(--course-muted);">Mettez vos connaissances à l'épreuve avec notre test interactif généré aléatoirement.</p>
+                </div>
+                <button class="course-exec-btn" onclick="window.quizController.startQuiz('${chapterInfo.id}', '${safeTitle}')" style="font-size: 1.1rem; padding: 12px 30px;">
+                    <i class="fas fa-tasks"></i> Démarrer le Quiz
+                </button>
+            `;
+            this.contentArea.appendChild(quizDiv);
+        }
+
         this.bindSectionEvents();
 
         // Restore scroll position
@@ -132,6 +165,10 @@ class CourseController {
     updateNavButtons() {
         if (this.prevBtn) this.prevBtn.disabled = this.currentChapterIndex === 0;
         if (this.nextBtn) this.nextBtn.disabled = this.currentChapterIndex === this.courseData.chapters.length - 1;
+
+        if (this.paginationLabel && this.courseData) {
+            this.paginationLabel.textContent = `${this.currentChapterIndex + 1} / ${this.courseData.chapters.length}`;
+        }
     }
 
     bindSectionEvents() {

@@ -76,6 +76,18 @@
     {
       "title": "Erreurs fréquentes et checklist finale",
       "content": "Erreurs observées en pratique :\n- type non défini avant la déclaration `Var`,\n- confusion entre affectation globale et comparaison,\n- comparaison directe non autorisée,\n- mélange de conventions d'indices dans un champ tableau,\n- oubli d'initialisation dans les structures imbriquées.\n\n### Checklist de fin de chapitre\n1. Type correctement défini dans `Type` ?\n2. Variables bien déclarées dans `Var` ?\n3. Accès aux champs via notation pointée cohérente ?\n4. Comparaisons faites champ par champ ?\n5. Champs sensibles validés avant calcul ?"
+    },
+    {
+      "title": "Exercice 2: Gestion complète des étudiants",
+      "content": "On considère les structures `Date` et `Etudiant` (nom, prénom, date de naissance, notes[8]).\n\n### Travail demandé\n1. écrire `Lire_Date`, `Lire_Notes`, `Lire_Etudiant`.\n2. écrire `Calculer_Moyenne`.\n3. écrire `Comparer_Dates` pour ordonner par date de naissance.\n4. Trier un tableau de `N` étudiants (1 <= N <= 50).\n5. Détecter les notes éliminatoires (`< 7`).\n6. Construire un tableau dynamique des étudiants ayant au moins une note éliminatoire.\n7. Afficher les résultats avec des actions dédiées.\n\n### Objectif pédagogique\nCombiner enregistrements imbriqués, tableaux, tris et filtrage dans un mini-projet cohérent."
+    },
+    {
+      "title": "Exercice 3: Gestion de bibliothèque",
+      "content": "Concevoir un système avec les structures `Date`, `Livre`, `Emprunt`.\n\n### Travail demandé\n1. Calculer les jours de retard d'un emprunt.\n2. Calculer l'amende (`50 DA` par jour).\n3. Rechercher un livre par ISBN.\n4. Lister tous les emprunts en retard.\n5. Produire le total des amendes ? collecter.\n\n### Objectif pédagogique\nManipuler des enregistrements imbriqués dans un contexte réaliste de gestion."
+    },
+    {
+      "title": "Exercice 4: Carnet de contacts intelligent",
+      "content": "Définir les structures `Adresse`, `Telephones`, `Contact` puis développer des traitements métiers.\n\n### Travail demandé\n1. Rechercher des contacts par nom (partiel).\n2. Compter les contacts par ville.\n3. Extraire les contacts d'une catégorie.\n4. Vérifier la validité d'un email (`@` et `.`).\n5. Détecter/fusionner les doublons (nom + prénom).\n6. Générer des statistiques et une liste d'emails invalides.\n\n### Objectif pédagogique\nPasser d'une simple définition de structures ? des opérations analytiques sur collections d'enregistrements."
     }
   ]
 }

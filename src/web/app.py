@@ -9,8 +9,19 @@ import contextlib
 from compiler.parser import parser, compile_algo
 
 from web.debugger import TraceRunner
+from web.models import db, Chapter, Question, Choice, UserProgress
 
 app = Flask(__name__)
+
+# Configure SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///algocompiler.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+# Ensure database tables exist
+with app.app_context():
+    db.create_all()
+
 
 # Correct path to examples and fixtures
 EXAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'examples'))
@@ -164,7 +175,86 @@ def get_example(filename):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# --- QUIZ API ENDPOINTS ---
+
+import random
+
+@app.route('/api/quiz/<chapter_identifier>')
+def get_quiz(chapter_identifier):
+    try:
+        chapter = Chapter.query.filter_by(identifier=chapter_identifier).first()
+        if not chapter:
+            return jsonify({'error': 'Chapter not found in database'}), 404
+
+        # Requirements: 6 Easy, 8 Medium, 6 Hard (Total 20)
+        # If not enough, get as many as possible
+        easy_q = Question.query.filter_by(chapter_id=chapter.id, difficulty='Easy').all()
+        medium_q = Question.query.filter_by(chapter_id=chapter.id, difficulty='Medium').all()
+        hard_q = Question.query.filter_by(chapter_id=chapter.id, difficulty='Hard').all()
+
+        selected_questions = (
+            random.sample(easy_q, min(6, len(easy_q))) +
+            random.sample(medium_q, min(8, len(medium_q))) +
+            random.sample(hard_q, min(6, len(hard_q)))
+        )
+        random.shuffle(selected_questions)
+
+        quiz_data = []
+        for q in selected_questions:
+            choices = Choice.query.filter_by(question_id=q.id).all()
+            
+            # Get the correct choice and up to 3 random incorrect choices
+            correct_choice = next((c for c in choices if c.is_correct), None)
+            incorrect_choices = [c for c in choices if not c.is_correct]
+            selected_incorrect = random.sample(incorrect_choices, min(3, len(incorrect_choices)))
+            
+            final_choices = [correct_choice] + selected_incorrect if correct_choice else selected_incorrect
+            random.shuffle(final_choices)
+
+            quiz_data.append({
+                'id': q.id,
+                'type': q.type,
+                'difficulty': q.difficulty,
+                'concept': q.concept,
+                'text': q.text,
+                'explanation': q.explanation,
+                'choices': [{'id': c.id, 'text': c.text, 'is_correct': c.is_correct} for c in final_choices]
+            })
+
+        return jsonify({'questions': quiz_data})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/quiz/save_progress', methods=['POST'])
+def save_quiz_progress():
+    try:
+        data = request.json
+        chapter_identifier = data.get('chapter_identifier')
+        score = data.get('score')
+        total = data.get('total')
+        details = data.get('details', '{}') 
+
+        chapter = Chapter.query.filter_by(identifier=chapter_identifier).first()
+        if not chapter:
+            return jsonify({'error': 'Chapter not found'}), 404
+
+        progress = UserProgress(
+            chapter_id=chapter.id,
+            score=score,
+            total_questions=total,
+            details=json.dumps(details)
+        )
+        db.session.add(progress)
+        db.session.commit()
+
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 import threading
+
 import queue
 import time
 import json

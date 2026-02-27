@@ -532,7 +532,8 @@ body.light-theme .course-exercise {
     overflow-x: auto;
 }
 
-.course-exec-btn {
+.course-exec-btn,
+.course-quiz-btn {
     background: linear-gradient(135deg, var(--course-accent), #1f6feb);
     color: #fff;
     border: 1px solid #1f6feb;
@@ -543,7 +544,8 @@ body.light-theme .course-exercise {
     font-size: 0.85rem;
 }
 
-.course-exec-btn:hover {
+.course-exec-btn:hover,
+.course-quiz-btn:hover {
     filter: brightness(1.08);
 }
 

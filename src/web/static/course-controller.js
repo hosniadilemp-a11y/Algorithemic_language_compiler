@@ -2,7 +2,7 @@ class CourseController {
     constructor() {
         this.courseData = null;
         this.currentChapterIndex = 0;
-        this.contentVersion = '13';
+        this.contentVersion = '14';
         this.isStandalonePage = !!document.getElementById('course-outline');
 
         this.sidebar = document.getElementById('course-outline');
@@ -133,15 +133,13 @@ class CourseController {
             quizDiv.style.paddingTop = '20px';
             quizDiv.style.borderTop = '1px solid var(--course-line)';
 
-            // Escape quotes to avoid breaking HTML rendering
             const safeTitle = chapterInfo.title.replace(/'/g, "\\'");
-
             quizDiv.innerHTML = `
                 <div style="margin-bottom: 20px;">
                     <h3 style="font-size: 1.5rem; margin-bottom: 10px;">Avez-vous tout compris ?</h3>
                     <p style="color: var(--course-muted);">Mettez vos connaissances à l'épreuve avec notre test interactif généré aléatoirement.</p>
                 </div>
-                <button class="course-exec-btn" onclick="window.quizController.startQuiz('${chapterInfo.id}', '${safeTitle}')" style="font-size: 1.1rem; padding: 12px 30px;">
+                <button class="course-quiz-btn" onclick="window.quizController.startQuiz('${chapterInfo.id}', '${safeTitle}')" style="font-size: 1.1rem; padding: 12px 30px;">
                     <i class="fas fa-tasks"></i> Démarrer le Quiz
                 </button>
             `;

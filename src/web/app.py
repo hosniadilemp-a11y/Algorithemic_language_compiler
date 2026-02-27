@@ -18,9 +18,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///algocompiler.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-# Ensure database tables exist
+# Ensure database tables exist and seed data if empty
 with app.app_context():
     db.create_all()
+    # Auto-seed if empty
+    from web.models import Question
+    if Question.query.count() == 0:
+        print("Production DB is empty. Seeding quiz data...")
+        try:
+            from web.seed_quiz import seed_chapter_1
+            seed_chapter_1()
+        except Exception as e:
+            print(f"Failed to auto-seed: {e}")
 
 
 # Correct path to examples and fixtures

@@ -2,3 +2,5 @@ ply
 flask
 requests
 gunicorn
+flask-sqlalchemy
+sqlalchemy

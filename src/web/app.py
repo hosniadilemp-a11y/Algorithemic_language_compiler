@@ -11,10 +11,15 @@ from compiler.parser import parser, compile_algo
 from web.debugger import TraceRunner
 from web.models import db, Chapter, Question, Choice, UserProgress
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 app = Flask(__name__)
 
-# Configure SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///algocompiler.db'
+# Configure SQLAlchemy with absolute path to avoid cwd discrepancy
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
@@ -26,8 +31,8 @@ with app.app_context():
     if Question.query.count() == 0:
         print("Production DB is empty. Seeding quiz data...")
         try:
-            from web.seed_quiz import seed_chapter_1
-            seed_chapter_1()
+            from web.seed_from_json import seed_from_json
+            seed_from_json()
         except Exception as e:
             print(f"Failed to auto-seed: {e}")
 
@@ -183,6 +188,33 @@ def get_example(filename):
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/validate_algo', methods=['POST'])
+def validate_algo():
+    """Validate a course snippet against the current compiler without executing it."""
+    try:
+        data = request.get_json(silent=True) or {}
+        code = data.get('code', '')
+        if isinstance(code, dict):
+            code = json.dumps(code)
+        code = str(code)
+
+        if not code.strip():
+            return jsonify({'ok': False, 'errors': [{'message': 'Code vide'}]}), 200
+
+        result = compile_algo(code)
+
+        # Modern parser returns (python_code, errors)
+        if isinstance(result, tuple):
+            python_code, errors = result
+            if errors:
+                return jsonify({'ok': False, 'errors': errors}), 200
+            return jsonify({'ok': bool(python_code), 'errors': []}), 200
+
+        # Backward compatibility
+        return jsonify({'ok': bool(result), 'errors': [] if result else [{'message': 'Compilation failed'}]}), 200
+    except Exception as e:
+        return jsonify({'ok': False, 'errors': [{'message': str(e)}]}), 200
 
 # --- QUIZ API ENDPOINTS ---
 
@@ -451,6 +483,13 @@ def start_execution():
                                 pass
                     def flush(self):
                         pass
+
+                    def isatty(self):
+                        return False
+
+                    def fileno(self):
+                        import io
+                        raise io.UnsupportedOperation("fileno")
                 
                 stream = StreamToQueue()
 
@@ -631,39 +670,30 @@ def start_execution():
                     '__builtins__': safe_builtins
                 }
 
-                with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-                    # Use TraceRunner?
-                    # TraceRunner is tricky in typical streaming because it collects steps.
-                    # If we want real-time inspector, TraceRunner needs to push steps to queue?
-                    # For now, let's focus on Console Interactivity.
-                    # We can use TraceRunner but modify it or wrap it.
-                    # The user wants "panel to see the variable... change during execution".
-                    # So YES, we need TraceRunner to push events.
-                    
-                    # Let's subclass or modify TraceRunner behavior via callback?
-                    # Or just use TraceRunner logic here.
-                    
-                    
-                    tracer = TraceRunner()
-                    
-                    # Callback to push step to queue
-                    def on_log_step(step):
-                         if not ctx.is_running:
-                             raise SystemExit("Execution stopped by user")
-                         try:
-                             # Try putting with timeout to allow checking run state
-                             while ctx.is_running:
-                                 try:
-                                     ctx.output_queue.put({'type': 'trace', 'data': step}, timeout=0.1)
-                                     break
-                                 except queue.Full:
-                                     if not ctx.is_running: break
-                                     continue
-                         except:
-                             pass
-                    
-                    # Run
-                    tracer.run(python_code, exec_globals, stdout_capture=stream, on_step=on_log_step)
+                # Let's subclass or modify TraceRunner behavior via callback?
+                # Or just use TraceRunner logic here.
+                
+                tracer = TraceRunner()
+                
+                # Callback to push step to queue
+                def on_log_step(step):
+                     if not ctx.is_running:
+                         raise SystemExit("Execution stopped by user")
+                     try:
+                         # Try putting with timeout to allow checking run state
+                         while ctx.is_running:
+                             try:
+                                 ctx.output_queue.put({'type': 'trace', 'data': step}, timeout=0.1)
+                                 break
+                             except queue.Full:
+                                 if not ctx.is_running: break
+                                 continue
+                     except:
+                         pass
+                
+                # Run execution
+                tracer.run(python_code, exec_globals, stdout_capture=stream, on_step=on_log_step)
+
 
             except SystemExit:
                  ctx.output_queue.put({'type': 'stopped', 'data': 'Exécution interrompue.'})

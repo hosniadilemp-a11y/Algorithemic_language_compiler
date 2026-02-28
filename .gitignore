@@ -78,6 +78,7 @@ src/web/seed_from_json.py
 src/web/verify_db.py
 tests/test_multi_eval_fix.py
 tests/verify_sizes.py
+fix_chapters.py
 
 # --- Quizzes & Database ---
 src/web/data/quizzes/*.json

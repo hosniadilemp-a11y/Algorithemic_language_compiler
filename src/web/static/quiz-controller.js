@@ -5,6 +5,7 @@ class QuizController {
         this.currentQuestionIndex = 0;
         this.score = 0;
         this.conceptAnalysis = {};
+        this.userAnswers = [];
 
         this.modal = null;
         this.initDOM();
@@ -17,15 +18,17 @@ class QuizController {
         this.modal.innerHTML = `
             <div class="quiz-modal-content">
                 <div class="quiz-header">
-                    <div class="quiz-progress-text">Question <span id="quiz-current-num">1</span> / <span id="quiz-total-num">20</span></div>
-                    <div class="quiz-progress-bar"><div id="quiz-progress-fill"></div></div>
+                    <div class="quiz-progress-text">Test - Question <span id="quiz-current-num">1</span> / <span id="quiz-total-num">20</span></div>
+                    <div class="quiz-progress-bar" style="display:none;"><div id="quiz-progress-fill"></div></div>
+                    <div id="quiz-bubbles" class="quiz-bubbles"></div>
                     <button class="quiz-close-btn"><i class="fas fa-times"></i></button>
                 </div>
                 <div id="quiz-body" class="quiz-body">
                     <!-- Dynamic Content -->
                 </div>
                 <div class="quiz-footer">
-                    <button id="quiz-next-btn" class="quiz-btn primary" disabled>Question suivante <i class="fas fa-arrow-right"></i></button>
+                    <button id="quiz-prev-btn" class="quiz-btn secondary" disabled><i class="fas fa-arrow-left"></i> Précédent</button>
+                    <button id="quiz-next-btn" class="quiz-btn primary">Question suivante <i class="fas fa-arrow-right"></i></button>
                     <button id="quiz-finish-btn" class="quiz-btn success" style="display: none;">Voir les résultats <i class="fas fa-chart-pie"></i></button>
                 </div>
             </div>
@@ -33,6 +36,7 @@ class QuizController {
         document.body.appendChild(this.modal);
 
         this.modal.querySelector('.quiz-close-btn').addEventListener('click', () => this.closeQuiz());
+        this.modal.querySelector('#quiz-prev-btn').addEventListener('click', () => this.prevQuestion());
         this.modal.querySelector('#quiz-next-btn').addEventListener('click', () => this.nextQuestion());
         this.modal.querySelector('#quiz-finish-btn').addEventListener('click', () => this.showResults());
     }
@@ -43,9 +47,10 @@ class QuizController {
         this.currentQuestionIndex = 0;
         this.score = 0;
         this.conceptAnalysis = {};
+        this.userAnswers = [];
 
         const body = this.modal.querySelector('#quiz-body');
-        body.innerHTML = `<div class="quiz-loading"><i class="fas fa-circle-notch fa-spin"></i> Chargement du quiz...</div>`;
+        body.innerHTML = `<div class="quiz-loading"><i class="fas fa-circle-notch fa-spin"></i> Chargement du test...</div>`;
         this.modal.classList.add('active');
 
         try {
@@ -68,7 +73,10 @@ class QuizController {
                 this.conceptAnalysis[q.concept].total += 1;
             });
 
+            this.userAnswers = new Array(this.quizData.length).fill(null);
+
             this.modal.querySelector('#quiz-total-num').textContent = this.quizData.length;
+            this.renderBubbles();
             this.renderQuestion();
 
         } catch (error) {
@@ -84,14 +92,20 @@ class QuizController {
         const finishBtn = this.modal.querySelector('#quiz-finish-btn');
 
         // Update Progress
-        this.modal.querySelector('#quiz-current-num').textContent = this.currentQuestionIndex + 1;
-        progressFill.style.width = `${((this.currentQuestionIndex) / this.quizData.length) * 100}%`;
+        const currentNum = this.modal.querySelector('#quiz-current-num');
+        if (currentNum) currentNum.textContent = this.currentQuestionIndex + 1;
+
+        if (progressFill) progressFill.style.width = `${((this.currentQuestionIndex) / this.quizData.length) * 100}%`;
 
         // Buttons state
-        nextBtn.style.display = this.currentQuestionIndex === this.quizData.length - 1 ? 'none' : 'inline-block';
-        nextBtn.disabled = true;
-        finishBtn.style.display = this.currentQuestionIndex === this.quizData.length - 1 ? 'inline-block' : 'none';
-        finishBtn.disabled = true;
+        if (nextBtn) {
+            nextBtn.style.display = this.currentQuestionIndex === this.quizData.length - 1 ? 'none' : 'inline-block';
+            nextBtn.disabled = true;
+        }
+        if (finishBtn) {
+            finishBtn.style.display = this.currentQuestionIndex === this.quizData.length - 1 ? 'inline-block' : 'none';
+            finishBtn.disabled = true;
+        }
 
         // Difficulty Badges
         const diffColors = {
@@ -125,11 +139,67 @@ class QuizController {
             </div>
         `;
 
-        // Bind Choices
+        // Update Bubbles visual state to highlight current
+        this.updateBubblesUI();
+
         const choiceBtns = body.querySelectorAll('.quiz-choice');
-        choiceBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleAnswer(e.currentTarget, choiceBtns, q));
-        });
+        const feedback = this.modal.querySelector('#quiz-feedback');
+
+        // Check if already answered
+        const previousAnswer = this.userAnswers[this.currentQuestionIndex];
+
+        if (previousAnswer !== null) {
+            // Reconstruct the answered state
+            choiceBtns.forEach(btn => {
+                btn.disabled = true;
+                if (btn.dataset.id === String(previousAnswer.id)) {
+                    if (previousAnswer.isCorrect) {
+                        btn.classList.add('correct');
+                        btn.querySelector('.quiz-choice-icon i').className = 'fas fa-check-circle';
+                    } else {
+                        btn.classList.add('wrong');
+                        btn.querySelector('.quiz-choice-icon i').className = 'fas fa-times-circle';
+                    }
+                }
+                // Highlight the correct one if they missed it
+                if (!previousAnswer.isCorrect && btn.dataset.correct === 'true') {
+                    btn.classList.add('correct-missed');
+                    btn.querySelector('.quiz-choice-icon i').className = 'fas fa-check-circle';
+                }
+            });
+
+            const fTitle = feedback.querySelector('.quiz-feedback-title');
+            const fIcon = feedback.querySelector('.quiz-feedback-icon');
+            if (previousAnswer.isCorrect) {
+                feedback.className = 'quiz-feedback feedback-success';
+                fIcon.innerHTML = '<i class="fas fa-check"></i>';
+                fTitle.textContent = 'Excellente réponse !';
+            } else {
+                feedback.className = 'quiz-feedback feedback-error';
+                fIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                fTitle.textContent = 'Incorrect';
+            }
+            feedback.style.display = 'flex';
+        } else {
+            // Bind Choices if not answered yet
+            choiceBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => this.handleAnswer(e.currentTarget, choiceBtns, q));
+            });
+        }
+
+        // Navigation state
+        const prevBtn = this.modal.querySelector('#quiz-prev-btn');
+        if (prevBtn) prevBtn.disabled = this.currentQuestionIndex === 0;
+
+        if (this.currentQuestionIndex === this.quizData.length - 1) {
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (finishBtn) finishBtn.style.display = 'inline-block';
+            if (finishBtn) finishBtn.disabled = this.userAnswers.includes(null); // Must answer all
+        } else {
+            if (nextBtn) nextBtn.style.display = 'inline-block';
+            if (finishBtn) finishBtn.style.display = 'none';
+            if (nextBtn) nextBtn.disabled = false;
+        }
 
         // Render markdown in code chunks if any
         this.formatCodeInQuiz(body);
@@ -172,17 +242,65 @@ class QuizController {
 
         feedback.style.display = 'flex';
 
-        // Enable Next/Finish btn
+        // Save the user answer
+        this.userAnswers[this.currentQuestionIndex] = {
+            id: selectedBtn.dataset.id,
+            isCorrect: isCorrect
+        };
+
+        this.updateBubblesUI();
+
+        // Enable Next/Finish btn if disabled
         if (this.currentQuestionIndex === this.quizData.length - 1) {
-            this.modal.querySelector('#quiz-finish-btn').disabled = false;
-        } else {
-            this.modal.querySelector('#quiz-next-btn').disabled = false;
+            this.modal.querySelector('#quiz-finish-btn').disabled = this.userAnswers.includes(null);
+        }
+    }
+
+    renderBubbles() {
+        const container = this.modal.querySelector('#quiz-bubbles');
+        container.innerHTML = '';
+        for (let i = 0; i < this.quizData.length; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'quiz-bubble';
+            bubble.dataset.index = i;
+            // Let user click bubble to navigate
+            bubble.addEventListener('click', () => {
+                this.currentQuestionIndex = i;
+                this.renderQuestion();
+            });
+            container.appendChild(bubble);
+        }
+    }
+
+    updateBubblesUI() {
+        const bubbles = this.modal.querySelectorAll('.quiz-bubble');
+        bubbles.forEach((bubble, index) => {
+            bubble.className = 'quiz-bubble'; // reset
+            if (index === this.currentQuestionIndex) {
+                bubble.classList.add('current');
+            }
+            if (this.userAnswers[index] !== null) {
+                if (this.userAnswers[index].isCorrect) {
+                    bubble.classList.add('correct-answer');
+                } else {
+                    bubble.classList.add('wrong-answer');
+                }
+            }
+        });
+    }
+
+    prevQuestion() {
+        if (this.currentQuestionIndex > 0) {
+            this.currentQuestionIndex--;
+            this.renderQuestion();
         }
     }
 
     nextQuestion() {
-        this.currentQuestionIndex++;
-        this.renderQuestion();
+        if (this.currentQuestionIndex < this.quizData.length - 1) {
+            this.currentQuestionIndex++;
+            this.renderQuestion();
+        }
     }
 
     async showResults() {
@@ -203,9 +321,12 @@ class QuizController {
         }
 
         const body = this.modal.querySelector('#quiz-body');
-        this.modal.querySelector('.quiz-progress-text').textContent = "Résultats";
-        this.modal.querySelector('#quiz-progress-fill').style.width = '100%';
-        this.modal.querySelector('.quiz-footer').style.display = 'none';
+        const progressText = this.modal.querySelector('.quiz-progress-text');
+        if (progressText) progressText.textContent = "Résultats";
+        const progressFill = this.modal.querySelector('#quiz-progress-fill');
+        if (progressFill) progressFill.style.width = '100%';
+        const footer = this.modal.querySelector('.quiz-footer');
+        if (footer) footer.style.display = 'none';
 
         const percentage = Math.round((this.score / this.quizData.length) * 100);
         let message = '';

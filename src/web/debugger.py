@@ -299,7 +299,12 @@ class TraceRunner:
             
         except Exception as e:
             import traceback
-            traceback.print_exc()
+            err_str = traceback.format_exc()
+            if self.stdout_capture and hasattr(self.stdout_capture, 'write'):
+                try:
+                    self.stdout_capture.write(err_str)
+                except:
+                    pass
             pass
             
         return self.trace_lines

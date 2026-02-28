@@ -192,6 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (pendingCourseCode) {
                 editor.setValue(pendingCourseCode);
+
+                // Format the code immediately after loading
+                if (typeof formatAlgoCode === 'function') {
+                    formatAlgoCode(editor);
+                }
+
                 localStorage.removeItem('algocompiler.pendingCourseCode');
                 localStorage.removeItem('algocompiler.fromExercise');
 

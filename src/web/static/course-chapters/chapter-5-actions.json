@@ -1,31 +1,62 @@
 {
   "id": "actions",
-  "title": "Chapitre 5: Actions Paramétrées",
+  "title": "Chapitre 5: Actions Parametrees",
   "sections": [
     {
-      "title": "But des actions paramétrées",
-      "content": "Les actions paramétrées permettent de modulariser les algorithmes et de réutiliser des blocs logiques.\n\n`Procedure` agit sans retour, `Fonction` renvoie une valeur."
+      "title": "1. Pourquoi les actions parametrees",
+      "content": "Les actions parametrees servent a modulariser un algorithme.\n\n[[DEF]] Une action parametree est une unite nommee (Procedure ou Fonction) qui recoit des parametres pour executer une tache.\n\n### Benefices\n- Eviter la repetition de code.\n- Ameliorer la lisibilite.\n- Faciliter les tests.\n- Isoler les responsabilites."
     },
     {
-      "title": "Design des paramètres",
-      "content": "Passer uniquement les données nécessaires limite le couplage.\n\nDocumenter les préconditions et les effets de bord rend les appels plus sûrs."
+      "title": "2. Procedure vs Fonction",
+      "content": "<div class=\"course-table-wrap\"><table class=\"course-table\"><thead><tr><th>Type</th><th>Retour</th><th>Effet principal</th><th>Exemple</th></tr></thead><tbody><tr><td>Procedure</td><td>pas de retour direct</td><td>agit sur des variables / affichage</td><td><code class=\"course-inline-code\">Procedure Echanger(Var a,b)</code></td></tr><tr><td>Fonction</td><td>retourne une valeur</td><td>calcule un resultat</td><td><code class=\"course-inline-code\">Fonction Max2(a,b)</code></td></tr></tbody></table></div>"
     },
     {
-      "title": "Exemple fonction + appel",
-      "content": "Exemple simple de fonction de calcul utilisée dans un algorithme principal.",
-      "code": "Fonction Carre(n : Entier) : Entier\nDebut\n    Retourner n * n;\nFin;\n\nAlgorithme TestCalcul;\nVar\n    x : Entier;\nDebut\n    Lire(x);\n    Ecrire(\"Carre = \", Carre(x));\nFin."
+      "title": "3. Cycle appel-retour",
+      "content": "Un appel suit ce schema: appelant -> action -> retour.\n\n<div class=\"course-diagram\">\n<svg viewBox=\"0 0 980 210\" role=\"img\" aria-label=\"Cycle appel retour\">\n  <rect x=\"40\" y=\"66\" width=\"230\" height=\"80\" rx=\"10\" class=\"diagram-node\"/>\n  <text x=\"84\" y=\"112\" class=\"diagram-main\">Programme principal</text>\n  <rect x=\"380\" y=\"66\" width=\"230\" height=\"80\" rx=\"10\" class=\"diagram-node-accent\"/>\n  <text x=\"468\" y=\"112\" class=\"diagram-main\">Action</text>\n  <rect x=\"720\" y=\"66\" width=\"220\" height=\"80\" rx=\"10\" class=\"diagram-node\"/>\n  <text x=\"786\" y=\"112\" class=\"diagram-main\">Retour</text>\n  <line x1=\"274\" y1=\"106\" x2=\"376\" y2=\"106\" class=\"diagram-arrow\"/>\n  <line x1=\"614\" y1=\"106\" x2=\"716\" y2=\"106\" class=\"diagram-arrow\"/>\n  <text x=\"298\" y=\"92\" class=\"diagram-caption\">arguments</text>\n  <text x=\"638\" y=\"92\" class=\"diagram-caption\">resultat/effet</text>\n</svg>\n</div>"
     },
     {
-      "title": "Valeur vs référence",
-      "content": "Par valeur : copie locale du paramètre.\nPar référence : modification de la variable appelante.\n\nLe cours peut montrer des styles mixtes. Conserver une convention unique dans chaque solution."
+      "title": "4. Parametres: valeur vs reference",
+      "content": "Par valeur: l'action recoit une copie.\nPar reference (`Var`): l'action modifie la variable appelante.\n\n<div class=\"course-diagram\">\n<svg viewBox=\"0 0 1040 280\" role=\"img\" aria-label=\"Valeur vs reference\">\n  <text x=\"70\" y=\"36\" class=\"diagram-title\">Par valeur</text>\n  <rect x=\"40\" y=\"58\" width=\"260\" height=\"74\" rx=\"10\" class=\"diagram-node\"/>\n  <text x=\"84\" y=\"101\" class=\"diagram-main\">x appelant = 5</text>\n  <rect x=\"360\" y=\"58\" width=\"280\" height=\"74\" rx=\"10\" class=\"diagram-node-accent\"/>\n  <text x=\"396\" y=\"101\" class=\"diagram-main\">param x = copie</text>\n  <line x1=\"302\" y1=\"96\" x2=\"356\" y2=\"96\" class=\"diagram-arrow\"/>\n  <text x=\"402\" y=\"148\" class=\"diagram-caption\">modif locale seulement</text>\n\n  <line x1=\"40\" y1=\"188\" x2=\"1000\" y2=\"188\" class=\"diagram-caption-line\"/>\n\n  <text x=\"70\" y=\"224\" class=\"diagram-title\">Par reference (Var)</text>\n  <rect x=\"40\" y=\"242\" width=\"260\" height=\"74\" rx=\"10\" class=\"diagram-node\"/>\n  <text x=\"84\" y=\"285\" class=\"diagram-main\">x appelant = 5</text>\n  <rect x=\"360\" y=\"242\" width=\"280\" height=\"74\" rx=\"10\" class=\"diagram-node-accent\"/>\n  <text x=\"400\" y=\"285\" class=\"diagram-main\">param x = alias</text>\n  <line x1=\"302\" y1=\"280\" x2=\"356\" y2=\"280\" class=\"diagram-arrow\"/>\n  <text x=\"392\" y=\"332\" class=\"diagram-caption\">modif visible apres retour</text>\n</svg>\n</div>\n\n[[ALERT]] Utiliser `Var` seulement si la modification est voulue."
     },
     {
-      "title": "Qualité et test",
-      "content": "- Une fonction, une responsabilité.\n- Noms explicites (`EstPair`, `CalculerMoyenne`).\n- Tester cas limites et entrées invalides.\n\nSéparer lecture/affichage de la logique métier facilite les tests."
+      "title": "5. Syntaxe de declaration",
+      "content": "Les actions sont declarees avant le `Debut` principal.",
+      "code": "Procedure NomProcedure(a : Entier; Var b : Entier)\nDebut\n    b := b + a;\nFin;\n\nFonction NomFonction(x : Entier) : Entier\nDebut\n    Retourner x * 2;\nFin;"
     },
     {
-      "title": "Mini-exercice",
-      "content": "Implémenter `Max2(a,b)` puis `Echanger(Var a, Var b)`.\n\n### Piste\nUtiliser une variable temporaire pour l'échange."
+      "title": "6. Exemple: Fonction Max2",
+      "content": "Fonction pure pour retourner le maximum de deux entiers.",
+      "code": "Fonction Max2(a, b : Entier) : Entier\nDebut\n    Si a >= b Alors\n        Retourner a;\n    Sinon\n        Retourner b;\n    Fin Si;\nFin;"
+    },
+    {
+      "title": "7. Exemple: Procedure Echanger",
+      "content": "Procedure qui echange deux variables via `Var`.",
+      "code": "Procedure Echanger(Var a, b : Entier)\nVar t : Entier;\nDebut\n    t := a;\n    a := b;\n    b := t;\nFin;"
+    },
+    {
+      "title": "8. Programme complet de test",
+      "content": "Integration de `Max2` et `Echanger` dans un algorithme complet.",
+      "code": "Algorithme TestActionsParametrees;\nVar\n    x, y, m : Entier;\n\nFonction Max2(a, b : Entier) : Entier\nDebut\n    Si a >= b Alors\n        Retourner a;\n    Sinon\n        Retourner b;\n    Fin Si;\nFin;\n\nProcedure Echanger(Var a, b : Entier)\nVar t : Entier;\nDebut\n    t := a;\n    a := b;\n    b := t;\nFin;\n\nDebut\n    Lire(x);\n    Lire(y);\n    m := Max2(x, y);\n    Ecrire('Max = ', m);\n    Echanger(x, y);\n    Ecrire('Apres echange: x=', x, ' y=', y);\nFin."
+    },
+    {
+      "title": "9. Qualite et erreurs frequentes",
+      "content": "<div class=\"course-table-wrap\"><table class=\"course-table\"><thead><tr><th>Erreur</th><th>Cause</th><th>Correction</th></tr></thead><tbody><tr><td>Oublier `Retourner`</td><td>confusion procedure/fonction</td><td>verifier tous les chemins</td></tr><tr><td>Abus de `Var`</td><td>effets de bord non maitrises</td><td>garder `Var` au strict necessaire</td></tr><tr><td>Action trop longue</td><td>mauvaise decomposition</td><td>scinder en sous-actions</td></tr><tr><td>Melanger I/O et calcul</td><td>couplage fort</td><td>separer logique et affichage</td></tr></tbody></table></div>"
+    },
+    {
+      "title": "10. Exercice guide A: Max3",
+      "content": "<div class=\"course-exercise\">\n  <div class=\"course-exercise-title\"><i class=\"fas fa-puzzle-piece\"></i> Enonce</div>\n  <p>Ecrire <code class=\"course-inline-code\">Max3(a,b,c)</code> en reutilisant <code class=\"course-inline-code\">Max2</code>.</p>\n  <details class=\"course-solution-details\"><summary>Voir la solution complete</summary>\n<pre class=\"course-solution-code\">Algorithme Exo_Max3;\nVar\n    a, b, c, m : Entier;\n\n    Fonction Max2(x, y : Entier) : Entier\nDebut\n    Si x >= y Alors\n        Retourner x;\n    Sinon\n        Retourner y;\n    Fin Si;\nFin;\n\nFonction Max3(x, y, z : Entier) : Entier\nDebut\n    Retourner Max2(Max2(x, y), z);\nFin;\n\nDebut\n    Lire(a);\n    Lire(b);\n    Lire(c);\n    m := Max3(a, b, c);\n    Ecrire('Max3 = ', m);\nFin.</pre>\n<button class=\"course-solution-run\" data-code=\"Algorithme Exo_Max3;&#10;Var&#10;    a, b, c, m : Entier;&#10;&#10;    Fonction Max2(x, y : Entier) : Entier&#10;Debut&#10;    Si x >= y Alors&#10;        Retourner x;&#10;    Sinon&#10;        Retourner y;&#10;    Fin Si;&#10;Fin;&#10;&#10;Fonction Max3(x, y, z : Entier) : Entier&#10;Debut&#10;    Retourner Max2(Max2(x, y), z);&#10;Fin;&#10;&#10;Debut&#10;    Lire(a);&#10;    Lire(b);&#10;    Lire(c);&#10;    m := Max3(a, b, c);&#10;    Ecrire('Max3 = ', m);&#10;Fin.\">Exécuter cette solution</button>>Executer cette solution</button>\n</details>\n</div>"
+    },
+    {
+      "title": "11. Exercice guide B: BornesNote",
+      "content": "<div class=\"course-exercise\">\n  <div class=\"course-exercise-title\"><i class=\"fas fa-flask\"></i> Enonce</div>\n  <p>Ecrire <code class=\"course-inline-code\">BornesNote(n)</code> qui force une note dans [0,20].</p>\n  <details class=\"course-solution-details\"><summary>Voir la solution complete</summary>\n<pre class=\"course-solution-code\">Algorithme Exo_BornesNote;\nVar\n    note : Reel;\n\n    Fonction BornesNote(n : Reel) : Reel\nDebut\n    Si n < 0 Alors\n        Retourner 0;\n    Sinon Si n > 20 Alors\n        Retourner 20;\n    Sinon\n        Retourner n;\n    Fin Si;\nFin;\n\nDebut\n    Lire(note);\n    note := BornesNote(note);\n    Ecrire('Note normalisee = ', note);\nFin.</pre>\n<button class=\"course-solution-run\" data-code=\"Algorithme Exo_BornesNote;&#10;Var&#10;    note : Reel;&#10;&#10;    Fonction BornesNote(n : Reel) : Reel&#10;Debut&#10;    Si n < 0 Alors&#10;        Retourner 0;&#10;    Sinon Si n > 20 Alors&#10;        Retourner 20;&#10;    Sinon&#10;        Retourner n;&#10;    Fin Si;&#10;Fin;&#10;&#10;Debut&#10;    Lire(note);&#10;    note := BornesNote(note);&#10;    Ecrire('Note normalisee = ', note);&#10;Fin.\">Exécuter cette solution</button>>Executer cette solution</button>\n</details>\n</div>"
+    },
+    {
+      "title": "12. Exercice guide C: Ordonner2",
+      "content": "<div class=\"course-exercise\">\n  <div class=\"course-exercise-title\"><i class=\"fas fa-random\"></i> Enonce</div>\n  <p>Ecrire <code class=\"course-inline-code\">Ordonner2(Var a, Var b)</code> pour garantir <code class=\"course-inline-code\">a <= b</code> apres appel.</p>\n  <details class=\"course-solution-details\"><summary>Voir la solution complete</summary>\n<pre class=\"course-solution-code\">Algorithme Exo_Ordonner2;\nVar\n    x, y : Entier;\n\n    Procedure Ordonner2(Var a, b : Entier)\nVar t : Entier;\nDebut\n    Si a > b Alors\n        t := a;\n        a := b;\n        b := t;\n    Fin Si;\nFin;\n\nDebut\n    Lire(x);\n    Lire(y);\n    Ordonner2(x, y);\n    Ecrire('Apres ordre: ', x, ' ', y);\nFin.</pre>\n<button class=\"course-solution-run\" data-code=\"Algorithme Exo_Ordonner2;&#10;Var&#10;    x, y : Entier;&#10;&#10;    Procedure Ordonner2(Var a, b : Entier)&#10;Var t : Entier;&#10;Debut&#10;    Si a > b Alors&#10;        t := a;&#10;        a := b;&#10;        b := t;&#10;    Fin Si;&#10;Fin;&#10;&#10;Debut&#10;    Lire(x);&#10;    Lire(y);&#10;    Ordonner2(x, y);&#10;    Ecrire('Apres ordre: ', x, ' ', y);&#10;Fin.\">Exécuter cette solution</button>>Executer cette solution</button>\n</details>\n</div>"
+    },
+    {
+      "title": "13. Exercice guide D: Piege valeur/reference",
+      "content": "<div class=\"course-exercise\">\n  <div class=\"course-exercise-title\"><i class=\"fas fa-exclamation-triangle\"></i> Enonce</div>\n  <p>Corriger cette situation: <code class=\"course-inline-code\">Ajouter10(x)</code> ne modifie pas la variable appelante parce que le parametre est passe par valeur.</p>\n  <details class=\"course-solution-details\"><summary>Voir la solution complete</summary>\n<pre class=\"course-solution-code\">Algorithme Exo_PiegeRef;\nVar\n    n : Entier;\n\n    Procedure Ajouter10(Var x : Entier)\nDebut\n    x := x + 10;\nFin;\n\nDebut\n    Lire(n);\n    Ajouter10(n);\n    Ecrire('n = ', n);\nFin.</pre>\n<button class=\"course-solution-run\" data-code=\"Algorithme Exo_PiegeRef;&#10;Var&#10;    n : Entier;&#10;&#10;    Procedure Ajouter10(Var x : Entier)&#10;Debut&#10;    x := x + 10;&#10;Fin;&#10;&#10;Debut&#10;    Lire(n);&#10;    Ajouter10(n);&#10;    Ecrire('n = ', n);&#10;Fin.\">Exécuter cette solution</button>>Executer cette solution</button>\n</details>\n</div>"
     }
   ]
 }

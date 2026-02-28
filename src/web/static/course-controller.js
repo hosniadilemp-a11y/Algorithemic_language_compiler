@@ -2,7 +2,7 @@ class CourseController {
     constructor() {
         this.courseData = null;
         this.currentChapterIndex = 0;
-        this.contentVersion = '14';
+        this.contentVersion = '26';
         this.isStandalonePage = !!document.getElementById('course-outline');
 
         this.sidebar = document.getElementById('course-outline');
@@ -125,7 +125,7 @@ class CourseController {
         }
 
         // --- Add Quiz Button if applicable ---
-        if (this.quiz && chapterInfo.id) {
+        if (this.quiz && chapterInfo.id && chapterInfo.id !== 'tutorial') {
             const quizDiv = document.createElement('div');
             quizDiv.className = 'course-section';
             quizDiv.style.textAlign = 'center';
@@ -147,6 +147,7 @@ class CourseController {
         }
 
         this.bindSectionEvents();
+        await this.validateRunnableSnippets();
 
         // Restore scroll position
         const savedScroll = localStorage.getItem('algocompiler.scrollTop');
@@ -173,23 +174,117 @@ class CourseController {
         // Add listeners to "Executer" buttons
         this.contentArea.querySelectorAll('.course-exec-btn').forEach(btn => {
             btn.onclick = (e) => {
-                const codeBlock = e.target.closest('.course-code-block').querySelector('.course-code-body');
-                const code = codeBlock.innerText;
+                const codeBlock = e.currentTarget.closest('.course-code-block').querySelector('.course-code-body');
+                const code = codeBlock.dataset.rawCode || codeBlock.innerText;
                 this.executeCode(code);
             };
         });
 
         // Add listeners to "Try in Editor" buttons (Exercises)
-        this.contentArea.querySelectorAll('.course-try-btn').forEach(btn => {
+        this.contentArea.querySelectorAll('.course-try-btn, .course-solution-run').forEach(btn => {
             btn.onclick = (e) => {
-                const code = e.target.getAttribute('data-code').replace(/\\n/g, '\n');
+                const rawCode = e.currentTarget.getAttribute('data-code') || '';
+                const code = this.normalizeCodeForDisplay(this.decodeCourseCode(rawCode));
                 this.executeCode(code, true);
             };
         });
 
-        this.contentArea.querySelectorAll('.course-solution-code').forEach((pre) => {
-            pre.innerHTML = this.highlightAlgoCode(pre.textContent || '');
+        // Always keep exercise solution buttons actionable and clearly labeled.
+        this.contentArea.querySelectorAll('.course-solution-run').forEach((btn) => {
+            btn.disabled = false;
+            btn.classList.remove('course-solution-run-disabled');
+            btn.removeAttribute('title');
+            btn.innerHTML = 'Executer code';
         });
+
+        this.contentArea.querySelectorAll('.course-solution-code').forEach((pre) => {
+            const normalized = this.normalizeCodeForDisplay(pre.textContent || '');
+            pre.innerHTML = this.highlightAlgoCode(normalized);
+        });
+    }
+
+    async validateRunnableSnippets() {
+        const checks = [];
+
+        this.contentArea.querySelectorAll('.course-exec-btn').forEach((btn) => {
+            const codeBlock = btn.closest('.course-code-block')?.querySelector('.course-code-body');
+            const code = (codeBlock?.dataset?.rawCode || codeBlock?.innerText || '').trim();
+
+            if (!this.isCompleteCourseCode(code)) {
+                btn.remove();
+                return;
+            }
+
+            checks.push(this.validateSnippet(btn, code, false));
+        });
+
+        // Do not disable exercise solution buttons.
+        // User should always be able to send solution code to the editor.
+
+        if (checks.length > 0) {
+            await Promise.all(checks);
+        }
+    }
+
+    async validateSnippet(button, code, isSolutionButton) {
+        try {
+            const response = await fetch('/api/validate_algo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+
+            if (!response.ok) {
+                if (isSolutionButton) return;
+                button.remove();
+                return;
+            }
+
+            const data = await response.json();
+            if (!data.ok) {
+                if (isSolutionButton) return;
+                button.remove();
+            }
+        } catch (error) {
+            if (isSolutionButton) return;
+            button.remove();
+        }
+    }
+
+    normalizeCodeForDisplay(code) {
+        let normalized = String(code || '').replace(/\r\n?/g, '\n');
+        normalized = normalized
+            .replace(/&#10;|&#x0A;|&#xA;/gi, '\n')
+            .replace(/&#13;|&#x0D;|&#xD;/gi, '\n');
+
+        // Some stored blocks may contain literal \n; convert for proper multi-line display.
+        if (!normalized.includes('\n') && normalized.includes('\\n')) {
+            normalized = normalized.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
+        }
+
+        // Split merged statements such as ";Tantque", ";Cour->x :=", ";Fin.".
+        normalized = normalized.replace(/;\s*(?=\S)/g, ';\n');
+
+        // Secondary split pass for common pseudo-code tokens.
+        normalized = normalized.replace(
+            /;\s*(?=(Algorithme|Type|Var|Const|Debut|Procedure|Fonction|Tantque|Pour|Si|Sinon|Fin\s*Si|FinSi|Fin\s*Pour|FinPour|Fin\s*Tantque|Fin\s*TantQue|FinTantque|FinTantQue|Jusqua|Fin\.|[A-Za-z_][A-Za-z0-9_]*\s*:=))/gi,
+            ';\n'
+        );
+
+        // Ensure block starters are on their own line when flattened after conditions.
+        normalized = normalized
+            .replace(/\b(Alors)(?!\s*\n)\s+/gi, '$1\n    ')
+            .replace(/\b(Faire)(?!\s*\n)\s+/gi, '$1\n    ');
+
+        // If still one line, perform stronger splitting.
+        if (!normalized.includes('\n')) {
+            normalized = normalized
+                .replace(/;\s*/g, ';\n')
+                .replace(/\s+(Algorithme|Type|Var|Const|Debut|Procedure|Fonction|Tantque|Pour|Si|Sinon|Fin|Jusqua)\b/g, '\n$1')
+                .trim();
+        }
+
+        return normalized;
     }
 
     saveState() {
@@ -221,10 +316,17 @@ class CourseController {
             html = html.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
         }
 
+        // Protect data-code attribute newlines from being flattened to spaces by the browser DOM
+        html = html.replace(/data-code="([^"]*)"/g, (match, p1) => {
+            return 'data-code="' + p1.replace(/\n/g, '&#10;').replace(/\\n/g, '&#10;') + '"';
+        });
+
         return html.split(/\n\n+/).map(block => {
             const normalized = block.trim();
             if (!normalized) return '';
-            if (normalized.startsWith('<div') || normalized.startsWith('<h4') || normalized.startsWith('<ul') || normalized.startsWith('<details')) {
+            // Keep any HTML fragment intact (not only a small whitelist),
+            // otherwise SVG blocks get split and wrapped in <p>, which breaks figures.
+            if (normalized.startsWith('<')) {
                 return normalized;
             }
             return `<p>${normalized.replace(/\n/g, '<br>')}</p>`;
@@ -237,12 +339,15 @@ class CourseController {
 
         const header = document.createElement('div');
         header.className = 'course-code-header';
-        header.innerHTML = `<span><i class="fas fa-terminal"></i> Exemple d'algorithme</span>
-                           <button class="course-exec-btn"><i class="fas fa-play"></i> Charger & Formater</button>`;
+        const canLoad = this.isCompleteCourseCode(code);
+        header.innerHTML = `<span><i class="fas fa-terminal"></i> Exemple d'algorithme</span>` +
+            (canLoad ? `<button class="course-exec-btn"><i class="fas fa-play"></i> Charger & Formater</button>` : '');
 
         const body = document.createElement('div');
         body.className = 'course-code-body';
-        body.innerHTML = this.highlightAlgoCode(code);
+        const normalizedCode = this.normalizeCodeForDisplay(code);
+        body.dataset.rawCode = normalizedCode;
+        body.innerHTML = this.highlightAlgoCode(normalizedCode);
 
         div.appendChild(header);
         div.appendChild(body);
@@ -268,7 +373,32 @@ class CourseController {
             .replace(/\b(Algorithme|Const|Var|Type|Enregistrement|Debut|Fin|Fonction|Procedure|Retourner|Si|Sinon|Alors|Fin Si|Pour|Fin Pour|Tantque|Fin Tantque|Repeter|Jusqua|Lire|Ecrire|Vrai|Faux|NIL|allouer|liberer|taille|Entier|Reel|Chaine|Caractere|Booleen|Tableau|De|Et|Ou|Non)\b/g, '<span class="algo-kw">$1</span>');
     }
 
+    decodeCourseCode(rawCode) {
+        return String(rawCode)
+            .replace(/&#10;|&#x0A;|&#xA;/gi, '\n')
+            .replace(/\\n/g, '\n')
+            .replace(/\\t/g, '\t')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&')
+            .replace(/&#39;/g, "'")
+            .replace(/&quot;/g, '"');
+    }
+
+    isCompleteCourseCode(code) {
+        const normalized = String(code || '').trim();
+        if (!normalized) return false;
+        if (!/\bDebut\b/i.test(normalized)) return false;
+        if (!/\bFin\.\s*$/i.test(normalized)) return false;
+        return true;
+    }
+
     executeCode(code, fromExercise = false) {
+        // Auto-wrap bare blocks with 'Algorithme' to ensure valid compilation in the IDE
+        if (!/^\s*Algorithme\b/i.test(code)) {
+            code = "Algorithme ExerciceAuto;\n" + code;
+        }
+
         if (window.editor) {
             window.editor.setValue(code);
             if (typeof formatAlgoCode === 'function') {

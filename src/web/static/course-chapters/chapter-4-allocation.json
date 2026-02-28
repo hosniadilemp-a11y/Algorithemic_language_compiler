@@ -12,7 +12,7 @@
     },
     {
       "title": "Opérations de base sur pointeurs",
-      "content": "Notations usuelles du cours :\n- `p^` : déréférencement (accès à la valeur pointée),\n- `NIL` : pointeur nul (aucune adresse valide),\n- `p^.champ` ou `p->champ` : accès à un champ d'un enregistrement pointé.\n\n[[ALERT]] Toujours tester `p <> NIL` avant de faire `p^` ou `p^.champ`.",
+      "content": "Notations usuelles du cours :\n- `p^` : déréférencement (accès à la valeur pointée),\n- `NIL` : pointeur nul (aucune adresse valide),\n- `p->champ` ou `p->champ` : accès à un champ d'un enregistrement pointé.\n\n[[ALERT]] Toujours tester `p <> NIL` avant de faire `p^` ou `p->champ`.",
       "code": "Algorithme PointeurBase;\nVar\n    p : ^Entier;\nDebut\n    p := allouer(taille(Entier));\n\n    Si p <> NIL Alors\n        p^ := 42;\n        Ecrire(\"Valeur pointee: \", p^);\n    Sinon\n        Ecrire(\"Echec allocation\");\n    Fin Si;\nFin."
     },
     {

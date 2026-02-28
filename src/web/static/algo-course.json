@@ -50,7 +50,7 @@
       "sections": []
     },
     {
-      "id": "listes",
+      "id": "listes_chainees",
       "title": "Chapitre 8: Listes Chaînées",
       "icon": "fas fa-link",
       "file": "/static/course-chapters/chapter-8-listes.json",

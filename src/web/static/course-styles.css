@@ -471,6 +471,15 @@ body.light-theme .course-exercise {
     color: #fff;
 }
 
+.course-solution-run-disabled,
+.course-solution-run-disabled:hover {
+    border-color: #7d8590;
+    color: #7d8590;
+    background: transparent;
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
 .course-solution-code {
     margin: 10px 0 0;
     background: linear-gradient(180deg, rgba(13, 17, 23, 0.88), rgba(13, 17, 23, 0.98));
@@ -480,7 +489,7 @@ body.light-theme .course-exercise {
     border: 1px solid rgba(88, 166, 255, 0.24);
     font-family: var(--course-code-font);
     font-size: 0.92rem;
-    white-space: pre;
+    white-space: pre-wrap;
     tab-size: 4;
     line-height: 1.6;
     overflow-x: auto;
@@ -524,7 +533,7 @@ body.light-theme .course-exercise {
 
 .course-code-body {
     padding: 18px;
-    white-space: pre;
+    white-space: pre-wrap;
     font-family: var(--course-code-font);
     font-size: 0.95rem;
     line-height: 1.65;

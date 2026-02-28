@@ -40,9 +40,6 @@ Thumbs.db      # Windows
 *.tmp
 nul
 examples/Tests/
-verify_sizes.py
-test_*.py
-verify_sizes.py 
 generated_lire.py
 output.py
 debug_output.py
@@ -65,6 +62,26 @@ run_test.py
 appsvision.txt
 review.txt
 promets.txt
+
+# --- Maintenance & Cleanup ---
+check_db.py
+check_exercises.py
+check_results.txt
+patch_app.py
+patch_buttons.py
+run_examples.py
+test_results.txt
+traceback_debug.txt
+src/web/repair_json_content.py
+src/web/seed_additional_quizzes.py
+src/web/seed_from_json.py
+src/web/verify_db.py
+tests/test_multi_eval_fix.py
+tests/verify_sizes.py
+
+# --- Quizzes & Database ---
+src/web/data/quizzes/*.json
+!src/web/algocompiler.db
 
 # --- Archive / draft files ---
 archive/

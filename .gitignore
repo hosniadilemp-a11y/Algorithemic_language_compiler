@@ -81,7 +81,8 @@ tests/verify_sizes.py
 fix_chapters.py
 
 # --- Quizzes & Database ---
-src/web/data/quizzes/*.json
+src/web/data/quizzes/*
+!src/web/data/quizzes/.gitkeep
 !src/web/algocompiler.db
 
 # --- Archive / draft files ---

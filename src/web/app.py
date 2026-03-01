@@ -467,8 +467,12 @@ def start_execution():
                 # TraceRunner captures it, but we also want real-time streaming.
                 # Let's create a stream-like object that puts to queue.
                 class StreamToQueue:
+                    def __init__(self):
+                        import io
+                        self.buffer = io.StringIO()
                     def write(self, text):
                         if text:
+                            self.buffer.write(text)
                             try:
                                 # Use timeout to allow checking if session is still running
                                 # This prevents deadlock if queue is full and stop is requested
@@ -486,6 +490,9 @@ def start_execution():
 
                     def isatty(self):
                         return False
+
+                    def getvalue(self):
+                        return self.buffer.getvalue()
 
                     def fileno(self):
                         import io

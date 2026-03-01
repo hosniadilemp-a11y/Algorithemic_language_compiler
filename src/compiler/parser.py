@@ -322,18 +322,7 @@ def p_program(p):
     code += "    except EOFError:\n"
     code += "        return ''\n\n"
 
-    # 1b. _algo_ecrire - Ecrire without auto-newline; interprets \\n and \\t
-    code += "def _algo_ecrire(*args):\n"
-    code += "    import sys\n"
-    code += "    parts = []\n"
-    code += "    for a in args:\n"
-    code += "        s = _algo_to_string(a)\n"
-    code += "        # Display #0 as the visible null sentinel\n"
-    code += "        s = s.replace('#0', chr(0))\n"
-    code += "        s = s.replace('\\\\n', '\\n').replace('\\\\t', '\\t')\n"
-    code += "        parts.append(s)\n"
-    code += "    sys.stdout.write(' '.join(parts))\n"
-    code += "    sys.stdout.flush()\n\n"
+    code += "    print(*parts, sep='', end='', flush=True)\n\n"
 
     # 2. _algo_to_string - no deps; MUST come before assign/concat/longueur
     code += "def _algo_to_string(val):\n"

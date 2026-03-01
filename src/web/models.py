@@ -28,7 +28,10 @@ class Choice(db.Model):
 class UserProgress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
+    learner_id = db.Column(db.String(64), nullable=False, index=True)
     score = db.Column(db.Integer, nullable=False)
     total_questions = db.Column(db.Integer, nullable=False)
+    percent_score = db.Column(db.Float, nullable=False, default=0.0)
+    is_passed = db.Column(db.Boolean, nullable=False, default=False)
     details = db.Column(db.Text, nullable=True) # JSON string of concept mastery
     completed_at = db.Column(db.DateTime, default=datetime.utcnow)

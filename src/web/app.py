@@ -1,11 +1,20 @@
 import sys
 import os
+import io
+import json
+import queue
+import random
+import threading
+import time
+import ctypes
+import uuid
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta
+
 # Add parent directory to path to allow importing 'compiler'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, render_template, request, jsonify, Response
-import io
-import contextlib
 from compiler.parser import parser, compile_algo
 
 from web.debugger import TraceRunner
@@ -23,9 +32,60 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'alg
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
+CORE_CHAPTER_IDENTIFIERS = [
+    'intro',
+    'tableaux',
+    'chaines',
+    'allocation',
+    'actions',
+    'enregistrements',
+    'fichiers',
+    'listes_chainees',
+    'piles',
+    'files'
+]
+CORE_CHAPTER_SET = set(CORE_CHAPTER_IDENTIFIERS)
+QUIZ_PASS_THRESHOLD = 70.0
+LEARNER_COOKIE_NAME = 'algo_learner_id'
+PROGRESS_COOKIE_NAME = 'algo_progress_snapshot'
+COOKIE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60
+
+
+def _ensure_user_progress_schema():
+    """Safely evolve the SQLite schema without Alembic."""
+    with db.engine.begin() as conn:
+        columns = {
+            row[1] for row in conn.exec_driver_sql("PRAGMA table_info(user_progress)").fetchall()
+        }
+
+        if 'learner_id' not in columns:
+            conn.exec_driver_sql("ALTER TABLE user_progress ADD COLUMN learner_id VARCHAR(64)")
+
+        if 'percent_score' not in columns:
+            conn.exec_driver_sql("ALTER TABLE user_progress ADD COLUMN percent_score FLOAT DEFAULT 0")
+            conn.exec_driver_sql(
+                "UPDATE user_progress SET percent_score = "
+                "CASE WHEN total_questions > 0 THEN (score * 100.0 / total_questions) ELSE 0 END "
+                "WHERE percent_score IS NULL"
+            )
+
+        if 'is_passed' not in columns:
+            conn.exec_driver_sql("ALTER TABLE user_progress ADD COLUMN is_passed BOOLEAN DEFAULT 0")
+            conn.exec_driver_sql(
+                "UPDATE user_progress SET is_passed = "
+                f"CASE WHEN percent_score >= {QUIZ_PASS_THRESHOLD} THEN 1 ELSE 0 END "
+                "WHERE is_passed IS NULL"
+            )
+
+        conn.exec_driver_sql(
+            "CREATE INDEX IF NOT EXISTS ix_user_progress_learner_id ON user_progress (learner_id)"
+        )
+
+
 # Ensure database tables exist and seed data if empty
 with app.app_context():
     db.create_all()
+    _ensure_user_progress_schema()
     # Auto-seed if empty
     from web.models import Question
     if Question.query.count() == 0:
@@ -218,7 +278,324 @@ def validate_algo():
 
 # --- QUIZ API ENDPOINTS ---
 
-import random
+def _safe_int(value, default=0):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _safe_float(value, default=0.0):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _parse_details_payload(raw_details):
+    if isinstance(raw_details, dict):
+        return raw_details
+    if isinstance(raw_details, str):
+        try:
+            parsed = json.loads(raw_details)
+            if isinstance(parsed, dict):
+                return parsed
+        except Exception:
+            return {}
+    return {}
+
+
+def _sanitize_learner_id(raw_value):
+    value = str(raw_value or '').strip()
+    if not value or len(value) > 64:
+        return None
+    if not all(ch.isalnum() or ch in {'-', '_'} for ch in value):
+        return None
+    return value
+
+
+def _get_or_create_learner_id():
+    current = _sanitize_learner_id(request.cookies.get(LEARNER_COOKIE_NAME))
+    if current:
+        return current, False
+    return uuid.uuid4().hex, True
+
+
+def _to_iso_utc(dt_value):
+    if not dt_value:
+        return None
+    if dt_value.tzinfo is None:
+        dt_value = dt_value.replace(tzinfo=timezone.utc)
+    return dt_value.isoformat().replace('+00:00', 'Z')
+
+
+def _compute_streak_days(pass_attempt_dates):
+    if not pass_attempt_dates:
+        return 0
+
+    unique_dates = sorted({d.date() for d in pass_attempt_dates}, reverse=True)
+    streak = 1
+    prev = unique_dates[0]
+
+    for current in unique_dates[1:]:
+        if prev - current == timedelta(days=1):
+            streak += 1
+            prev = current
+            continue
+        break
+
+    return streak
+
+
+def _badges_for_progress(completed_count, streak_days):
+    return [
+        {
+            'id': 'first_chapter',
+            'label': 'Premier Pas',
+            'description': 'Valider 1 chapitre.',
+            'unlocked': completed_count >= 1
+        },
+        {
+            'id': 'three_chapters',
+            'label': 'Trio Solide',
+            'description': 'Valider 3 chapitres.',
+            'unlocked': completed_count >= 3
+        },
+        {
+            'id': 'five_chapters',
+            'label': 'Mi-Parcours',
+            'description': 'Valider 5 chapitres.',
+            'unlocked': completed_count >= 5
+        },
+        {
+            'id': 'ten_chapters',
+            'label': 'Maitre Algo',
+            'description': 'Valider les 10 chapitres.',
+            'unlocked': completed_count >= 10
+        },
+        {
+            'id': 'streak_3_days',
+            'label': 'Serie 3 Jours',
+            'description': 'Reussir au moins un quiz sur 3 jours consecutifs.',
+            'unlocked': streak_days >= 3
+        }
+    ]
+
+
+def _suggestion_for_concept(concept_name):
+    label = str(concept_name or '').strip()
+    lowered = label.lower()
+
+    if any(k in lowered for k in ('boucle', 'tantque', 'pour', 'repeter')):
+        return "Refais un tracage pas-a-pas de la boucle (valeurs initiales, condition, evolution)."
+    if any(k in lowered for k in ('pointeur', 'liste', 'chainee', 'maillon')):
+        return "Dessine les liens en memoire avant de coder pour verifier les champs `suivant`."
+    if any(k in lowered for k in ('fichier', 'lecture', 'ecriture')):
+        return "Reprends le flux Ouvrir/Lire-Ecrire/Fermer avec un mini-exemple de 3 enregistrements."
+    if any(k in lowered for k in ('pile', 'file', 'queue', 'stack')):
+        return "Revois les operations de base et leur ordre (LIFO/FIFO) avec un tableau d'etats."
+    if any(k in lowered for k in ('tableau', 'indice', 'matrice')):
+        return "Ajoute un controle systematique des bornes d'indices avant chaque acces."
+
+    return "Relis la section du cours correspondante puis refais un exercice cible avant de retenter le quiz."
+
+
+def _recommendation_text(overall_percent, weak_concepts):
+    if weak_concepts:
+        first = weak_concepts[0]
+        return (
+            f"Priorite pedagogique: consolider '{first['concept']}' "
+            f"(precision actuelle {first['accuracy']}%). {first['suggestion']}"
+        )
+    if overall_percent <= 0:
+        return "Demarre par le quiz du Chapitre 1, puis enchaine un chapitre a la fois pour installer des bases solides."
+    if overall_percent < 100:
+        return "Progression stable: continue le rythme actuel et vise le prochain chapitre pour gagner +10%."
+    return "Excellent travail: les 10 chapitres principaux sont valides. Passe maintenant a des exercices combines."
+
+
+def _build_progress_snapshot(learner_id):
+    chapters = Chapter.query.all()
+    chapter_id_to_identifier = {chapter.id: chapter.identifier for chapter in chapters}
+
+    attempts = (
+        UserProgress.query
+        .filter_by(learner_id=learner_id)
+        .order_by(UserProgress.completed_at.desc(), UserProgress.id.desc())
+        .all()
+    )
+
+    chapter_progress = {
+        chapter_id: {
+            'attempted': False,
+            'passed': False,
+            'best_score': 0,
+            'best_total': 0,
+            'best_percent': 0.0,
+            'best_attempted_at': None
+        }
+        for chapter_id in CORE_CHAPTER_IDENTIFIERS
+    }
+
+    best_attempt_per_chapter = {}
+    concept_agg = defaultdict(lambda: {'correct': 0, 'total': 0})
+    pass_attempt_dates = []
+
+    for index, attempt in enumerate(attempts):
+        chapter_identifier = chapter_id_to_identifier.get(attempt.chapter_id)
+        if chapter_identifier not in CORE_CHAPTER_SET:
+            continue
+
+        percent_score = _safe_float(
+            attempt.percent_score,
+            (attempt.score * 100.0 / attempt.total_questions) if attempt.total_questions else 0.0
+        )
+        passed = bool(attempt.is_passed) or (
+            attempt.total_questions > 0 and percent_score >= QUIZ_PASS_THRESHOLD
+        )
+
+        previous = best_attempt_per_chapter.get(chapter_identifier)
+        is_better = (
+            previous is None
+            or percent_score > previous['percent_score'] + 1e-9
+            or (
+                abs(percent_score - previous['percent_score']) <= 1e-9
+                and attempt.completed_at
+                and (
+                    previous['completed_at'] is None
+                    or attempt.completed_at > previous['completed_at']
+                )
+            )
+        )
+
+        if is_better:
+            best_attempt_per_chapter[chapter_identifier] = {
+                'score': _safe_int(attempt.score, 0),
+                'total': max(_safe_int(attempt.total_questions, 0), 0),
+                'percent_score': round(percent_score, 2),
+                'passed': passed,
+                'completed_at': attempt.completed_at
+            }
+
+        if passed and attempt.completed_at:
+            pass_attempt_dates.append(attempt.completed_at)
+
+        if index < 30:
+            details_obj = _parse_details_payload(attempt.details)
+            for concept_name, stats in details_obj.items():
+                if not isinstance(stats, dict):
+                    continue
+                total = max(_safe_int(stats.get('total'), 0), 0)
+                correct = max(_safe_int(stats.get('correct'), 0), 0)
+                if total <= 0:
+                    continue
+                concept_agg[concept_name]['total'] += total
+                concept_agg[concept_name]['correct'] += min(correct, total)
+
+    attempted_chapter_ids = []
+    completed_chapter_ids = []
+
+    for chapter_identifier in CORE_CHAPTER_IDENTIFIERS:
+        best = best_attempt_per_chapter.get(chapter_identifier)
+        if not best:
+            continue
+        chapter_progress[chapter_identifier] = {
+            'attempted': True,
+            'passed': bool(best['passed']),
+            'best_score': best['score'],
+            'best_total': best['total'],
+            'best_percent': best['percent_score'],
+            'best_attempted_at': _to_iso_utc(best['completed_at'])
+        }
+        attempted_chapter_ids.append(chapter_identifier)
+        if best['passed']:
+            completed_chapter_ids.append(chapter_identifier)
+
+    weak_concepts = []
+    for concept_name, stats in concept_agg.items():
+        total = stats['total']
+        correct = stats['correct']
+        if total <= 0:
+            continue
+        accuracy = round((correct / total) * 100)
+        weak_concepts.append({
+            'concept': concept_name,
+            'accuracy': accuracy,
+            'correct': correct,
+            'total': total,
+            'suggestion': _suggestion_for_concept(concept_name)
+        })
+
+    weak_concepts.sort(key=lambda item: (item['accuracy'], -item['total'], item['concept'].lower()))
+    weak_concepts = weak_concepts[:3]
+
+    completed_count = len(completed_chapter_ids)
+    overall_percent = min(completed_count * 10, 100)
+    streak_days = _compute_streak_days(pass_attempt_dates)
+    badges = _badges_for_progress(completed_count, streak_days)
+
+    return {
+        'core_chapters_total': len(CORE_CHAPTER_IDENTIFIERS),
+        'pass_threshold': QUIZ_PASS_THRESHOLD,
+        'overall_percent': overall_percent,
+        'completed_count': completed_count,
+        'completed_chapter_ids': completed_chapter_ids,
+        'attempted_chapter_ids': attempted_chapter_ids,
+        'chapter_progress': chapter_progress,
+        'streak_days': streak_days,
+        'badges': badges,
+        'weak_concepts': weak_concepts,
+        'recommendation': _recommendation_text(overall_percent, weak_concepts),
+        'last_updated': _to_iso_utc(datetime.now(timezone.utc))
+    }
+
+
+def _compact_snapshot_for_cookie(snapshot):
+    return {
+        'overall_percent': snapshot.get('overall_percent', 0),
+        'completed_count': snapshot.get('completed_count', 0),
+        'core_chapters_total': snapshot.get('core_chapters_total', len(CORE_CHAPTER_IDENTIFIERS)),
+        'completed_chapter_ids': snapshot.get('completed_chapter_ids', []),
+        'attempted_chapter_ids': snapshot.get('attempted_chapter_ids', []),
+        'streak_days': snapshot.get('streak_days', 0),
+        'badges': [badge['id'] for badge in snapshot.get('badges', []) if badge.get('unlocked')],
+        'weak_concepts': [
+            {
+                'concept': item.get('concept'),
+                'accuracy': item.get('accuracy')
+            }
+            for item in snapshot.get('weak_concepts', [])
+        ],
+        'recommendation': snapshot.get('recommendation', ''),
+        'last_updated': snapshot.get('last_updated')
+    }
+
+
+def _set_progress_cookies(response, learner_id, snapshot):
+    response.set_cookie(
+        LEARNER_COOKIE_NAME,
+        learner_id,
+        max_age=COOKIE_MAX_AGE_SECONDS,
+        samesite='Lax',
+        path='/',
+        httponly=True
+    )
+
+    compact_payload = json.dumps(
+        _compact_snapshot_for_cookie(snapshot),
+        ensure_ascii=False,
+        separators=(',', ':')
+    )
+    response.set_cookie(
+        PROGRESS_COOKIE_NAME,
+        compact_payload,
+        max_age=COOKIE_MAX_AGE_SECONDS,
+        samesite='Lax',
+        path='/',
+        httponly=False
+    )
+    return response
+
 
 @app.route('/api/quiz/<chapter_identifier>')
 def get_quiz(chapter_identifier):
@@ -268,37 +645,55 @@ def get_quiz(chapter_identifier):
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/api/quiz/progress', methods=['GET'])
+def get_quiz_progress():
+    try:
+        learner_id, _created = _get_or_create_learner_id()
+        snapshot = _build_progress_snapshot(learner_id)
+        response = jsonify({'success': True, 'snapshot': snapshot})
+        return _set_progress_cookies(response, learner_id, snapshot)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/quiz/save_progress', methods=['POST'])
 def save_quiz_progress():
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         chapter_identifier = data.get('chapter_identifier')
-        score = data.get('score')
-        total = data.get('total')
-        details = data.get('details', '{}') 
+        score = _safe_int(data.get('score'), 0)
+        total = max(_safe_int(data.get('total'), 0), 0)
+        details = _parse_details_payload(data.get('details', {}))
+
+        if not chapter_identifier:
+            return jsonify({'error': 'Missing chapter_identifier'}), 400
 
         chapter = Chapter.query.filter_by(identifier=chapter_identifier).first()
         if not chapter:
             return jsonify({'error': 'Chapter not found'}), 404
 
+        learner_id, _created = _get_or_create_learner_id()
+        percent_score = round((score * 100.0 / total), 2) if total > 0 else 0.0
+        is_passed = bool(total > 0 and percent_score >= QUIZ_PASS_THRESHOLD)
+
         progress = UserProgress(
             chapter_id=chapter.id,
             score=score,
             total_questions=total,
-            details=json.dumps(details)
+            learner_id=learner_id,
+            percent_score=percent_score,
+            is_passed=is_passed,
+            details=json.dumps(details, ensure_ascii=False)
         )
         db.session.add(progress)
         db.session.commit()
 
-        return jsonify({'success': True})
+        snapshot = _build_progress_snapshot(learner_id)
+        response = jsonify({'success': True, 'snapshot': snapshot})
+        return _set_progress_cookies(response, learner_id, snapshot)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-import threading
-
-import queue
-import time
-import json
 
 # Global Session State
 class GlobalSession:

@@ -304,9 +304,15 @@ class QuizController {
     }
 
     async showResults() {
+        let progressSnapshot = null;
+        const passThreshold = 70;
+        const percentage = Math.round((this.score / this.quizData.length) * 100);
+        const chapterPassed = percentage >= passThreshold;
+        let saveSucceeded = false;
+
         // Save progress to backend
         try {
-            await fetch('/api/quiz/save_progress', {
+            const response = await fetch('/api/quiz/save_progress', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -316,8 +322,35 @@ class QuizController {
                     details: this.conceptAnalysis
                 })
             });
+
+            const data = await response.json();
+            if (response.ok && data && data.snapshot) {
+                saveSucceeded = true;
+                progressSnapshot = data.snapshot;
+                this.persistProgressSnapshotCookie(progressSnapshot);
+                this.emitProgressUpdate(progressSnapshot);
+            }
         } catch (e) {
             console.error("Failed to save progress", e);
+        }
+
+        // Always sync snapshot from backend as source of truth.
+        const syncedSnapshot = await this.fetchProgressSnapshot();
+        if (syncedSnapshot) {
+            progressSnapshot = syncedSnapshot;
+        }
+
+        // Last resort: optimistic local update so learner sees immediate change.
+        if (!progressSnapshot) {
+            progressSnapshot = this.buildOptimisticSnapshot(percentage, passThreshold);
+            if (progressSnapshot) {
+                this.persistProgressSnapshotCookie(progressSnapshot);
+                this.emitProgressUpdate(progressSnapshot);
+            }
+        }
+
+        if (!saveSucceeded && !progressSnapshot) {
+            progressSnapshot = await this.fetchProgressSnapshot();
         }
 
         const body = this.modal.querySelector('#quiz-body');
@@ -328,7 +361,6 @@ class QuizController {
         const footer = this.modal.querySelector('.quiz-footer');
         if (footer) footer.style.display = 'none';
 
-        const percentage = Math.round((this.score / this.quizData.length) * 100);
         let message = '';
         let colorClass = '';
 
@@ -357,6 +389,11 @@ class QuizController {
                 </div>
             `;
         }).join('');
+        const passFeedbackHtml = chapterPassed
+            ? `<div class="quiz-analysis-box quiz-analysis-box-progress"><p><strong>Chapitre valide:</strong> ${percentage}% >= ${passThreshold}%.</p></div>`
+            : `<div class="quiz-analysis-box quiz-analysis-box-weak"><p><strong>Chapitre non valide:</strong> ${percentage}% &lt; ${passThreshold}%. Refaire le test pour debloquer les +10% et les badges.</p></div>`;
+        const weakConceptsHtml = this.buildWeakConceptsHtml(progressSnapshot);
+        const progressionFooter = this.buildProgressFooter(progressSnapshot);
 
         body.innerHTML = `
             <div class="quiz-results-container">
@@ -371,12 +408,171 @@ class QuizController {
                     ${analysisHtml}
                 </div>
 
+                ${passFeedbackHtml}
+                ${weakConceptsHtml}
+                ${progressionFooter}
+
                 <div class="quiz-res-actions">
                     <button class="quiz-btn outline" onclick="window.quizController.startQuiz('${this.chapterIdentifier}', '${this.chapterTitle}')"><i class="fas fa-redo"></i> Refaire le test</button>
                     <button class="quiz-btn primary" onclick="window.quizController.closeQuiz()"><i class="fas fa-book"></i> Retourner au cours</button>
                 </div>
             </div>
         `;
+    }
+
+    buildOptimisticSnapshot(percentage, passThreshold) {
+        const base = this.course && this.course.progress
+            ? JSON.parse(JSON.stringify(this.course.progress))
+            : null;
+        if (!base) return null;
+
+        const chapterId = this.chapterIdentifier;
+        if (!chapterId) return null;
+
+        if (!Array.isArray(base.attempted_chapter_ids)) base.attempted_chapter_ids = [];
+        if (!Array.isArray(base.completed_chapter_ids)) base.completed_chapter_ids = [];
+        if (!base.chapter_progress || typeof base.chapter_progress !== 'object') base.chapter_progress = {};
+
+        if (!base.chapter_progress[chapterId]) {
+            base.chapter_progress[chapterId] = {
+                attempted: false,
+                passed: false,
+                best_score: 0,
+                best_total: 0,
+                best_percent: 0,
+                best_attempted_at: null
+            };
+        }
+
+        const row = base.chapter_progress[chapterId];
+        row.attempted = true;
+        row.best_score = Math.max(Number(row.best_score) || 0, Number(this.score) || 0);
+        row.best_total = Math.max(Number(row.best_total) || 0, Number(this.quizData.length) || 0);
+        row.best_percent = Math.max(Number(row.best_percent) || 0, Number(percentage) || 0);
+        row.best_attempted_at = new Date().toISOString();
+
+        if (!base.attempted_chapter_ids.includes(chapterId)) {
+            base.attempted_chapter_ids.push(chapterId);
+        }
+
+        const passed = percentage >= passThreshold;
+        if (passed) {
+            row.passed = true;
+            if (!base.completed_chapter_ids.includes(chapterId)) {
+                base.completed_chapter_ids.push(chapterId);
+            }
+        }
+
+        base.completed_count = base.completed_chapter_ids.length;
+        base.overall_percent = Math.min(base.completed_count * 10, 100);
+        base.pass_threshold = passThreshold;
+
+        if (Array.isArray(base.badges)) {
+            base.badges = base.badges.map((badge) => {
+                if (!badge || !badge.id) return badge;
+                const unlocked =
+                    badge.id === 'first_chapter' ? base.completed_count >= 1 :
+                    badge.id === 'three_chapters' ? base.completed_count >= 3 :
+                    badge.id === 'five_chapters' ? base.completed_count >= 5 :
+                    badge.id === 'ten_chapters' ? base.completed_count >= 10 :
+                    badge.id === 'streak_3_days' ? (Number(base.streak_days) || 0) >= 3 :
+                    Boolean(badge.unlocked);
+                return { ...badge, unlocked };
+            });
+        }
+
+        return base;
+    }
+
+    async fetchProgressSnapshot() {
+        try {
+            const response = await fetch('/api/quiz/progress');
+            if (!response.ok) return null;
+            const data = await response.json();
+            if (!data || !data.snapshot) return null;
+            this.persistProgressSnapshotCookie(data.snapshot);
+            this.emitProgressUpdate(data.snapshot);
+            return data.snapshot;
+        } catch (error) {
+            console.error('Failed to refresh progress snapshot', error);
+            return null;
+        }
+    }
+
+    buildWeakConceptsHtml(snapshot) {
+        if (!snapshot || !Array.isArray(snapshot.weak_concepts) || snapshot.weak_concepts.length === 0) {
+            return '';
+        }
+
+        const rows = snapshot.weak_concepts.map((item) => `
+            <div class="analysis-row">
+                <div class="analysis-lbl">${this.escapeHtml(item.concept || 'Concept')}</div>
+                <div class="analysis-bar-bg">
+                    <div class="analysis-bar-fill" style="width: ${Math.max(0, Math.min(100, Number(item.accuracy) || 0))}%; background: #f85149"></div>
+                </div>
+                <div class="analysis-val">${Math.max(0, Math.min(100, Number(item.accuracy) || 0))}%</div>
+            </div>
+            <p class="quiz-weak-tip">${this.escapeHtml(item.suggestion || '')}</p>
+        `).join('');
+
+        return `
+            <div class="quiz-analysis-box quiz-analysis-box-weak">
+                <h3>Priorites de revision</h3>
+                ${rows}
+            </div>
+        `;
+    }
+
+    buildProgressFooter(snapshot) {
+        if (!snapshot) return '';
+
+        const completed = Number(snapshot.completed_count) || 0;
+        const total = Number(snapshot.core_chapters_total) || 10;
+        const overall = Number(snapshot.overall_percent) || 0;
+        const streak = Number(snapshot.streak_days) || 0;
+        const recommendation = snapshot.recommendation || '';
+
+        return `
+            <div class="quiz-analysis-box quiz-analysis-box-progress">
+                <h3>Progression globale</h3>
+                <p>Avancement: <strong>${overall}%</strong> (${completed}/${total} chapitres valides) | Serie: <strong>${streak} jour(s)</strong></p>
+                <p>${this.escapeHtml(recommendation)}</p>
+            </div>
+        `;
+    }
+
+    emitProgressUpdate(snapshot) {
+        window.dispatchEvent(new CustomEvent('quiz:progress-updated', {
+            detail: { snapshot }
+        }));
+    }
+
+    persistProgressSnapshotCookie(snapshot) {
+        try {
+            const compact = {
+                overall_percent: Number(snapshot.overall_percent) || 0,
+                completed_count: Number(snapshot.completed_count) || 0,
+                core_chapters_total: Number(snapshot.core_chapters_total) || 10,
+                completed_chapter_ids: Array.isArray(snapshot.completed_chapter_ids) ? snapshot.completed_chapter_ids : [],
+                attempted_chapter_ids: Array.isArray(snapshot.attempted_chapter_ids) ? snapshot.attempted_chapter_ids : [],
+                streak_days: Number(snapshot.streak_days) || 0,
+                badges: Array.isArray(snapshot.badges)
+                    ? snapshot.badges.filter((b) => b && b.unlocked).map((b) => b.id)
+                    : [],
+                weak_concepts: Array.isArray(snapshot.weak_concepts)
+                    ? snapshot.weak_concepts.map((item) => ({
+                        concept: item.concept,
+                        accuracy: Number(item.accuracy) || 0
+                    }))
+                    : [],
+                recommendation: snapshot.recommendation || '',
+                last_updated: snapshot.last_updated || null
+            };
+            const encoded = encodeURIComponent(JSON.stringify(compact));
+            document.cookie = `algo_progress_snapshot=${encoded}; max-age=31536000; path=/; SameSite=Lax`;
+        } catch (error) {
+            console.warn('Unable to persist progress snapshot cookie', error);
+        }
     }
 
     getColorForPerc(perc) {
@@ -388,9 +584,9 @@ class QuizController {
     closeQuiz() {
         this.modal.classList.remove('active');
         setTimeout(() => this.modal.querySelector('.quiz-footer').style.display = 'flex', 300);
-        // Refresh course if needed, or simply return visually
-        if (this.course) {
-            // Maybe reset scroll or do something
+        // Keep right progress panel in sync after closing modal.
+        if (this.course && typeof this.course.refreshProgressFromApi === 'function') {
+            this.course.refreshProgressFromApi();
         }
     }
 

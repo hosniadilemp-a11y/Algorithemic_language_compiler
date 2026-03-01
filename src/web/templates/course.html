@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AlgoCompiler - Cours</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}?v=14">
-    <link rel="stylesheet" href="{{ url_for('static', filename='quiz-styles.css') }}?v=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}?v=19">
+    <link rel="stylesheet" href="{{ url_for('static', filename='quiz-styles.css') }}?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -16,7 +15,7 @@
         <div class="course-page-topbar">
             <div class="course-page-brand"><i class="fas fa-graduation-cap"></i> Cours d'algorithmique</div>
             <div style="display:flex; gap:10px; align-items:center;">
-                <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <button class="course-theme-btn" data-theme-toggle title="Basculer le theme">
                     <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
                 </button>
                 <a href="/" class="course-back-btn"><i class="fas fa-code"></i> Retour au compilateur</a>
@@ -30,21 +29,80 @@
                 </div>
                 <nav id="course-outline" class="course-outline"></nav>
             </aside>
+
             <main class="course-main">
                 <div id="course-content" class="course-content"></div>
                 <footer class="course-nav-footer">
-                    <button id="course-prev-btn" class="btn secondary"><i class="fas fa-arrow-left"></i>
-                        Précédent</button>
+                    <button id="course-prev-btn" class="btn secondary"><i class="fas fa-arrow-left"></i> Precedent</button>
                     <div id="course-pagination" class="course-pagination">1 / 10</div>
-                    <button id="course-next-btn" class="btn secondary">Suivant <i
-                            class="fas fa-arrow-right"></i></button>
+                    <button id="course-next-btn" class="btn secondary">Suivant <i class="fas fa-arrow-right"></i></button>
                 </footer>
             </main>
+
+            <aside class="course-progress-sidebar">
+                <section id="course-progress-dock" class="course-progress-dock" aria-label="Progression d'apprentissage">
+                    <div class="course-progress-row">
+                        <div class="course-progress-title-wrap">
+                            <h3>Progression du Parcours</h3>
+                            <p id="course-progress-completed">0 / 10 chapitres valides</p>
+                        </div>
+                    </div>
+
+                    <div class="course-progress-head">
+                        <div id="course-progress-gauge" class="course-progress-gauge" style="--progress-value: 0%;">
+                            <div class="course-progress-gauge-inner">
+                                <span id="course-progress-percent">0%</span>
+                                <small>Acquis</small>
+                            </div>
+                        </div>
+                        <div class="course-progress-head-info">
+                            <div id="course-progress-streak" class="course-progress-meta-item">0 jour(s) de serie</div>
+                            <div class="course-progress-meta-item">Chaque chapitre valide = +10%</div>
+                        </div>
+                    </div>
+
+                    <div class="course-progress-kpis">
+                        <div class="course-progress-kpi">
+                            <span class="course-progress-kpi-label">Termines</span>
+                            <strong id="course-progress-kpi-completed">0</strong>
+                        </div>
+                        <div class="course-progress-kpi">
+                            <span class="course-progress-kpi-label">Restants</span>
+                            <strong id="course-progress-kpi-remaining">10</strong>
+                        </div>
+                        <div class="course-progress-kpi">
+                            <span class="course-progress-kpi-label">Badges</span>
+                            <strong id="course-progress-kpi-badges">0</strong>
+                        </div>
+                        <div class="course-progress-kpi">
+                            <span class="course-progress-kpi-label">A revoir</span>
+                            <strong id="course-progress-kpi-weak">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="course-progress-goal">
+                        <div class="course-progress-goal-title"><i class="fas fa-bullseye"></i> Prochain objectif</div>
+                        <p id="course-progress-goal">Valider le premier chapitre pour lancer la progression.</p>
+                    </div>
+
+                    <div class="course-progress-section">
+                        <h4>Badges</h4>
+                        <div id="course-progress-badges" class="course-progress-badges"></div>
+                    </div>
+
+                    <div class="course-progress-section">
+                        <h4>Concepts a renforcer</h4>
+                        <div id="course-progress-weak" class="course-progress-weak"></div>
+                    </div>
+
+                    <p id="course-progress-reco" class="course-progress-reco"><i class="fas fa-lightbulb"></i> Passe un quiz pour lancer le suivi pedagogique.</p>
+                </section>
+            </aside>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='quiz-controller.js') }}?v=5"></script>
-    <script src="{{ url_for('static', filename='course-controller.js') }}?v=26"></script>
+    <script src="{{ url_for('static', filename='quiz-controller.js') }}?v=4"></script>
+    <script src="{{ url_for('static', filename='course-controller.js') }}?v=30"></script>
     <script src="{{ url_for('static', filename='theme.js') }}?v=2"></script>
 </body>
 

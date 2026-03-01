@@ -574,6 +574,25 @@ body.light-theme .quiz-analysis-box {
     font-size: 1.2rem;
 }
 
+.quiz-analysis-box-weak {
+    border-color: rgba(248, 81, 73, 0.4);
+}
+
+.quiz-analysis-box-progress {
+    border-color: rgba(88, 166, 255, 0.4);
+}
+
+.quiz-weak-tip {
+    margin: 4px 0 10px;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: #8b949e;
+}
+
+body.light-theme .quiz-weak-tip {
+    color: #57606a;
+}
+
 .analysis-row {
     display: flex;
     align-items: center;

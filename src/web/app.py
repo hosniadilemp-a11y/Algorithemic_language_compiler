@@ -11,9 +11,20 @@ from compiler.parser import parser, compile_algo
 from web.debugger import TraceRunner
 from web.models import db, Chapter, Question, Choice, UserProgress
 
+# Handle Windows console encoding issues for scientific/accented characters
+if sys.platform == 'win32':
+    try:
+        import io
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except:
+        pass
+
 import logging
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+# Aggressively silence all logging to prevent OSError [Errno 22] on Windows console
+logging.disable(logging.CRITICAL)
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+logging.getLogger('werkzeug').disabled = True
 
 app = Flask(__name__)
 
@@ -397,7 +408,6 @@ def start_execution():
         return jsonify({'success': False, 'error': 'Already running'})
 
     try:
-        print(f"DEBUG: app session ID: {id(session)}")
         # Transpile to Python
         # Use compile_algo to ensure indent_level is reset
         result = compile_algo(code)
@@ -499,207 +509,155 @@ def start_execution():
                         raise io.UnsupportedOperation("fileno")
                 
                 stream = StreamToQueue()
-
-                # Prepare builtins
-                # Custom print to ensure capture
-                def custom_print(*args, **kwargs):
-                    sep = kwargs.get('sep', ' ')
-                    end = kwargs.get('end', '\n')
-                    file = kwargs.get('file', None)
-                    if file is None:
-                        text = sep.join(map(str, args)) + end
-                        stream.write(text)
-                    else:
-                        try:
-                            file.write(sep.join(map(str, args)) + end)
-                        except:
-                            pass
-
-                # Helper to convert Algo types (like char lists) to string for display
-                def _algo_to_string(val):
-                    if isinstance(val, bool): return "Vrai" if val else "Faux"
-                    if isinstance(val, list):
-                        res = ""
-                        for char in val:
-                            if char is None or char == "\0": break
-                            res += str(char)
-                        return res
-                    return str(val)
-
                 
-                def _algo_longueur(val):
-                    """Calculate length of a string (stops at null terminator for fixed strings)"""
-                    if isinstance(val, list):
-                        return len(_algo_to_string(val))
-                    return len(str(val))
-                
-                def _algo_concat(val1, val2):
-                    """Concatenate two strings, handling fixed-size string arrays"""
-                    # Convert both values to strings
-                    str1 = ""
-                    # Concatenate two values (string or fixed-string list)
-                    s1 = _algo_to_string(val1) if isinstance(val1, list) else str(val1)
-                    s2 = _algo_to_string(val2) if isinstance(val2, list) else str(val2)
-                    return s1 + s2
-                    
-                def _algo_assign_fixed_string(target_list, source_val):
-                    # Update target_list in-place to match source_val (string or list)
-                    # Enforce size limit and terminator
-                    if not isinstance(target_list, list): return target_list # Should be list
-                    limit = len(target_list)
-                    
-                    # Convert source to string first
-                    s_val = ''
-                    # Check if source_val is a Pointer pointing to an array (array decay read)
-                    if hasattr(source_val, '_get_target_container'):
-                        targ = source_val._get_target_container()
-                        # Sub-pointers decay wrapper (chaine Pointers points to base_var=Pointer(...)
-                        while hasattr(targ, '_get_target_container'): 
-                            targ = targ._get_target_container()
-                        
-                        if isinstance(targ, list):
-                            # It's a pointer to an array, extract from index onwards
-                            s_val = _algo_to_string(targ[source_val.index:])
+                # Global redirection for this thread to capture all prints and logs
+                with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
+
+                    # Prepare builtins
+                    # Custom print to ensure capture
+                    def custom_print(*args, **kwargs):
+                        sep = kwargs.get('sep', ' ')
+                        end = kwargs.get('end', '\n')
+                        file = kwargs.get('file', None)
+                        if file is None:
+                            text = sep.join(map(str, args)) + end
+                            stream.write(text)
                         else:
-                            # Evaluate scalar value
-                            s_val = str(source_val._get_string() if hasattr(source_val, '_get_string') else source_val._get())
-                    elif isinstance(source_val, list):
-                         s_val = _algo_to_string(source_val)
-                    else:
-                         s_val = str(source_val)
-                    
-                    # Truncate to limit - 1 to ensure room for terminator if limit > 0
-                    if limit > 0:
-                        s_val = s_val[:limit-1]
+                            try:
+                                file.write(sep.join(map(str, args)) + end)
+                            except:
+                                pass
+
+                    # Helper to convert Algo types (like char lists) to string for display
+                    def _algo_to_string(val):
+                        if isinstance(val, bool): return "Vrai" if val else "Faux"
+                        if isinstance(val, list):
+                            res = ""
+                            for char in val:
+                                if char is None or char == "\0": break
+                                res += str(char)
+                            return res
+                        return str(val)
+
+                    def _algo_longueur(val):
+                        """Calculate length of a string (stops at null terminator for fixed strings)"""
+                        if isinstance(val, list):
+                            return len(_algo_to_string(val))
+                        return len(str(val))
+                
+                    def _algo_concat(val1, val2):
+                        """Concatenate two strings, handling fixed-size string arrays"""
+                        # Convert both values to strings
+                        s1 = _algo_to_string(val1) if isinstance(val1, list) else str(val1)
+                        s2 = _algo_to_string(val2) if isinstance(val2, list) else str(val2)
+                        return s1 + s2
                         
-                        # Fill list
-                        for i in range(len(s_val)):
-                            target_list[i] = s_val[i]
-                        target_list[len(s_val)] = '\0' # Terminator
-                        # Pad rest with None
-                        for i in range(len(s_val)+1, limit):
-                            target_list[i] = None
-                    return target_list
+                    def _algo_assign_fixed_string(target_list, source_val):
+                        # Update target_list in-place to match source_val (string or list)
+                        if not isinstance(target_list, list): return target_list
+                        limit = len(target_list)
+                        s_val = ''
+                        if hasattr(source_val, '_get_target_container'):
+                            targ = source_val._get_target_container()
+                            while hasattr(targ, '_get_target_container'): 
+                                targ = targ._get_target_container()
+                            if isinstance(targ, list):
+                                s_val = _algo_to_string(targ[source_val.index:])
+                            else:
+                                s_val = str(source_val._get_string() if hasattr(source_val, '_get_string') else source_val._get())
+                        elif isinstance(source_val, list):
+                             s_val = _algo_to_string(source_val)
+                        else:
+                             s_val = str(source_val)
+                        
+                        if limit > 0:
+                            s_val = s_val[:limit-1]
+                            for i in range(len(s_val)):
+                                target_list[i] = s_val[i]
+                            target_list[len(s_val)] = '\0'
+                            for i in range(len(s_val)+1, limit):
+                                target_list[i] = None
+                        return target_list
 
-
-                # Mock input for LIRE if needed
-                if False:
-                    pass 
-                
-                # Parser generates: x = _algo_read_typed(x, _algo_read())
-                # app.py defines: def _algo_read_typed(current_val, raw_input): ...
-                
-                def _algo_read_typed(current_val, raw_val, target_type_name='CHAINE'):
-                    # Strict Type Enforcement based on current_val OR target_type_name
-                    
-                    # Determine effective type check
-                    type_to_check = target_type_name.upper()
-                    
-                    # Handle Fixed Strings
-                    if 'CHAINE' in type_to_check:
-                        # If it's a list (fixed Chaine), update in place
-                        if isinstance(current_val, list):
-                             _algo_assign_fixed_string(current_val, raw_val)
-                             return current_val
-                        # If scalar (dynamic? forbidden? or None init), return string
+                    # Mock input for LIRE if needed
+                    def _algo_read_typed(current_val, raw_val, target_type_name='CHAINE'):
+                        type_to_check = target_type_name.upper()
+                        if 'CHAINE' in type_to_check:
+                            if isinstance(current_val, list):
+                                 _algo_assign_fixed_string(current_val, raw_val)
+                                 return current_val
+                            return str(raw_val)
+                        if 'BOOLEEN' in type_to_check or isinstance(current_val, bool):
+                            val_str = str(raw_val).lower()
+                            if val_str in ['vrai', 'true', '1']: return True
+                            if val_str in ['faux', 'false', '0']: return False
+                            raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Booléen valide.")
+                        if 'ENTIER' in type_to_check or isinstance(current_val, int):
+                            try: return int(raw_val)
+                            except: raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Entier valide.")
+                        if 'REEL' in type_to_check or isinstance(current_val, float):
+                            try: return float(raw_val)
+                            except: raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Reel valide.")
+                        if isinstance(current_val, list): return raw_val 
                         return str(raw_val)
 
-                    # Handle Boolean
-                    if 'BOOLEEN' in type_to_check or isinstance(current_val, bool):
-                        val_str = str(raw_val).lower()
-                        if val_str in ['vrai', 'true', '1']: return True
-                        if val_str in ['faux', 'false', '0']: return False
-                        raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Booléen valide.")
-
-                    # Handle Integer
-                    if 'ENTIER' in type_to_check or isinstance(current_val, int):
-                        try: 
-                            val = int(raw_val)
-                            return val
-                        except: 
-                            raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Entier valide.")
-
-                    # Handle Float
-                    if 'REEL' in type_to_check or isinstance(current_val, float):
-                        try:
-                            val = float(raw_val)
-                            return val
-                        except: 
-                            raise ValueError(f"Type mismatch: '{raw_val}' n'est pas un Reel valide.")
-
-
-                    # Handle Lists (Arrays or Fixed Strings) - Complex case if None
-                    if isinstance(current_val, list):
-                        return raw_val 
-                    
-                    # Default: String
-                    return str(raw_val)
-
-                def _algo_set_char(target_list, index, char_val):
-                    """Set character at 0-based index in a fixed string"""
-                    if not isinstance(target_list, list):
-                        raise TypeError(f"Variable Chaine non initialisee. Declarez avec s[N]: Chaine (recu: {type(target_list).__name__})")
-                    idx = int(index)  # 0-based
-                    if 0 <= idx < len(target_list):
-                        c = str(char_val)[0] if char_val else "\0"
-                        target_list[idx] = c
-                    return target_list
-
-                def _algo_get_char(target_list, index):
-                    """Get character at 0-based index from a fixed string"""
-                    if isinstance(target_list, list):
-                        idx = int(index)  # 0-based
+                    def _algo_set_char(target_list, index, char_val):
+                        if not isinstance(target_list, list): return target_list
+                        idx = int(index)
                         if 0 <= idx < len(target_list):
-                            c = target_list[idx]
-                            return c if c is not None and c != "\0" else ""
-                        return ""
-                    s = str(target_list)
-                    idx = int(index)
-                    return s[idx] if 0 <= idx < len(s) else ""
+                            c = str(char_val)[0] if char_val else "\0"
+                            target_list[idx] = c
+                        return target_list
 
-                # Prepare builtins
-                safe_builtins = {}
-                if isinstance(__builtins__, dict):
-                    safe_builtins = __builtins__.copy()
-                else:
-                    safe_builtins = __builtins__.__dict__.copy()
+                    def _algo_get_char(target_list, index):
+                        if isinstance(target_list, list):
+                            idx = int(index)
+                            if 0 <= idx < len(target_list):
+                                c = target_list[idx]
+                                return c if c is not None and c != "\0" else ""
+                            return ""
+                        s = str(target_list)
+                        idx = int(index)
+                        return s[idx] if 0 <= idx < len(s) else ""
 
-                exec_globals = {
-                    '_algo_to_string': _algo_to_string,
-                    '_algo_longueur': _algo_longueur,
-                    '_algo_concat': _algo_concat,
-                    '_algo_assign_fixed_string': _algo_assign_fixed_string,
-                    '_algo_set_char': _algo_set_char,
-                    '_algo_get_char': _algo_get_char,
-                    '_algo_read_typed': _algo_read_typed,
-                    'print': custom_print,
-                    'input': mock_input, 
-                    '__builtins__': safe_builtins
-                }
+                    # Prepare builtins
+                    safe_builtins = {}
+                    if isinstance(__builtins__, dict):
+                        safe_builtins = __builtins__.copy()
+                    else:
+                        safe_builtins = __builtins__.__dict__.copy()
 
-                # Let's subclass or modify TraceRunner behavior via callback?
-                # Or just use TraceRunner logic here.
-                
-                tracer = TraceRunner()
-                
-                # Callback to push step to queue
-                def on_log_step(step):
-                     if not ctx.is_running:
-                         raise SystemExit("Execution stopped by user")
-                     try:
-                         # Try putting with timeout to allow checking run state
-                         while ctx.is_running:
-                             try:
-                                 ctx.output_queue.put({'type': 'trace', 'data': step}, timeout=0.1)
-                                 break
-                             except queue.Full:
-                                 if not ctx.is_running: break
-                                 continue
-                     except:
-                         pass
-                
-                # Run execution
-                tracer.run(python_code, exec_globals, stdout_capture=stream, on_step=on_log_step)
+                    exec_globals = {
+                        '_algo_to_string': _algo_to_string,
+                        '_algo_longueur': _algo_longueur,
+                        '_algo_concat': _algo_concat,
+                        '_algo_assign_fixed_string': _algo_assign_fixed_string,
+                        '_algo_set_char': _algo_set_char,
+                        '_algo_get_char': _algo_get_char,
+                        '_algo_read_typed': _algo_read_typed,
+                        'print': custom_print,
+                        'input': mock_input, 
+                        '__builtins__': safe_builtins
+                    }
+
+                    tracer = TraceRunner()
+                    
+                    def on_log_step(step):
+                         if not ctx.is_running:
+                             raise SystemExit("Execution stopped by user")
+                         try:
+                             while ctx.is_running:
+                                 try:
+                                     ctx.output_queue.put({'type': 'trace', 'data': step}, timeout=0.1)
+                                     break
+                                 except queue.Full:
+                                     if not ctx.is_running: break
+                                     continue
+                         except:
+                             pass
+                    
+                    # Run execution
+                    tracer.run(python_code, exec_globals, stdout_capture=stream, on_step=on_log_step)
 
 
             except SystemExit:

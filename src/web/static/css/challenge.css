@@ -1,0 +1,529 @@
+/* Layout */
+.challenge-layout {
+    display: flex;
+    height: calc(100vh - 60px);
+    /* Adjust for navbar */
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--bg-color, #f4f6f8);
+}
+
+/* Left Pane: Problem Description */
+.problem-pane {
+    width: 50%;
+    min-width: 300px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: var(--card-bg, #fff);
+    border-right: 1px solid var(--border-color, #ddd);
+    box-sizing: border-box;
+}
+
+.problem-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.problem-nav {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.problem-nav .btn[aria-disabled="true"] {
+    opacity: 0.55;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.problem-header h2 {
+    margin: 0 0 10px 0;
+    color: var(--text-color, #333);
+}
+
+.problem-description {
+    line-height: 1.6;
+    color: var(--text-color, #333);
+}
+
+/* Problem definition readability */
+#problem-description.markdown-body {
+    line-height: 1.75;
+    font-size: 1rem;
+    max-width: 100%;
+}
+
+#problem-description.markdown-body h3 {
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+    padding-bottom: 0.3rem;
+}
+
+#problem-description.markdown-body h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+}
+
+#problem-description.markdown-body code {
+    border-radius: 6px;
+    padding: 0.1rem 0.35rem;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+#problem-description.markdown-body pre {
+    padding: 12px 14px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+/* Middle Divider (Vertical) */
+.split-pane-divider {
+    width: 5px;
+    background-color: var(--border-color, #ddd);
+    cursor: col-resize;
+    z-index: 10;
+    transition: background-color 0.2s;
+}
+
+.split-pane-divider:hover,
+.split-pane-divider.dragging {
+    background-color: var(--primary-color, #0056b3);
+}
+
+/* Right Pane: Editor + Bottom Console */
+.editor-pane {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 50%;
+    /* Handled by flex but good to have a base */
+    min-width: 400px;
+    height: 100%;
+    background-color: var(--bg-color, #1e1e1e);
+    /* Dark IDE base */
+}
+
+/* Existing IDE Toolbar Tweaks */
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: var(--toolbar-bg, #2d2d2d);
+    color: var(--text-color, #e0e0e0);
+    border-bottom: 1px solid var(--border-color, #111);
+}
+
+.editor-wrapper {
+    flex-grow: 1;
+    position: relative;
+    overflow: hidden;
+    /* CodeMirror needs to fill this */
+}
+
+.editor-wrapper .CodeMirror {
+    height: 100% !important;
+}
+
+/* Horizontal Splitter */
+.h-splitter {
+    height: 5px;
+    background-color: var(--border-color, #444);
+    cursor: row-resize;
+    z-index: 10;
+}
+
+.h-splitter:hover,
+.h-splitter.dragging {
+    background-color: var(--primary-color, #0056b3);
+}
+
+/* Bottom Tabs Pane */
+.bottom-pane {
+    height: 30%;
+    /* Initial Height */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bottom-pane-bg, #1e1e1e);
+    border-top: 1px solid var(--border-color, #333);
+    color: #e0e0e0;
+}
+
+.tabs-header {
+    display: flex;
+    align-items: center;
+    background-color: var(--tab-header-bg, #252526);
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-top: 2px solid transparent;
+}
+
+.tab-btn:hover {
+    color: #ccc;
+    background-color: #2a2d2e;
+}
+
+.tab-btn.active {
+    color: #fff;
+    background-color: #1e1e1e;
+    border-top-color: var(--primary-color, #007acc);
+}
+
+.tabs-header .btn {
+    margin-right: 10px;
+    padding: 6px 15px;
+    font-size: 0.85rem;
+}
+
+.tab-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #1e1e1e;
+}
+
+/* Console Split Input/Output */
+.console-io-split {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    gap: 15px;
+}
+
+.console-input-section,
+.console-output-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.console-input-section h4,
+.console-output-section h4 {
+    margin: 0 0 10px 0;
+    color: #bbb;
+    font-size: 0.9em;
+}
+
+#custom-input {
+    flex-grow: 1;
+    background-color: #000;
+    color: #0f0;
+    border: 1px solid #333;
+    padding: 10px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    resize: none;
+}
+
+.output-logs {
+    flex-grow: 1;
+    background-color: #000;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    padding: 10px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    overflow-y: auto;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Test Cases UI */
+.test-case-card {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.test-case-card h4 {
+    margin: 0 0 10px 0;
+    color: #ccc;
+}
+
+.io-block {
+    background-color: #111;
+    padding: 8px;
+    border-radius: 3px;
+    font-family: monospace;
+    margin-bottom: 5px;
+}
+
+/* Results UI */
+.results-summary {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.summary-pass {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+.summary-fail {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.result-item {
+    margin-bottom: 10px;
+}
+
+.result-header {
+    background-color: #2d2d2d;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid transparent;
+}
+
+.result-header.passed {
+    border-left-color: #28a745;
+}
+
+.result-header.failed {
+    border-left-color: #dc3545;
+}
+
+.result-details {
+    padding: 15px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    display: none;
+}
+
+.result-details.expanded {
+    display: block;
+}
+
+.diff-expected {
+    color: #28a745;
+}
+
+.diff-actual {
+    color: #dc3545;
+}
+
+.err-text {
+    color: #dc3545;
+}
+
+/* Light theme overrides for challenge-specific panels */
+body.light-theme .challenge-layout {
+    background-color: #f6f8fc;
+}
+
+body.light-theme .editor-pane {
+    background-color: #f8fbff;
+}
+
+body.light-theme .editor-toolbar {
+    background-color: #eef3fb;
+    color: #1f2d3d;
+    border-bottom-color: #d8e2ef;
+}
+
+body.light-theme .h-splitter,
+body.light-theme .split-pane-divider {
+    background-color: #d8e2ef;
+}
+
+body.light-theme .bottom-pane {
+    background-color: #f7faff;
+    border-top-color: #d8e2ef;
+    color: #1f2d3d;
+}
+
+body.light-theme .tabs-header {
+    background-color: #edf3fb;
+    border-bottom-color: #d8e2ef;
+}
+
+body.light-theme .tab-btn {
+    color: #4a5d73;
+}
+
+body.light-theme .tab-btn:hover {
+    color: #24364a;
+    background-color: #e5eef9;
+}
+
+body.light-theme .tab-btn.active {
+    color: #123a73;
+    background-color: #f7faff;
+    border-top-color: #2f6ecf;
+}
+
+body.light-theme .tab-content {
+    background-color: #f7faff;
+}
+
+body.light-theme .console-input-section h4,
+body.light-theme .console-output-section h4,
+body.light-theme .test-case-card h4 {
+    color: #24364a;
+}
+
+body.light-theme #custom-input,
+body.light-theme .output-logs,
+body.light-theme .io-block {
+    background-color: #ffffff;
+    color: #1f2d3d;
+    border-color: #d8e2ef;
+}
+
+body.light-theme .test-case-card,
+body.light-theme .result-header {
+    background-color: #eef4fc;
+    border-color: #d7e3f2;
+}
+
+body.light-theme .result-details {
+    background-color: #ffffff;
+    border-color: #d8e2ef;
+}
+
+/* Dark theme (default mode = when light-theme is absent): black + white */
+body:not(.light-theme) .challenge-layout {
+    background-color: #000;
+}
+
+body:not(.light-theme) .problem-pane {
+    background-color: #000;
+    border-right-color: #1f1f1f;
+}
+
+body:not(.light-theme) .problem-header {
+    border-bottom-color: #262626;
+}
+
+body:not(.light-theme) .problem-header h2,
+body:not(.light-theme) .problem-meta,
+body:not(.light-theme) #problem-description {
+    color: #fff;
+}
+
+body:not(.light-theme) .topic-tag {
+    background: #111;
+    color: #fff;
+    border: 1px solid #2a2a2a;
+}
+
+body:not(.light-theme) #problem-description.markdown-body {
+    background-color: transparent !important;
+    color: #fff !important;
+}
+
+body:not(.light-theme) #problem-description.markdown-body h1,
+body:not(.light-theme) #problem-description.markdown-body h2,
+body:not(.light-theme) #problem-description.markdown-body h3,
+body:not(.light-theme) #problem-description.markdown-body h4,
+body:not(.light-theme) #problem-description.markdown-body h5,
+body:not(.light-theme) #problem-description.markdown-body h6,
+body:not(.light-theme) #problem-description.markdown-body p,
+body:not(.light-theme) #problem-description.markdown-body li,
+body:not(.light-theme) #problem-description.markdown-body strong {
+    color: #fff !important;
+}
+
+body:not(.light-theme) #problem-description.markdown-body code {
+    background: #0f0f0f !important;
+    color: #fff !important;
+    border: 1px solid #262626;
+}
+
+body:not(.light-theme) #problem-description.markdown-body pre {
+    background: #070707 !important;
+    border: 1px solid #242424;
+}
+
+body:not(.light-theme) .editor-pane,
+body:not(.light-theme) .bottom-pane,
+body:not(.light-theme) .tab-content {
+    background-color: #000;
+    color: #fff;
+}
+
+body:not(.light-theme) .tabs-header {
+    background-color: #0b0b0b;
+    border-bottom-color: #232323;
+}
+
+body:not(.light-theme) .tab-btn {
+    color: #d2d2d2;
+}
+
+body:not(.light-theme) .tab-btn:hover {
+    color: #fff;
+    background-color: #141414;
+}
+
+body:not(.light-theme) .tab-btn.active {
+    background-color: #000;
+    color: #fff;
+}
+
+body:not(.light-theme) #custom-input,
+body:not(.light-theme) .output-logs,
+body:not(.light-theme) .io-block {
+    background-color: #050505;
+    color: #fff;
+    border-color: #2c2c2c;
+}
+
+body:not(.light-theme) .test-case-card,
+body:not(.light-theme) .result-header,
+body:not(.light-theme) .result-details {
+    background-color: #101010;
+    border-color: #2c2c2c;
+}
+
+body:not(.light-theme) .editor-wrapper .CodeMirror,
+body:not(.light-theme) .cm-s-dracula.CodeMirror {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+body:not(.light-theme) .cm-s-dracula .CodeMirror-gutters {
+    background-color: #000 !important;
+    border-right: 1px solid #1f1f1f !important;
+}
+
+body.light-theme .markdown-body {
+    background-color: transparent !important;
+    color: #1f2d3d !important;
+}
+
+body.light-theme #problem-description.markdown-body code {
+    background: #f2f6fc !important;
+    border: 1px solid #dbe5f2;
+    color: #1f2d3d !important;
+}
+
+body.light-theme #problem-description.markdown-body pre {
+    background: #f8fbff !important;
+    border: 1px solid #dbe5f2;
+}

@@ -316,15 +316,24 @@ def p_program(p):
     code += "\n# Helper functions (dependency order)\n"
 
     # 1. _algo_read - no deps
+    code += "_algo_input_buffer = []\n"
     code += "def _algo_read():\n"
-    code += "    try:\n"
-    code += "        return input()\n"
-    code += "    except EOFError:\n"
-    code += "        return ''\n\n"
+    code += "    global _algo_input_buffer\n"
+    code += "    while True:\n"
+    code += "        if _algo_input_buffer:\n"
+    code += "            return _algo_input_buffer.pop(0)\n"
+    code += "        try:\n"
+    code += "            line = input()\n"
+    code += "        except EOFError:\n"
+    code += "            return ''\n"
+    code += "        if line is None:\n"
+    code += "            return ''\n"
+    code += "        parts = str(line).strip().split()\n"
+    code += "        if parts:\n"
+    code += "            _algo_input_buffer.extend(parts)\n\n"
 
     # 1b. _algo_ecrire - Ecrire without auto-newline; interprets \\n and \\t
     code += "def _algo_ecrire(*args):\n"
-    code += "    import sys\n"
     code += "    parts = []\n"
     code += "    for a in args:\n"
     code += "        s = _algo_to_string(a)\n"
@@ -332,8 +341,7 @@ def p_program(p):
     code += "        s = s.replace('#0', chr(0))\n"
     code += "        s = s.replace('\\\\n', '\\n').replace('\\\\t', '\\t')\n"
     code += "        parts.append(s)\n"
-    code += "    sys.stdout.write(' '.join(parts))\n"
-    code += "    sys.stdout.flush()\n\n"
+    code += "    print(' '.join(parts), end='')\n\n"
 
     # 2. _algo_to_string - no deps; MUST come before assign/concat/longueur
     code += "def _algo_to_string(val):\n"

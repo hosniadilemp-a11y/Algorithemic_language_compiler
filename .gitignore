@@ -3,6 +3,8 @@
 # ============================================================
 docs/CoursAlgo
 examples/Tests
+src/web/data
+tests/*.py
 # --- Python cache ---
 __pycache__/
 *.py[cod]
@@ -88,3 +90,9 @@ src/web/data/quizzes/*
 # --- Archive / draft files ---
 archive/
 ppts/
+
+# --- Local problem solution notes (do not commit) ---
+src/web/data/problem_solutions_txt/
+
+# Local-only admin app
+local_admin/

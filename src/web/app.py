@@ -9,7 +9,7 @@ import contextlib
 from compiler.parser import parser, compile_algo
 
 from web.debugger import TraceRunner
-from web.models import db, Chapter, Question, Choice, UserProgress
+from web.models import db, Chapter, Question, Choice, UserProgress, Problem, TestCase
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -48,6 +48,15 @@ def index():
 @app.route('/course')
 def course():
     return render_template('course.html')
+
+@app.route('/problems')
+def problems_page():
+    return render_template('problems.html')
+
+@app.route('/challenge/<int:problem_id>')
+def challenge_page(problem_id):
+    # Just render the template. JS will fetch the problem details via API
+    return render_template('challenge.html', problem_id=problem_id)
 
 @app.after_request
 def add_header(r):
@@ -777,6 +786,158 @@ def send_input():
     return jsonify({'success': True})
 
 
+@app.route('/api/problems', methods=['GET'])
+def get_problems():
+    topic = request.args.get('topic')
+    difficulty = request.args.get('difficulty')
+    
+    query = Problem.query
+    if topic:
+        query = query.filter_by(topic=topic)
+    if difficulty:
+        query = query.filter_by(difficulty=difficulty)
+        
+    problems = query.all()
+    return jsonify({
+        'success': True,
+        'problems': [{
+            'id': p.id,
+            'title': p.title,
+            'topic': p.topic,
+            'difficulty': p.difficulty,
+            'description': p.description[:150] + '...' if p.description and len(p.description) > 150 else p.description
+        } for p in problems]
+    })
+
+@app.route('/api/problems/<int:problem_id>', methods=['GET'])
+def get_problem(problem_id):
+    problem = Problem.query.get_or_404(problem_id)
+    # Return only public test cases to frontend
+    public_cases = [tc for tc in problem.test_cases if tc.is_public]
+    
+    return jsonify({
+        'success': True,
+        'problem': {
+            'id': problem.id,
+            'title': problem.title,
+            'description': problem.description,
+            'topic': problem.topic,
+            'difficulty': problem.difficulty,
+            'template_code': problem.template_code,
+            'test_cases': [{
+                'id': tc.id,
+                'input': tc.input_data,
+                'expected_output': tc.expected_output
+            } for tc in public_cases]
+        }
+    })
+
+@app.route('/submission_results')
+def submission_results():
+    return render_template('submission_results.html')
+
+from web.sandbox.runner import execute_code
+# Assuming compiler is available in the same scope as before for `run` endpoint
+import ast
+
+@app.route('/api/submissions/custom', methods=['POST'])
+def submit_custom_code():
+    data = request.get_json()
+    code = data.get('code')
+    custom_input = data.get('input', '')
+    
+    # 1. Compile Algo code to Python
+    result = compile_algo(code)
+    
+    # Handle tuple return (code, errors)
+    if isinstance(result, tuple):
+        python_code, errors = result
+        if errors:
+            return jsonify({'success': False, 'error': 'Compilation failed', 'details': errors})
+    else:
+        python_code = result
+        
+    if not python_code:
+        return jsonify({'success': False, 'error': 'Compilation failed (Syntax Error)'})
+        
+    tc_data = [{
+        'id': 'custom',
+        'input': custom_input,
+        'expected_output': ''
+    }]
+    
+    from web.sandbox.runner import execute_code
+    results = execute_code(python_code, tc_data)
+    
+    return jsonify({
+        'success': True,
+        'all_passed': results[0]['passed'],
+        'results': results
+    })
+
+@app.route('/api/submissions', methods=['POST'])
+def submit_code():
+    data = request.get_json()
+    problem_id = data.get('problem_id')
+    code = data.get('code')
+    execute_all = data.get('execute_all', False)
+    
+    problem = Problem.query.get_or_404(problem_id)
+    
+    # 1. Compile Algo code to Python
+    result = compile_algo(code)
+    
+    # Handle tuple return (code, errors)
+    if isinstance(result, tuple):
+        python_code, errors = result
+        if errors:
+            # Return structured errors exactly as expected by frontend mapping
+            return jsonify({'success': False, 'error': 'Compilation failed', 'details': errors})
+    else:
+        python_code = result
+        
+    if not python_code:
+        return jsonify({'success': False, 'error': 'Compilation failed (Syntax Error)'})
+    
+    # 2. Select test cases
+    if execute_all:
+        test_cases = problem.test_cases
+    else:
+        test_cases = [tc for tc in problem.test_cases if tc.is_public]
+        
+    # 3. Format test case data for sandbox
+    tc_data = [{
+        'id': tc.id,
+        'input': tc.input_data,
+        'expected_output': tc.expected_output
+    } for tc in test_cases]
+    
+    # 4. Execute in sandbox
+    raw_results = execute_code(python_code, tc_data)
+    
+    # Merge original tc_data with execution results
+    results = []
+    for i, raw_res in enumerate(raw_results):
+        tc_info = tc_data[i]
+        results.append({
+            'test_case_id': tc_info['id'],
+            'input': tc_info['input'],
+            'expected_output': tc_info['expected_output'],
+            'actual_output': raw_res['actual_output'],
+            'passed': raw_res['passed'],
+            'error': raw_res['error']
+        })
+    
+    # Calculate all_passed
+    all_passed = all(r['passed'] for r in results) if results else False
+    
+    return jsonify({
+        'success': True,
+        'all_passed': all_passed,
+        'results': results
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
+

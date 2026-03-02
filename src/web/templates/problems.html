@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Défis de Codage - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/problems.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="problems-page">
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-terminal"></i> AlgoCompiler
+            </div>
+            <div class="controls">
+                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                    <i class="fas fa-code"></i> Éditeur
+                </a>
+                <div class="separator"></div>
+                <a href="/course" class="btn secondary highlight" title="Ouvrir le cours d'algorithmique">
+                    <i class="fas fa-graduation-cap"></i> Cours
+                </a>
+                <div class="separator"></div>
+                <button class="btn secondary" data-theme-toggle title="Basculer le thème">
+                    <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="problems-container">
+            <div class="problems-header">
+                <h1><i class="fas fa-laptop-code"></i> Défis de Codage</h1>
+                <p>Pratiquez l'algorithmique avec notre série d'exercices.</p>
+            </div>
+
+            <div class="problems-filter-bar">
+                <select id="topic-filter">
+                    <option value="">Tous les thèmes</option>
+                    <option value="Basics">Bases</option>
+                    <option value="Arrays">Tableaux</option>
+                    <option value="Strings">Chaînes de caractères</option>
+                    <option value="Algorithms">Algorithmes</option>
+                    <option value="Functions">Fonctions</option>
+                    <option value="Linked Lists">Listes Chaînées</option>
+                    <option value="Stacks">Piles</option>
+                    <option value="Queues">Files</option>
+                </select>
+
+                <select id="difficulty-filter">
+                    <option value="">Toutes les difficultés</option>
+                    <option value="Easy">Facile</option>
+                    <option value="Medium">Moyen</option>
+                    <option value="Hard">Difficile</option>
+                </select>
+            </div>
+
+            <div class="problems-list" id="problems-list">
+                <!-- List populated via JS -->
+                <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Chargement des défis...</div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/problems.js') }}"></script>
+</body>
+
+</html>

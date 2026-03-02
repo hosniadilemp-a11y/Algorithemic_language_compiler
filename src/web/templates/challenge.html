@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Défi - AlgoCompiler</title>
+    <!-- CodeMirror Core -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+
+    <!-- CodeMirror Addons - CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/display/fullscreen.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/challenge.css') }}">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CodeMirror Core JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/pascal/pascal.min.js"></script>
+
+    <!-- CodeMirror Addons - JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/jump-to-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/annotatescrollbar.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/scroll/simplescrollbars.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/mark-selection.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-terminal"></i> AlgoCompiler
+            </div>
+            <div class="controls">
+                <a href="/problems" class="btn secondary highlight" title="Tous les défis">
+                    <i class="fas fa-list"></i> Tous les défis
+                </a>
+                <div class="separator"></div>
+                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                    <i class="fas fa-code"></i> Éditeur
+                </a>
+                <div class="separator"></div>
+                <button class="btn secondary" data-theme-toggle title="Basculer le thème">
+                    <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="challenge-layout">
+            <!-- LEFT PANE: Problem Description -->
+            <div class="problem-pane">
+                <div class="problem-header">
+                    <h2 id="problem-title">Titre du problème...</h2>
+                    <div class="problem-meta">
+                        <span id="problem-topic" class="topic-tag">...</span>
+                        <span id="problem-difficulty" class="difficulty-badge">...</span>
+                    </div>
+                    <div class="problem-nav">
+                        <a id="prev-challenge-btn" class="btn secondary" href="#" aria-disabled="true">
+                            <i class="fas fa-arrow-left"></i> Précédent
+                        </a>
+                        <a id="next-challenge-btn" class="btn secondary" href="#" aria-disabled="true">
+                            Suivant <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="problem-description" class="markdown-body">
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Chargement de la description...
+                    </div>
+                </div>
+            </div>
+
+            <!-- MIDDLE: Draggable Splitter -->
+            <div class="split-pane-divider" id="vertical-splitter"></div>
+
+            <!-- RIGHT PANE: Code Editor & Output -->
+            <div class="editor-pane">
+
+                <!-- Editor Top Bar -->
+                <div class="editor-toolbar" style="justify-content: flex-start; gap: 4px;">
+                    <button id="undo-btn" class="toolbar-btn" title="Annuler (Ctrl+Z)"><i
+                            class="fas fa-undo"></i></button>
+                    <button id="redo-btn" class="toolbar-btn" title="Refaire (Ctrl+Y)"><i
+                            class="fas fa-redo"></i></button>
+                    <div class="toolbar-separator"></div>
+                    <button id="comment-btn" class="toolbar-btn" title="Commenter/Décommenter (Ctrl+/)"><i
+                            class="fas fa-comment-slash"></i></button>
+                    <div class="toolbar-separator"></div>
+                    <button id="search-btn" class="toolbar-btn" title="Rechercher (Ctrl+F)"><i
+                            class="fas fa-search"></i></button>
+                    <button id="replace-btn" class="toolbar-btn" title="Remplacer (Ctrl+H)"><i
+                            class="fas fa-exchange-alt"></i></button>
+                    <div class="toolbar-separator"></div>
+                    <button id="format-btn" class="toolbar-btn" title="Formater le code"><i
+                            class="fas fa-align-left"></i></button>
+                </div>
+
+                <div class="editor-wrapper">
+                    <input type="hidden" id="filename-input" value="challenge.algo">
+                    <textarea id="code-editor" style="display: none;"></textarea>
+                </div>
+
+                <div id="editor-status-bar" class="editor-status-bar">
+                    <div class="status-left">
+                        <span id="status-cursor" class="status-item" title="Ligne et Colonne"><i
+                                class="fas fa-map-pin"></i> Ln 1, Col 1</span>
+                        <span class="status-sep">|</span>
+                        <span id="status-chars" class="status-item" title="Caractères totaux"><i
+                                class="fas fa-font"></i> 0 car.</span>
+                        <span class="status-sep">|</span>
+                        <span id="status-lines" class="status-item" title="Lignes totales"><i
+                                class="fas fa-list-ol"></i> 0 lignes</span>
+                    </div>
+                    <div class="status-right">
+                        <button id="wordwrap-btn" class="status-btn" title="Activer/Désactiver le retour à ligne"><i
+                                class="fas fa-text-width"></i> Wrap</button>
+                        <span class="status-sep">|</span>
+                        <button id="font-decrease-btn" class="status-btn" title="Réduire la taille (Ctrl+-)"><i
+                                class="fas fa-minus"></i></button>
+                        <span id="status-fontsize" class="status-item">14px</span>
+                        <button id="font-increase-btn" class="status-btn" title="Augmenter la taille (Ctrl+=)"><i
+                                class="fas fa-plus"></i></button>
+                        <button id="font-reset-btn" class="status-btn" title="Réinitialiser"><i
+                                class="fas fa-redo-alt"></i></button>
+                    </div>
+                </div>
+
+                <!-- Bottom Pane Resize handle -->
+                <div class="h-splitter" id="horizontal-splitter"></div>
+
+                <!-- BOTTOM TABS: Console / Test Cases / Results -->
+                <div class="bottom-pane">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-target="tab-console"><i class="fas fa-terminal"></i> Console
+                            E/S</button>
+                        <button class="tab-btn" data-target="tab-tests"><i class="fas fa-vial"></i> Cas de Test</button>
+
+                        <div style="flex-grow: 1;"></div>
+                        <button class="btn btn-secondary highlight" id="run-stdin-btn" style="margin-right: 10px;"><i
+                                class="fas fa-terminal"></i> Exécuter avec Entrée</button>
+                        <button class="btn btn-secondary" id="run-tests-btn"><i class="fas fa-play"></i> Exécuter sur
+                            les Tests</button>
+                        <button class="btn btn-success" id="submit-btn"><i class="fas fa-cloud-upload-alt"></i>
+                            Soumettre la Solution</button>
+                    </div>
+
+                    <div class="tab-content" id="tab-console" style="display: flex;">
+                        <div class="console-io-split">
+                            <div class="console-input-section">
+                                <h4>Entrée Standard (stdin)</h4>
+                                <textarea id="custom-input"
+                                    placeholder="Saisissez vos données d'entrée ici..."></textarea>
+                            </div>
+                            <div class="console-output-section">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <h4>Sortie (stdout)</h4>
+                                    <button id="clear-console-btn" class="btn btn-icon btn-small"><i
+                                            class="fas fa-eraser"></i></button>
+                                </div>
+                                <pre id="console-logs" class="output-logs"></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-tests" style="display: none;">
+                        <div id="test-cases-list">
+                            <p>Chargement des cas de test...</p>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+
+    <!-- CodeMirror Core & Addons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/dracula.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/show-hint.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/scroll/simplescrollbars.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldgutter.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/anyword-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/comment/comment.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/scroll/simplescrollbars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/dialog/dialog.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/dialog/dialog.min.css">
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
+    <script src="{{ url_for('static', filename='algo-mode.js') }}"></script>
+    <script src="{{ url_for('static', filename='algo-hints.js') }}"></script>
+    <script src="{{ url_for('static', filename='algo-fold.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/challenge.js') }}"></script>
+    <script>
+        window.CURRENT_PROBLEM_ID = {{ problem_id }};
+    </script>
+</body>
+
+</html>

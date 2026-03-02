@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize CodeMirror with sophisticated IDE features
-    if (codeEditorElement) {
+    if (codeEditorElement && !window.CURRENT_PROBLEM_ID) {
         editor = CodeMirror.fromTextArea(codeEditorElement, {
             mode: "algo", // Use custom mode from algo-mode.js
             theme: "dracula",
@@ -175,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        window.editor = editor;
         editor.setSize("100%", null); // Let flex handle height
 
         function applyEditorThemeFromBody() {
@@ -250,12 +251,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ═══════════════════════════════════════════════════════════
     // FULLSCREEN LOGIC (IDE-WIDE)
     // ═══════════════════════════════════════════════════════════
-    function toggleIDEFullscreen() {
+    window.toggleIDEFullscreen = function () {
         const container = document.querySelector('.container');
         if (!document.fullscreenElement) {
             container.requestFullscreen().catch(err => {
                 console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-                // Fallback to editor-only if IDE-wide fails? No, user wants IDE-wide.
             });
         } else {
             document.exitFullscreen();
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Code formatting function for Algo - Refined for structural alignment
-    function formatAlgoCode(cm) {
+    window.formatAlgoCode = function (cm) {
         var code = cm.getValue();
         var lines = code.split('\n');
         var formatted = [];
@@ -1298,4 +1298,67 @@ Fin.`);
         });
     }
 
+    window.initEditorUI = function () {
+        const editor = window.editor;
+        if (!editor) return;
+
+        const formatBtn = document.getElementById('format-btn');
+        if (formatBtn) formatBtn.onclick = () => window.formatAlgoCode(editor);
+
+        const undoBtn = document.getElementById('undo-btn');
+        if (undoBtn) undoBtn.onclick = () => editor.undo();
+
+        const redoBtn = document.getElementById('redo-btn');
+        if (redoBtn) redoBtn.onclick = () => editor.redo();
+
+        const commentBtn = document.getElementById('comment-btn');
+        if (commentBtn) commentBtn.onclick = () => editor.execCommand('toggleComment');
+
+        const searchBtn = document.getElementById('search-btn');
+        if (searchBtn) searchBtn.onclick = () => editor.execCommand('find');
+
+        const replaceBtn = document.getElementById('replace-btn');
+        if (replaceBtn) replaceBtn.onclick = () => editor.execCommand('replace');
+
+        const wordWrapBtn = document.getElementById('wordwrap-btn');
+        if (wordWrapBtn) {
+            wordWrapBtn.onclick = () => {
+                const wrap = !editor.getOption('lineWrapping');
+                editor.setOption('lineWrapping', wrap);
+                wordWrapBtn.classList.toggle('active', wrap);
+            };
+        }
+
+        const fsInc = document.getElementById('font-increase-btn');
+        const fsDec = document.getElementById('font-decrease-btn');
+        const fsReset = document.getElementById('font-reset-btn');
+        const fsSpan = document.getElementById('status-fontsize');
+
+        let fontSize = 14;
+        const updateFS = () => {
+            const cmEl = document.querySelector('.CodeMirror');
+            if (cmEl) {
+                cmEl.style.fontSize = fontSize + 'px';
+                editor.refresh();
+            }
+            if (fsSpan) fsSpan.textContent = fontSize + 'px';
+        };
+
+        if (fsInc) fsInc.onclick = () => { fontSize += 2; updateFS(); };
+        if (fsDec) fsDec.onclick = () => { fontSize = Math.max(8, fontSize - 2); updateFS(); };
+        if (fsReset) fsReset.onclick = () => { fontSize = 14; updateFS(); };
+
+        editor.on("cursorActivity", () => {
+            const cursor = editor.getCursor();
+            const statusCursor = document.getElementById('status-cursor');
+            if (statusCursor) {
+                statusCursor.innerHTML = `<i class="fas fa-map-pin"></i> Ln ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+            }
+            const content = editor.getValue();
+            const statusChars = document.getElementById('status-chars');
+            if (statusChars) statusChars.innerHTML = `<i class="fas fa-font"></i> ${content.length} car.`;
+            const statusLines = document.getElementById('status-lines');
+            if (statusLines) statusLines.innerHTML = `<i class="fas fa-list-ol"></i> ${editor.lineCount()} lignes`;
+        });
+    };
 });

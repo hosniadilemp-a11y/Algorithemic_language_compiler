@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de Soumission - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .results-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: var(--card-bg, #1e1e1e);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .results-header {
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color, #333);
+        }
+
+        .results-header.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .results-header.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .results-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2em;
+        }
+
+        .results-header p {
+            margin: 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .test-cases-list {
+            padding: 20px;
+        }
+
+        .test-case {
+            background-color: var(--bg-color, #111);
+            border: 1px solid var(--border-color, #333);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .tc-header {
+            padding: 12px 15px;
+            background-color: var(--toolbar-bg, #2d2d2d);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color, #333);
+        }
+
+        .tc-header.passed {
+            border-left: 4px solid #28a745;
+        }
+
+        .tc-header.failed {
+            border-left: 4px solid #dc3545;
+        }
+
+        .tc-body {
+            padding: 15px;
+        }
+
+        .tc-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .io-box {
+            background-color: #000;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+            border: 1px solid #333;
+            margin-top: 5px;
+        }
+
+        .io-box.actual.error-out {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .io-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-bar {
+            padding: 20px;
+            border-top: 1px solid var(--border-color, #333);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background-color: var(--toolbar-bg, #2a2a2a);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-terminal"></i> AlgoCompiler
+            </div>
+            <div class="controls">
+                <a href="/problems" class="btn secondary highlight" title="Tous les défis">
+                    <i class="fas fa-list"></i> Tous les défis
+                </a>
+                <div class="separator"></div>
+                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                    <i class="fas fa-code"></i> Éditeur
+                </a>
+                <div class="separator"></div>
+                <button class="btn secondary" data-theme-toggle title="Basculer le thème">
+                    <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+                </button>
+            </div>
+        </header>
+
+        <main style="flex-grow: 1; overflow-y: auto;">
+            <div class="results-container" id="results-container">
+                <div class="results-header" id="main-header">
+                    <h1><i class="fas fa-spinner fa-spin"></i> Traitement...</h1>
+                    <p>Récupération de vos résultats.</p>
+                </div>
+
+                <div class="test-cases-list" id="test-list">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="action-bar">
+                    <a href="#" id="retry-btn" class="btn secondary"><i class="fas fa-redo"></i> Réessayer</a>
+                    <a href="/problems" class="btn primary"><i class="fas fa-list"></i> Voir d'autres défis</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function getCookie(name) {
+                const raw = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith(name + '='));
+                return raw ? decodeURIComponent(raw.split('=')[1]) : '';
+            }
+
+            function setCookie(name, value, maxAgeSeconds) {
+                document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${maxAgeSeconds};SameSite=Lax`;
+            }
+
+            function markProblemSolved(problemId) {
+                if (!problemId) return;
+                const current = getCookie('algo_solved_problems');
+                const solved = new Set(
+                    current
+                        ? current.split(',').map(v => Number(v.trim())).filter(Number.isFinite)
+                        : []
+                );
+                solved.add(Number(problemId));
+                setCookie('algo_solved_problems', Array.from(solved).join(','), 60 * 60 * 24 * 365);
+            }
+
+            const resultDataRaw = sessionStorage.getItem('algo_submission_result');
+            const container = document.getElementById('results-container');
+            const header = document.getElementById('main-header');
+            const list = document.getElementById('test-list');
+            const retryBtn = document.getElementById('retry-btn');
+
+            if (!resultDataRaw) {
+                header.className = 'results-header error';
+                header.innerHTML = `<h1><i class="fas fa-exclamation-triangle"></i> Erreur</h1><p>Aucun résultat trouvé dans la session.</p>`;
+                return;
+            }
+
+            const data = JSON.parse(resultDataRaw);
+            const passedCount = data.results.filter(r => r.passed).length;
+            const totalCount = data.results.length;
+
+            if (data.problem_id) {
+                retryBtn.href = `/challenge/${data.problem_id}`;
+            }
+
+            // Make the header reflect success
+            if (data.all_passed) {
+                markProblemSolved(data.problem_id);
+                header.className = 'results-header success';
+                header.innerHTML = `<h1><i class="fas fa-trophy"></i> Défi Résolu !</h1><p>Félicitations, tous les tests (${passedCount}/${totalCount}) sont passés avec succès.</p>`;
+            } else {
+                header.className = 'results-header error';
+                header.innerHTML = `<h1><i class="fas fa-times-circle"></i> Tests Échoués</h1><p>Seulement ${passedCount}/${totalCount} tests ont réussi. Vérifiez votre logique.</p>`;
+            }
+
+            // Render details
+            list.innerHTML = data.results.map((r, i) => {
+                const statusIcon = r.passed ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>';
+                const statusClass = r.passed ? 'passed' : 'failed';
+
+                let actualHtml = `<div class="io-label">Sortie de votre programme</div>
+                                  <div class="io-box actual ${!r.passed && !r.error ? 'error-out' : ''}">${r.actual_output || '(Vide)'}</div>`;
+
+                if (r.error && r.error !== 'Execution Failed') {
+                    actualHtml = `<div class="io-label">Erreur d'exécution</div>
+                                  <div class="io-box actual error-out">${r.error}</div>`;
+                }
+
+                return `
+                    <div class="test-case">
+                        <div class="tc-header ${statusClass}" onclick="toggleTestCase(this)" style="cursor:pointer">
+                            <div>
+                                <span>Cas de Test #${i + 1}</span>
+                                <span style="margin-left: 15px; color: ${r.passed ? '#28a745' : '#dc3545'}">${statusIcon} ${r.passed ? 'Réussi' : 'Échoué'}</span>
+                            </div>
+                            <i class="fas ${r.passed ? 'fa-chevron-down' : 'fa-chevron-up'}"></i>
+                        </div>
+                        <div class="tc-body" style="display: ${r.passed ? 'none' : 'block'}">
+                            <div class="tc-grid">
+                                <div>
+                                    <div class="io-label">Entrée Standard (stdin)</div>
+                                    <div class="io-box">${r.input || '(Vide)'}</div>
+                                </div>
+                                <div>
+                                    <div class="io-label">Sortie Attendue (stdout)</div>
+                                    <div class="io-box">${r.expected_output || '(Vide)'}</div>
+                                </div>
+                                <div>
+                                    ${actualHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+
+        function toggleTestCase(header) {
+            const body = header.nextElementSibling;
+            const icon = header.querySelector('.fa-chevron-down, .fa-chevron-up');
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                body.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+    </script>
+</body>
+
+</html>

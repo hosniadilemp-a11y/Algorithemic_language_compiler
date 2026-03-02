@@ -15,6 +15,16 @@
 
 ---
 
+## 🌐 Live Demo
+
+Try AlgoCompiler instantly in your browser:  
+**[https://algorithemic-language-compiler.onrender.com](https://algorithemic-language-compiler.onrender.com)**
+
+> [!NOTE]  
+> The live version is hosted on Render. If it hasn't been visited recently, the server might be "sleeping." Please allow up to **60 seconds** for the first load.
+
+---
+
 ## 📚 Table of Contents
 
 - [What is AlgoCompiler?](#-what-is-algocompiler)

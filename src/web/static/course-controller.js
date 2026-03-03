@@ -24,6 +24,7 @@ class CourseController {
         try {
             const response = await fetch(`/static/algo-course.json?v=${this.contentVersion}`);
             this.courseData = await response.json();
+            await this.fetchUserProgress();
             this.loadState();
             await this.renderOutline();
             this.bindEvents();
@@ -32,6 +33,21 @@ class CourseController {
             }
         } catch (error) {
             console.error("Failed to initialize course controller:", error);
+        }
+    }
+
+    async fetchUserProgress() {
+        this.userProgress = {};
+        try {
+            const res = await fetch('/api/user/progress');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    this.userProgress = data.progress.chapter_stats || {};
+                }
+            }
+        } catch (e) {
+            console.error("Failed to fetch user progress", e);
         }
     }
 
@@ -62,10 +78,50 @@ class CourseController {
         if (!this.sidebar) return;
         this.sidebar.innerHTML = '';
 
+        let earnedWeight = 0;
+        const CHAPTER_WEIGHTS = {
+            "intro": 1, "tableaux": 3, "chaines": 1, "allocation": 3,
+            "actions": 2, "enregistrements": 2, "fichiers": 1,
+            "listes_chainees": 2, "piles": 1, "files": 1
+        };
+
         this.courseData.chapters.forEach((chapter, index) => {
             const item = document.createElement('div');
             item.className = 'outline-item' + (index === this.currentChapterIndex ? ' active' : '');
-            item.innerHTML = `<i class="${chapter.icon || 'fas fa-book'}"></i> <span>${chapter.title}</span>`;
+
+            let statusIcon = '';
+            if (chapter.id && this.userProgress && this.userProgress[chapter.id]) {
+                const stats = this.userProgress[chapter.id];
+                if (stats.taken) {
+                    const percent = (stats.score / stats.total) * 100;
+                    let r, g, b;
+                    if (percent < 50) {
+                        const ratio = percent / 50;
+                        r = Math.round(220 + (255 - 220) * ratio);
+                        g = Math.round(53 + (193 - 53) * ratio);
+                        b = Math.round(69 + (7 - 69) * ratio);
+                    } else {
+                        const ratio = (percent - 50) / 50;
+                        r = Math.round(255 + (40 - 255) * ratio);
+                        g = Math.round(193 + (167 - 193) * ratio);
+                        b = Math.round(7 + (69 - 7) * ratio);
+                    }
+                    const color = `rgb(${r}, ${g}, ${b})`;
+
+                    if (stats.all_correct) {
+                        statusIcon = `<i class="fas fa-check-circle" style="color: ${color}; margin-left: auto;" title="Parfait"></i>`;
+                    } else {
+                        statusIcon = `<i class="fas fa-dot-circle" style="color: ${color}; margin-left: auto;" title="Partiel: ${stats.score}/${stats.total}"></i>`;
+                    }
+
+                    if (stats.total > 0) {
+                        const weight = CHAPTER_WEIGHTS[chapter.id] || 0;
+                        earnedWeight += (stats.score / stats.total) * weight;
+                    }
+                }
+            }
+
+            item.innerHTML = `<i class="${chapter.icon || 'fas fa-book'}"></i> <span>${chapter.title}</span> ${statusIcon}`;
             item.dataset.index = index;
             item.onclick = () => {
                 this.currentChapterIndex = index;
@@ -75,6 +131,22 @@ class CourseController {
             };
             this.sidebar.appendChild(item);
         });
+
+        const progressPercent = Math.min(100, Math.round((earnedWeight / 17) * 100));
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'user-progress-container';
+        progressContainer.innerHTML = `
+            <div style="margin-top: 30px; padding: 15px; background: var(--panel-bg); border-radius: 12px; border: 1px solid var(--course-line);">
+                <div style="font-size: 0.9em; margin-bottom: 8px; font-weight: 600; color: var(--course-ink); display: flex; justify-content: space-between;">
+                    <span><i class="fas fa-trophy" style="color: #f1c40f; margin-right: 5px;"></i> Progression</span>
+                    <span style="color: var(--course-accent); font-weight: bold;">${progressPercent}%</span>
+                </div>
+                <div style="background: var(--course-line); border-radius: 8px; height: 10px; overflow: hidden; width: 100%;">
+                    <div style="background: linear-gradient(90deg, #4a6ee0, #6ed68a); width: ${progressPercent}%; height: 100%; transition: width 1s ease-in-out; border-radius: 8px;"></div>
+                </div>
+            </div>
+        `;
+        this.sidebar.appendChild(progressContainer);
     }
 
     updateOutlineActiveState() {

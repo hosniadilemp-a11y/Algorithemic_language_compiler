@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classement - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .leaderboard-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: var(--panel-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaderboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .leaderboard-table-container {
+            background: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: left;
+            color: var(--text-secondary);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .leaderboard-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .leaderboard-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(74, 110, 224, 0.05);
+        }
+
+        .rank-cell {
+            font-weight: bold;
+            font-size: 1.2rem;
+            width: 80px;
+            text-align: center !important;
+        }
+
+        .rank-1 {
+            color: #f1c40f;
+            font-size: 1.5rem;
+        }
+
+        .rank-2 {
+            color: #bdc3c7;
+            font-size: 1.4rem;
+        }
+
+        .rank-3 {
+            color: #cd7f32;
+            font-size: 1.3rem;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4a6ee0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .score-cell {
+            font-weight: bold;
+            color: #4a6ee0;
+            font-size: 1.1rem;
+        }
+
+        .stats-badges {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-item i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body class="course-standalone-body">
+    <header>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="/" class="logo" style="text-decoration: none;">
+                <i class="fas fa-terminal"></i> AlgoCompiler
+            </a>
+
+            <nav class="nav-main">
+                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                    <i class="fas fa-code"></i> <span>Éditeur</span>
+                </a>
+                <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
+                    <i class="fas fa-graduation-cap"></i> <span>Cours</span>
+                </a>
+                <a href="/problems" class="btn secondary highlight" title="Défis de codage">
+                    <i class="fas fa-laptop-code"></i> <span>Défis</span>
+                </a>
+                <a href="/leaderboard" class="btn secondary highlight" title="Classement">
+                    <i class="fas fa-trophy"></i> <span>Classement</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="controls">
+            <button class="btn secondary" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+            <div class="separator"></div>
+            {% if current_user.is_authenticated %}
+            <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
+                <span>{{ current_user.name }}</span></a>
+            <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
+                style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
+                    class="fas fa-sign-out-alt"></i></a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
+                Connexion</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="leaderboard-container">
+        <div class="leaderboard-header">
+            <h1><i class="fas fa-trophy"></i> Panthéon des Algorithmes</h1>
+            <p>Découvrez les meilleurs contributeurs et experts en algorithmique.</p>
+        </div>
+
+        <div class="leaderboard-table-container">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th class="rank-cell">Rang</th>
+                        <th>Étudiant</th>
+                        <th>Score Global</th>
+                        <th>Réalisations</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Chargement du classement...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const body = document.getElementById('leaderboard-body');
+            try {
+                const res = await fetch('/api/leaderboard');
+                const data = await res.json();
+                if (data.success) {
+                    body.innerHTML = '';
+                    data.leaderboard.forEach((entry, index) => {
+                        const rank = index + 1;
+                        let rankClass = '';
+                        let rankIcon = rank;
+                        if (rank === 1) { rankClass = 'rank-1'; rankIcon = '<i class="fas fa-medal"></i>'; }
+                        if (rank === 2) { rankClass = 'rank-2'; rankIcon = '<i class="fas fa-medal"></i>'; }
+                        if (rank === 3) { rankClass = 'rank-3'; rankIcon = '<i class="fas fa-medal"></i>'; }
+
+                        body.innerHTML += `
+                            <tr>
+                                <td class="rank-cell ${rankClass}">${rankIcon}</td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar" style="background: ${getStableColor(entry.name)}">${entry.name[0].upper()}</div>
+                                        <div>
+                                            <div style="font-weight: bold;">${entry.name} ${entry.last_name}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="score-cell">${entry.score} pts</td>
+                                <td>
+                                    <div class="stats-badges">
+                                        <span class="stat-item" title="Quiz réussis"><i class="fas fa-check-circle"></i> ${entry.quizzes}</span>
+                                        <span class="stat-item" title="Défis réussis"><i class="fas fa-code"></i> ${entry.challenges}</span>
+                                        <span class="stat-item" title="Badges obtenus"><i class="fas fa-award"></i> ${entry.badges}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (err) {
+                body.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Erreur lors du chargement.</td></tr>';
+            }
+        });
+
+        function getStableColor(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return `hsl(${Math.abs(hash) % 360}, 60%, 50%)`;
+        }
+
+        String.prototype.upper = function () { return this.toUpperCase(); }
+    </script>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

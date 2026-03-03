@@ -7,11 +7,27 @@
     <title>Résultats de Soumission - AlgoCompiler</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+            --card-bg: #1e1e1e;
+            --io-bg: #000;
+            --io-text: #e0e0e0;
+        }
+
+        body.light-theme {
+            --bg-color: #f7f9fc;
+            --card-bg: #ffffff;
+            --border-color: #d0d7de;
+            --toolbar-bg: #f6f8fa;
+            --io-bg: #f8fbff;
+            --io-text: #1f2328;
+        }
+
         .results-container {
             max-width: 800px;
             margin: 40px auto;
-            background-color: var(--card-bg, #1e1e1e);
+            background-color: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
             overflow: hidden;
@@ -87,13 +103,13 @@
         }
 
         .io-box {
-            background-color: #000;
+            background-color: var(--io-bg);
             border-radius: 4px;
             padding: 10px;
             font-family: 'Consolas', monospace;
-            color: #e0e0e0;
+            color: var(--io-text);
             white-space: pre-wrap;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
             margin-top: 5px;
         }
 
@@ -121,24 +137,47 @@
     </style>
 </head>
 
-<body>
+<body data-authenticated="{{ 'true' if current_user.is_authenticated else 'false' }}">
     <div class="container">
         <header>
-            <div class="logo">
-                <i class="fas fa-terminal"></i> AlgoCompiler
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="/" class="logo" style="text-decoration: none;">
+                    <i class="fas fa-terminal"></i> AlgoCompiler
+                </a>
+
+                <nav class="nav-main">
+                    <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                        <i class="fas fa-code"></i> <span>Éditeur</span>
+                    </a>
+                    <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
+                        <i class="fas fa-graduation-cap"></i> <span>Cours</span>
+                    </a>
+                    <a href="/problems" class="btn secondary highlight" title="Défis de codage">
+                        <i class="fas fa-laptop-code"></i> <span>Défis</span>
+                    </a>
+                    <a href="/leaderboard" class="btn secondary highlight" title="Classement">
+                        <i class="fas fa-trophy"></i> <span>Classement</span>
+                    </a>
+                </nav>
+
+                <div class="separator" style="height: 24px;"></div>
             </div>
+
             <div class="controls">
-                <a href="/problems" class="btn secondary highlight" title="Tous les défis">
-                    <i class="fas fa-list"></i> Tous les défis
-                </a>
-                <div class="separator"></div>
-                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
-                    <i class="fas fa-code"></i> Éditeur
-                </a>
-                <div class="separator"></div>
                 <button class="btn secondary" data-theme-toggle title="Basculer le thème">
                     <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
                 </button>
+                <div class="separator"></div>
+                {% if current_user.is_authenticated %}
+                <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
+                    <span>{{ current_user.name }}</span></a>
+                <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
+                    style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
+                        class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
+                    Connexion</a>
+                {% endif %}
             </div>
         </header>
 
@@ -163,6 +202,7 @@
 
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
     <script>
+        const isUserAuthenticated = document.body.dataset.authenticated === 'true';
         document.addEventListener('DOMContentLoaded', () => {
             function getCookie(name) {
                 const raw = document.cookie
@@ -176,7 +216,7 @@
             }
 
             function markProblemSolved(problemId) {
-                if (!problemId) return;
+                if (!problemId || isUserAuthenticated) return;
                 const current = getCookie('algo_solved_problems');
                 const solved = new Set(
                     current
@@ -257,6 +297,11 @@
                     </div>
                 `;
             }).join('');
+
+            // Trigger instant badge check if authenticated
+            if (isUserAuthenticated && typeof window.checkNewBadges === 'function') {
+                setTimeout(window.checkNewBadges, 1000);
+            }
         });
 
         function toggleTestCase(header) {

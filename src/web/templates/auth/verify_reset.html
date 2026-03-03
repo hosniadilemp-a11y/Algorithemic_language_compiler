@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification Réinitialisation - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-topbar" style="flex-shrink: 0; z-index: 20;">
+        <div style="display:flex; gap:15px; align-items:center;">
+            <a href="{{ url_for('auth.forgot_password') }}" class="course-back-btn" title="Retour"><i
+                    class="fas fa-arrow-left"></i> Retour</a>
+            <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
+                    class="fas fa-terminal"></i> AlgoCompiler</a>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container login-size">
+            <h2 class="auth-title">Vérification du code</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">
+                Un code a été envoyé à <strong>{{ email }}</strong>. (Valable 15 minutes)
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.verify_reset') }}">
+                <div class="form-group">
+                    <label class="form-label" style="text-align: left;">Code de réinitialisation</label>
+                    <input type="text" name="code" class="form-control" placeholder="123456" maxlength="6" required
+                        autofocus autocomplete="off">
+                </div>
+                <button type="submit" class="btn-auth btn-primary-auth">Valider le code</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

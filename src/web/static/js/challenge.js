@@ -374,7 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     problem_id: problemId,
                     code: code,
-                    execute_all: executeAll
+                    execute_all: executeAll,
+                    time_taken_seconds: window.challengeTimerSeconds || 0
                 })
             });
 
@@ -525,5 +526,34 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('console-logs').innerHTML = '';
         });
     }
+
+    // Timer Logic
+    window.challengeTimerSeconds = 0;
+    const timerDisplay = document.getElementById('timer-display');
+    let timerInterval = null;
+
+    function formatTime(totalSeconds) {
+        const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+        const s = (totalSeconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            window.challengeTimerSeconds++;
+            if (timerDisplay) {
+                timerDisplay.textContent = formatTime(window.challengeTimerSeconds);
+                // change color if taking too long (e.g. 15 minutes = 900s)
+                if (window.challengeTimerSeconds > 900) {
+                    timerDisplay.parentElement.style.color = '#ffc107'; // yellow
+                    timerDisplay.parentElement.style.background = 'rgba(255, 193, 7, 0.1)';
+                }
+            }
+        }, 1000);
+    }
+
+    // Start timer automatically when the problem is fully loaded
+    startTimer();
 
 });

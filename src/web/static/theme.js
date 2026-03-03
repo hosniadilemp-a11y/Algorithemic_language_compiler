@@ -59,4 +59,42 @@
             console.warn('Theme initialization skipped:', error);
         }
     });
+
+    // Global Badge Notification Polling
+    window.checkNewBadges = async function () {
+        // Only run if user is authenticated (checked via endpoint internally or global flag)
+        try {
+            const res = await fetch('/api/user/progress');
+            const data = await res.json();
+            if (data.success && data.progress.badges) {
+                const unread = data.progress.badges.filter(b => b.earned && !b.seen);
+                if (unread.length > 0) {
+                    // Check if Swal is available
+                    if (typeof Swal !== 'undefined') {
+                        for (const badge of unread) {
+                            await Swal.fire({
+                                title: 'Nouveau Badge Débloqué !',
+                                text: `${badge.name}: ${badge.description}`,
+                                iconHtml: `<i class="${badge.icon}" style="color: #f1c40f;"></i>`,
+                                customClass: { icon: 'no-border' },
+                                background: document.body.classList.contains('light-theme') ? '#ffffff' : '#161b22',
+                                color: document.body.classList.contains('light-theme') ? '#24292f' : '#c9d1d9',
+                                confirmButtonColor: '#4a6ee0',
+                                confirmButtonText: 'Génial !'
+                            });
+                        }
+                    } else {
+                        console.log("New badges unlocked:", unread.map(b => b.name).join(', '));
+                    }
+
+                    // Mark as seen
+                    await fetch('/api/user/badges/seen', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ badge_ids: unread.map(b => b.id) })
+                    });
+                }
+            }
+        } catch (e) { console.error('Error checking badges', e); }
+    }
 })();

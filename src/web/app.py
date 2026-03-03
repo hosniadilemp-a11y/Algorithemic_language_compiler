@@ -4,12 +4,18 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, render_template, request, jsonify, Response
+from flask_login import current_user, login_required
 import io
 import contextlib
 from compiler.parser import parser, compile_algo
 
 from web.debugger import TraceRunner
-from web.models import db, Chapter, Question, Choice, UserProgress, Problem, TestCase
+from web.models import db, Chapter, Question, Choice, Problem, TestCase, User, QuizAttempt, ChallengeSubmission, UserBadge
+from web.extensions import login_manager, oauth, mail
+from web.sandbox.runner import execute_code
+from sqlalchemy import func, distinct
+import json
+import secrets
 
 # Handle Windows console encoding issues for scientific/accented characters
 if sys.platform == 'win32':
@@ -28,11 +34,44 @@ logging.getLogger('werkzeug').disabled = True
 
 app = Flask(__name__)
 
-# Configure SQLAlchemy with absolute path to avoid cwd discrepancy
+# Basic Config
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(16))
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Mail Config (Resend defaults for easier testing)
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.resend.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'false').lower() in ['true', 'on', '1']
+app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'true').lower() in ['true', 'on', '1']
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'resend')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 're_9cRuUmG4_Eput4Zv2E5vYHmD7f175ikGa')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'onboarding@resend.dev')
+
+# OAuth Config Placeholder
+app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID', 'placeholder')
+app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET', 'placeholder')
+app.config['GITHUB_CLIENT_ID'] = os.environ.get('GITHUB_CLIENT_ID', 'placeholder')
+app.config['GITHUB_CLIENT_SECRET'] = os.environ.get('GITHUB_CLIENT_SECRET', 'placeholder')
+
+# Initialize extensions
 db.init_app(app)
+login_manager.init_app(app)
+oauth.init_app(app)
+mail.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
+
+# Register Auth Blueprint
+from web.auth import auth_bp
+app.register_blueprint(auth_bp)
+
+# Register Admin Blueprint (Teacher Dashboard at /admin)
+from web.admin import admin_bp
+app.register_blueprint(admin_bp)
 
 # Ensure database tables exist and seed data if empty
 with app.app_context():
@@ -59,6 +98,11 @@ def index():
 @app.route('/course')
 def course():
     return render_template('course.html')
+
+@app.route('/progress')
+@login_required
+def progress_page():
+    return render_template('progress.html')
 
 @app.route('/problems')
 def problems_page():
@@ -229,6 +273,7 @@ def validate_algo():
             python_code, errors = result
             if errors:
                 return jsonify({'ok': False, 'errors': errors}), 200
+                
             return jsonify({'ok': bool(python_code), 'errors': []}), 200
 
         # Backward compatibility
@@ -301,16 +346,24 @@ def save_quiz_progress():
         if not chapter:
             return jsonify({'error': 'Chapter not found'}), 404
 
-        progress = UserProgress(
-            chapter_id=chapter.id,
-            score=score,
-            total_questions=total,
-            details=json.dumps(details)
-        )
-        db.session.add(progress)
-        db.session.commit()
+        if current_user.is_authenticated:
+            # Check interpretation
+            all_correct = (score == total)
+            none_correct = (score == 0)
+            
+            attempt = QuizAttempt(
+                user_id=current_user.id,
+                chapter_id=chapter.id,
+                score=score,
+                total_questions=total,
+                all_correct=all_correct,
+                none_correct=none_correct,
+                details=json.dumps(details)
+            )
+            db.session.add(attempt)
+            db.session.commit()
 
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'saved': current_user.is_authenticated})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -432,6 +485,8 @@ def start_execution():
 
         if not python_code:
             return jsonify({'success': False, 'error': 'Compilation failed (Syntax Error)'})
+
+        print(f"\n--- DEBUG: GENERATED PYTHON CODE (LIVE EXECUTION) ---\n{python_code}\n-----------------------------------------------------\n")
 
         # Save to file (optional, for debug)
         with open('output.py', 'w', encoding='utf-8') as f:
@@ -643,9 +698,7 @@ def start_execution():
                         '_algo_assign_fixed_string': _algo_assign_fixed_string,
                         '_algo_set_char': _algo_set_char,
                         '_algo_get_char': _algo_get_char,
-                        '_algo_read_typed': _algo_read_typed,
-                        'print': custom_print,
-                        'input': mock_input, 
+                            'input': mock_input, 
                         '__builtins__': safe_builtins
                     }
 
@@ -763,6 +816,21 @@ def get_problems():
         query = query.filter_by(difficulty=difficulty)
         
     problems = query.all()
+    
+    # Get solved problems for the current user if authenticated
+    solved_ids = set()
+    if current_user.is_authenticated:
+        solved_submissions = ChallengeSubmission.query.filter_by(user_id=current_user.id, passed=True).all()
+        solved_ids = {s.problem_id for s in solved_submissions}
+
+    # Count distinct solvers for each problem
+    solver_counts = db.session.query(
+        ChallengeSubmission.problem_id, 
+        func.count(distinct(ChallengeSubmission.user_id))
+    ).filter(ChallengeSubmission.passed == True).group_by(ChallengeSubmission.problem_id).all()
+    
+    solver_map = {prob_id: count for prob_id, count in solver_counts}
+    
     return jsonify({
         'success': True,
         'problems': [{
@@ -770,13 +838,17 @@ def get_problems():
             'title': p.title,
             'topic': p.topic,
             'difficulty': p.difficulty,
+            'solved': p.id in solved_ids if current_user.is_authenticated else None,
+            'solvers': solver_map.get(p.id, 0),
             'description': p.description[:150] + '...' if p.description and len(p.description) > 150 else p.description
         } for p in problems]
     })
 
 @app.route('/api/problems/<int:problem_id>', methods=['GET'])
 def get_problem(problem_id):
-    problem = Problem.query.get_or_404(problem_id)
+    problem = db.session.get(Problem, problem_id)
+    if not problem:
+        return jsonify({'success': False, 'error': 'Problem not found'}), 404
     # Return only public test cases to frontend
     public_cases = [tc for tc in problem.test_cases if tc.is_public]
     
@@ -825,13 +897,14 @@ def submit_custom_code():
     if not python_code:
         return jsonify({'success': False, 'error': 'Compilation failed (Syntax Error)'})
         
+        
     tc_data = [{
         'id': 'custom',
         'input': custom_input,
         'expected_output': ''
     }]
     
-    from web.sandbox.runner import execute_code
+    
     results = execute_code(python_code, tc_data)
     
     return jsonify({
@@ -846,8 +919,11 @@ def submit_code():
     problem_id = data.get('problem_id')
     code = data.get('code')
     execute_all = data.get('execute_all', False)
+    time_taken_seconds = data.get('time_taken_seconds', 0)
     
-    problem = Problem.query.get_or_404(problem_id)
+    problem = db.session.get(Problem, problem_id)
+    if not problem:
+        return jsonify({'success': False, 'error': 'Problem not found'}), 404
     
     # 1. Compile Algo code to Python
     result = compile_algo(code)
@@ -863,6 +939,7 @@ def submit_code():
         
     if not python_code:
         return jsonify({'success': False, 'error': 'Compilation failed (Syntax Error)'})
+    
     
     # 2. Select test cases
     if execute_all:
@@ -896,13 +973,403 @@ def submit_code():
     # Calculate all_passed
     all_passed = all(r['passed'] for r in results) if results else False
     
+    # Save submission if user is logged in and it's a full submission
+    if current_user.is_authenticated and execute_all:
+        score_percent = sum(1 for r in results if r['passed']) / len(results) * 100 if results else 0
+        submission = ChallengeSubmission(
+            user_id=current_user.id,
+            problem_id=problem.id,
+            score=score_percent,
+            code=code,
+            passed=all_passed,
+            time_taken_seconds=time_taken_seconds
+        )
+        db.session.add(submission)
+        db.session.commit()
+    
     return jsonify({
         'success': True,
         'all_passed': all_passed,
         'results': results
     })
 
+@app.route('/api/user/progress', methods=['GET'])
+def get_user_progress():
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    
+    # Aggregate data
+    quiz_attempts = QuizAttempt.query.filter_by(user_id=current_user.id).order_by(QuizAttempt.timestamp.desc()).all()
+    submissions = ChallengeSubmission.query.filter_by(user_id=current_user.id).order_by(ChallengeSubmission.timestamp.desc()).all()
+    
+    chapter_stats = {}
+    for qa in quiz_attempts:
+        chap_id = qa.chapter_id
+        # Define 'completed' as >= 80% score
+        is_completed = (qa.score / qa.total_questions) >= 0.8 if qa.total_questions > 0 else False
+        
+        if chap_id not in chapter_stats:
+            chapter_stats[chap_id] = {
+                'all_correct': is_completed, 
+                'taken': True, 
+                'score': qa.score, 
+                'total': qa.total_questions
+            }
+        elif is_completed:
+            # If a later attempt (or earlier) meets the threshold, mark it as completed
+            chapter_stats[chap_id]['all_correct'] = True
+            # Also keep the best score
+            if qa.score > chapter_stats[chap_id]['score']:
+                chapter_stats[chap_id]['score'] = qa.score
+            
+    # Map chapter IDs to their identifiers to send back to frontend
+    chapters = Chapter.query.all()
+    chapter_map = {c.id: c.identifier for c in chapters}
+    
+    frontend_chapter_stats = {}
+    for cid, stats in chapter_stats.items():
+        if cid in chapter_map:
+            frontend_chapter_stats[chapter_map[cid]] = stats
+
+    challenge_stats = {}
+    for sub in submissions:
+        pid = sub.problem_id
+        if pid not in challenge_stats:
+            challenge_stats[pid] = {'passed': False, 'best_score': 0}
+        if sub.passed:
+            challenge_stats[pid]['passed'] = True
+        if sub.score > challenge_stats[pid]['best_score']:
+             challenge_stats[pid]['best_score'] = sub.score
+
+    total_quizzes = len(quiz_attempts)
+    perfect_quizzes = sum(1 for q in quiz_attempts if q.all_correct)
+    unique_perfect_chapters = sum(1 for cid in frontend_chapter_stats if frontend_chapter_stats[cid].get('all_correct'))
+    
+    total_challenges_attempted = len(set(sub.problem_id for sub in submissions))
+    passed_challenges = sum(1 for pid in challenge_stats if challenge_stats[pid]['passed'])
+    
+    # --- NEW ADVANCED STATISTICS (Phase 6) ---
+    # 1. Challenge Distributions
+    challenge_topic_dist = {}
+    challenge_diff_dist = {'Easy': 0, 'Medium': 0, 'Hard': 0}
+    
+    # We only count UNIQUE passed problems for distribution
+    passed_pids = [pid for pid, s in challenge_stats.items() if s['passed']]
+    if passed_pids:
+        passed_problems = Problem.query.filter(Problem.id.in_(passed_pids)).all()
+        for p in passed_problems:
+            challenge_topic_dist[p.topic] = challenge_topic_dist.get(p.topic, 0) + 1
+            challenge_diff_dist[p.difficulty] = challenge_diff_dist.get(p.difficulty, 0) + 1
+
+    # 2. Temporal Quiz Data (Daily Averages)
+    daily_stats = {}
+    for qa in quiz_attempts:
+        day = qa.timestamp.date().isoformat()
+        if day not in daily_stats:
+            daily_stats[day] = {'total_score': 0, 'count': 0}
+        daily_stats[day]['total_score'] += (qa.score / qa.total_questions) * 100
+        daily_stats[day]['count'] += 1
+    
+    daily_avg_quiz_score = [
+        {'day': d, 'avg': round(s['total_score'] / s['count'], 1)} 
+        for d, s in sorted(daily_stats.items())
+    ]
+
+    # 3. Per-Chapter Score Evolution
+    # Format: { 'chap_identifier': [ {timestamp, score_perc} ] }
+    quiz_evolution_per_chapter = {}
+    # Process in chronological order for the chart
+    for qa in sorted(quiz_attempts, key=lambda x: x.timestamp):
+        ident = chapter_map.get(qa.chapter_id)
+        if not ident: continue
+        if ident not in quiz_evolution_per_chapter:
+            quiz_evolution_per_chapter[ident] = []
+        quiz_evolution_per_chapter[ident].append({
+            'ts': qa.timestamp.isoformat(),
+            'score': round((qa.score / qa.total_questions) * 100, 1)
+        })
+
+    # --- END ADVANCED STATISTICS ---
+
+    # --- NEW BADGES LOGIC based on Badges.txt ---
+    # Streaks calculation (simplified for now to days active based on timestamps)
+    # Course completion stats
+    courses_completed = sum(1 for cid in frontend_chapter_stats if frontend_chapter_stats[cid].get('all_correct'))
+    
+    # Challenge Stats
+    challenges_completed = passed_challenges
+    
+    # Mastery / Hacker Stats
+    # Assuming "hard" challenges are those marked difficulty='Hard'
+    hard_problems_passed = ChallengeSubmission.query.join(Problem).filter(
+        ChallengeSubmission.user_id == current_user.id,
+        ChallengeSubmission.passed == True,
+        Problem.difficulty == 'Hard'
+    ).with_entities(Problem.id).distinct().count()
+
+    total_course_score = sum(stats['score']/stats['total'] for stats in chapter_stats.values()) if chapter_stats else 0
+    num_courses_taken = len(chapter_stats) if chapter_stats else 1
+    avg_course_score = (total_course_score / num_courses_taken) * 100
+    
+    # Calculate badges to award
+    badges_to_award = []
+    
+    # 1. Streaks (Require complex date parsing - simplified placeholder for demo or basic activity)
+    # We will award 3 day streak if they have submissions/quizzes on 3 distinct days
+    import datetime
+    distinct_active_days = set([d.timestamp.date() for d in submissions] + [d.timestamp.date() for d in quiz_attempts])
+    active_days = len(distinct_active_days)
+    
+    if active_days >= 3: badges_to_award.append("streak_3")
+    if active_days >= 7: badges_to_award.append("streak_7")
+    if active_days >= 14: badges_to_award.append("streak_14")
+    if active_days >= 30: badges_to_award.append("streak_30")
+    if active_days >= 60: badges_to_award.append("streak_60")
+    if active_days >= 90: badges_to_award.append("streak_90")
+    if active_days >= 180: badges_to_award.append("streak_180")
+    if active_days >= 365: badges_to_award.append("streak_365")
+    
+    # 2. Courses
+    if courses_completed >= 1: badges_to_award.append("course_1")
+    if courses_completed >= 3: badges_to_award.append("course_3")
+    if courses_completed >= 7: badges_to_award.append("course_7")
+    if courses_completed >= 10: badges_to_award.append("course_10_master")
+    
+    # 3. Challenges 
+    if challenges_completed >= 1: badges_to_award.append("chall_1")
+    if challenges_completed >= 5: badges_to_award.append("chall_5")
+    if challenges_completed >= 10: badges_to_award.append("chall_10_beg")
+    if challenges_completed >= 20: badges_to_award.append("chall_20_int")
+    if challenges_completed >= 50: badges_to_award.append("chall_50_adv")
+    if challenges_completed >= 100: badges_to_award.append("chall_100_mast")
+        
+    # 4. Mastery Hacker
+    all_courses_finished = courses_completed >= 10
+    if all_courses_finished and avg_course_score > 70 and challenges_completed >= 10 and hard_problems_passed >= 2:
+        badges_to_award.append("hacker_bronze")
+    if all_courses_finished and avg_course_score > 80 and challenges_completed >= 15 and hard_problems_passed >= 3:
+        badges_to_award.append("hacker_gold")
+    if all_courses_finished and avg_course_score > 90 and challenges_completed >= 20 and hard_problems_passed >= 4:
+        badges_to_award.append("hacker_platinum")
+    if all_courses_finished and avg_course_score > 92 and challenges_completed >= 30 and hard_problems_passed >= 6:
+        badges_to_award.append("hacker_diamond")
+    if all_courses_finished and avg_course_score > 95 and challenges_completed >= 40 and hard_problems_passed >= 8:
+        badges_to_award.append("hacker_master")
+    if all_courses_finished and avg_course_score > 99 and challenges_completed >= 50 and hard_problems_passed >= 10:
+        badges_to_award.append("hacker_grandmaster")
+        
+    # 5. Maitre Badges (Assuming specific topic problem counts)
+    def chapter_prob_passed(topic):
+        return ChallengeSubmission.query.join(Problem).filter(
+            ChallengeSubmission.user_id == current_user.id,
+            ChallengeSubmission.passed == True,
+            Problem.topic == topic
+        ).with_entities(Problem.id).distinct().count()
+        
+    if chapter_prob_passed("Arrays") >= 20: badges_to_award.append("maitre_tableaux")
+    if chapter_prob_passed("Strings") >= 20: badges_to_award.append("maitre_chaines")
+    if chapter_prob_passed("Enregistrements") >= 20: badges_to_award.append("maitre_enregistrements")
+    if chapter_prob_passed("Listes_Chainees") >= 2: badges_to_award.append("maitre_listes") # as per Badges.txt 02
+    if chapter_prob_passed("Files") >= 20: badges_to_award.append("maitre_files")
+    if chapter_prob_passed("Piles") >= 2: badges_to_award.append("maitre_piles") # as per txt 02
+
+    # Query existing badges to see what's new
+    existing_badges = {ub.badge_id: ub for ub in UserBadge.query.filter_by(user_id=current_user.id).all()}
+    
+    new_badges_awarded = []
+    for bid in badges_to_award:
+        if bid not in existing_badges:
+            ub = UserBadge(user_id=current_user.id, badge_id=bid, seen=False)
+            db.session.add(ub)
+            new_badges_awarded.append(bid)
+            existing_badges[bid] = ub
+            
+    if new_badges_awarded:
+        db.session.commit()
+
+    # Define metadata for frontend delivery
+    badge_defs = {
+        "streak_3": {"name": "Séquence 3 Jours", "desc": "Actif pendant 3 jours distincts", "icon": "fas fa-fire", "category": "streak"},
+        "streak_7": {"name": "Séquence 7 Jours", "desc": "Actif pendant 7 jours distincts", "icon": "fas fa-fire-alt", "category": "streak"},
+        "streak_14": {"name": "Séquence 14 Jours", "desc": "Actif pendant 14 jours distincts", "icon": "fas fa-burn", "category": "streak"},
+        "streak_30": {"name": "Séquence Mensuelle", "desc": "Actif pendant 30 jours", "icon": "fas fa-calendar-check", "category": "streak"},
+        
+        "course_1": {"name": "Premier Pas", "desc": "1 cours terminé", "icon": "fas fa-book-open", "category": "course"},
+        "course_3": {"name": "Étudiant Assidu", "desc": "3 cours terminés", "icon": "fas fa-book-reader", "category": "course"},
+        "course_7": {"name": "Érudit", "desc": "7 cours terminés", "icon": "fas fa-graduation-cap", "category": "course"},
+        "course_10_master": {"name": "Algo Master", "desc": "10 cours terminés", "icon": "fas fa-university", "category": "course"},
+        
+        "chall_1": {"name": "Développeur", "desc": "1 défi terminé", "icon": "fas fa-keyboard", "category": "challenges"},
+        "chall_5": {"name": "Codeur", "desc": "5 défis terminés", "icon": "fas fa-laptop-code", "category": "challenges"},
+        "chall_10_beg": {"name": "Débutant", "desc": "10 défis terminés", "icon": "fas fa-medal", "category": "challenges"},
+        "chall_20_int": {"name": "Intermédiaire", "desc": "20 défis terminés", "icon": "fas fa-award", "category": "challenges"},
+        "chall_50_adv": {"name": "Avancé", "desc": "50 défis terminés", "icon": "fas fa-trophy", "category": "challenges"},
+        "chall_100_mast": {"name": "Maître des Défis", "desc": "100 défis terminés", "icon": "fas fa-crown", "category": "challenges"},
+        
+        "hacker_bronze": {"name": "Hacker Bronze", "desc": "Tous cours, avg > 70%, 10 défis dont 2 difficiles", "icon": "fas fa-user-ninja", "category": "mastery"},
+        "hacker_gold": {"name": "Hacker Or", "desc": "Tous cours, avg > 80%, 15 défis dont 3 difficiles", "icon": "fas fa-user-ninja", "category": "mastery"},
+        "hacker_platinum": {"name": "Hacker Platine", "desc": "Tous cours, avg > 90%, 20 défis dont 4 difficiles", "icon": "fas fa-user-ninja", "category": "mastery"},
+        "hacker_diamond": {"name": "Hacker Diamant", "desc": "Tous cours, avg > 92%, 30 défis dont 6 difficiles", "icon": "fas fa-user-astronaut", "category": "mastery"},
+        "hacker_master": {"name": "Maître Hacker", "desc": "Tous cours, avg > 95%, 40 défis dont 8 difficiles", "icon": "fas fa-user-secret", "category": "mastery"},
+        "hacker_grandmaster": {"name": "Grand Maître Hacker", "desc": "Tous cours, avg > 99%, 50 défis dont 10 difficiles", "icon": "fas fa-user-secret", "category": "mastery"},
+        
+        "maitre_tableaux": {"name": "Maitre des Tableaux", "desc": "20 problèmes sur Arrays", "icon": "fas fa-table", "category": "maitre"},
+        "maitre_chaines": {"name": "Maitre des Chaines", "desc": "20 problèmes sur Strings", "icon": "fas fa-font", "category": "maitre"},
+        "maitre_enregistrements": {"name": "Maitre des Enregistrements", "desc": "20 problèmes d'Enregistrements", "icon": "fas fa-address-card", "category": "maitre"},
+        "maitre_listes": {"name": "Maitre des Listes Chainees", "desc": "2 problèmes sur LinkedList", "icon": "fas fa-link", "category": "maitre"},
+        "maitre_files": {"name": "Maitre des Files", "desc": "20 problèmes sur Files", "icon": "fas fa-layer-group", "category": "maitre"},
+        "maitre_piles": {"name": "Maitre des Piles", "desc": "2 problèmes sur Piles", "icon": "fas fa-bars", "category": "maitre"},
+    }
+    
+    # Send up all definitions, marking which ones the user earned vs locked
+    badges_response = []
+    for bid, meta in badge_defs.items():
+        badges_response.append({
+            "id": bid,
+            "name": meta["name"],
+            "description": meta["desc"],
+            "icon": meta["icon"],
+            "category": meta["category"],
+            "earned": bid in existing_badges,
+            "seen": existing_badges[bid].seen if bid in existing_badges else True
+        })
+
+    # Topic counts for "Maitre" badges
+    topics = ["Arrays", "Strings", "Enregistrements", "Listes_Chainees", "Files", "Piles"]
+    topic_counts = {t: chapter_prob_passed(t) for t in topics}
+
+    # Activity Heatmap Data (last 365 days)
+    activity_map = {}
+    today = datetime.date.today()
+    one_year_ago = today - datetime.timedelta(days=365)
+    
+    for d in distinct_active_days:
+        if d >= one_year_ago:
+            activity_map[d.isoformat()] = sum(1 for sub in submissions if sub.timestamp.date() == d) + \
+                                         sum(1 for qa in quiz_attempts if qa.timestamp.date() == d)
+
+    return jsonify({
+        'success': True,
+        'progress': {
+            'chapter_stats': frontend_chapter_stats,
+            'challenge_stats': challenge_stats,
+            'total_quizzes_taken': total_quizzes,
+            'total_challenges_attempted': total_challenges_attempted,
+            'challenges_completed': passed_challenges,
+            'active_days': active_days,
+            'courses_completed': courses_completed,
+            'hard_challenges_completed': hard_problems_passed,
+            'avg_course_score': avg_course_score,
+            'topic_counts': topic_counts,
+            'badges': badges_response,
+            'activity_map': activity_map,
+            'advanced_stats': {
+                'challenge_topic_dist': challenge_topic_dist,
+                'challenge_diff_dist': challenge_diff_dist,
+                'daily_avg_quiz_score': daily_avg_quiz_score,
+                'quiz_evolution_per_chapter': quiz_evolution_per_chapter
+            }
+        }
+    })
+
+@app.route('/leaderboard')
+@app.route('/leaderboards')
+def leaderboard_page():
+    return render_template('leaderboard.html')
+
+@app.route('/api/leaderboard', methods=['GET'])
+def get_leaderboard():
+    users = User.query.all()
+    leaderboard = []
+    
+    for user in users:
+        # Calculate Power Score
+        q_count = QuizAttempt.query.filter_by(user_id=user.id).filter(QuizAttempt.score / QuizAttempt.total_questions >= 0.8).count()
+        c_count = ChallengeSubmission.query.filter_by(user_id=user.id, passed=True).count()
+        b_count = UserBadge.query.filter_by(user_id=user.id).count()
+        
+        score = (q_count * 10) + (c_count * 25) + (b_count * 50)
+        
+        leaderboard.append({
+            'name': user.name,
+            'last_name': user.last_name or '',
+            'score': score,
+            'quizzes': q_count,
+            'challenges': c_count,
+            'badges': b_count
+        })
+    
+    # Sort by score descending
+    leaderboard.sort(key=lambda x: x['score'], reverse=True)
+    
+    return jsonify({
+        'success': True,
+        'leaderboard': leaderboard[:20]  # Top 20
+    })
+
+@app.route('/badges')
+def badges_page():
+    return render_template('badges.html')
+
+@app.route('/api/user/badges/seen', methods=['POST'])
+@login_required
+def mark_badges_seen():
+    try:
+        data = request.json or {}
+        badge_ids = data.get('badge_ids', [])
+        
+        if badge_ids:
+            # Mark specific badges
+            UserBadge.query.filter(
+                UserBadge.user_id == current_user.id,
+                UserBadge.badge_id.in_(badge_ids)
+            ).update({"seen": True}, synchronize_session=False)
+        else:
+            # Mark all as seen
+            UserBadge.query.filter_by(
+                user_id=current_user.id, 
+                seen=False
+            ).update({"seen": True}, synchronize_session=False)
+            
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/update_profile', methods=['POST'])
+@login_required
+def update_profile():
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'error': 'No data provided'}), 400
+    
+    name = data.get('name')
+    last_name = data.get('last_name')
+    dob_str = data.get('date_of_birth')
+    study_year = data.get('study_year')
+    
+    if not name:
+        return jsonify({'success': False, 'error': 'Le prénom est requis'}), 400
+        
+    current_user.name = name
+    current_user.last_name = last_name
+    current_user.study_year = study_year
+    
+    if dob_str:
+        try:
+            from datetime import datetime
+            current_user.date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
+        except ValueError:
+            pass # Ignore invalid date format
+            
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'message': 'Profil mis à jour avec succès'
+    })
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=True)
 

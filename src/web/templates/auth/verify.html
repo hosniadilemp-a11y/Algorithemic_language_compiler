@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification E-mail - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-topbar" style="flex-shrink: 0; z-index: 20;">
+        <div style="display:flex; gap:15px; align-items:center;">
+            <a href="javascript:history.back()" class="course-back-btn" title="Retour" style="text-decoration:none;"><i
+                    class="fas fa-arrow-left"></i> Retour</a>
+            <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
+                    class="fas fa-terminal"></i> AlgoCompiler</a>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container login-size">
+            <h2 class="auth-title">Vérification de l'e-mail</h2>
+
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">
+                Un code à 6 chiffres a été envoyé à <strong>{{ email }}</strong>.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.verify') }}">
+                {% if email %}
+                <input type="hidden" name="email" value="{{ email }}">
+                {% else %}
+                <div class="form-group">
+                    <label class="form-label" style="text-align: left;">Adresse e-mail</label>
+                    <input type="email" name="email" class="form-control"
+                        style="font-size: 1rem; letter-spacing: normal; text-align: left;" required>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label class="form-label">Code de vérification</label>
+                    <input type="text" name="code" class="form-control" placeholder="123456" maxlength="6" required
+                        autofocus autocomplete="off">
+                </div>
+                <button type="submit" class="btn-auth btn-primary-auth">Valider</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('auth.resend_code') }}"
+                style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                <p style="color: var(--text-secondary); margin-bottom: 10px; font-size: 0.9rem;">Vous n'avez pas reçu le
+                    code ?</p>
+                <div class="form-group"
+                    style="max-width: 250px; margin: 0 auto 10px auto; text-align: center; background: var(--bg-color); padding: 10px; border-radius: 6px; border: 1px dotted var(--border-color);">
+                    <label class="form-label" style="font-size: 0.9rem; margin-bottom: 5px;">Question de sécurité
+                        :</label>
+                    <div
+                        style="font-size: 1.2rem; font-weight: bold; color: #4a6ee0; margin-bottom: 10px; letter-spacing: 1px;">
+                        {{ captcha_text }}</div>
+                    <input type="text" name="captcha" class="form-control" placeholder="Résultat"
+                        style="font-size: 1rem; text-align: center; letter-spacing: normal;" required
+                        autocomplete="off">
+                </div>
+                {% if email %}
+                <input type="hidden" name="email" value="{{ email }}">
+                {% endif %}
+                <button type="submit"
+                    style="background:none; border:none; color: #4a6ee0; text-decoration: underline; cursor: pointer; font-weight: bold;">Renvoyer
+                    le code</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

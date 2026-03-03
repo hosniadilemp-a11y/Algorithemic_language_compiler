@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Badges - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styling isolated to badges for clarity */
+        .badges-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .badge-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+        }
+
+        .badge-earned .badge-icon-wrapper {
+            background: linear-gradient(135deg, rgba(110, 214, 138, 0.2), rgba(74, 110, 224, 0.2));
+            border: 2px solid var(--course-accent);
+            color: var(--course-accent);
+        }
+
+        .badge-locked {
+            opacity: 0.6;
+            filter: grayscale(100%);
+            background: rgba(13, 17, 23, 0.3);
+            /* dark transparent */
+        }
+
+        body.light-theme .badge-locked {
+            background: rgba(240, 240, 240, 0.8);
+        }
+
+        .badge-locked .badge-icon-wrapper {
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .badge-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        /* Ensure text stays readable in dark mode */
+        body:not(.light-theme) .badge-title {
+            color: #e6edf3;
+        }
+
+        body:not(.light-theme) .badge-desc {
+            color: #8b949e;
+        }
+
+        body:not(.light-theme) .badge-card {
+            background: #1c2128;
+            border-color: #30363d;
+        }
+
+        body:not(.light-theme) .badge-earned {
+            background: rgba(46, 204, 113, 0.05);
+            border-color: rgba(74, 110, 224, 0.4);
+        }
+
+        body:not(.light-theme) .progress-text,
+        body:not(.light-theme) .remaining-text {
+            color: #8b949e;
+        }
+
+        body:not(.light-theme) .badge-category-title {
+            color: #e6edf3;
+            border-color: #30363d;
+        }
+
+        body:not(.light-theme) .label-earned {
+            color: #3fb950;
+        }
+
+        .badge-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .badge-category-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 40px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-status-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .label-earned {
+            background: rgba(110, 214, 138, 0.2);
+            color: #6ed68a;
+        }
+
+        .label-locked {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .badge-progress-container {
+            width: 100%;
+            margin-top: 15px;
+            padding: 0 5px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(128, 128, 128, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar-fill {
+            background: #28a745;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .remaining-text {
+            font-size: 0.75rem;
+            color: #28a745;
+            font-style: italic;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-topbar">
+        <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
+                class="fas fa-terminal"></i> AlgoCompiler</a>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+            <a href="/progress" class="course-back-btn"><i class="fas fa-arrow-left"></i> Retour au profil</a>
+        </div>
+    </div>
+
+    <div style="flex: 1; overflow-y: auto; padding-bottom: 40px; padding-top: 20px;">
+        <div class="container" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+            <div class="content-header" style="margin-bottom: 30px;">
+                <h1><i class="fas fa-medal" style="color: #f1c40f; margin-right: 10px;"></i>Galerie des Badges</h1>
+                <p style="color: var(--text-secondary); margin-top: 5px;">Découvrez tous les badges déblocables et
+                    affichez ceux que
+                    vous avez obtenus !</p>
+            </div>
+
+            <div id="badges-container">
+                <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Chargement de vos accomplissements...
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    try {
+                        const response = await fetch('/api/user/progress');
+                        const data = await response.json();
+
+                        if (data.success && data.progress.badges) {
+                            renderBadges(data.progress);
+                        } else {
+                            document.getElementById('badges-container').innerHTML = '<div class="alert alert-danger">Erreur lors du chargement de la progression.</div>';
+                        }
+                    } catch (error) {
+                        console.error("Error fetching badges:", error);
+                        document.getElementById('badges-container').innerHTML = '<div class="alert alert-danger">Impossible de contacter le serveur.</div>';
+                    }
+                });
+
+                function renderBadges(progressObj) {
+                    const badges = progressObj.badges;
+                    const container = document.getElementById('badges-container');
+                    container.innerHTML = '';
+
+                    const categories = {
+                        'streak': { title: 'Assiduité', icon: 'fa-fire' },
+                        'course': { title: 'Côté Cours', icon: 'fa-book' },
+                        'challenges': { title: 'Défis Algorithmiques', icon: 'fa-keyboard' },
+                        'mastery': { title: 'Hacker Maîtrise', icon: 'fa-user-ninja' },
+                        'maitre': { title: 'Maitre des Sujets', icon: 'fa-crown' }
+                    };
+
+                    // Group badges
+                    const grouped = {};
+                    Object.keys(categories).forEach(cat => grouped[cat] = []);
+
+                    badges.forEach(b => {
+                        if (grouped[b.category]) {
+                            grouped[b.category].push(b);
+                        }
+                    });
+
+                    // Render each category
+                    Object.keys(categories).forEach(catKey => {
+                        const catBadges = grouped[catKey];
+                        if (catBadges.length === 0) return;
+
+                        const catInfo = categories[catKey];
+                        const catHtml = `
+            <h2 class="badge-category-title"><i class="fas ${catInfo.icon}"></i> ${catInfo.title}</h2>
+            <div class="badges-layout">
+                ${catBadges.map(b => {
+                            const progress = calculateBadgeProgress(b.id, progressObj);
+                            return `
+                    <div class="badge-card ${b.earned ? 'badge-earned' : 'badge-locked'}">
+                        <span class="badge-status-label ${b.earned ? 'label-earned' : 'label-locked'}">
+                            ${b.earned ? '<i class="fas fa-check"></i> Obtenu' : '<i class="fas fa-lock"></i> Verrouillé'}
+                        </span>
+                        <div class="badge-icon-wrapper">
+                            <i class="${b.icon}"></i>
+                        </div>
+                        <div class="badge-title">${b.name}</div>
+                        <div class="badge-desc">${b.description}</div>
+                        
+                        ${!b.earned && progress ? `
+                        <div class="badge-progress-container">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${progress.percent}%"></div>
+                            </div>
+                            <div class="progress-text">${progress.current} / ${progress.target}</div>
+                            <div class="remaining-text">${progress.remainingText}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                        }).join('')}
+            </div>
+        `;
+
+                        container.innerHTML += catHtml;
+                    });
+
+                    function calculateBadgeProgress(badgeId, stats) {
+                        const targets = {
+                            // Streak
+                            "streak_3": { key: 'active_days', target: 3, label: 'jours' },
+                            "streak_7": { key: 'active_days', target: 7, label: 'jours' },
+                            "streak_14": { key: 'active_days', target: 14, label: 'jours' },
+                            "streak_30": { key: 'active_days', target: 30, label: 'jours' },
+                            // Course
+                            "course_1": { key: 'courses_completed', target: 1, label: 'cours' },
+                            "course_3": { key: 'courses_completed', target: 3, label: 'cours' },
+                            "course_7": { key: 'courses_completed', target: 7, label: 'cours' },
+                            "course_10_master": { key: 'courses_completed', target: 10, label: 'cours' },
+                            // Challenges
+                            "chall_1": { key: 'challenges_completed', target: 1, label: 'défis' },
+                            "chall_5": { key: 'challenges_completed', target: 5, label: 'défis' },
+                            "chall_10_beg": { key: 'challenges_completed', target: 10, label: 'défis' },
+                            "chall_20_int": { key: 'challenges_completed', target: 20, label: 'défis' },
+                            "chall_50_adv": { key: 'challenges_completed', target: 50, label: 'défis' },
+                            "chall_100_mast": { key: 'challenges_completed', target: 100, label: 'défis' },
+                            // Maitre
+                            "maitre_tableaux": { key: 'topic_counts.Arrays', target: 20, label: 'problèmes Arrays' },
+                            "maitre_chaines": { key: 'topic_counts.Strings', target: 20, label: 'problèmes Chaines' },
+                            "maitre_enregistrements": { key: 'topic_counts.Enregistrements', target: 20, label: 'problèmes Enregistrements' },
+                            "maitre_listes": { key: 'topic_counts.Listes_Chainees', target: 2, label: 'problèmes Listes' },
+                            "maitre_piles": { key: 'topic_counts.Piles', target: 2, label: 'problèmes Piles' },
+                            "maitre_files": { key: 'topic_counts.Files', target: 20, label: 'problèmes Files' },
+                        };
+
+                        const masteryTargets = {
+                            "hacker_bronze": { chall: 10, hard: 2, avg: 70 },
+                            "hacker_gold": { chall: 15, hard: 3, avg: 80 },
+                            "hacker_platinum": { chall: 20, hard: 4, avg: 90 },
+                            "hacker_diamond": { chall: 30, hard: 6, avg: 92 },
+                            "hacker_master": { chall: 40, hard: 8, avg: 95 },
+                            "hacker_grandmaster": { chall: 50, hard: 10, avg: 99 },
+                        };
+
+                        if (targets[badgeId]) {
+                            const config = targets[badgeId];
+                            let current = 0;
+                            if (config.key.includes('.')) {
+                                const [p1, p2] = config.key.split('.');
+                                current = stats[p1] ? (stats[p1][p2] || 0) : 0;
+                            } else {
+                                current = stats[config.key] || 0;
+                            }
+
+                            const percent = Math.min(100, (current / config.target) * 100);
+                            const remaining = config.target - current;
+                            return {
+                                current,
+                                target: config.target,
+                                percent,
+                                remainingText: `Encore ${remaining} ${config.label === 'jours' ? (remaining > 1 ? 'jours' : 'jour') : config.label}`
+                            };
+                        }
+
+                        if (masteryTargets[badgeId]) {
+                            const config = masteryTargets[badgeId];
+                            // Simplify to challenges count for the bar, but mention others
+                            const current = stats.challenges_completed || 0;
+                            const percent = Math.min(100, (current / config.chall) * 100);
+                            const remaining = config.chall - current;
+                            let remainingText = "";
+
+                            if (remaining > 0) remainingText += `Encore ${remaining} défis`;
+                            if (stats.courses_completed < 10) remainingText += (remainingText ? " & " : "") + "Finaliser cours";
+                            if (stats.avg_course_score < config.avg) remainingText += (remainingText ? " & " : "") + `Score > ${config.avg}%`;
+
+                            return {
+                                current,
+                                target: config.chall,
+                                percent,
+                                remainingText: remainingText || "Presque là!"
+                            };
+                        }
+
+                        return null;
+                    }
+
+                    // Count stats
+                    const totalEarned = badges.filter(b => b.earned).length;
+                    const statsHtml = `
+        <div style="background: var(--panel-bg); border-radius: 12px; padding: 20px; margin-top: 40px; text-align: center; border: 1px dashed var(--border-color);">
+            <h3 style="margin-top: 0;">Progression totale</h3>
+            <div style="font-size: 2rem; font-weight: bold; color: var(--course-accent); margin: 10px 0;">
+                ${totalEarned} <span style="font-size: 1rem; color: var(--text-secondary);">/ ${badges.length} badges débloqués</span>
+            </div>
+            <div style="background: var(--bg-color); border-radius: 10px; height: 10px; overflow: hidden; max-width: 500px; margin: 0 auto;">
+                <div style="background: linear-gradient(90deg, #4a6ee0, #6ed68a); height: 100%; width: ${(totalEarned / badges.length) * 100}%;"></div>
+            </div>
+        </div>
+    `;
+
+                    container.innerHTML = statsHtml + container.innerHTML;
+                }
+            </script>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

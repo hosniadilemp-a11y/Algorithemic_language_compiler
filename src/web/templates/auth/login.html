@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 40px;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
+            /* ensure space for scrolling */
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .btn-google {
+            background: #db4437;
+            color: white;
+        }
+
+        .btn-github {
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-topbar" style="flex-shrink: 0; z-index: 20;">
+        <div style="display:flex; gap:15px; align-items:center;">
+            <a href="javascript:history.back()" class="course-back-btn" title="Retour" style="text-decoration:none;"><i
+                    class="fas fa-arrow-left"></i> Retour</a>
+            <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
+                    class="fas fa-terminal"></i> AlgoCompiler</a>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container login-size">
+            <h2 class="auth-title">Connexion</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label class="form-label">Adresse e-mail</label>
+                    <input type="email" name="email" class="form-control" required autofocus>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between;">
+                        <label class="form-label">Mot de passe</label>
+                        <a href="{{ url_for('auth.forgot_password') }}"
+                            style="font-size: 0.85em; color: #4a6ee0; text-decoration: none;">Mot de passe oublié ?</a>
+                    </div>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn-auth btn-primary-auth">Se connecter</button>
+            </form>
+
+            <div class="divider">Nouveau sur AlgoCompiler ?</div>
+
+            <div style="text-align: center;">
+                <a href="{{ url_for('auth.signup') }}" class="btn-auth btn-secondary-auth">
+                    <i class="fas fa-user-plus"></i> Créer un compte
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

@@ -1,6 +1,0 @@
-Algorithme TestStop;
-Debut
-    Tant Que Vrai Faire
-        Ecrire("Running");
-    Fin Tant Que;
-Fin.

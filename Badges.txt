@@ -1,0 +1,40 @@
+Streak badges:
+- 3 day streak
+- 7 day streak
+- 14 day streak
+- 30 day streak
+- 60 day streak
+- 90 day streak
+- 180 day streak
+- 365 day streak
+
+Course badges:
+- 1 course completed
+- 3 courses completed
+- 7 courses completed
+- 10 courses completed algo master badge
+
+Challenges badges:
+- 1 challenge completed
+- 5 challenges completed
+- 10 challenges completed beginner badge
+- 20 challenges completed intermediate badge
+- 50 challenges completed advanced badge
+- 100 challenges completed master badge
+
+Mastery badges:
+- bronse Hacker -> finish all coursesm have an average score > 70% in all courses and challenges 10 at least 2 of them hard
+-gold Hacker -> finish all coursesm have an average score > 80% in all courses and challenges 15 at least 3 of them hard
+-platinum Hacker -> finish all coursesm have an average score > 90% in all courses and challenges 20 at least 4 of them hard
+-dimond Hacker -> finish all coursesm have an average score > 92% in all courses and challenges 30 at least 6 of them hard
+-master Hacker -> finish all coursesm have an average score > 95% in all courses and challenges 40 at least 8 of them hard
+- Grans master Hacker badge -> finish all coursesm have an average score > 99% in all courses and challenges 50 at least 10 of them hard
+
+Maitre badges:
+Maitre des Tableaux finsin 20 problem in tableau
+Maitre des string finsin 20 problem in string
+Maitre des enregistrement finsin 20 problem in enregistrement
+Maitre des linked list finsin 02 problem in linked list
+Maitre des files finsin 20 problem in files
+Maitre des piles finsin 02 problem in piles
+

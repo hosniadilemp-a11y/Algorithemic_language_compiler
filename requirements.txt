@@ -4,3 +4,7 @@ requests
 gunicorn
 flask-sqlalchemy
 sqlalchemy
+flask-login
+authlib
+flask-mail
+email-validator

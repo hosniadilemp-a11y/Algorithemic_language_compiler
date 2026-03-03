@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlgoCompiler — Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+    }
+
+    /* ── Login ── */
+    .login-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d1117 60%, #1a2332);
+    }
+
+    .login-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 380px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-card .logo {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4a6ee0;
+      margin-bottom: 8px;
+    }
+
+    .login-card .subtitle {
+      text-align: center;
+      color: #8b949e;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .form-field {
+      margin-bottom: 18px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #e6edf3;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-field input:focus {
+      outline: none;
+      border-color: #4a6ee0;
+      box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.2);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #4a6ee0, #6a3de8);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .error-msg {
+      color: #f85149;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    /* ── Layout ── */
+    .app {
+      display: none;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+      z-index: 100;
+    }
+
+    .sidebar .brand {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .sidebar .brand h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #4a6ee0;
+    }
+
+    .sidebar .brand p {
+      font-size: 0.75rem;
+      color: #8b949e;
+      margin-top: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 20px;
+      cursor: pointer;
+      color: #8b949e;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .nav-item:hover {
+      background: rgba(74, 110, 224, 0.08);
+      color: #e6edf3;
+    }
+
+    .nav-item.active {
+      background: rgba(74, 110, 224, 0.12);
+      color: #4a6ee0;
+      border-left-color: #4a6ee0;
+      font-weight: 600;
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 15px 20px;
+      border-top: 1px solid #30363d;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f85149;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 8px 0;
+    }
+
+    .main {
+      margin-left: 240px;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .page-header p {
+      color: #8b949e;
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    /* ── KPI Cards ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .kpi-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon.blue {
+      background: rgba(74, 110, 224, 0.15);
+      color: #4a6ee0;
+    }
+
+    .kpi-icon.green {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+
+    .kpi-icon.amber {
+      background: rgba(241, 196, 15, 0.15);
+      color: #f1c40f;
+    }
+
+    .kpi-icon.red {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+
+    .kpi-icon.purple {
+      background: rgba(155, 89, 182, 0.15);
+      color: #9b59b6;
+    }
+
+    .kpi-icon.teal {
+      background: rgba(26, 188, 156, 0.15);
+      color: #1abc9c;
+    }
+
+    .kpi-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+
+    /* ── Panels ── */
+    .panel {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Table ── */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th {
+      padding: 10px 14px;
+      background: #0d1117;
+      color: #8b949e;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #21262d;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ── Badges ── */
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .tag-easy {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+
+    .tag-medium {
+      background: rgba(241, 196, 15, 0.15);
+      color: #f1c40f;
+    }
+
+    .tag-hard {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+
+    .tag-passed {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+
+    .tag-failed {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: 8px 16px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-success {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-success:hover {
+      background: rgba(46, 204, 113, 0.25);
+    }
+
+    .btn-danger {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(231, 76, 60, 0.25);
+    }
+
+    .btn-info {
+      background: rgba(74, 110, 224, 0.15);
+      color: #4a6ee0;
+      border: 1px solid rgba(74, 110, 224, 0.3);
+    }
+
+    .btn-info:hover {
+      background: rgba(74, 110, 224, 0.25);
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* ── Search/Filter bar ── */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar input,
+    .filter-bar select {
+      padding: 9px 14px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #e6edf3;
+      font-size: 0.88rem;
+    }
+
+    .filter-bar input:focus,
+    .filter-bar select:focus {
+      outline: none;
+      border-color: #4a6ee0;
+    }
+
+    .filter-bar input {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    /* ── Modal ── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+    }
+
+    .modal h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .field-row {
+      margin-bottom: 14px;
+    }
+
+    .field-row label {
+      display: block;
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-bottom: 5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .field-row input,
+    .field-row textarea,
+    .field-row select {
+      width: 100%;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      color: #e6edf3;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+    }
+
+    .field-row textarea {
+      min-height: 90px;
+      resize: vertical;
+      font-family: monospace;
+    }
+
+    .field-row input:focus,
+    .field-row textarea:focus,
+    .field-row select:focus {
+      outline: none;
+      border-color: #4a6ee0;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #30363d;
+    }
+
+    /* ── Test cases builder ── */
+    .tc-list {
+      margin-top: 8px;
+    }
+
+    .tc-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 10px;
+      background: #0d1117;
+      border-radius: 8px;
+      border: 1px solid #21262d;
+    }
+
+    .tc-item input {
+      padding: 7px 10px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #e6edf3;
+      font-size: 0.82rem;
+      font-family: monospace;
+    }
+
+    .tc-item label {
+      font-size: 0.75rem;
+      color: #8b949e;
+      white-space: nowrap;
+    }
+
+    .tc-add-btn {
+      margin-top: 8px;
+    }
+
+    /* ── Choice builder ── */
+    .choice-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+    }
+
+    .choice-item input[type="text"] {
+      flex: 1;
+      padding: 7px 10px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #e6edf3;
+      font-size: 0.88rem;
+    }
+
+    .choice-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2ecc71;
+    }
+
+    .choice-item .correct-label {
+      font-size: 0.78rem;
+      color: #8b949e;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1f2933;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      font-size: 0.9rem;
+      max-width: 360px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success .toast-icon {
+      color: #2ecc71;
+    }
+
+    .toast.error .toast-icon {
+      color: #f85149;
+    }
+
+    /* ── Page sections ── */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* ── User detail ── */
+    .user-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .mini-table {
+      font-size: 0.82rem;
+      width: 100%;
+    }
+
+    .mini-table th {
+      font-size: 0.72rem;
+      padding: 8px 10px;
+    }
+
+    .mini-table td {
+      padding: 8px 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-wrap" id="loginWrap">
+    <div class="login-card">
+      <div class="logo"><i class="fas fa-terminal"></i> AlgoCompiler</div>
+      <p class="subtitle">Espace Enseignant</p>
+      <div class="form-field">
+        <label>Identifiant</label>
+        <input type="text" id="loginUser" placeholder="Teacher1" autocomplete="username">
+      </div>
+      <div class="form-field">
+        <label>Mot de passe</label>
+        <input type="password" id="loginPwd" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Connexion</button>
+      <p class="error-msg" id="loginErr"></p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="app" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <h1><i class="fas fa-terminal"></i> Admin</h1>
+        <p>Espace Enseignant</p>
+      </div>
+      <nav style="margin-top:12px;">
+        <div class="nav-item active" onclick="showSection('overview')" id="nav-overview"><i
+            class="fas fa-chart-line"></i> Vue d'ensemble</div>
+        <div class="nav-item" onclick="showSection('users')" id="nav-users"><i class="fas fa-users"></i> Utilisateurs
+        </div>
+        <div class="nav-item" onclick="showSection('problems')" id="nav-problems"><i class="fas fa-laptop-code"></i>
+          Problèmes</div>
+        <div class="nav-item" onclick="showSection('quizzes')" id="nav-quizzes"><i class="fas fa-graduation-cap"></i>
+          Quiz</div>
+        <div class="nav-item" onclick="showSection('probstats')" id="nav-probstats"><i class="fas fa-chart-bar"></i>
+          Statistiques</div>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="logout-btn" onclick="location.href='/admin/logout'"><i class="fas fa-sign-out-alt"></i> Déconnexion
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- OVERVIEW -->
+      <div class="section active" id="sec-overview">
+        <div class="page-header">
+          <h2>Vue d'ensemble</h2>
+          <p>Statistiques générales de la plateforme</p>
+        </div>
+        <div class="kpi-grid" id="kpiGrid">
+          <div class="kpi-card">
+            <div class="kpi-icon blue"><i class="fas fa-users"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-users">—</div>
+              <div class="kpi-label">Utilisateurs</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fas fa-laptop-code"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-problems">—</div>
+              <div class="kpi-label">Problèmes</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon amber"><i class="fas fa-graduation-cap"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-chapters">—</div>
+              <div class="kpi-label">Chapitres</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon purple"><i class="fas fa-pencil-alt"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-quizzes">—</div>
+              <div class="kpi-label">Tentatives Quiz</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon teal"><i class="fas fa-code"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-subs">—</div>
+              <div class="kpi-label">Soumissions</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-passed">—</div>
+              <div class="kpi-label">Réussies</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon amber"><i class="fas fa-medal"></i></div>
+            <div>
+              <div class="kpi-value" id="kpi-badges">—</div>
+              <div class="kpi-label">Badges Décernés</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title"><i class="fas fa-chart-area"></i> Activité (30
+              jours)</span></div>
+          <canvas id="activityChart" height="80"></canvas>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="section" id="sec-users">
+        <div class="page-header">
+          <h2>Utilisateurs</h2>
+          <p>Liste complète et activité individuelle</p>
+        </div>
+        <div class="panel">
+          <div class="filter-bar">
+            <input type="text" id="userSearch" placeholder="🔍 Rechercher par nom ou email…" oninput="filterUsers()">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Inscrit</th>
+                  <th>Dernière activité</th>
+                  <th>Quiz</th>
+                  <th>Moy. Quiz</th>
+                  <th>Défis</th>
+                  <th>Réussis</th>
+                  <th>Badges</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userTable">
+                <tr>
+                  <td colspan="10" style="text-align:center;color:#8b949e;padding:30px;">Chargement…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROBLEMS -->
+      <div class="section" id="sec-problems">
+        <div class="page-header">
+          <h2>Gestion des Problèmes</h2>
+          <p>Créer, modifier et supprimer les défis de programmation</p>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title"><i class="fas fa-list"></i> Problèmes (<span id="probCount">0</span>)</span>
+            <button class="btn btn-success" onclick="location.href='/admin/problems/new'"><i class="fas fa-plus"></i>
+              Nouveau</button>
+          </div>
+          <div class="filter-bar">
+            <input type="text" id="probSearch" placeholder="🔍 Rechercher…" oninput="filterProblems()">
+            <select id="probDiffFilter" onchange="filterProblems()">
+              <option value="">Toutes les difficultés</option>
+              <option value="Easy">Facile</option>
+              <option value="Medium">Moyen</option>
+              <option value="Hard">Difficile</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Titre</th>
+                  <th>Thème</th>
+                  <th>Difficulté</th>
+                  <th>Tests</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="problemTable">
+                <tr>
+                  <td colspan="6" style="text-align:center;color:#8b949e;padding:30px;">Chargement…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZZES -->
+      <div class="section" id="sec-quizzes">
+        <div class="page-header">
+          <h2>Gestion des Quiz</h2>
+          <p>Gérer les chapitres et les questions</p>
+        </div>
+        <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;">
+          <div class="panel" style="margin-bottom:0;">
+            <div class="panel-header">
+              <span class="panel-title"><i class="fas fa-book"></i> Chapitres</span>
+              <button class="btn btn-success btn-sm" onclick="openChapModal()"><i class="fas fa-plus"></i></button>
+            </div>
+            <div id="chapterList" style="max-height:500px;overflow-y:auto;"></div>
+          </div>
+          <div class="panel" style="margin-bottom:0;" id="questionPanel">
+            <div class="panel-header">
+              <span class="panel-title" id="qPanelTitle"><i class="fas fa-question-circle"></i> Sélectionnez un
+                chapitre</span>
+              <button class="btn btn-success btn-sm" id="addQBtn" style="display:none;" onclick="openQuestionModal()"><i
+                  class="fas fa-plus"></i> Question</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Concept</th>
+                    <th>Difficulté</th>
+                    <th>Choix</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="questionTable">
+                  <tr>
+                    <td colspan="5" style="text-align:center;color:#8b949e;padding:20px;">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROB STATS -->
+      <div class="section" id="sec-probstats">
+        <div class="page-header">
+          <h2>Statistiques des Problèmes</h2>
+          <p>Taux de réussite, scores moyens et temps</p>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Titre</th>
+                  <th>Thème</th>
+                  <th>Diff.</th>
+                  <th>Tentatives</th>
+                  <th>Réussites</th>
+                  <th>Taux</th>
+                  <th>Score Moy.</th>
+                  <th>Temps Moy.</th>
+                </tr>
+              </thead>
+              <tbody id="probStatTable">
+                <tr>
+                  <td colspan="8" style="text-align:center;color:#8b949e;padding:30px;">Chargement…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <!-- Problem Modal -->
+  <div class="modal-bg" id="probModal">
+    <div class="modal">
+      <h3 id="probModalTitle">Nouveau Problème</h3>
+      <div class="field-row"><label>Titre</label><input id="pm-title" placeholder="ex: Somme de deux entiers"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="field-row"><label>Thème</label><input id="pm-topic" placeholder="Tableaux, Tri…"></div>
+        <div class="field-row"><label>Difficulté</label>
+          <select id="pm-diff">
+            <option value="Easy">Facile</option>
+            <option value="Medium" selected>Moyen</option>
+            <option value="Hard">Difficile</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row"><label>Description</label><textarea id="pm-desc" rows="3"
+          placeholder="Énoncé du problème…"></textarea></div>
+      <div class="field-row"><label>Code Modèle (optionnel)</label><textarea id="pm-template" rows="3"
+          placeholder="algorithme …&#10;début&#10;  // votre code&#10;fin"></textarea></div>
+      <div class="field-row">
+        <label>Cas de test</label>
+        <div class="tc-list" id="tcList"></div>
+        <button class="btn btn-info btn-sm tc-add-btn" onclick="addTC()"><i class="fas fa-plus"></i> Ajouter un cas de
+          test</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" onclick="closeModal('probModal')">Annuler</button>
+        <button class="btn btn-success" onclick="saveProblem()"><i class="fas fa-save"></i> Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Modal -->
+  <div class="modal-bg" id="qModal">
+    <div class="modal">
+      <h3 id="qModalTitle">Nouvelle Question</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div class="field-row"><label>Concept</label><input id="qm-concept" placeholder="Variables, Boucles…"></div>
+        <div class="field-row"><label>Type</label><select id="qm-type">
+            <option value="MCQ">QCM</option>
+            <option value="TF">Vrai/Faux</option>
+          </select></div>
+        <div class="field-row"><label>Difficulté</label><select id="qm-diff">
+            <option value="Easy">Facile</option>
+            <option value="Medium" selected>Moyen</option>
+            <option value="Hard">Difficile</option>
+          </select></div>
+      </div>
+      <div class="field-row"><label>Question</label><textarea id="qm-text" rows="2"></textarea></div>
+      <div class="field-row"><label>Explication (après réponse)</label><textarea id="qm-expl" rows="2"></textarea></div>
+      <div class="field-row">
+        <label>Choix de réponse <span style="font-size:0.75rem;color:#2ecc71;">(cocher = correct)</span></label>
+        <div id="choiceList"></div>
+        <button class="btn btn-info btn-sm" style="margin-top:8px;" onclick="addChoice()"><i class="fas fa-plus"></i>
+          Choix</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" onclick="closeModal('qModal')">Annuler</button>
+        <button class="btn btn-success" onclick="saveQuestion()"><i class="fas fa-save"></i> Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Detail Modal -->
+  <div class="modal-bg" id="userModal">
+    <div class="modal" style="max-width:860px;">
+      <h3 id="userModalTitle">Détail Utilisateur</h3>
+      <div class="user-detail-grid" id="userDetailContent"></div>
+      <div class="modal-actions">
+        <input type="password" id="newPwdInput" placeholder="Nouveau mot de passe…"
+          style="padding:9px 12px;background:#0d1117;border:1px solid #30363d;border-radius:7px;color:#e6edf3;font-size:0.88rem;">
+        <button class="btn btn-info" onclick="resetUserPwd()"><i class="fas fa-key"></i> Réinitialiser MDP</button>
+        <button class="btn btn-danger" onclick="closeModal('userModal')">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter Modal -->
+  <div class="modal-bg" id="chapModal">
+    <div class="modal" style="max-width:420px;">
+      <h3 id="chapModalTitle">Nouveau Chapitre</h3>
+      <div class="field-row"><label>Titre</label><input id="chap-title" placeholder="ex: Algorithmes de Tri"></div>
+      <div class="field-row"><label>Identifiant</label><input id="chap-id" placeholder="ex: chapter_tri"></div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" onclick="closeModal('chapModal')">Annuler</button>
+        <button class="btn btn-success" onclick="saveChapter()"><i class="fas fa-save"></i> Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastMsg"></span></div>
+
+  <script>
+    // ── State ────────────────────────────────────────────────────────────────────
+    let allUsers = [], allProblems = [], allChapters = [], currentChapterId = null;
+    let editingProblemId = null, editingQuestionId = null, editingChapterId = null;
+    let actChart = null, currentDetailUserId = null;
+
+    // ── Helpers ─────────────────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    function toast(msg, type = 'success') {
+      const t = $('toast'); const icon = $('toastIcon');
+      t.className = `toast ${type}`;
+      icon.className = `toast-icon fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
+      $('toastMsg').textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+    async function api(url, opts = {}) {
+      const r = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || 'Erreur serveur');
+      return data;
+    }
+    function closeModal(id) { $(id).classList.remove('open'); }
+    function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
+    function diffTag(d) {
+      const m = { Easy: 'tag-easy', Medium: 'tag-medium', Hard: 'tag-hard' };
+      const l = { Easy: 'Facile', Medium: 'Moyen', Hard: 'Difficile' };
+      return `<span class="tag ${m[d] || ''}">${l[d] || d}</span>`;
+    }
+
+    // ── Login ────────────────────────────────────────────────────────────────────
+    async function doLogin() {
+      const u = $('loginUser').value.trim(), p = $('loginPwd').value;
+      try {
+        await api('/admin/login', { method: 'POST', body: JSON.stringify({ username: u, password: p }) });
+        $('loginWrap').style.display = 'none';
+        $('app').style.display = 'block';
+        initApp();
+      } catch (e) { $('loginErr').textContent = e.message; }
+    }
+    $('loginPwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    {% if view == 'dashboard' %}
+    document.addEventListener('DOMContentLoaded', () => {
+      $('loginWrap').style.display = 'none';
+      $('app').style.display = 'block';
+      initApp();
+    });
+    {% endif %}
+
+    // ── Navigation ───────────────────────────────────────────────────────────────
+    function showSection(name) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      $(`sec-${name}`).classList.add('active');
+      $(`nav-${name}`).classList.add('active');
+      if (name === 'overview') loadOverview();
+      if (name === 'users') loadUsers();
+      if (name === 'problems') loadProblems();
+      if (name === 'quizzes') loadChapters();
+      if (name === 'probstats') loadProbStats();
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────────
+    function initApp() { loadOverview(); }
+
+    // ── Overview ─────────────────────────────────────────────────────────────────
+    async function loadOverview() {
+      const [ov, act] = await Promise.all([api('/admin/api/stats/overview'), api('/admin/api/stats/activity?days=30')]);
+      $('kpi-users').textContent = ov.total_users;
+      $('kpi-problems').textContent = ov.total_problems;
+      $('kpi-chapters').textContent = ov.total_chapters;
+      $('kpi-quizzes').textContent = ov.total_quiz_attempts;
+      $('kpi-subs').textContent = ov.total_submissions;
+      $('kpi-passed').textContent = ov.passed_submissions;
+      $('kpi-badges').textContent = ov.total_badges_awarded;
+
+      if (actChart) actChart.destroy();
+      const ctx = $('activityChart').getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 200);
+      grad.addColorStop(0, 'rgba(74,110,224,0.4)');
+      grad.addColorStop(1, 'rgba(74,110,224,0)');
+      actChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: act.labels, datasets: [{ label: 'Activités', data: act.values, borderColor: '#4a6ee0', backgroundColor: grad, fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#4a6ee0' }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { maxTicksLimit: 10, color: '#8b949e' } }, y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { stepSize: 1, color: '#8b949e' } } } }
+      });
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────────────
+    async function loadUsers() {
+      const d = await api('/admin/api/stats/users');
+      allUsers = d.users;
+      renderUsers(allUsers);
+    }
+    function filterUsers() {
+      const q = $('userSearch').value.toLowerCase();
+      renderUsers(allUsers.filter(u => (u.name + ' ' + u.last_name + ' ' + u.email).toLowerCase().includes(q)));
+    }
+    function renderUsers(users) {
+      $('userTable').innerHTML = users.length === 0
+        ? '<tr><td colspan="10" style="text-align:center;color:#8b949e;padding:30px;">Aucun utilisateur trouvé</td></tr>'
+        : users.map(u => `<tr>
+      <td><strong>${u.name} ${u.last_name}</strong></td>
+      <td style="color:#8b949e;">${u.email}</td>
+      <td>${fmtDate(u.created_at)}</td>
+      <td>${fmtDate(u.last_activity)}</td>
+      <td>${u.quiz_count}</td>
+      <td>${u.avg_quiz_score}%</td>
+      <td>${u.challenge_total}</td>
+      <td>${u.challenge_passed}</td>
+      <td>${u.badge_count}</td>
+      <td><button class="btn btn-info btn-sm" onclick="openUserDetail(${u.id})"><i class="fas fa-eye"></i></button></td>
+    </tr>`).join('');
+    }
+    async function openUserDetail(uid) {
+      currentDetailUserId = uid;
+      const d = await api(`/admin/api/stats/users/${uid}`);
+      const u = d.user;
+      $('userModalTitle').textContent = `${u.name} ${u.last_name} — ${u.email}`;
+      $('userDetailContent').innerHTML = `
+    <div>
+      <h4 style="margin-bottom:12px;color:#8b949e;font-size:0.85rem;text-transform:uppercase;">Derniers Quiz</h4>
+      <table class="mini-table">
+        <thead><tr><th>Chapitre</th><th>Score</th><th>%</th><th>Date</th></tr></thead>
+        <tbody>${d.quizzes.slice(0, 10).map(q => `<tr><td>${q.chapter}</td><td>${q.score}/${q.total}</td><td>${q.pct}%</td><td>${fmtDate(q.timestamp)}</td></tr>`).join('') || '<tr><td colspan="4" style="color:#8b949e;">Aucun</td></tr>'}</tbody>
+      </table>
+    </div>
+    <div>
+      <h4 style="margin-bottom:12px;color:#8b949e;font-size:0.85rem;text-transform:uppercase;">Dernières Soumissions</h4>
+      <table class="mini-table">
+        <thead><tr><th>Problème</th><th>Score</th><th>Statut</th><th>Date</th></tr></thead>
+        <tbody>${d.submissions.slice(0, 10).map(s => `<tr><td>${s.problem}</td><td>${s.score}%</td><td><span class="tag ${s.passed ? 'tag-passed' : 'tag-failed'}">${s.passed ? 'Réussi' : 'Échoué'}</span></td><td>${fmtDate(s.timestamp)}</td></tr>`).join('') || '<tr><td colspan="4" style="color:#8b949e;">Aucune</td></tr>'}</tbody>
+      </table>
+    </div>`;
+      $('userModal').classList.add('open');
+      $('newPwdInput').value = '';
+    }
+    async function resetUserPwd() {
+      const pwd = $('newPwdInput').value.trim();
+      if (!pwd) return toast('Saisissez un nouveau mot de passe', 'error');
+      try {
+        await api(`/admin/api/users/${currentDetailUserId}/reset_password`, { method: 'POST', body: JSON.stringify({ password: pwd }) });
+        toast('Mot de passe réinitialisé !');
+        $('newPwdInput').value = '';
+      } catch (e) { toast(e.message, 'error'); }
+    }
+
+    // ── Problems ──────────────────────────────────────────────────────────────────
+    async function loadProblems() {
+      const d = await api('/admin/api/problems');
+      allProblems = d.items;
+      $('probCount').textContent = allProblems.length;
+      renderProblems(allProblems);
+    }
+    function filterProblems() {
+      const q = $('probSearch').value.toLowerCase();
+      const df = $('probDiffFilter').value;
+      renderProblems(allProblems.filter(p => (!q || (p.title + p.topic).toLowerCase().includes(q)) && (!df || p.difficulty === df)));
+    }
+    function renderProblems(probs) {
+      $('problemTable').innerHTML = probs.map(p => `<tr>
+    <td style="color:#8b949e;">#${p.id}</td>
+    <td><strong>${p.title}</strong></td>
+    <td>${p.topic}</td>
+    <td>${diffTag(p.difficulty)}</td>
+    <td>${p.test_cases.length}</td>
+    <td>
+      <button class="btn btn-info btn-sm" onclick="location.href='/admin/problems/${p.id}/edit'"><i class="fas fa-pencil-alt"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteProblem(${p.id})" style="margin-left:4px;"><i class="fas fa-trash"></i></button>
+    </td>
+  </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px;">Aucun problème</td></tr>';
+    }
+    function openProblemModal(p = null) {
+      editingProblemId = p ? p.id : null;
+      $('probModalTitle').textContent = p ? 'Modifier le Problème' : 'Nouveau Problème';
+      $('pm-title').value = p?.title || '';
+      $('pm-topic').value = p?.topic || '';
+      $('pm-diff').value = p?.difficulty || 'Medium';
+      $('pm-desc').value = p?.description || '';
+      $('pm-template').value = p?.template_code || '';
+      $('tcList').innerHTML = '';
+      (p?.test_cases || []).forEach(tc => addTC(tc.input, tc.expected_output, tc.is_public));
+      $('probModal').classList.add('open');
+    }
+    async function editProblem(id) {
+      const p = await api(`/admin/api/problems/${id}`);
+      openProblemModal(p);
+    }
+    async function deleteProblem(id) {
+      if (!confirm('Supprimer ce problème ?')) return;
+      try { await api(`/admin/api/problems/${id}`, { method: 'DELETE' }); toast('Problème supprimé.'); loadProblems(); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+    function addTC(input = '', expected = '', isPublic = false) {
+      const div = document.createElement('div');
+      div.className = 'tc-item';
+      div.innerHTML = `
+    <input class="tc-in" placeholder="Entrée" value="${input.replace(/"/g, '&quot;')}">
+    <input class="tc-out" placeholder="Sortie attendue" value="${expected.replace(/"/g, '&quot;')}">
+    <label><input type="checkbox" class="tc-pub" ${isPublic ? 'checked' : ''}> Public</label>
+    <button class="btn btn-danger btn-sm" onclick="this.closest('.tc-item').remove()"><i class="fas fa-times"></i></button>`;
+      $('tcList').appendChild(div);
+    }
+    async function saveProblem() {
+      const tcs = [...document.querySelectorAll('.tc-item')].map(el => ({
+        input: el.querySelector('.tc-in').value,
+        expected_output: el.querySelector('.tc-out').value,
+        is_public: el.querySelector('.tc-pub').checked
+      }));
+      const body = { title: $('pm-title').value, topic: $('pm-topic').value, difficulty: $('pm-diff').value, description: $('pm-desc').value, template_code: $('pm-template').value, test_cases: tcs };
+      try {
+        if (editingProblemId) await api(`/admin/api/problems/${editingProblemId}`, { method: 'PUT', body: JSON.stringify(body) });
+        else await api('/admin/api/problems', { method: 'POST', body: JSON.stringify(body) });
+        toast('Problème sauvegardé !'); closeModal('probModal'); loadProblems();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+
+    // ── Prob Stats ────────────────────────────────────────────────────────────────
+    async function loadProbStats() {
+      const d = await api('/admin/api/stats/problems');
+      $('probStatTable').innerHTML = d.problems.map(p => `<tr>
+    <td><strong>${p.title}</strong></td>
+    <td>${p.topic}</td>
+    <td>${diffTag(p.difficulty)}</td>
+    <td>${p.total_attempts}</td>
+    <td>${p.total_passed}</td>
+    <td><span class="tag ${p.pass_rate >= 60 ? 'tag-easy' : p.pass_rate >= 30 ? 'tag-medium' : 'tag-hard'}">${p.pass_rate}%</span></td>
+    <td>${p.avg_score}%</td>
+    <td>${p.avg_time_seconds}s</td>
+  </tr>`).join('') || '<tr><td colspan="8" style="text-align:center;color:#8b949e;padding:30px;">Aucune donnée</td></tr>';
+    }
+
+    // ── Chapters / Questions ───────────────────────────────────────────────────────
+    async function loadChapters() {
+      const d = await api('/admin/api/chapters');
+      allChapters = d.items;
+      renderChapters();
+    }
+    function renderChapters() {
+      $('chapterList').innerHTML = allChapters.map(c => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 8px;border-bottom:1px solid #21262d;cursor:pointer;" onclick="selectChapter(${c.id},'${c.title.replace(/'/g, "\\'")}')">
+      <span style="font-size:0.88rem;"><i class="fas fa-book" style="color:#4a6ee0;margin-right:8px;"></i>${c.title} <span style="color:#8b949e;font-size:0.78rem;">(${c.question_count})</span></span>
+      <div style="display:flex;gap:4px;">
+        <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteChapter(${c.id})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('') || '<p style="color:#8b949e;padding:12px;font-size:0.85rem;">Aucun chapitre.</p>';
+    }
+    function openChapModal(c = null) {
+      editingChapterId = c?.id || null;
+      $('chapModalTitle').textContent = c ? 'Modifier' : 'Nouveau Chapitre';
+      $('chap-title').value = c?.title || ''; $('chap-id').value = c?.identifier || '';
+      $('chapModal').classList.add('open');
+    }
+    async function saveChapter() {
+      const body = { title: $('chap-title').value, identifier: $('chap-id').value };
+      try {
+        if (editingChapterId) await api(`/admin/api/chapters/${editingChapterId}`, { method: 'PUT', body: JSON.stringify(body) });
+        else await api('/admin/api/chapters', { method: 'POST', body: JSON.stringify(body) });
+        toast('Chapitre sauvegardé !'); closeModal('chapModal'); loadChapters();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function deleteChapter(id) {
+      if (!confirm('Supprimer ce chapitre et toutes ses questions ?')) return;
+      try { await api(`/admin/api/chapters/${id}`, { method: 'DELETE' }); toast('Chapitre supprimé.'); loadChapters(); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+    async function selectChapter(id, title) {
+      currentChapterId = id;
+      $('qPanelTitle').innerHTML = `<i class="fas fa-question-circle"></i> ${title}`;
+      $('addQBtn').style.display = 'flex';
+      const d = await api(`/admin/api/questions?chapter_id=${id}`);
+      $('questionTable').innerHTML = d.items.map(q => `<tr>
+    <td style="color:#8b949e;">#${q.id}</td>
+    <td>${q.concept}</td>
+    <td>${diffTag(q.difficulty)}</td>
+    <td>${q.choices.length}</td>
+    <td>
+      <button class="btn btn-info btn-sm" onclick="editQuestion(${q.id})"><i class="fas fa-pencil-alt"></i></button>
+      <button class="btn btn-danger btn-sm" style="margin-left:4px;" onclick="deleteQuestion(${q.id})"><i class="fas fa-trash"></i></button>
+    </td>
+  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#8b949e;padding:20px;">Aucune question.</td></tr>';
+    }
+    function openQuestionModal(q = null) {
+      editingQuestionId = q?.id || null;
+      $('qModalTitle').textContent = q ? 'Modifier la Question' : 'Nouvelle Question';
+      $('qm-concept').value = q?.concept || ''; $('qm-type').value = q?.type || 'MCQ';
+      $('qm-diff').value = q?.difficulty || 'Medium'; $('qm-text').value = q?.text || '';
+      $('qm-expl').value = q?.explanation || '';
+      $('choiceList').innerHTML = '';
+      (q?.choices || [{ text: '', is_correct: true }, { text: '', is_correct: false }]).forEach(c => addChoice(c.text, c.is_correct));
+      $('qModal').classList.add('open');
+    }
+    async function editQuestion(id) {
+      const q = await api(`/admin/api/questions/${id}`);
+      openQuestionModal(q);
+    }
+    async function deleteQuestion(id) {
+      if (!confirm('Supprimer cette question ?')) return;
+      try { await api(`/admin/api/questions/${id}`, { method: 'DELETE' }); toast('Question supprimée.'); selectChapter(currentChapterId, $('qPanelTitle').textContent.trim()); }
+      catch (e) { toast(e.message, 'error'); }
+    }
+    function addChoice(text = '', isCorrect = false) {
+      const div = document.createElement('div');
+      div.className = 'choice-item';
+      div.innerHTML = `<input type="text" class="c-text" placeholder="Texte du choix…" value="${text.replace(/"/g, '&quot;')}">
+    <input type="checkbox" class="c-correct" ${isCorrect ? 'checked' : ''}><span class="correct-label">Correct</span>
+    <button class="btn btn-danger btn-sm" onclick="this.closest('.choice-item').remove()"><i class="fas fa-times"></i></button>`;
+      $('choiceList').appendChild(div);
+    }
+    async function saveQuestion() {
+      const choices = [...document.querySelectorAll('.choice-item')].map(el => ({
+        text: el.querySelector('.c-text').value,
+        is_correct: el.querySelector('.c-correct').checked
+      }));
+      const body = { chapter_id: currentChapterId, concept: $('qm-concept').value, type: $('qm-type').value, difficulty: $('qm-diff').value, text: $('qm-text').value, explanation: $('qm-expl').value, choices };
+      try {
+        if (editingQuestionId) await api(`/admin/api/questions/${editingQuestionId}`, { method: 'PUT', body: JSON.stringify(body) });
+        else await api('/admin/api/questions', { method: 'POST', body: JSON.stringify(body) });
+        toast('Question sauvegardée !'); closeModal('qModal');
+        selectChapter(currentChapterId, $('qPanelTitle').textContent.trim());
+      } catch (e) { toast(e.message, 'error'); }
+    }
+
+    // Close modals on background click
+    document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); }));
+  </script>
+</body>
+
+</html>

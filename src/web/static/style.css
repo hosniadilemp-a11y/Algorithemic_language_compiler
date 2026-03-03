@@ -132,10 +132,17 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
 }
 
 .logo i {
     color: var(--accent);
+}
+
+.nav-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .btn {
@@ -149,6 +156,16 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+@media (max-width: 900px) {
+    .nav-main span {
+        display: none;
+    }
+
+    .nav-main .btn {
+        padding: 8px;
+    }
 }
 
 .btn.primary {

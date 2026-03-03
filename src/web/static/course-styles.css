@@ -158,6 +158,8 @@ body.light-theme .course-container {
     border-right: 1px solid var(--course-line);
     display: flex;
     flex-direction: column;
+    z-index: 10;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .course-sidebar {
@@ -822,4 +824,236 @@ body.light-theme .course-exercise {
 .course-content::-webkit-scrollbar-thumb {
     background: var(--course-line);
     border-radius: 10px;
+}
+
+/* --- AUTHENTICATION PAGES --- */
+.auth-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 40px 20px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.auth-container {
+    width: 100%;
+    margin: auto;
+    padding: 50px 40px;
+    background: rgba(22, 27, 34, 0.65);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 10;
+}
+
+body.light-theme .auth-container {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 30px 60px rgba(0, 0, 15, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.auth-container.login-size {
+    max-width: 440px;
+}
+
+.auth-container.signup-size {
+    max-width: 650px;
+}
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 35px;
+    color: var(--course-ink);
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.btn-primary-auth {
+    background: linear-gradient(135deg, var(--course-accent), #2b6fe3);
+    color: white;
+    box-shadow: 0 8px 25px rgba(88, 166, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary-auth:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(88, 166, 255, 0.4);
+    background: linear-gradient(135deg, #6baeff, #4a8deb);
+}
+
+.btn-primary-auth:active {
+    transform: translateY(0);
+}
+
+.auth-links {
+    text-align: center;
+    font-size: 0.95em;
+    margin-top: 20px;
+    color: var(--course-muted);
+}
+
+.auth-links a {
+    color: var(--course-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.auth-links a:hover {
+    color: #8cbcfc;
+    text-decoration: underline;
+}
+
+body.light-theme .auth-links a:hover {
+    color: #004dadd4;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+    color: var(--course-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--course-line);
+}
+
+.divider:not(:empty)::before {
+    margin-right: 1em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 1em;
+}
+
+.flash-messages {
+    margin-bottom: 25px;
+}
+
+.alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #ff6b7b;
+    border: 1px solid rgba(220, 53, 69, 0.4);
+}
+
+body.light-theme .alert-danger {
+    color: #dc3545;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #6ed68a;
+    border: 1px solid rgba(40, 167, 69, 0.4);
+}
+
+body.light-theme .alert-success {
+    color: #28a745;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffd147;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+body.light-theme .alert-warning {
+    color: #c49100;
+}
+
+.alert-info {
+    background: rgba(23, 162, 184, 0.1);
+    color: #5bc2d4;
+    border: 1px solid rgba(23, 162, 184, 0.4);
+}
+
+/* --- UNIFIED AUTHENTICATION INPUTS --- */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--course-ink);
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(13, 17, 23, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: var(--course-ink);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--course-accent);
+    background: rgba(13, 17, 23, 0.6);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #24292f;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .form-control:focus {
+    background: #ffffff;
+    border-color: #0969da;
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+}
+
+.form-control::placeholder {
+    color: var(--course-muted);
 }

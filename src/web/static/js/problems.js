@@ -53,22 +53,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const solved = getSolvedProblems();
 
-        problemsList.innerHTML = problems.map(p => `
-            <div class="problem-card ${solved.has(p.id) ? 'solved' : ''}">
+        problemsList.innerHTML = problems.map(p => {
+            // Use API 'solved' status if provided, otherwise fallback to cookie
+            const isSolved = (p.solved !== null && p.solved !== undefined) ? p.solved : solved.has(p.id);
+
+            return `
+            <div class="problem-card ${isSolved ? 'solved' : ''}">
                 <div class="problem-info">
                     <h3>${p.title}</h3>
                     <p class="problem-snippet">${p.description ? p.description.replace(/<[^>]*>?/gm, '').replace(/[#*`]/g, '').trim().substring(0, 100) + '...' : ''}</p>
                     <div class="problem-meta">
                         <span class="topic-tag"><i class="fas fa-tag"></i> ${p.topic}</span>
                         <span class="difficulty-badge difficulty-${p.difficulty}">${translateDifficulty(p.difficulty)}</span>
-                        ${solved.has(p.id) ? '<span class="done-badge"><i class="fas fa-check-circle"></i> Terminé</span>' : ''}
+                        <span class="solver-count"><i class="fas fa-users"></i> ${p.solvers || 0}</span>
+                        ${isSolved ? '<span class="done-badge"><i class="fas fa-check-circle"></i> Terminé</span>' : ''}
                     </div>
                 </div>
                 <div class="problem-actions">
-                    <a href="/challenge/${p.id}" class="btn-solve ${solved.has(p.id) ? 'done' : ''}">${solved.has(p.id) ? 'Revoir' : 'Résoudre'} <i class="fas fa-arrow-right"></i></a>
+                    <a href="/challenge/${p.id}" class="btn-solve ${isSolved ? 'done' : ''}">${isSolved ? 'Revoir' : 'Résoudre'} <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function translateDifficulty(diff) {

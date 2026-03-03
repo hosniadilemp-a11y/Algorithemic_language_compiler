@@ -25,6 +25,9 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- CodeMirror Core JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/pascal/pascal.min.js"></script>
@@ -54,17 +57,40 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">
-                <i class="fas fa-terminal"></i> AlgoCompiler
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="/" class="logo" style="text-decoration: none;">
+                    <i class="fas fa-terminal"></i> AlgoCompiler
+                </a>
+
+                <nav class="nav-main">
+                    <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                        <i class="fas fa-code"></i> <span>Éditeur</span>
+                    </a>
+                    <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
+                        <i class="fas fa-graduation-cap"></i> <span>Cours</span>
+                    </a>
+                    <a href="/problems" class="btn secondary highlight" title="Défis de codage">
+                        <i class="fas fa-laptop-code"></i> <span>Défis</span>
+                    </a>
+                    <a href="/leaderboard" class="btn secondary highlight" title="Classement">
+                        <i class="fas fa-trophy"></i> <span>Classement</span>
+                    </a>
+                </nav>
             </div>
+
             <div class="controls">
-                <a href="/problems" class="btn secondary highlight" title="Tous les défis">
-                    <i class="fas fa-list"></i> Tous les défis
-                </a>
-                <div class="separator"></div>
-                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
-                    <i class="fas fa-code"></i> Éditeur
-                </a>
+                {% if current_user.is_authenticated %}
+                <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
+                    <span>{{ current_user.name }}</span></a>
+                <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
+                    style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
+                        class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
+                    Connexion</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn primary highlight auth-btn" style="color: white;"><i
+                        class="fas fa-user-plus"></i> S'inscrire</a>
+                {% endif %}
                 <div class="separator"></div>
                 <button class="btn secondary" data-theme-toggle title="Basculer le thème">
                     <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
@@ -119,6 +145,12 @@
                     <div class="toolbar-separator"></div>
                     <button id="format-btn" class="toolbar-btn" title="Formater le code"><i
                             class="fas fa-align-left"></i></button>
+
+                    <!-- Timer inserted on the right side -->
+                    <div id="challenge-timer"
+                        style="margin-left: auto; font-family: monospace; font-size: 1.1rem; color: #6ed68a; font-weight: bold; background: rgba(110, 214, 138, 0.1); padding: 5px 12px; border-radius: 6px; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-stopwatch"></i> <span id="timer-display">00:00</span>
+                    </div>
                 </div>
 
                 <div class="editor-wrapper">
@@ -206,32 +238,6 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
 
-    <!-- CodeMirror Core & Addons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/theme/dracula.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/show-hint.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/scroll/simplescrollbars.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldgutter.min.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/hint/anyword-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/comment/comment.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/scroll/simplescrollbars.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/foldgutter.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/fold/indent-fold.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/selection/active-line.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/search/searchcursor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/search/search.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/dialog/dialog.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/addon/dialog/dialog.min.css">
 
     <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
     <script src="{{ url_for('static', filename='algo-mode.js') }}"></script>
@@ -239,8 +245,17 @@
     <script src="{{ url_for('static', filename='algo-fold.js') }}"></script>
     <script src="{{ url_for('static', filename='js/challenge.js') }}"></script>
     <script>
-        window.CURRENT_PROBLEM_ID = {{ problem_id }};
+        window.CURRENT_PROBLEM_ID = parseInt("{{ problem_id }}");
     </script>
+    {% if current_user.is_authenticated %}
+    <script>
+        // Check once on load, then every 60 seconds (centralized in theme.js)
+        if (typeof window.checkNewBadges === 'function') {
+            setTimeout(window.checkNewBadges, 2000);
+            setInterval(window.checkNewBadges, 60000);
+        }
+    </script>
+    {% endif %}
 </body>
 
 </html>

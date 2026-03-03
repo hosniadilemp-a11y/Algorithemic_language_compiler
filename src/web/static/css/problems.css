@@ -178,6 +178,22 @@ body.dark-theme .problems-filter-bar select {
     color: #155724;
 }
 
+.solver-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted, #666);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+}
+
+body.dark-theme .solver-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+}
+
 /* Dark mode overrides if needed */
 body.dark-theme .problem-card {
     background-color: #2b2b2b;

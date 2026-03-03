@@ -305,8 +305,9 @@ class QuizController {
 
     async showResults() {
         // Save progress to backend
+        let isUserAuthenticated = false;
         try {
-            await fetch('/api/quiz/save_progress', {
+            const res = await fetch('/api/quiz/save_progress', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -316,6 +317,18 @@ class QuizController {
                     details: this.conceptAnalysis
                 })
             });
+            const backData = await res.json();
+            isUserAuthenticated = backData.saved; // True if saved for authenticated user
+            // Reload course user progress 
+            if (this.course && isUserAuthenticated) {
+                await this.course.fetchUserProgress();
+                this.course.renderOutline();
+            }
+
+            // Check for newly earned badges immediately
+            if (typeof window.checkNewBadges === 'function') {
+                window.checkNewBadges();
+            }
         } catch (e) {
             console.error("Failed to save progress", e);
         }
@@ -370,6 +383,12 @@ class QuizController {
                     <h3>Analyse par concept</h3>
                     ${analysisHtml}
                 </div>
+                
+                <div id="quiz-auth-prompt" style="display: none; background: rgba(74, 110, 224, 0.1); border: 1px solid #4a6ee0; border-radius: 8px; padding: 15px; margin-top: 20px; text-align: center;">
+                    <p style="margin-bottom: 10px; color: var(--text-color);">Rejoignez-nous pour sauvegarder vos progrès !</p>
+                    <a href="/login" class="quiz-btn primary" style="text-decoration: none; display: inline-block; margin-right: 10px;">Se connecter</a>
+                    <a href="/signup" class="quiz-btn outline" style="text-decoration: none; display: inline-block;">Créer un compte</a>
+                </div>
 
                 <div class="quiz-res-actions">
                     <button class="quiz-btn outline" onclick="window.quizController.startQuiz('${this.chapterIdentifier}', '${this.chapterTitle}')"><i class="fas fa-redo"></i> Refaire le test</button>
@@ -377,6 +396,10 @@ class QuizController {
                 </div>
             </div>
         `;
+
+        if (!isUserAuthenticated) {
+            this.modal.querySelector('#quiz-auth-prompt').style.display = 'block';
+        }
     }
 
     getColorForPerc(perc) {

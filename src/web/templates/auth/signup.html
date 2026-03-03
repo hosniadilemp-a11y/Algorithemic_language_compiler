@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - AlgoCompiler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='course-styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="course-standalone-body">
+    <div class="course-page-topbar" style="flex-shrink: 0; z-index: 20;">
+        <div style="display:flex; gap:15px; align-items:center;">
+            <a href="javascript:history.back()" class="course-back-btn" title="Retour" style="text-decoration:none;"><i
+                    class="fas fa-arrow-left"></i> Retour</a>
+            <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
+                    class="fas fa-terminal"></i> AlgoCompiler</a>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
+                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container signup-size">
+            <h2 class="auth-title">Inscription</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.signup') }}">
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Prénom</label>
+                        <input type="text" name="name" class="form-control" required autofocus>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Nom de famille</label>
+                        <input type="text" name="last_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Date de naissance</label>
+                        <input type="date" name="date_of_birth" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Première année d'inscription universitaire</label>
+                        <select name="study_year" class="form-control" required style="cursor: pointer;">
+                            <option value="" disabled selected>Sélectionnez l'année</option>
+                            {% for y in range(2026, 1899, -1) %}
+                            <option value="{{ y }}">{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Adresse e-mail</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <input type="password" name="password" class="form-control" required minlength="6">
+                </div>
+                <div class="form-group"
+                    style="background: var(--bg-color); padding: 15px; border-radius: 8px; border: 1px dotted var(--border-color); text-align: center;">
+                    <label class="form-label"
+                        style="margin-bottom: 10px; font-weight: bold; color: var(--text-color);">Résolvez ce problème
+                        pour
+                        prouver que vous êtes humain :</label>
+                    <div
+                        style="font-size: 1.5rem; font-weight: bold; color: #4a6ee0; margin-bottom: 15px; letter-spacing: 2px;">
+                        {{ captcha_text }}</div>
+                    <input type="text" name="captcha" class="form-control" placeholder="Entrez le résultat" required
+                        autocomplete="off" style="text-align: center; font-size: 1.2rem;">
+                </div>
+                <button type="submit" class="btn-auth btn-primary-auth">S'inscrire</button>
+            </form>
+
+            <div class="divider">Déjà membre ?</div>
+
+            <div style="text-align: center;">
+                <a href="{{ url_for('auth.login') }}" class="btn-auth btn-secondary-auth">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+
+</html>

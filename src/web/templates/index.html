@@ -27,6 +27,9 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- SweetAlert2 for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- CodeMirror Core JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/pascal/pascal.min.js"></script>
@@ -56,54 +59,78 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">
-                <i class="fas fa-terminal"></i> AlgoCompiler
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="/" class="logo" style="text-decoration: none;">
+                    <i class="fas fa-terminal"></i> AlgoCompiler
+                </a>
+
+                <nav class="nav-main">
+                    <a href="/" class="btn secondary highlight" title="Retour au compilateur">
+                        <i class="fas fa-code"></i> <span>Éditeur</span>
+                    </a>
+                    <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
+                        <i class="fas fa-graduation-cap"></i> <span>Cours</span>
+                    </a>
+                    <a href="/problems" class="btn secondary highlight" title="Défis de codage">
+                        <i class="fas fa-laptop-code"></i> <span>Défis</span>
+                    </a>
+                    <a href="/leaderboard" class="btn secondary highlight" title="Classement">
+                        <i class="fas fa-trophy"></i> <span>Classement</span>
+                    </a>
+                </nav>
+
+                <div class="separator" style="height: 24px;"></div>
             </div>
+
             <div class="controls">
-                <input type="text" id="filename-input" class="filename-input" value="programme.algo" spellcheck="false">
-                <button id="new-btn" class="btn secondary" title="Nouveau fichier (Ctrl+N)">
-                    <i class="fas fa-file"></i>
-                </button>
-                <button id="open-btn" class="btn secondary" title="Ouvrir un fichier .algo">
-                    <i class="fas fa-folder-open"></i>
-                </button>
-                <input type="file" id="file-input" accept=".algo" style="display: none;">
-                <button id="save-btn" class="btn secondary" title="Sauvegarder (Ctrl+S)">
-                    <i class="fas fa-save"></i>
-                </button>
-                <div class="separator"></div>
                 <button id="open-examples-btn" class="btn secondary" title="Ouvrir la bibliothèque d'exemples">
-                    <i class="fas fa-book"></i> Exemples
+                    <i class="fas fa-book"></i> <span>Exemples</span>
                 </button>
                 <div class="separator"></div>
                 <button class="btn secondary" data-theme-toggle title="Basculer le thème">
                     <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
                 </button>
                 <div class="separator"></div>
-                <a href="/course" class="btn secondary highlight" title="Ouvrir le cours d'algorithmique">
-                    <i class="fas fa-graduation-cap"></i> Cours
-                </a>
-                <div class="separator"></div>
-                <a href="/problems" class="btn secondary highlight" title="Défis de codage">
-                    <i class="fas fa-laptop-code"></i> Défis
-                </a>
-                <div class="separator"></div>
-                <button id="input-file-btn" class="btn secondary" title="Charger un fichier d'entrée (stdin)">
-                    <i class="fas fa-file-import"></i> Entrée
-                </button>
-                <input type="file" id="input-file-select" style="display: none;">
-                <span id="input-file-status" style="font-size: 0.8em; color: #8b949e; display: none;">Fichier
-                    chargé</span>
-                <button id="run-btn" class="btn primary">
-                    <i class="fas fa-play"></i> Exécuter
-                </button>
+                {% if current_user.is_authenticated %}
+                <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
+                    <span>{{ current_user.name }}</span></a>
+                <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
+                    style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
+                        class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
+                    Connexion</a>
+                {% endif %}
             </div>
         </header>
+
 
         <main class="editor-layout">
             <div class="pane editor-pane">
                 <div class="pane-header">
-                    <span><i class="fas fa-code"></i> Algorithme</span>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span><i class="fas fa-code"></i> Algorithme</span>
+
+                        <div class="editor-quick-tools"
+                            style="display: flex; align-items: center; gap: 4px; margin-left: 10px;">
+                            <input type="text" id="filename-input" class="filename-input" value="programme.algo"
+                                spellcheck="false" style="max-width: 100px; padding: 2px 5px; font-size: 0.85rem;">
+                            <button id="new-btn" class="toolbar-btn" style="font-size: 0.8rem;"
+                                title="Nouveau fichier (Ctrl+N)">
+                                <i class="fas fa-file"></i>
+                            </button>
+                            <button id="open-btn" class="toolbar-btn" style="font-size: 0.8rem;"
+                                title="Ouvrir un fichier .algo">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                            <input type="file" id="file-input" accept=".algo" style="display: none;">
+                            <button id="save-btn" class="toolbar-btn" style="font-size: 0.8rem;"
+                                title="Sauvegarder (Ctrl+S)">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div style="display:flex;gap:6px;align-items:center">
                         <span id="file-state" class="badge" style="display: none;">Modifié</span>
                         <span class="lang-badge">ALGO</span>
@@ -188,13 +215,16 @@ Fin.</textarea>
                 <div id="editor-status-bar" class="editor-status-bar">
                     <div class="status-left">
                         <span id="status-cursor" class="status-item" title="Ligne et Colonne"><i
-                                class="fas fa-map-pin"></i> Ln 1, Col 1</span>
+                                class="fas fa-map-pin"></i>
+                            Ln 1, Col 1</span>
                         <span class="status-sep">|</span>
                         <span id="status-chars" class="status-item" title="Caractères totaux"><i
-                                class="fas fa-font"></i> 0 car.</span>
+                                class="fas fa-font"></i> 0
+                            car.</span>
                         <span class="status-sep">|</span>
                         <span id="status-lines" class="status-item" title="Lignes totales"><i
-                                class="fas fa-list-ol"></i> 0 lignes</span>
+                                class="fas fa-list-ol"></i> 0
+                            lignes</span>
                     </div>
                     <div class="status-right">
                         <button id="wordwrap-btn" class="status-btn" title="Activer/Désactiver le retour à la ligne"><i
@@ -217,6 +247,19 @@ Fin.</textarea>
                 <div class="pane-header">
                     <span><i class="fas fa-desktop"></i> Sortie (Console)</span>
                     <div style="display: flex; gap: 5px; align-items: center;">
+                        <button id="run-btn" class="btn primary"
+                            style="padding: 4px 12px; font-size: 0.9rem; margin-right: 5px;">
+                            <i class="fas fa-play"></i> Exécuter
+                        </button>
+                        <button id="input-file-btn" class="btn secondary" title="Charger un fichier d'entrée (stdin)"
+                            style="padding: 4px 10px; font-size: 0.9rem;">
+                            <i class="fas fa-file-import"></i>
+                        </button>
+                        <input type="file" id="input-file-select" style="display: none;">
+                        <span id="input-file-status"
+                            style="font-size: 0.8em; color: #8b949e; display: none; margin-right: 5px;">Fichier
+                            chargé</span>
+                        <div class="separator" style="height: 20px; margin: 0 5px;"></div>
                         <button id="clear-console-btn" class="icon-btn" title="Effacer la console"><i
                                 class="fas fa-trash-alt"></i></button>
                         <span id="status-badge" class="badge">Prêt</span>
@@ -277,6 +320,16 @@ Fin.</textarea>
     <script src="{{ url_for('static', filename='quiz-controller.js') }}?v=1"></script>
     <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
     <script src="{{ url_for('static', filename='theme.js') }}?v=2"></script>
+
+    {% if current_user.is_authenticated %}
+    <script>
+        // Check once on load, then every 60 seconds (centralized in theme.js)
+        if (typeof window.checkNewBadges === 'function') {
+            setTimeout(window.checkNewBadges, 2000);
+            setInterval(window.checkNewBadges, 60000);
+        }
+    </script>
+    {% endif %}
 </body>
 
 </html>

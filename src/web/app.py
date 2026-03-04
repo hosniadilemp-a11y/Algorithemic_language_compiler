@@ -46,7 +46,7 @@ app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465))
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'false').lower() in ['true', 'on', '1']
 app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'true').lower() in ['true', 'on', '1']
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'resend')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 're_9cRuUmG4_Eput4Zv2E5vYHmD7f175ikGa')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '---')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'onboarding@resend.dev')
 
 # OAuth Config Placeholder

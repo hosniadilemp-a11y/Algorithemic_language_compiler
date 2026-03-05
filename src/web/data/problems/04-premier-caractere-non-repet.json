@@ -1,0 +1,69 @@
+{
+  "title": "Premier Caractere Non Repeté",
+  "topic": "Strings",
+  "difficulty": "Medium",
+  "description": "### Premier caractère non répété\n\nOn vous donne une chaîne.\n\nAffichez le premier caractère qui apparaît exactement une fois.\n\nSi tous les caractères se répètent, affichez `-1`.\n\n#### Format d'entrée\n- Une ligne: la chaîne `S`\n\n#### Format de sortie\n- Un caractère (ou `-1`)\n\n#### Exemple\n**Entrée**\n```\nswiss\n```\n**Sortie**\n```\nw\n```",
+  "template_code": "Algorithme PremierNonRepete;\nVar\n    s[200] : Chaine;\n    i, j, n, cpt, pos : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(s);\n\n    // TODO: ecrire votre idee ici\n    // pos doit contenir la reponse\n\n    // Affichage deja predefini\n    Ecrire(pos);\nFin.",
+  "test_cases": [
+    {
+      "input": "swiss\n",
+      "expected_output": "2\n",
+      "is_public": true
+    },
+    {
+      "input": "aabbcc\n",
+      "expected_output": "0\n",
+      "is_public": true
+    },
+    {
+      "input": "algo\n",
+      "expected_output": "1\n",
+      "is_public": false
+    },
+    {
+      "input": "aabccd\n",
+      "expected_output": "3\n",
+      "is_public": false
+    },
+    {
+      "input": "abcabcde\n",
+      "expected_output": "7\n",
+      "is_public": false
+    },
+    {
+      "input": "zzzz\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "x\n",
+      "expected_output": "1\n",
+      "is_public": false
+    },
+    {
+      "input": "abacabad\n",
+      "expected_output": "4\n",
+      "is_public": false
+    },
+    {
+      "input": "teeter\n",
+      "expected_output": "6\n",
+      "is_public": false
+    },
+    {
+      "input": "aabbc\n",
+      "expected_output": "5\n",
+      "is_public": false
+    },
+    {
+      "input": "bbaa\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "mamma\n",
+      "expected_output": "0\n",
+      "is_public": false
+    }
+  ]
+}

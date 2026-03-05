@@ -1,0 +1,49 @@
+{
+  "title": "Générer les N Premiers Binaires avec File Chaînée",
+  "topic": "Queues",
+  "difficulty": "Easy",
+  "description": "### Générer les N premiers binaires avec file chaînée\n\nGénérez les représentations binaires des entiers de `1` à `N`.\n\nUtilisez une file chaînée (`Enfiler`, `Defiler`) de chaînes.\n\n#### Format d'entrée\n- Un entier `N`\n\n#### Format de sortie\n- Les `N` binaires séparés par des espaces\n\n#### Exemple\n**Entrée**\n```\n5\n```\n**Sortie**\n```\n1 10 11 100 101\n```",
+  "template_code": "Type Element = Enregistrement\nDebut\n    txt  : Chaine;\n    suiv : ^Element;\nFin;\n\nType File = Enregistrement\nDebut\n    tete  : ^Element;\n    queue : ^Element;\nFin;\n\nProcedure Init(Var F : File)\nDebut\n    F.tete := NIL;\n    F.queue := NIL;\nFin;\n\nProcedure Enfiler(Var F : File, s : Chaine)\nVar n : ^Element;\nDebut\n    n := allouer(taille(Element));\n    n->txt := s;\n    n->suiv := NIL;\n    Si F.tete = NIL Alors\n        F.tete := n;\n        F.queue := n;\n    Sinon\n        F.queue->suiv := n;\n        F.queue := n;\n    FinSi\nFin;\n\nProcedure Defiler(Var F : File, Var s : Chaine)\nVar t : ^Element;\nDebut\n    t := F.tete;\n    s := t->txt;\n    F.tete := t->suiv;\n    Si F.tete = NIL Alors F.queue := NIL; FinSi\n    liberer(t);\nFin;\n\nAlgorithme BinairesAvecFile;\nVar\n    F : File;\n    N, i : Entier;\n    x : Chaine;\nDebut\n    Lire(N);\n    Init(F);\n    Enfiler(F, \"1\");\n\n    Pour i := 1 a N Faire\n        Defiler(F, x);\n        Ecrire(x);\n        Si i < N Alors Ecrire(\" \" ); FinSi\n\n        // TODO: Enfiler(F, Concat(x, \"0\"))\n        // TODO: Enfiler(F, Concat(x, \"1\"))\n    FinPour\nFin.",
+  "test_cases": [
+    {
+      "input": "1\n",
+      "expected_output": "1\n",
+      "is_public": true
+    },
+    {
+      "input": "5\n",
+      "expected_output": "1 10 11 100 101\n",
+      "is_public": true
+    },
+    {
+      "input": "2\n",
+      "expected_output": "1 10\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n",
+      "expected_output": "1 10 11\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n",
+      "expected_output": "1 10 11 100 101 110\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n",
+      "expected_output": "1 10 11 100 101 110 111\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n",
+      "expected_output": "1 10 11 100 101 110 111 1000\n",
+      "is_public": false
+    },
+    {
+      "input": "10\n",
+      "expected_output": "1 10 11 100 101 110 111 1000 1001 1010\n",
+      "is_public": false
+    }
+  ]
+}

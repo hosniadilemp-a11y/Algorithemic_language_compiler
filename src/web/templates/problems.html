@@ -13,47 +13,14 @@
 
 <body class="problems-page">
     <div class="container">
-        <header>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <a href="/" class="logo" style="text-decoration: none;">
-                    <i class="fas fa-terminal"></i> AlgoCompiler
-                </a>
-
-                <nav class="nav-main">
-                    <a href="/" class="btn secondary highlight" title="Retour au compilateur">
-                        <i class="fas fa-code"></i> <span>Éditeur</span>
-                    </a>
-                    <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
-                        <i class="fas fa-graduation-cap"></i> <span>Cours</span>
-                    </a>
-                    <a href="/problems" class="btn secondary highlight" title="Défis de codage">
-                        <i class="fas fa-laptop-code"></i> <span>Défis</span>
-                    </a>
-                    <a href="/leaderboard" class="btn secondary highlight" title="Classement">
-                        <i class="fas fa-trophy"></i> <span>Classement</span>
-                    </a>
-                </nav>
-            </div>
-
-            <div class="controls">
-                {% if current_user.is_authenticated %}
-                <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
-                    <span>{{ current_user.name }}</span></a>
-                <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
-                    style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
-                        class="fas fa-sign-out-alt"></i></a>
-                {% else %}
-                <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
-                    Connexion</a>
-                <a href="{{ url_for('auth.signup') }}" class="btn primary highlight auth-btn" style="color: white;"><i
-                        class="fas fa-user-plus"></i> S'inscrire</a>
-                {% endif %}
-                <div class="separator"></div>
-                <button class="btn secondary" data-theme-toggle title="Basculer le thème">
-                    <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
-                </button>
-            </div>
-        </header>
+        {% set header_custom_controls %}
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.signup') }}" class="btn primary highlight auth-btn" style="color: white;"><i
+                class="fas fa-user-plus"></i> S'inscrire</a>
+        {% endif %}
+        <div class="separator"></div>
+        {% endset %}
+        {% include 'partials/navbar.html' %}
 
         <div class="problems-container">
             <div class="problems-header">
@@ -89,6 +56,7 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/level_pill.js') }}"></script>
     <script src="{{ url_for('static', filename='js/problems.js') }}"></script>
 </body>
 

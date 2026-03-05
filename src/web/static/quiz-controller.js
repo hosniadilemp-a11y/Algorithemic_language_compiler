@@ -329,6 +329,27 @@ class QuizController {
             if (typeof window.checkNewBadges === 'function') {
                 window.checkNewBadges();
             }
+
+            // LEVEL UP CHECK
+            if (backData.level_up && backData.level && typeof Swal !== 'undefined') {
+                const lvl = backData.level;
+                const xpEarned = backData.xp_earned > 0 ? ` (+${backData.xp_earned} XP)` : '';
+
+                await Swal.fire({
+                    title: '🎉 Nouveau Niveau !',
+                    html: `<div style="font-size:3rem; margin-bottom:10px;">${lvl.icon}</div>
+                           <div style="font-size:1.3rem; font-weight:800; color:${lvl.color};">${lvl.name}</div>
+                           <div style="margin-top:10px; color:#c9d1d9; font-size:0.9rem;">Vous avez gagné${xpEarned} et atteint le niveau <strong style="color:${lvl.color}">${lvl.name}</strong> !<br>Félicitations !</div>`,
+                    background: '#161b22',
+                    color: '#c9d1d9',
+                    confirmButtonColor: lvl.color,
+                    confirmButtonText: 'Super ! 🚀',
+                    allowOutsideClick: false,
+                    showClass: { popup: 'animate__animated animate__bounceIn' }
+                });
+                // Invalidate cached level so header refreshes
+                localStorage.removeItem('algo_user_level_cache');
+            }
         } catch (e) {
             console.error("Failed to save progress", e);
         }

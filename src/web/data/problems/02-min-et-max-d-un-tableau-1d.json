@@ -1,0 +1,69 @@
+{
+  "title": "Min et Max d'un Tableau 1D",
+  "topic": "Arrays",
+  "difficulty": "Easy",
+  "description": "### Min et Max d'un tableau 1D\n\nOn vous donne un tableau d'entiers de taille `N`.\n\nVous devez déterminer la plus petite valeur et la plus grande valeur.\n\n#### Objectif\n- Trouver `min(T)`\n- Trouver `max(T)`\n- Afficher `min max`\n\n#### Format d'entrée\n- Ligne 1: entier `N`\n- Ligne 2: `N` entiers\n\n#### Format de sortie\n- Deux entiers séparés par un espace: `min max`\n\n#### Exemple\n**Entrée**\n```\n5\n8 2 11 -3 7\n```\n**Sortie**\n```\n-3 11\n```",
+  "template_code": "Algorithme MinMaxTableau1D;\nVar\n    N, i : Entier;\n    T[1000] : Entier;\n    mn, mx : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(N);\n    Pour i <- 0 a N - 1 Faire\n        Lire(T[i]);\n    FinPour;\n\n    // TODO: ecrire votre idee ici\n    // Calculer mn et mx\n\n    // Affichage deja predefini\n    Ecrire(mn, ' ', mx);\nFin.",
+  "test_cases": [
+    {
+      "input": "5\n4 -1 7 7 0\n",
+      "expected_output": "-1 7\n",
+      "is_public": true
+    },
+    {
+      "input": "1\n99\n",
+      "expected_output": "99 99\n",
+      "is_public": true
+    },
+    {
+      "input": "4\n10 20 30 40\n",
+      "expected_output": "10 40\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n-3 -8 -1 -9 -5 -2\n",
+      "expected_output": "-9 -1\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n2 2 2 2 2 2 2\n",
+      "expected_output": "2 2\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n5 -5 10 -10 15 -15 20 -20\n",
+      "expected_output": "-20 20\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n1000 0 999\n",
+      "expected_output": "0 1000\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n-1 0 1 0 -1\n",
+      "expected_output": "-1 1\n",
+      "is_public": false
+    },
+    {
+      "input": "9\n3 6 9 12 15 18 21 24 27\n",
+      "expected_output": "3 27\n",
+      "is_public": false
+    },
+    {
+      "input": "2\n-100 100\n",
+      "expected_output": "-100 100\n",
+      "is_public": false
+    },
+    {
+      "input": "10\n9 8 7 6 5 4 3 2 1 0\n",
+      "expected_output": "0 9\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n42 42 41 42 42\n",
+      "expected_output": "41 42\n",
+      "is_public": false
+    }
+  ]
+}

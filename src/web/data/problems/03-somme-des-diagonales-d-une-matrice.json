@@ -1,0 +1,69 @@
+{
+  "title": "Somme des Diagonales d'une Matrice",
+  "topic": "Arrays",
+  "difficulty": "Medium",
+  "description": "### Somme des diagonales d'une matrice carrée\n\nOn vous donne une matrice carrée `N x N`.\n\nCalculez la somme de la diagonale principale et de la diagonale secondaire.\n\nSi `N` est impair, l'élément central appartient aux deux diagonales et doit être compté une seule fois.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Puis `N` lignes, chacune avec `N` entiers\n\n#### Format de sortie\n- Un entier: la somme totale\n\n#### Exemple\n**Entrée**\n```\n3\n1 2 3\n4 5 6\n7 8 9\n```\n**Sortie**\n```\n25\n```\nExplication: `(1+5+9) + (3+5+7) - 5 = 25`.",
+  "template_code": "Algorithme SommeDiagonalesMatrice;\nVar\n    N, i, j : Entier;\n    M[50][50] : Entier;\n    diag1, diag2 : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(N);\n    Pour i <- 0 a N - 1 Faire\n        Pour j <- 0 a N - 1 Faire\n            Lire(M[i][j]);\n        FinPour;\n    FinPour;\n\n    // TODO: ecrire votre idee ici\n    // Calculer diag1 et diag2\n\n    // Affichage deja predefini\n    Ecrire(diag1, ' ', diag2);\nFin.",
+  "test_cases": [
+    {
+      "input": "3\n1 2 3\n4 5 6\n7 8 9\n",
+      "expected_output": "15 15\n",
+      "is_public": true
+    },
+    {
+      "input": "2\n4 1\n2 3\n",
+      "expected_output": "7 3\n",
+      "is_public": true
+    },
+    {
+      "input": "1\n9\n",
+      "expected_output": "9 9\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n2 0 1\n3 4 5\n6 7 8\n",
+      "expected_output": "14 11\n",
+      "is_public": false
+    },
+    {
+      "input": "4\n1 1 1 1\n1 1 1 1\n1 1 1 1\n1 1 1 1\n",
+      "expected_output": "4 4\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n-1 -2 -3\n-4 -5 -6\n-7 -8 -9\n",
+      "expected_output": "-15 -15\n",
+      "is_public": false
+    },
+    {
+      "input": "4\n5 0 0 1\n0 4 2 0\n0 3 6 0\n7 0 0 8\n",
+      "expected_output": "23 13\n",
+      "is_public": false
+    },
+    {
+      "input": "2\n10 -5\n-6 20\n",
+      "expected_output": "30 -11\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n1 0 0 0 2\n0 3 0 4 0\n0 0 5 0 0\n0 6 0 7 0\n8 0 0 0 9\n",
+      "expected_output": "25 25\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n9 8 7\n6 5 4\n3 2 1\n",
+      "expected_output": "15 15\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n0 1 0\n2 0 2\n0 3 0\n",
+      "expected_output": "0 0\n",
+      "is_public": false
+    },
+    {
+      "input": "4\n2 3 4 5\n6 7 8 9\n1 0 -1 -2\n3 4 5 6\n",
+      "expected_output": "14 16\n",
+      "is_public": false
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+[
+    {
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "question":  "Qu\u0027est-ce qu\u0027une chaîne de caractères ?",
+        "explanation":  "Un tableau de caractères. Reponse correcte: Une suite de caractères (Type structuré). Ici, la notion \u0027Définition\u0027 s\u0027applique: une chaine manipule du texte: concatenation, longueur et comparaison se font sur des caracteres, pas sur des valeurs numeriques.",
+        "choices":  [
+                        "Une suite de caractères (Type structuré)",
+                        "Un nombre décimal",
+                        "Un seul caractère",
+                        "Une adresse mémoire"
+                    ],
+        "answer":  "Une suite de caractères (Type structuré)"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Conventions",
+        "question":  "Les chaînes sont souvent entourées de ?",
+        "explanation":  "Guillemets doubles. Reponse correcte: Guillemets (\"). Ici, la notion \u0027Conventions\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        "Guillemets (\")",
+                        "Apostrophes (\u0027)",
+                        "Rien",
+                        "Parenthèses"
+                    ],
+        "answer":  "Guillemets (\")"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Opérateur",
+        "question":  "L\u0027opération de concaténation sert à ?",
+        "explanation":  "Coller deux chaînes. Reponse correcte: Joindre deux chaînes bout à bout. Ici, la notion \u0027Opérateur\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Joindre deux chaînes bout à bout",
+                        "Soustraire deux chaînes",
+                        "Comparer deux chaînes",
+                        "Diviser une chaîne"
+                    ],
+        "answer":  "Joindre deux chaînes bout à bout"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Taille",
+        "question":  "Fonction classique pour avoir la longueur ?",
+        "explanation":  "Longueur() Reponse correcte: Longueur(Ch). Ici, la notion \u0027Taille\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        "Longueur(Ch)",
+                        "Taille(Ch)",
+                        "Nb(Ch)",
+                        "Size(Ch)"
+                    ],
+        "answer":  "Longueur(Ch)"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Comparaison",
+        "question":  "Si \u0027A\u0027 \u003c \u0027B\u0027, alors \u0027AA\u0027 \u003c \u0027AB\u0027 ?",
+        "explanation":  "Ordre lexicographique. Reponse correcte: Vrai, ordre lexicographique. Ici, la notion \u0027Comparaison\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        "Vrai, ordre lexicographique",
+                        "Faux, basé sur la longueur",
+                        "Cela dépend de la langue",
+                        "Erreur de syntaxe"
+                    ],
+        "answer":  "Vrai, ordre lexicographique"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Accès",
+        "question":  "Comment accéder au 3ème caractère de Ch ?",
+        "explanation":  "Ch[3] Reponse correcte: Ch[3]. Ici, la notion \u0027Accès\u0027 s\u0027applique: une chaine manipule du texte: concatenation, longueur et comparaison se font sur des caracteres, pas sur des valeurs numeriques.",
+        "choices":  [
+                        "Ch[3]",
+                        "Ch-\u003e3",
+                        "Ch.3",
+                        "Get(Ch, 3)"
+                    ],
+        "answer":  "Ch[3]"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Caractère de fin",
+        "question":  "En C, une chaîne se termine par ?",
+        "explanation":  "Caractère nul. Reponse correcte: \\0 (Caractère nul). Ici, la notion \u0027Caractère de fin\u0027 s\u0027applique: une chaine manipule du texte: concatenation, longueur et comparaison se font sur des caracteres, pas sur des valeurs numeriques.",
+        "choices":  [
+                        "\\0 (Caractère nul)",
+                        "\\n",
+                        "Un espace",
+                        "Un point"
+                    ],
+        "answer":  "\\0 (Caractère nul)"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Sous-chaîne",
+        "question":  "Extraire une partie d\u0027une chaîne est une opération de ?",
+        "explanation":  "Sous-chaîne. Reponse correcte: Extraction de sous-chaîne. Ici, la notion \u0027Sous-chaîne\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        "Extraction de sous-chaîne",
+                        "Concaténation",
+                        "Division",
+                        "Soustraction"
+                    ],
+        "answer":  "Extraction de sous-chaîne"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Typage",
+        "question":  "Différence entre \u0027A\u0027 and \"A\" ?",
+        "explanation":  "Caractère vs Chaîne. Reponse correcte: Caractère vs Chaîne (Tableau). Ici, la notion \u0027Typage\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Caractère vs Chaîne (Tableau)",
+                        "Valeur numérique vs Texte",
+                        "Aucune différence",
+                        "Différence de police"
+                    ],
+        "answer":  "Caractère vs Chaîne (Tableau)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Immutabilité",
+        "question":  "Dans beaucoup de langages, les chaînes sont ?",
+        "explanation":  "Immuables en mémoire. Reponse correcte: Immutables (non modifiables directement). Ici, la notion \u0027Immutabilité\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        "Immutables (non modifiables directement)",
+                        "Totalement dynamiques",
+                        "Toujours modifiables",
+                        "Plus rapides que les entiers"
+                    ],
+        "answer":  "Immutables (non modifiables directement)"
+    }
+]

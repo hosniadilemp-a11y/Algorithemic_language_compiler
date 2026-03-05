@@ -6,19 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if problem %}Modifier{% else %}Nouveau{% endif %} Problème — Admin</title>
 
-    <!-- EasyMDE (Markdown editor) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easymde/2.18.0/easymde.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/easymde/2.18.0/easymde.min.js"></script>
 
-    <!-- CodeMirror (Code editor) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css">
 
-    <!-- Marked (MD preview in description) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/indent-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 
-    <!-- Font Awesome -->
+    <script src="{{ url_for('static', filename='algo-mode.js') }}"></script>
+    <script src="{{ url_for('static', filename='algo-hints.js') }}"></script>
+    <script src="{{ url_for('static', filename='algo-fold.js') }}"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -28,929 +39,1267 @@
             padding: 0;
         }
 
+        :root {
+            --bg: #0d1117;
+            --bg-2: #161b22;
+            --panel: #10151d;
+            --border: #30363d;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --primary: #4a6ee0;
+            --primary-2: #6a3de8;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #0d1117;
-            color: #e6edf3;
+            background: radial-gradient(circle at top right, #131f33 0%, #0d1117 45%);
+            color: var(--text);
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         .editor-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 28px;
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
-            position: sticky;
-            top: 0;
-            z-index: 50;
+            gap: 14px;
+            padding: 14px 22px;
+            background: rgba(22, 27, 34, 0.94);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .editor-header .back-btn {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: #8b949e;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
+            gap: 14px;
         }
 
-        .editor-header .back-btn:hover {
-            color: #e6edf3;
+        .back-btn {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
         }
 
         .editor-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: #4a6ee0;
-            display: flex;
+            color: var(--primary);
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .header-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
-        /* ── Layout ── */
-        .editor-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 0;
-            height: calc(100vh - 64px);
-        }
-
-        .editor-main {
-            padding: 24px 28px;
-            overflow-y: auto;
-        }
-
-        .editor-sidebar {
-            background: #161b22;
-            border-left: 1px solid #30363d;
+        .page {
+            max-width: 1280px;
+            margin: 0 auto;
             padding: 20px;
-            overflow-y: auto;
         }
 
-        /* ── Section titles ── */
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, #111923, #0f1620);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .utility-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
         .section-title {
-            font-size: 0.75rem;
-            font-weight: 700;
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #4a6ee0;
-            margin-bottom: 10px;
+            font-size: 0.75rem;
+            letter-spacing: 0.7px;
+            font-weight: 700;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #21262d;
         }
 
-        /* ── Fields ── */
+        .section-title-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .collapse-btn {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .collapse-btn:hover {
+            color: var(--text);
+            border-color: #7f8a95;
+        }
+
+        .section-body.collapsed {
+            display: none;
+        }
+
         .field-group {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         .field-label {
             display: block;
             font-size: 0.78rem;
-            font-weight: 600;
-            color: #8b949e;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.45px;
+            color: var(--muted);
             margin-bottom: 6px;
+        }
+
+        .field-hint {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 5px;
         }
 
         .field-input {
             width: 100%;
-            padding: 10px 14px;
             background: #0d1117;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 12px;
             border-radius: 8px;
-            color: #e6edf3;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
         }
 
         .field-input:focus {
             outline: none;
-            border-color: #4a6ee0;
+            border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.15);
         }
 
-        .field-select {
-            cursor: pointer;
-        }
-
-        .field-row-2 {
+        .meta-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr);
             gap: 14px;
         }
 
-        /* ── Markdown editor override (dark) ── */
-        .EasyMDEContainer .CodeMirror {
-            background: #0d1117 !important;
-            color: #e6edf3 !important;
-            border: 1px solid #30363d !important;
-            border-radius: 0 0 8px 8px !important;
-            min-height: 300px;
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
-            font-size: 0.92rem;
-        }
-
-        .EasyMDEContainer .editor-toolbar {
-            background: #161b22 !important;
-            border: 1px solid #30363d !important;
-            border-bottom: none !important;
-            border-radius: 8px 8px 0 0 !important;
-        }
-
-        .EasyMDEContainer .editor-toolbar button {
-            color: #8b949e !important;
-        }
-
-        .EasyMDEContainer .editor-toolbar button:hover,
-        .EasyMDEContainer .editor-toolbar button.active {
-            color: #4a6ee0 !important;
-            background: rgba(74, 110, 224, 0.1) !important;
-        }
-
-        .EasyMDEContainer .editor-toolbar i.separator {
-            border-color: #30363d !important;
-        }
-
-        .editor-preview {
-            background: #0d1117 !important;
-            color: #e6edf3 !important;
-            padding: 16px !important;
-        }
-
-        .editor-preview h1,
-        .editor-preview h2,
-        .editor-preview h3 {
-            color: #4a6ee0;
-            margin: 1rem 0 0.5rem;
-        }
-
-        .editor-preview code {
-            background: #161b22;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #f0883e;
-            font-size: 0.85em;
-        }
-
-        .editor-preview pre {
-            background: #161b22;
-            border-radius: 8px;
-            padding: 12px;
-        }
-
-        .editor-preview pre code {
-            background: none;
-            padding: 0;
-            color: #e6edf3;
-        }
-
-        .editor-preview blockquote {
-            border-left: 3px solid #4a6ee0;
-            padding-left: 12px;
-            color: #8b949e;
-            margin: 8px 0;
-        }
-
-        .editor-preview table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .editor-preview th,
-        .editor-preview td {
-            border: 1px solid #30363d;
-            padding: 8px 12px;
-        }
-
-        .editor-preview th {
-            background: #161b22;
-        }
-
-        /* ── CodeMirror template code ── */
-        .cm-wrapper {
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 0.9rem;
-            min-height: 140px;
-        }
-
-        .cm-wrapper .CodeMirror {
-            height: auto;
-            min-height: 140px;
-            background: #0d1117;
-            color: #e6edf3;
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
-        }
-
-        .cm-toolbar {
-            display: flex;
-            gap: 6px;
-            padding: 6px 10px;
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .cm-toolbar button {
-            padding: 4px 10px;
-            background: rgba(74, 110, 224, 0.1);
-            border: 1px solid rgba(74, 110, 224, 0.2);
-            border-radius: 5px;
-            color: #8b949e;
-            font-size: 0.78rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .cm-toolbar button:hover {
-            background: rgba(74, 110, 224, 0.2);
-            color: #4a6ee0;
-        }
-
-        /* ── Test cases ── */
-        .tc-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .tc-item {
-            background: #0d1117;
-            border: 1px solid #21262d;
-            border-radius: 8px;
-            padding: 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            position: relative;
-        }
-
-        .tc-item .tc-inputs {
-            display: contents;
-        }
-
-        .tc-item .tc-meta {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 4px;
-        }
-
-        .tc-field-label {
-            font-size: 0.72rem;
-            color: #8b949e;
-            margin-bottom: 3px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .tc-input {
-            padding: 7px 10px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            color: #e6edf3;
-            font-size: 0.85rem;
-            font-family: 'Fira Code', monospace;
-            width: 100%;
-        }
-
-        .tc-input:focus {
-            outline: none;
-            border-color: #4a6ee0;
-        }
-
-        .tc-number {
-            font-size: 0.72rem;
-            color: #8b949e;
-            font-weight: 600;
-        }
-
-        .public-toggle {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.78rem;
-            color: #8b949e;
-            cursor: pointer;
-        }
-
-        .public-toggle input {
-            accent-color: #2ecc71;
-            width: 15px;
-            height: 15px;
-        }
-
-        /* ── Buttons ── */
         .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 9px 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            padding: 9px 18px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.88rem;
-            font-weight: 600;
-            transition: all 0.2s;
             text-decoration: none;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4a6ee0, #6a3de8);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
         }
 
         .btn-primary:hover {
-            opacity: 0.9;
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(74, 110, 224, 0.35);
+            opacity: 0.95;
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid #30363d;
-            color: #8b949e;
+            border: 1px solid var(--border);
+            color: var(--muted);
         }
 
         .btn-outline:hover {
-            border-color: #8b949e;
-            color: #e6edf3;
+            color: var(--text);
+            border-color: #7f8a95;
         }
 
         .btn-success {
-            background: rgba(46, 204, 113, 0.15);
-            color: #2ecc71;
-            border: 1px solid rgba(46, 204, 113, 0.3);
+            background: rgba(46, 204, 113, 0.16);
+            border: 1px solid rgba(46, 204, 113, 0.35);
+            color: var(--success);
         }
 
         .btn-success:hover {
-            background: rgba(46, 204, 113, 0.25);
+            background: rgba(46, 204, 113, 0.24);
         }
 
-        .btn-danger-sm {
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            border: none;
-            border-radius: 5px;
-            padding: 4px 8px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s;
+        .btn-disabled {
+            opacity: 0.5;
+            pointer-events: none;
         }
 
-        .btn-danger-sm:hover {
-            background: rgba(231, 76, 60, 0.2);
-        }
-
-        .btn-add {
-            background: rgba(74, 110, 224, 0.1);
-            color: #4a6ee0;
-            border: 1px dashed rgba(74, 110, 224, 0.4);
-            border-radius: 8px;
-            padding: 10px;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-
-        .btn-add:hover {
-            background: rgba(74, 110, 224, 0.18);
-        }
-
-        /* ── Difficulty badge ── */
         .diff-pills {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .diff-pill {
             padding: 7px 16px;
-            border-radius: 20px;
+            border-radius: 18px;
             border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.04);
             cursor: pointer;
             font-size: 0.82rem;
             font-weight: 700;
-            transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.04);
         }
 
-        .diff-pill[data-val="Easy"] {
-            color: #2ecc71;
-        }
+        .diff-pill[data-val="Easy"] { color: #2ecc71; }
+        .diff-pill[data-val="Medium"] { color: #f1c40f; }
+        .diff-pill[data-val="Hard"] { color: #e74c3c; }
 
-        .diff-pill[data-val="Easy"].selected {
-            background: rgba(46, 204, 113, 0.15);
-            border-color: #2ecc71;
-        }
-
-        .diff-pill[data-val="Medium"] {
-            color: #f1c40f;
-        }
-
-        .diff-pill[data-val="Medium"].selected {
-            background: rgba(241, 196, 15, 0.15);
-            border-color: #f1c40f;
-        }
-
-        .diff-pill[data-val="Hard"] {
-            color: #e74c3c;
-        }
-
-        .diff-pill[data-val="Hard"].selected {
-            background: rgba(231, 76, 60, 0.15);
-            border-color: #e74c3c;
-        }
+        .diff-pill.selected[data-val="Easy"] { border-color: #2ecc71; background: rgba(46, 204, 113, 0.16); }
+        .diff-pill.selected[data-val="Medium"] { border-color: #f1c40f; background: rgba(241, 196, 15, 0.16); }
+        .diff-pill.selected[data-val="Hard"] { border-color: #e74c3c; background: rgba(231, 76, 60, 0.16); }
 
         #diffHidden {
             display: none;
         }
 
-        /* ── Live Preview panel ── */
-        .preview-panel {
-            background: #0d1117;
-            border-radius: 8px;
-            padding: 16px;
-            min-height: 100px;
+        #newTopicWrap {
+            margin-top: 8px;
+            display: none;
         }
 
-        .preview-panel h1,
-        .preview-panel h2,
-        .preview-panel h3 {
-            color: #4a6ee0;
-            margin: 0.8rem 0 0.4rem;
+        .EasyMDEContainer .editor-toolbar {
+            border: 1px solid var(--border) !important;
+            background: var(--bg-2) !important;
+            border-radius: 8px 8px 0 0 !important;
         }
 
-        .preview-panel code {
-            background: #161b22;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #f0883e;
-            font-size: 0.85em;
+        .EasyMDEContainer .editor-toolbar button {
+            color: var(--muted) !important;
         }
 
-        .preview-panel pre {
-            background: #161b22;
-            border-radius: 8px;
-            padding: 12px;
-            margin: 8px 0;
-            overflow-x: auto;
+        .EasyMDEContainer .editor-toolbar button:hover,
+        .EasyMDEContainer .editor-toolbar button.active {
+            color: var(--primary) !important;
+            background: rgba(74, 110, 224, 0.1) !important;
         }
 
-        .preview-panel pre code {
-            background: none;
-            padding: 0;
+        .EasyMDEContainer .CodeMirror {
+            border: 1px solid var(--border) !important;
+            border-top: none !important;
+            min-height: 300px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            background: var(--bg) !important;
+            color: var(--text) !important;
+            border-radius: 0 0 8px 8px !important;
         }
 
-        .preview-panel table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 8px 0;
+        .cm-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            background: var(--bg-2);
         }
 
-        .preview-panel th,
-        .preview-panel td {
-            border: 1px solid #30363d;
-            padding: 7px 10px;
-            font-size: 0.88rem;
+        .md-fallback-toolbar {
+            display: none;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
         }
 
-        .preview-panel th {
-            background: #161b22;
-            color: #8b949e;
+        .cm-wrapper {
+            border: 1px solid var(--border);
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
         }
 
-        .preview-panel blockquote {
-            border-left: 3px solid #4a6ee0;
-            padding-left: 10px;
-            color: #8b949e;
-            margin: 6px 0;
+        .CodeMirror {
+            height: auto;
+            min-height: 260px;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
         }
 
-        .preview-panel p {
-            margin: 6px 0;
-            line-height: 1.7;
+        .CodeMirror-gutters {
+            border-right: 1px solid #223043;
+            background: #0f1926;
         }
 
-        .preview-panel ul,
-        .preview-panel ol {
-            padding-left: 20px;
-            margin: 6px 0;
+        .tests-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .preview-empty {
-            color: #8b949e;
-            font-style: italic;
-            font-size: 0.85rem;
+        .tc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* ── Tag chips ── */
-        .tag-chip {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(74, 110, 224, 0.1);
-            border: 1px solid rgba(74, 110, 224, 0.25);
-            border-radius: 20px;
-            color: #4a6ee0;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        /* ── Toast ── */
-        .toast {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            background: #1f2933;
-            border: 1px solid #30363d;
+        .tc-item {
+            border: 1px solid #223043;
             border-radius: 10px;
-            padding: 13px 18px;
+            padding: 12px;
+            background: #0d141f;
+        }
+
+        .tc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tc-num {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .tc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .tc-field textarea {
+            width: 100%;
+            min-height: 72px;
+            resize: vertical;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #161b22;
+            color: var(--text);
+            padding: 8px 10px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.86rem;
+        }
+
+        .tc-field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .tc-public {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .tc-public input {
+            accent-color: var(--success);
+        }
+
+        .btn-danger-sm {
+            border: 1px solid rgba(231, 76, 60, 0.36);
+            background: rgba(231, 76, 60, 0.12);
+            color: var(--danger);
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            width: 100%;
+            margin-top: 10px;
+            border: 1px dashed rgba(74, 110, 224, 0.45);
+            background: rgba(74, 110, 224, 0.12);
+            color: var(--primary);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .btn-add:hover {
+            background: rgba(74, 110, 224, 0.19);
+        }
+
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 5, 10, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 120;
+            padding: 16px;
+        }
+
+        .modal-bg.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #101824;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: min(980px, 100%);
+            max-height: 85vh;
+            overflow: auto;
+            padding: 16px;
+        }
+
+        .modal-head {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .challenge-preview {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #0d1117;
+            overflow: hidden;
+        }
+
+        .challenge-preview-head {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            background: #141b27;
+        }
+
+        .challenge-preview h2 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 14px;
+            border: 1px solid #2f3e52;
+            color: #b9c6d7;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .preview-desc {
+            padding: 14px;
+            line-height: 1.65;
+        }
+
+        .preview-desc pre {
+            overflow: auto;
+            padding: 10px;
+            border-radius: 8px;
+            background: #161b22;
+        }
+
+        .preview-desc code {
+            background: #161b22;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .preview-extra {
+            padding: 14px;
+            border-top: 1px solid var(--border);
+            font-size: 0.86rem;
+            color: var(--muted);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            z-index: 9999;
-            transform: translateY(60px);
+        }
+
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 140;
+            background: #1f2933;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            min-width: 240px;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             opacity: 0;
-            transition: all 0.3s;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            font-size: 0.88rem;
-            max-width: 340px;
+            transform: translateY(40px);
+            transition: 0.25s;
         }
 
         .toast.show {
-            transform: translateY(0);
             opacity: 1;
+            transform: translateY(0);
         }
 
         .toast.success .ti {
-            color: #2ecc71;
+            color: var(--success);
         }
 
         .toast.error .ti {
-            color: #f85149;
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 900px) {
+            .meta-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tc-grid,
+            .preview-extra {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
     </style>
 </head>
 
 <body>
-
     <header class="editor-header">
-        <a href="/admin/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Tableau de bord</a>
-        <div class="editor-title"><i class="fas fa-laptop-code"></i> {% if problem %}Modifier le problème #{{ problem_id
-            }}{% else %}Nouveau problème{% endif %}</div>
+        <div class="header-left">
+            <a href="/admin/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Tableau de bord</a>
+            <div class="editor-title"><i class="fas fa-laptop-code"></i> {% if problem %}Modifier le problème #{{
+                problem_id }}{% else %}Nouveau problème{% endif %}</div>
+        </div>
         <div class="header-actions">
-            <button class="btn btn-outline" onclick="saveProblem(false)"><i class="fas fa-save"></i>
-                Sauvegarder</button>
-            <button class="btn btn-primary" onclick="saveProblem(true)"><i class="fas fa-check"></i> Sauvegarder &amp;
-                Quitter</button>
+            <button id="saveBtn" class="btn btn-outline" type="button"><i class="fas fa-save"></i> Sauvegarder</button>
+            <button id="saveExitBtn" class="btn btn-primary" type="button"><i class="fas fa-check"></i> Sauvegarder & Quitter</button>
         </div>
     </header>
 
-    <div class="editor-layout">
+    <main class="page">
+        <div class="utility-bar">
+            <button id="quickPreviewBtn" class="btn btn-primary" type="button"><i class="fas fa-eye"></i> Aperçu rapide</button>
+            <button id="importJsonBtn" class="btn btn-outline" type="button"><i class="fas fa-file-import"></i> Importer JSON</button>
+            <button id="exportJsonBtn" class="btn btn-outline" type="button"><i class="fas fa-file-export"></i> Exporter JSON</button>
+        </div>
+        <div class="editor-grid">
+            <section class="panel">
+                <div class="section-title"><i class="fas fa-pen"></i> Informations générales</div>
 
-        <!-- ── MAIN EDITOR ── -->
-        <div class="editor-main">
-
-            <!-- Title -->
-            <div class="field-group">
-                <label class="field-label"><i class="fas fa-heading"></i> Titre du problème *</label>
-                <input id="title" class="field-input" placeholder="ex: Calcul de la moyenne d'un tableau"
-                    value="{{ problem.title if problem else '' }}">
-            </div>
-
-            <!-- Difficulty + Topic -->
-            <div class="field-row-2" style="margin-bottom:20px;">
-                <div class="field-group" style="margin-bottom:0;">
-                    <label class="field-label"><i class="fas fa-layer-group"></i> Thème *</label>
-                    <input id="topic" class="field-input" placeholder="ex: Tableaux, Tri, Récursion…"
-                        value="{{ problem.topic if problem else '' }}">
+                <div class="field-group">
+                    <label class="field-label" for="title">Titre du problème *</label>
+                    <input id="title" class="field-input" placeholder="ex: Calcul de la moyenne d'un tableau"
+                        value="{{ problem.title if problem else '' }}">
                 </div>
-                <div class="field-group" style="margin-bottom:0;">
-                    <label class="field-label"><i class="fas fa-signal"></i> Difficulté *</label>
-                    <input type="hidden" id="diffHidden" value="{{ problem.difficulty if problem else 'Medium' }}">
-                    <div class="diff-pills">
-                        <div class="diff-pill" data-val="Easy" onclick="selectDiff('Easy')">Facile</div>
-                        <div class="diff-pill" data-val="Medium" onclick="selectDiff('Medium')">Moyen</div>
-                        <div class="diff-pill" data-val="Hard" onclick="selectDiff('Hard')">Difficile</div>
+
+                <div class="meta-row">
+                    <div class="field-group">
+                        <label class="field-label" for="topicSelect">Thème *</label>
+                        <select id="topicSelect" class="field-input"></select>
+                        <div id="newTopicWrap">
+                            <input id="newTopicInput" class="field-input" placeholder="Nouveau thème">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label"><i class="fas fa-signal"></i> Difficulté *</label>
+                        <input type="hidden" id="diffHidden" value="{{ problem.difficulty if problem else 'Medium' }}">
+                        <div class="diff-pills">
+                            <div class="diff-pill" data-val="Easy">Facile</div>
+                            <div class="diff-pill" data-val="Medium">Moyen</div>
+                            <div class="diff-pill" data-val="Hard">Difficile</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Description (EasyMDE) -->
-            <div class="field-group">
-                <label class="field-label"><i class="fas fa-align-left"></i> Description (Markdown) *</label>
-                <textarea id="description">{{ problem.description if problem else '' }}</textarea>
-            </div>
-
-            <!-- Template Code (CodeMirror) -->
-            <div class="field-group">
-                <label class="field-label" style="margin-bottom:8px;"><i class="fas fa-code"></i> Code Modèle (Algo —
-                    optionnel)</label>
-                <div class="cm-toolbar">
-                    <button onclick="insertTemplate('algo-func')"><i class="fas fa-function"></i> Fonction</button>
-                    <button onclick="insertTemplate('algo-proc')"><i class="fas fa-cogs"></i> Procédure</button>
-                    <button onclick="insertTemplate('algo-for')"><i class="fas fa-redo"></i> Pour</button>
-                    <button onclick="insertTemplate('algo-while')"><i class="fas fa-sync"></i> TantQue</button>
-                    <button onclick="insertTemplate('algo-if')"><i class="fas fa-code-branch"></i> Si</button>
-                    <button onclick="insertTemplate('algo-tab')"><i class="fas fa-table"></i> Tableau</button>
-                    <button onclick="clearTemplate()" style="margin-left:auto;"><i class="fas fa-trash"></i>
-                        Effacer</button>
+            <section class="panel">
+                <div class="section-title-wrap">
+                    <div class="section-title" style="margin:0;"><i class="fas fa-align-left"></i> Description (Markdown)</div>
+                    <button class="collapse-btn" type="button" data-collapse-target="descBody">-</button>
                 </div>
-                <div class="cm-wrapper" id="cmWrapper">
-                    <textarea id="templateCode">{{ problem.template_code if problem else '' }}</textarea>
+                <div class="section-body" id="descBody">
+                    <div class="md-fallback-toolbar" id="mdFallbackToolbar">
+                        <button class="btn btn-outline" type="button" data-md-wrap="**" title="Gras"><i class="fas fa-bold"></i></button>
+                        <button class="btn btn-outline" type="button" data-md-wrap="*" title="Italique"><i class="fas fa-italic"></i></button>
+                        <button class="btn btn-outline" type="button" data-md-prefix="# " title="Titre 1">H1</button>
+                        <button class="btn btn-outline" type="button" data-md-prefix="## " title="Titre 2">H2</button>
+                        <button class="btn btn-outline" type="button" data-md-wrap="`" title="Code inline"><i class="fas fa-code"></i></button>
+                        <button class="btn btn-outline" type="button" data-md-prefix="- " title="Liste"><i class="fas fa-list-ul"></i></button>
+                        <button class="btn btn-outline" type="button" data-md-prefix="> " title="Citation"><i class="fas fa-quote-left"></i></button>
+                        <button class="btn btn-outline" type="button" data-md-link="1" title="Lien"><i class="fas fa-link"></i></button>
+                    </div>
+                    <textarea id="description">{{ problem.description if problem else '' }}</textarea>
+                    <div class="field-hint">Raccourci: <strong>Ctrl/Cmd+S</strong> pour sauvegarder.</div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Test Cases -->
-            <div class="field-group">
-                <label class="field-label" style="margin-bottom:10px;"><i class="fas fa-flask"></i> Cas de test
-                    *</label>
-                <div class="tc-list" id="tcList"></div>
-                <button class="btn-add" onclick="addTC()"><i class="fas fa-plus"></i> Ajouter un cas de test</button>
-            </div>
+            <section class="panel">
+                <div class="section-title-wrap">
+                    <div class="section-title" style="margin:0;"><i class="fas fa-code"></i> Code Modèle (Algo — optionnel)</div>
+                    <button class="collapse-btn" type="button" data-collapse-target="codeBody">-</button>
+                </div>
+                <div class="section-body" id="codeBody">
+                    <div class="cm-toolbar">
+                        <button class="btn btn-outline" data-snippet="algo-func" type="button"><i class="fas fa-function"></i> Fonction</button>
+                        <button class="btn btn-outline" data-snippet="algo-proc" type="button"><i class="fas fa-cogs"></i> Procédure</button>
+                        <button class="btn btn-outline" data-snippet="algo-for" type="button"><i class="fas fa-redo"></i> Pour</button>
+                        <button class="btn btn-outline" data-snippet="algo-while" type="button"><i class="fas fa-sync"></i> TantQue</button>
+                        <button class="btn btn-outline" data-snippet="algo-if" type="button"><i class="fas fa-code-branch"></i> Si</button>
+                        <button class="btn btn-outline" data-snippet="algo-tab" type="button"><i class="fas fa-table"></i> Tableau</button>
+                        <button id="clearTemplateBtn" class="btn btn-outline" style="margin-left:auto;" type="button"><i class="fas fa-trash"></i> Effacer</button>
+                    </div>
+                    <div class="cm-wrapper">
+                        <textarea id="templateCode">{{ problem.template_code if problem else '' }}</textarea>
+                    </div>
+                </div>
+            </section>
 
+            <section class="panel">
+                <div class="section-title-wrap">
+                    <div class="section-title" style="margin:0;"><i class="fas fa-flask"></i> Cas de test *</div>
+                    <button class="collapse-btn" type="button" data-collapse-target="testsBody">-</button>
+                </div>
+                <div class="section-body" id="testsBody">
+                    <div class="tc-list" id="tcList"></div>
+                    <button id="addTestBtn" class="btn-add" type="button"><i class="fas fa-plus"></i> Ajouter un cas de test</button>
+                </div>
+            </section>
         </div>
+    </main>
 
-        <!-- ── SIDEBAR ── -->
-        <aside class="editor-sidebar">
-
-            <!-- Live Preview -->
-            <div style="margin-bottom:20px;">
-                <div class="section-title"><i class="fas fa-eye"></i> Aperçu de la description</div>
-                <div class="preview-panel" id="livePreview"><span class="preview-empty">Commencez à écrire la
-                        description…</span></div>
+    <div class="modal-bg" id="previewModal">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Aperçu rapide du challenge</h3>
+                <button class="btn btn-outline" id="closePreviewBtn" type="button"><i class="fas fa-times"></i> Fermer</button>
             </div>
-
-            <!-- Tips -->
-            <div style="margin-bottom:20px;">
-                <div class="section-title"><i class="fas fa-lightbulb"></i> Guide Markdown</div>
-                <div style="font-size:0.8rem; color:#8b949e; line-height:1.9;">
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;"># Titre H1</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">## Titre H2</code><br>
-                    <code style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">**gras**</code>
-                    &nbsp;
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">*italique*</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">`code inline`</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">```<br>bloc de code<br>```</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">- item liste</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">&gt; citation</code><br>
-                    <code
-                        style="background:#0d1117;padding:2px 6px;border-radius:4px;color:#f0883e;">| col1 | col2 |</code><br>
-                </div>
-            </div>
-
-            <!-- Snippets -->
-            <div style="margin-bottom:20px;">
-                <div class="section-title"><i class="fas fa-puzzle-piece"></i> Snippets rapides</div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                    <button class="btn btn-outline"
-                        style="font-size:0.8rem;padding:7px 12px;justify-content:flex-start;"
-                        onclick="insertMd('### Exemple\n\n**Entrée :**\n```\n\n```\n\n**Sortie :**\n```\n\n```\n')"><i
-                            class="fas fa-flask"></i> Bloc Exemple</button>
-                    <button class="btn btn-outline"
-                        style="font-size:0.8rem;padding:7px 12px;justify-content:flex-start;"
-                        onclick="insertMd('### Contraintes\n\n- $1 \\leq n \\leq 100$\n- Les valeurs sont des entiers\n')"><i
-                            class="fas fa-shield-alt"></i> Contraintes</button>
-                    <button class="btn btn-outline"
-                        style="font-size:0.8rem;padding:7px 12px;justify-content:flex-start;"
-                        onclick="insertMd('| Entrée | Sortie |\n|--------|--------|\n| 5 2 | 10 |\n')"><i
-                            class="fas fa-table"></i> Tableau I/O</button>
-                    <button class="btn btn-outline"
-                        style="font-size:0.8rem;padding:7px 12px;justify-content:flex-start;"
-                        onclick="insertMd('> **Note :** ')"><i class="fas fa-info-circle"></i> Note</button>
-                </div>
-            </div>
-
-            <!-- Status -->
-            <div>
-                <div class="section-title"><i class="fas fa-info-circle"></i> Infos</div>
-                <div style="font-size:0.82rem;color:#8b949e;line-height:2;">
-                    {% if problem %}
-                    <span class="tag-chip">ID #{{ problem_id }}</span><br>
-                    {{ problem.test_cases | length }} cas de test actuels<br>
-                    {% else %}
-                    Nouveau problème
-                    {% endif %}
-                </div>
-            </div>
-
-        </aside>
+            <div id="previewContent" class="challenge-preview"></div>
+        </div>
     </div>
 
-    <!-- Toast -->
+    <input type="file" id="jsonFileInput" accept="application/json,.json" style="display:none;">
+
     <div class="toast" id="toast"><span class="ti" id="toastIcon"></span><span id="toastMsg"></span></div>
 
     <script>
-        // ── Initial data from server ─────────────────────────────────────────────────
         const PROBLEM_ID = {{ problem_id | tojson }};
         const INIT_TEST_CASES = {{ (problem.test_cases if problem else[]) | tojson }};
+        const INIT_TOPIC = {{ (problem.topic if problem else '') | tojson }};
         const INIT_DIFF = {{ (problem.difficulty if problem else 'Medium') | tojson }};
+        const NEW_TOPIC_VALUE = '__new_topic__';
 
-        // ── Difficulty pills ─────────────────────────────────────────────────────────
-        function selectDiff(val) {
-            document.querySelectorAll('.diff-pill').forEach(p => p.classList.toggle('selected', p.dataset.val === val));
-            document.getElementById('diffHidden').value = val;
-        }
-        selectDiff(INIT_DIFF);
+        const topicSelect = document.getElementById('topicSelect');
+        const newTopicWrap = document.getElementById('newTopicWrap');
+        const newTopicInput = document.getElementById('newTopicInput');
+        const tcList = document.getElementById('tcList');
+        const jsonFileInput = document.getElementById('jsonFileInput');
 
-        // ── EasyMDE ──────────────────────────────────────────────────────────────────
-        const mde = new EasyMDE({
-            element: document.getElementById('description'),
-            spellChecker: false,
-            autofocus: false,
-            placeholder: 'Rédigez l\'énoncé du problème en Markdown...\n\n## Description\n\nÉcrivez votre description ici.\n\n## Entrée\n\nDécrivez le format d\'entrée.\n\n## Sortie\n\nDécrivez le format de sortie.',
-            toolbar: [
-                'bold', 'italic', 'strikethrough', '|',
-                'heading-1', 'heading-2', 'heading-3', '|',
-                'code', 'quote', '|',
-                'unordered-list', 'ordered-list', '|',
-                'link', 'table', '|',
-                'preview', 'side-by-side', 'fullscreen', '|',
-                'guide'
-            ],
-            status: ['lines', 'words', 'cursor'],
-            previewRender(text) {
-                return marked.parse(text);
-            }
-        });
-
-        // Live preview on the right side
-        mde.codemirror.on('change', () => {
-            const md = mde.value();
-            const preview = document.getElementById('livePreview');
-            if (!md.trim()) {
-                preview.innerHTML = '<span class="preview-empty">Commencez à écrire la description…</span>';
-            } else {
-                preview.innerHTML = marked.parse(md);
-            }
-        });
-        // Trigger initial preview
-        if (mde.value().trim()) {
-            document.getElementById('livePreview').innerHTML = marked.parse(mde.value());
-        }
-
-        // ── CodeMirror for template code ──────────────────────────────────────────────
-        const cm = CodeMirror.fromTextArea(document.getElementById('templateCode'), {
-            mode: 'text/plain',
-            theme: 'dracula',
-            lineNumbers: true,
-            indentUnit: 2,
-            tabSize: 2,
-            lineWrapping: false,
-            autofocus: false,
-            extraKeys: { 'Tab': cm => cm.execCommand('insertSoftTab') }
-        });
-
-        // Code snippets
-        const snippets = {
-            'algo-func': 'Fonction NomFonction(param1 : Entier) : Entier\nDébut\n  // votre code\n  Retourner param1\nFin\n',
-            'algo-proc': 'Procédure NomProcedure(param1 : Entier)\nDébut\n  // votre code\nFin\n',
-            'algo-for': 'Pour i de 1 à n Faire\n  // votre code\nFin Pour\n',
-            'algo-while': 'TantQue condition Faire\n  // votre code\nFin TantQue\n',
-            'algo-if': 'Si condition Alors\n  // votre code\nSinon\n  // votre code\nFin Si\n',
-            'algo-tab': 'Tableau T[n] : Entier\n',
-        };
-
-        function insertTemplate(key) {
-            const doc = cm.getDoc();
-            const cursor = doc.getCursor();
-            doc.replaceRange(snippets[key] || '', cursor);
-            cm.focus();
-        }
-        function clearTemplate() {
-            cm.setValue('');
-            cm.focus();
-        }
-
-        // ── Insert markdown snippet ───────────────────────────────────────────────────
-        function insertMd(text) {
-            const cm2 = mde.codemirror;
-            const doc = cm2.getDoc();
-            const cursor = doc.getCursor();
-            const current = doc.getValue();
-            const pos = doc.indexFromPos(cursor);
-            const before = current.slice(0, pos);
-            const after = current.slice(pos);
-            doc.setValue(before + '\n' + text + after);
-            cm2.focus();
-        }
-
-        // ── Test cases ────────────────────────────────────────────────────────────────
-        let tcCount = 0;
-        function addTC(input = '', expected = '', isPublic = false) {
-            tcCount++;
-            const n = tcCount;
-            const div = document.createElement('div');
-            div.className = 'tc-item';
-            div.dataset.idx = n;
-            div.innerHTML = `
-    <div>
-      <div class="tc-field-label">Entrée</div>
-      <textarea class="tc-input tc-in" rows="2" placeholder="Données d'entrée…">${escHtml(input)}</textarea>
-    </div>
-    <div>
-      <div class="tc-field-label">Sortie attendue</div>
-      <textarea class="tc-input tc-out" rows="2" placeholder="Résultat attendu…">${escHtml(expected)}</textarea>
-    </div>
-    <div class="tc-meta">
-      <span class="tc-number">Cas #${n}</span>
-      <label class="public-toggle"><input type="checkbox" class="tc-pub" ${isPublic ? 'checked' : ''}> Visible par l'étudiant</label>
-      <button class="btn-danger-sm" onclick="this.closest('.tc-item').remove()"><i class="fas fa-trash"></i></button>
-    </div>`;
-            document.getElementById('tcList').appendChild(div);
-        }
-        function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-        // Populate existing test cases
-        INIT_TEST_CASES.forEach(tc => addTC(tc.input, tc.expected_output, tc.is_public));
-        if (INIT_TEST_CASES.length === 0) addTC(); // Start with one empty case
-
-        // ── Save ─────────────────────────────────────────────────────────────────────
         function toast(msg, type = 'success') {
             const t = document.getElementById('toast');
             t.className = `toast ${type}`;
             document.getElementById('toastIcon').className = `ti fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
             document.getElementById('toastMsg').textContent = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3500);
+            setTimeout(() => t.classList.remove('show'), 3400);
+        }
+
+        function escHtml(s) {
+            return String(s || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function slugify(text) {
+            return String(text || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '') || 'problem';
+        }
+
+        function selectDiff(val) {
+            document.querySelectorAll('.diff-pill').forEach(p => {
+                p.classList.toggle('selected', p.dataset.val === val);
+            });
+            document.getElementById('diffHidden').value = val;
+        }
+
+        function updateTopicCustomVisibility() {
+            const isNew = topicSelect.value === NEW_TOPIC_VALUE;
+            newTopicWrap.style.display = isNew ? 'block' : 'none';
+            if (isNew) newTopicInput.focus();
+        }
+
+        function fillTopicSelect(topics, currentTopic = '') {
+            const dedup = Array.from(new Set((topics || []).map(t => String(t || '').trim()).filter(Boolean)));
+            if (currentTopic && !dedup.includes(currentTopic)) dedup.push(currentTopic);
+            dedup.sort((a, b) => a.localeCompare(b, 'fr'));
+
+            topicSelect.innerHTML = '';
+            dedup.forEach(topic => {
+                const opt = document.createElement('option');
+                opt.value = topic;
+                opt.textContent = topic;
+                topicSelect.appendChild(opt);
+            });
+
+            const addOpt = document.createElement('option');
+            addOpt.value = NEW_TOPIC_VALUE;
+            addOpt.textContent = '+ Nouveau thème...';
+            topicSelect.appendChild(addOpt);
+
+            if (currentTopic) {
+                topicSelect.value = dedup.includes(currentTopic) ? currentTopic : NEW_TOPIC_VALUE;
+                if (topicSelect.value === NEW_TOPIC_VALUE) newTopicInput.value = currentTopic;
+            } else if (dedup.length) {
+                topicSelect.value = dedup[0];
+            } else {
+                topicSelect.value = NEW_TOPIC_VALUE;
+            }
+
+            updateTopicCustomVisibility();
+        }
+
+        async function loadTopics() {
+            try {
+                const res = await fetch('/admin/api/problems/topics');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Impossible de charger les thèmes');
+                fillTopicSelect(data.items || [], INIT_TOPIC || '');
+            } catch (e) {
+                fillTopicSelect([], INIT_TOPIC || '');
+                toast(e.message, 'error');
+            }
+        }
+
+        function mdToHtml(text) {
+            if (window.marked && typeof window.marked.parse === 'function') {
+                return window.marked.parse(text || '');
+            }
+            return `<pre>${escHtml(text || '')}</pre>`;
+        }
+
+        const descTextarea = document.getElementById('description');
+        const mdFallbackToolbar = document.getElementById('mdFallbackToolbar');
+        let mdeRef = null;
+        let descCmRef = null;
+        if (window.EasyMDE) {
+            try {
+                mdeRef = new EasyMDE({
+                    element: descTextarea,
+                    spellChecker: false,
+                    autofocus: false,
+                    toolbar: [
+                        'bold', 'italic', 'strikethrough', '|',
+                        'heading-1', 'heading-2', 'heading-3', '|',
+                        'code', 'quote', 'horizontal-rule', '|',
+                        'unordered-list', 'ordered-list', '|',
+                        'link', 'table', '|',
+                        'preview', 'side-by-side', 'fullscreen', '|',
+                        'guide'
+                    ],
+                    status: ['lines', 'words', 'cursor'],
+                    renderingConfig: { codeSyntaxHighlighting: true },
+                    previewRender(text) {
+                        return mdToHtml(text);
+                    }
+                });
+            } catch (e) {
+                mdeRef = null;
+            }
+        }
+        if (!mdeRef && window.CodeMirror) {
+            try {
+                descCmRef = CodeMirror.fromTextArea(descTextarea, {
+                    mode: 'markdown',
+                    theme: 'dracula',
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    styleActiveLine: true
+                });
+                descCmRef.setSize('100%', 320);
+                if (mdFallbackToolbar) mdFallbackToolbar.style.display = 'flex';
+            } catch (e) {
+                descCmRef = null;
+            }
+        }
+        function getDescriptionValue() {
+            if (mdeRef) return mdeRef.value();
+            if (descCmRef) return descCmRef.getValue();
+            return descTextarea.value;
+        }
+        function setDescriptionValue(v) {
+            const value = String(v || '');
+            if (mdeRef) mdeRef.value(value);
+            else if (descCmRef) descCmRef.setValue(value);
+            else descTextarea.value = value;
+        }
+        function mdInsertPrefix(prefix) {
+            if (descCmRef) {
+                const doc = descCmRef.getDoc();
+                const cursor = doc.getCursor();
+                doc.replaceRange(prefix, cursor);
+                descCmRef.focus();
+                return;
+            }
+            const start = descTextarea.selectionStart || 0;
+            const current = descTextarea.value || '';
+            descTextarea.value = current.slice(0, start) + prefix + current.slice(start);
+            descTextarea.focus();
+            descTextarea.selectionStart = descTextarea.selectionEnd = start + prefix.length;
+        }
+        function mdWrapSelection(wrapper) {
+            if (descCmRef) {
+                const doc = descCmRef.getDoc();
+                const sel = doc.getSelection() || 'texte';
+                doc.replaceSelection(`${wrapper}${sel}${wrapper}`);
+                descCmRef.focus();
+                return;
+            }
+            const start = descTextarea.selectionStart || 0;
+            const end = descTextarea.selectionEnd || start;
+            const current = descTextarea.value || '';
+            const sel = current.slice(start, end) || 'texte';
+            const next = `${wrapper}${sel}${wrapper}`;
+            descTextarea.value = current.slice(0, start) + next + current.slice(end);
+            descTextarea.focus();
+            descTextarea.selectionStart = start + wrapper.length;
+            descTextarea.selectionEnd = start + wrapper.length + sel.length;
+        }
+        function mdInsertLink() {
+            const text = '[texte](https://example.com)';
+            mdInsertPrefix(text);
+        }
+
+        const templateTextarea = document.getElementById('templateCode');
+        let cm = null;
+        if (window.CodeMirror) {
+            try {
+                cm = CodeMirror.fromTextArea(templateTextarea, {
+                    mode: 'algo',
+                    theme: 'dracula',
+                    lineNumbers: true,
+                    indentUnit: 4,
+                    tabSize: 4,
+                    smartIndent: true,
+                    styleActiveLine: true,
+                    matchBrackets: true,
+                    autoCloseBrackets: true,
+                    foldGutter: true,
+                    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                    extraKeys: {
+                        Tab: cmRef => cmRef.execCommand('insertSoftTab'),
+                        'Ctrl-Space': 'autocomplete'
+                    },
+                    hintOptions: {
+                        hint: (CodeMirror.hint && CodeMirror.hint.algo) || (CodeMirror.hint && CodeMirror.hint.anyword) || null,
+                        completeSingle: false,
+                        alignWithWord: true,
+                        closeOnUnfocus: true
+                    }
+                });
+
+                let typingTimer;
+                cm.on('inputRead', (cmRef, change) => {
+                    if (!change.text || !change.text[0] || !/[\w]/.test(change.text[0])) return;
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        if (typeof cmRef.showHint !== 'function') return;
+                        const token = cmRef.getTokenAt(cmRef.getCursor());
+                        if ((token.string || '').length >= 2) {
+                            const hintFn = (CodeMirror.hint && CodeMirror.hint.algo) || (CodeMirror.hint && CodeMirror.hint.anyword);
+                            if (hintFn) cmRef.showHint({ hint: hintFn });
+                        }
+                    }, 260);
+                });
+            } catch (e) {
+                cm = null;
+            }
+        }
+        function getTemplateValue() {
+            return cm ? cm.getValue() : templateTextarea.value;
+        }
+        function setTemplateValue(v) {
+            const value = String(v || '');
+            if (cm) cm.setValue(value);
+            else templateTextarea.value = value;
+        }
+        function insertTemplateSnippet(text) {
+            if (cm) {
+                const doc = cm.getDoc();
+                doc.replaceRange(text, doc.getCursor());
+                cm.focus();
+                return;
+            }
+            const start = templateTextarea.selectionStart || 0;
+            const end = templateTextarea.selectionEnd || 0;
+            const current = templateTextarea.value || '';
+            templateTextarea.value = current.slice(0, start) + text + current.slice(end);
+            const newPos = start + text.length;
+            templateTextarea.focus();
+            templateTextarea.selectionStart = newPos;
+            templateTextarea.selectionEnd = newPos;
+        }
+
+        const snippets = {
+            'algo-func': 'Fonction NomFonction(param1 : Entier) : Entier\nDebut\n    // votre code\n    Retourner param1\nFin\n',
+            'algo-proc': 'Procedure NomProcedure(param1 : Entier)\nDebut\n    // votre code\nFin\n',
+            'algo-for': 'Pour i := 1 a n Faire\n    // votre code\nFin Pour\n',
+            'algo-while': 'TantQue condition Faire\n    // votre code\nFin TantQue\n',
+            'algo-if': 'Si condition Alors\n    // votre code\nSinon\n    // votre code\nFin Si\n',
+            'algo-tab': 'Tableau T[100] : Entier\n'
+        };
+
+        function renderTests(testCases) {
+            const list = (Array.isArray(testCases) ? testCases : []).map(tc => ({
+                input: String(tc.input || ''),
+                expected_output: String(tc.expected_output || ''),
+                is_public: Boolean(tc.is_public)
+            }));
+
+            tcList.innerHTML = list.map((tc, idx) => `
+                <div class="tc-item" data-idx="${idx}">
+                    <div class="tc-top">
+                        <span class="tc-num">Cas #${idx + 1}</span>
+                        <button type="button" class="btn-danger-sm tc-remove"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="tc-grid">
+                        <div class="tc-field">
+                            <label class="field-label">Entrée</label>
+                            <textarea class="tc-in" placeholder="Données d'entrée">${escHtml(tc.input)}</textarea>
+                        </div>
+                        <div class="tc-field">
+                            <label class="field-label">Sortie attendue</label>
+                            <textarea class="tc-out" placeholder="Résultat attendu">${escHtml(tc.expected_output)}</textarea>
+                        </div>
+                    </div>
+                    <label class="tc-public"><input type="checkbox" class="tc-pub" ${tc.is_public ? 'checked' : ''}> Test public (visible pour l'étudiant)</label>
+                </div>
+            `).join('');
+
+            if (list.length === 0) {
+                addTestCase();
+            }
+        }
+
+        function getTestsFromDom() {
+            return [...tcList.querySelectorAll('.tc-item')].map(card => ({
+                input: card.querySelector('.tc-in').value,
+                expected_output: card.querySelector('.tc-out').value,
+                is_public: card.querySelector('.tc-pub').checked
+            }));
+        }
+
+        function reindexTests() {
+            [...tcList.querySelectorAll('.tc-item')].forEach((card, idx) => {
+                const num = card.querySelector('.tc-num');
+                if (num) num.textContent = `Cas #${idx + 1}`;
+            });
+        }
+
+        function addTestCase(input = '', expected = '', isPublic = false) {
+            const current = getTestsFromDom();
+            current.push({ input, expected_output: expected, is_public: isPublic });
+            renderTests(current);
+        }
+
+        function getResolvedTopic() {
+            if (topicSelect.value === NEW_TOPIC_VALUE) return newTopicInput.value.trim();
+            return String(topicSelect.value || '').trim();
+        }
+
+        function applyTopic(topic, preferCustom = false) {
+            const value = String(topic || '').trim();
+            if (!value) {
+                topicSelect.value = NEW_TOPIC_VALUE;
+                newTopicInput.value = '';
+                updateTopicCustomVisibility();
+                return;
+            }
+
+            const optionExists = [...topicSelect.options].some(opt => opt.value === value);
+            if (optionExists && !preferCustom) {
+                topicSelect.value = value;
+                newTopicInput.value = '';
+            } else {
+                topicSelect.value = NEW_TOPIC_VALUE;
+                newTopicInput.value = value;
+            }
+            updateTopicCustomVisibility();
+        }
+
+        function getPayload(validateRequired = true) {
+            const title = document.getElementById('title').value.trim();
+            const topic = getResolvedTopic();
+            const difficulty = document.getElementById('diffHidden').value;
+            const description = getDescriptionValue().trim();
+            const template_code = getTemplateValue();
+            const test_cases = getTestsFromDom();
+
+            if (validateRequired) {
+                if (!title) throw new Error('Le titre est obligatoire');
+                if (!topic) throw new Error('Le thème est obligatoire');
+                if (!description) throw new Error('La description est obligatoire');
+                if (!test_cases.length) throw new Error('Ajoutez au moins un cas de test');
+            }
+
+            return { title, topic, difficulty, description, template_code, test_cases };
         }
 
         async function saveProblem(andExit = false) {
-            const title = document.getElementById('title').value.trim();
-            const topic = document.getElementById('topic').value.trim();
-            const diff = document.getElementById('diffHidden').value;
-            const desc = mde.value().trim();
-            const template = cm.getValue();
-
-            if (!title) return toast('Le titre est obligatoire', 'error');
-            if (!topic) return toast('Le thème est obligatoire', 'error');
-            if (!desc) return toast('La description est obligatoire', 'error');
-
-            const test_cases = [...document.querySelectorAll('.tc-item')].map(el => ({
-                input: el.querySelector('.tc-in').value,
-                expected_output: el.querySelector('.tc-out').value,
-                is_public: el.querySelector('.tc-pub').checked
-            }));
-
-            if (test_cases.length === 0) return toast('Ajoutez au moins un cas de test', 'error');
-
-            const body = { title, topic, difficulty: diff, description: desc, template_code: template, test_cases };
-
             try {
+                const body = getPayload(true);
                 let resp;
                 if (PROBLEM_ID) {
-                    resp = await fetch(`/admin/api/problems/${PROBLEM_ID}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    resp = await fetch(`/admin/api/problems/${PROBLEM_ID}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
                 } else {
-                    resp = await fetch('/admin/api/problems', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    resp = await fetch('/admin/api/problems', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
                 }
-                const data = await resp.json();
-                if (!resp.ok) throw new Error(data.error || 'Erreur serveur');
 
-                toast('Problème sauvegardé avec succès !');
+                const data = await resp.json().catch(() => ({}));
+                if (!resp.ok) throw new Error(data.error || 'Erreur lors de la sauvegarde');
+
+                toast('Problème sauvegardé avec succès');
+
                 if (andExit) {
-                    setTimeout(() => location.href = '/admin/dashboard', 1000);
-                } else if (!PROBLEM_ID && data.id) {
-                    // Redirect to edit page for the new problem
-                    setTimeout(() => { location.href = `/admin/problems/${data.id}/edit`; }, 900);
+                    setTimeout(() => { location.href = '/admin/dashboard'; }, 800);
+                    return;
+                }
+
+                if (!PROBLEM_ID && data.id) {
+                    setTimeout(() => { location.href = `/admin/problems/${data.id}/edit`; }, 700);
                 }
             } catch (e) {
                 toast(e.message, 'error');
             }
         }
 
-        // Keyboard shortcut Ctrl+S / Cmd+S
-        document.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
+        function validateImportedJson(payload) {
+            const required = ['title', 'topic', 'difficulty', 'description', 'template_code', 'test_cases'];
+            const missing = required.filter(k => !(k in payload));
+            if (missing.length) throw new Error(`JSON invalide, champs manquants: ${missing.join(', ')}`);
+            if (!Array.isArray(payload.test_cases)) throw new Error('JSON invalide: test_cases doit être une liste');
+        }
+
+        function applyJsonPayload(payload) {
+            document.getElementById('title').value = String(payload.title || '');
+            selectDiff(['Easy', 'Medium', 'Hard'].includes(payload.difficulty) ? payload.difficulty : 'Medium');
+            setDescriptionValue(String(payload.description || ''));
+            setTemplateValue(String(payload.template_code || ''));
+            applyTopic(payload.topic, true);
+            renderTests((payload.test_cases || []).map(tc => ({
+                input: String(tc.input || ''),
+                expected_output: String(tc.expected_output || ''),
+                is_public: Boolean(tc.is_public)
+            })));
+        }
+
+        function exportJson() {
+            try {
+                const payload = getPayload(false);
+                const pretty = JSON.stringify(payload, null, 2);
+                const blob = new Blob([pretty], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const idPrefix = PROBLEM_ID ? String(PROBLEM_ID).padStart(2, '0') + '-' : '';
+                const filename = PROBLEM_ID ? `${idPrefix}${slugify(payload.title)}.json` : 'problem-draft.json';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                toast('Export JSON effectué');
+            } catch (e) {
+                toast(e.message, 'error');
+            }
+        }
+
+        function openQuickPreview() {
+            let payload;
+            try {
+                payload = getPayload(false);
+            } catch (e) {
+                toast(e.message, 'error');
+                return;
+            }
+
+            const testCount = payload.test_cases.length;
+            const publicCount = payload.test_cases.filter(t => t.is_public).length;
+            const difficultyLabel = payload.difficulty === 'Easy' ? 'Facile' : payload.difficulty === 'Hard' ? 'Difficile' : 'Moyen';
+
+            document.getElementById('previewContent').innerHTML = `
+                <div class="challenge-preview-head">
+                    <h2>${escHtml(payload.title || 'Sans titre')}</h2>
+                    <div class="meta-tags">
+                        <span class="tag">Thème: ${escHtml(payload.topic || '—')}</span>
+                        <span class="tag">Difficulté: ${escHtml(difficultyLabel)}</span>
+                        <span class="tag">Tests: ${testCount}</span>
+                        <span class="tag">Publics: ${publicCount}</span>
+                    </div>
+                </div>
+                <div class="preview-desc markdown-body">${mdToHtml(payload.description || '')}</div>
+                <div class="preview-extra">
+                    <div><strong>Code modèle:</strong> ${payload.template_code ? 'Oui' : 'Non'}</div>
+                    <div><strong>ID problème:</strong> ${PROBLEM_ID || 'Nouveau (non sauvegardé)'}</div>
+                </div>
+            `;
+
+            document.getElementById('previewModal').classList.add('open');
+        }
+
+        document.querySelectorAll('.diff-pill').forEach(pill => {
+            pill.addEventListener('click', () => selectDiff(pill.dataset.val));
+        });
+
+        document.querySelectorAll('[data-collapse-target]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-collapse-target');
+                const body = document.getElementById(targetId);
+                if (!body) return;
+                body.classList.toggle('collapsed');
+                btn.textContent = body.classList.contains('collapsed') ? '+' : '-';
+            });
+        });
+
+        if (mdFallbackToolbar) {
+            mdFallbackToolbar.addEventListener('click', (evt) => {
+                const btn = evt.target.closest('button');
+                if (!btn) return;
+                const wrap = btn.getAttribute('data-md-wrap');
+                const prefix = btn.getAttribute('data-md-prefix');
+                const isLink = btn.getAttribute('data-md-link');
+                if (wrap) mdWrapSelection(wrap);
+                else if (prefix) mdInsertPrefix(prefix);
+                else if (isLink) mdInsertLink();
+            });
+        }
+
+        topicSelect.addEventListener('change', updateTopicCustomVisibility);
+
+        document.querySelectorAll('[data-snippet]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const key = btn.getAttribute('data-snippet');
+                insertTemplateSnippet(snippets[key] || '');
+            });
+        });
+
+        document.getElementById('clearTemplateBtn').addEventListener('click', () => {
+            setTemplateValue('');
+            if (cm) cm.focus();
+            else templateTextarea.focus();
+        });
+
+        document.getElementById('addTestBtn').addEventListener('click', () => addTestCase());
+
+        tcList.addEventListener('click', (evt) => {
+            const removeBtn = evt.target.closest('.tc-remove');
+            if (!removeBtn) return;
+            const card = removeBtn.closest('.tc-item');
+            if (card) card.remove();
+            if (!tcList.querySelector('.tc-item')) addTestCase();
+            reindexTests();
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', () => saveProblem(false));
+        document.getElementById('saveExitBtn').addEventListener('click', () => saveProblem(true));
+
+        document.getElementById('quickPreviewBtn').addEventListener('click', openQuickPreview);
+        document.getElementById('closePreviewBtn').addEventListener('click', () => {
+            document.getElementById('previewModal').classList.remove('open');
+        });
+        document.getElementById('previewModal').addEventListener('click', (evt) => {
+            if (evt.target.id === 'previewModal') document.getElementById('previewModal').classList.remove('open');
+        });
+
+        document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+        document.getElementById('importJsonBtn').addEventListener('click', () => jsonFileInput.click());
+
+        jsonFileInput.addEventListener('change', async (evt) => {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const payload = JSON.parse(text);
+                validateImportedJson(payload);
+                applyJsonPayload(payload);
+                toast('JSON importé dans l\'éditeur');
+            } catch (e) {
+                toast(e.message || 'Fichier JSON invalide', 'error');
+            } finally {
+                jsonFileInput.value = '';
+            }
+        });
+
+        document.addEventListener('keydown', (evt) => {
+            if ((evt.ctrlKey || evt.metaKey) && evt.key.toLowerCase() === 's') {
+                evt.preventDefault();
                 saveProblem(false);
             }
         });
+
+        selectDiff(INIT_DIFF);
+        renderTests(INIT_TEST_CASES);
+        loadTopics();
+        if (!window.EasyMDE) {
+            toast('EasyMDE non chargé: édition Markdown avancée indisponible', 'error');
+        }
+        if (!window.CodeMirror) {
+            toast('CodeMirror non chargé: mode code avancé indisponible', 'error');
+        }
     </script>
 </body>
 

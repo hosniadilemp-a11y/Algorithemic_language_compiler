@@ -187,16 +187,13 @@
 </head>
 
 <body class="course-standalone-body">
-    <div class="course-page-topbar">
-        <a href="/" class="course-page-brand" style="text-decoration: none; color: inherit;"><i
-                class="fas fa-terminal"></i> AlgoCompiler</a>
-        <div style="display:flex; gap:10px; align-items:center;">
-            <button class="course-theme-btn" data-theme-toggle title="Basculer le thème">
-                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
-            </button>
-            <a href="/progress" class="course-back-btn"><i class="fas fa-arrow-left"></i> Retour au profil</a>
-        </div>
-    </div>
+    {% set header_custom_controls %}
+    <a href="/progress" class="btn secondary highlight">
+        <i class="fas fa-arrow-left"></i> <span>Retour au profil</span>
+    </a>
+    <div class="separator"></div>
+    {% endset %}
+    {% include 'partials/navbar.html' %}
 
     <div style="flex: 1; overflow-y: auto; padding-bottom: 40px; padding-top: 20px;">
         <div class="container" style="max-width: 1000px; margin: 0 auto; padding: 20px;">

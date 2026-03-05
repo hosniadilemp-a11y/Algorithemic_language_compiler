@@ -1,0 +1,132 @@
+[
+    {
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "question":  "Différence Fonction / Procédure ?",
+        "explanation":  "Fonction retourne une valeur, procédure non. Reponse correcte: Une fonction retourne un résultat, la procédure effectue juste une action. Ici, la notion \u0027Définition\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Une fonction retourne un résultat, la procédure effectue juste une action",
+                        "Aucune différence",
+                        "Une procédure est plus rapide",
+                        "Une fonction ne prend pas de paramètres"
+                    ],
+        "answer":  "Une fonction retourne un résultat, la procédure effectue juste une action"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Paramètre Valeur",
+        "question":  "Passage par valeur : la fonction modifie-t-elle l\u0027original ?",
+        "explanation":  "Non, c\u0027est une copie. Reponse correcte: Non, elle modifie une copie locale. Ici, la notion \u0027Paramètre Valeur\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Non, elle modifie une copie locale",
+                        "Oui, elle modifie l\u0027original",
+                        "Seulement si c\u0027est un entier",
+                        "Oui, à la fin de l\u0027exécution"
+                    ],
+        "answer":  "Non, elle modifie une copie locale"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Paramètre Variable",
+        "question":  "Passage par variable : modification de l\u0027original ?",
+        "explanation":  "Oui, via son adresse. Reponse correcte: Oui, car on passe l\u0027adresse mémoire de l\u0027original. Ici, la notion \u0027Paramètre Variable\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        "Oui, car on passe l\u0027adresse mémoire de l\u0027original",
+                        "Non",
+                        "Seulement si on utilise le mot-clé global",
+                        "Jamais en algorithmique"
+                    ],
+        "answer":  "Oui, car on passe l\u0027adresse mémoire de l\u0027original"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Retour",
+        "question":  "Mot-clé pour quitter une fonction avec résultat ?",
+        "explanation":  "Retourner. Reponse correcte: Retourner (Return). Ici, la notion \u0027Retour\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        "Retourner (Return)",
+                        "Finir",
+                        "Quitter",
+                        "Donner"
+                    ],
+        "answer":  "Retourner (Return)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Portée",
+        "question":  "Variable déclarée dans une fonction ?",
+        "explanation":  "Variable locale. Reponse correcte: Variable locale (invisible dehors). Ici, la notion \u0027Portée\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        "Variable locale (invisible dehors)",
+                        "Variable globale",
+                        "Variable persistante",
+                        "Constante"
+                    ],
+        "answer":  "Variable locale (invisible dehors)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Récursivité",
+        "question":  "Une fonction qui s\u0027appelle elle-même ?",
+        "explanation":  "Récursive. Reponse correcte: Fonction récursive. Ici, la notion \u0027Récursivité\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        "Fonction récursive",
+                        "Fonction itérative",
+                        "Fonction infinie",
+                        "Fonction miroir"
+                    ],
+        "answer":  "Fonction récursive"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Pile d\u0027appels",
+        "question":  "Où sont stockés les appels imbriqués ?",
+        "explanation":  "Dans le Call Stack. Reponse correcte: Dans la pile d\u0027exécution (Call Stack). Ici, la notion \u0027Pile d\u0027appels\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        "Dans la pile d\u0027exécution (Call Stack)",
+                        "Dans le tas (Heap)",
+                        "Sur le disque dur",
+                        "Dans le registre d\u0027état"
+                    ],
+        "answer":  "Dans la pile d\u0027exécution (Call Stack)"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Modularité",
+        "question":  "Avantage des sous-programmes ?",
+        "explanation":  "Réutiliser et structurer. Reponse correcte: Réutilisation de code et clarté. Ici, la notion \u0027Modularité\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        "Réutilisation de code et clarté",
+                        "Plus rapide à exécuter",
+                        "Moins de mémoire utilisée",
+                        "Supprime les bugs automatiquement"
+                    ],
+        "answer":  "Réutilisation de code et clarté"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Signature",
+        "question":  "Qu\u0027est-ce que l\u0027en-tête d\u0027une procédure ?",
+        "explanation":  "Nom et paramètres. Reponse correcte: Son nom et la liste de ses paramètres types. Ici, la notion \u0027Signature\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        "Son nom et la liste de ses paramètres types",
+                        "Son code interne",
+                        "Ses variables locales",
+                        "Son commentaire de fin"
+                    ],
+        "answer":  "Son nom et la liste de ses paramètres types"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Effet de bord",
+        "question":  "C\u0027est quoi un effet de bord ?",
+        "explanation":  "Modification de global depuis une fonction. Reponse correcte: Une fonction qui modifie une variable globale. Ici, la notion \u0027Effet de bord\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        "Une fonction qui modifie une variable globale",
+                        "Une division par zéro",
+                        "Un écran bleu",
+                        "Une boucle infinie"
+                    ],
+        "answer":  "Une fonction qui modifie une variable globale"
+    }
+]

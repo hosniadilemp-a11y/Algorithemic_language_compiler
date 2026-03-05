@@ -39,15 +39,9 @@
             {% endwith %}
 
             <form method="POST" action="{{ url_for('auth.signup') }}">
-                <div style="display: flex; gap: 15px;">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Prénom</label>
-                        <input type="text" name="name" class="form-control" required autofocus>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Nom de famille</label>
-                        <input type="text" name="last_name" class="form-control" required>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">Pseudo</label>
+                    <input type="text" name="name" class="form-control" required autofocus>
                 </div>
 
                 <div style="display: flex; gap: 15px;">
@@ -56,7 +50,7 @@
                         <input type="date" name="date_of_birth" class="form-control" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Première année d'inscription universitaire</label>
+                        <label class="form-label">Année d'étude (Université)</label>
                         <select name="study_year" class="form-control" required style="cursor: pointer;">
                             <option value="" disabled selected>Sélectionnez l'année</option>
                             {% for y in range(2026, 1899, -1) %}
@@ -72,6 +66,17 @@
                 <div class="form-group">
                     <label class="form-label">Mot de passe</label>
                     <input type="password" name="password" class="form-control" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Question de sécurité (pour la réinitialisation du mot de passe)</label>
+                    <input type="text" name="security_question" class="form-control"
+                        placeholder="Ex: Quel est le nom de mon premier animal ?" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Réponse secrète</label>
+                    <input type="text" name="security_answer" class="form-control" required>
                 </div>
                 <div class="form-group"
                     style="background: var(--bg-color); padding: 15px; border-radius: 8px; border: 1px dotted var(--border-color); text-align: center;">

@@ -448,63 +448,212 @@
             background: rgba(38, 166, 154, 0.07);
         }
 
+
         .badge-card.earned[data-shape="ribbon"] {
             border-color: #e53935;
             box-shadow: 0 0 20px rgba(229, 57, 53, 0.25);
             background: rgba(229, 57, 53, 0.07);
         }
+
+        /* ============================================
+           HEATMAP CENTERING + STYLING
+        ============================================ */
+        #heatmap-chart .frappe-chart {
+            margin: 0 auto;
+        }
+
+        #heatmap-chart svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        #heatmap-chart .chart-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Frappe heatmap text color fix for dark mode */
+        #heatmap-chart text {
+            fill: var(--text-secondary, #888) !important;
+        }
+
+        /* ============================================
+           XP CARD + LEVEL BADGE
+        ============================================ */
+        .stat-card.xp-card {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card.xp-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(74, 110, 224, 0.15), rgba(168, 85, 247, 0.15));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card.xp-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card.xp-card .stat-value {
+            color: #7c3aed;
+        }
+
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 6px;
+            border: 1.5px solid currentColor;
+            animation: level-glow 2.5s ease-in-out infinite;
+        }
+
+        @keyframes level-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px 2px var(--level-glow, #7c3aed55);
+            }
+
+            50% {
+                box-shadow: 0 0 20px 6px var(--level-glow, #7c3aed99);
+            }
+        }
+
+        .xp-bar-wrap {
+            margin-top: 8px;
+            background: var(--border-color, rgba(128, 128, 128, 0.3));
+            border-radius: 8px;
+            height: 8px;
+            width: 200px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 1s ease;
+        }
+
+        /* XP Breakdown Modal */
+        #xp-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #xp-modal-overlay.active {
+            display: flex;
+        }
+
+        #xp-modal {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 520px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #xp-modal h3 {
+            margin: 0 0 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .xp-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+
+        .xp-row .xp-pill {
+            background: rgba(74, 110, 224, 0.2);
+            color: #7c8ef0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.82rem;
+        }
+
+        .level-ladder {
+            margin-bottom: 20px;
+        }
+
+        .level-ladder-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            border: 1px solid transparent;
+        }
+
+        .level-ladder-item.current {
+            border-color: var(--accent);
+            background: rgba(74, 110, 224, 0.1);
+            font-weight: 700;
+        }
+
+        .level-ladder-item .lvl-xp {
+            margin-left: auto;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 
 <body class="course-standalone-body">
-    <header>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <a href="/" class="logo" style="text-decoration: none;">
-                <i class="fas fa-terminal"></i> AlgoCompiler
-            </a>
-
-            <nav class="nav-main">
-                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
-                    <i class="fas fa-code"></i> <span>Éditeur</span>
-                </a>
-                <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
-                    <i class="fas fa-graduation-cap"></i> <span>Cours</span>
-                </a>
-                <a href="/problems" class="btn secondary highlight" title="Défis de codage">
-                    <i class="fas fa-laptop-code"></i> <span>Défis</span>
-                </a>
-                <a href="/leaderboard" class="btn secondary highlight" title="Classement">
-                    <i class="fas fa-trophy"></i> <span>Classement</span>
-                </a>
-            </nav>
-        </div>
-
-        <div class="controls">
-            <button class="btn secondary" data-theme-toggle title="Basculer le thème">
-                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
-            </button>
-            <div class="separator"></div>
-            {% if current_user.is_authenticated %}
-            <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
-                <span>{{ current_user.name }}</span></a>
-            <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
-                style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
-                    class="fas fa-sign-out-alt"></i></a>
-            {% else %}
-            <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
-                Connexion</a>
-            {% endif %}
-        </div>
-    </header>
+    {% set header_custom_controls = "" %}
+    {% include 'partials/navbar.html' %}
 
     <div style="flex: 1; overflow-y: auto; padding-bottom: 40px;">
         <div class="progress-container">
             <div class="profile-header">
                 <div class="avatar">{{ current_user.name[0]|upper }}</div>
                 <div class="profile-info">
-                    <h1><span id="display-name">{{ current_user.name }}</span> <span id="display-lastname">{{
-                            current_user.last_name or '' }}</span></h1>
+                    <h1><span id="display-name">{{ current_user.name }}</span></h1>
                     <p class="email">{{ current_user.email }}</p>
+                    <div id="level-badge-wrap" style="margin: 4px 0;">
+                        <span id="level-badge" class="level-badge"
+                            style="color:#6c757d; --level-glow: rgba(108,117,125,0.4);">🌱 Novice</span>
+                        <div style="display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap;">
+                            <div class="xp-bar-wrap">
+                                <div id="xp-bar-fill" class="xp-bar-fill" style="width:0%; background:#6c757d;"></div>
+                            </div>
+                            <span id="xp-bar-label"
+                                style="font-size:0.78rem; color:var(--text-color); opacity:0.75; font-weight:600; white-space:nowrap;">0
+                                XP</span>
+                        </div>
+                    </div>
                     <div class="profile-meta">
                         <div class="meta-item">
                             <i class="fas fa-graduation-cap"></i> Inscription: <span id="display-study">{{
@@ -535,6 +684,12 @@
                     <div class="stat-value" id="stat-score">0%</div>
                     <div class="stat-label">Score Moyen aux Quiz</div>
                 </div>
+                <div class="stat-card xp-card" id="xp-stat-card" title="Cliquer pour voir le détail des points"
+                    onclick="document.getElementById('xp-modal-overlay').classList.add('active')">
+                    <div class="stat-value" id="stat-xp" style="color:#7c3aed;">0 XP</div>
+                    <div class="stat-label">⚡ Total XP <i class="fas fa-info-circle"
+                            style="font-size:0.75rem; opacity:0.6;"></i></div>
+                </div>
             </div>
 
             <!-- Activity Heatmap (Phase 7) -->
@@ -542,7 +697,9 @@
                 style="padding: 30px; border-radius: 12px; background: var(--panel-bg); border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
                 <h2 style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-calendar-alt"
                         style="color: var(--accent);"></i> Activité sur l'année</h2>
-                <div id="heatmap-chart" style="margin: 20px 0; min-height: 120px;"></div>
+                <div id="heatmap-chart"
+                    style="margin: 20px auto; overflow-x: auto; display: flex; justify-content: center; min-height: 120px;">
+                </div>
                 <p
                     style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-top: 15px; line-height: 1.5;">
                     <i class="fas fa-info-circle" style="color: #4a6ee0;"></i>
@@ -612,25 +769,73 @@
         </div>
     </div>
 
+    <!-- XP Breakdown Modal -->
+    <div id="xp-modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+        <div id="xp-modal">
+            <h3>⚡ Mes Points XP</h3>
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding:14px 16px; background:linear-gradient(135deg,rgba(74,110,224,0.15),rgba(168,85,247,0.15)); border-radius:12px; border:1px solid rgba(124,58,237,0.3);">
+                <span style="font-size:1.8rem; font-weight:900;" id="xp-modal-total">0 XP</span>
+                <span id="xp-modal-level-badge" class="level-badge"
+                    style="color:#6c757d; --level-glow:rgba(108,117,125,0.4)">🌱 Novice</span>
+            </div>
+            <!-- Level Ladder -->
+            <h4
+                style="margin:0 0 10px; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+                Niveaux</h4>
+            <div class="level-ladder" id="xp-level-ladder">
+                <div class="level-ladder-item"><span>🌱</span><span>Novice</span><span class="lvl-xp">0 XP</span></div>
+                <div class="level-ladder-item"><span>⚡</span><span>Initié</span><span class="lvl-xp">50 XP</span></div>
+                <div class="level-ladder-item"><span>🔥</span><span>Apprenti</span><span class="lvl-xp">200 XP</span>
+                </div>
+                <div class="level-ladder-item"><span>💎</span><span>Confirmé</span><span class="lvl-xp">500 XP</span>
+                </div>
+                <div class="level-ladder-item"><span>🏆</span><span>Expert</span><span class="lvl-xp">1 200 XP</span>
+                </div>
+                <div class="level-ladder-item"><span>👑</span><span>Maître Algo</span><span class="lvl-xp">3 000 XP +
+                        score moy ≥ 95% + 50 défis</span></div>
+            </div>
+            <!-- Comment les points sont comptés -->
+            <h4
+                style="margin:0 0 10px; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+                Comment sont comptés vos points ?</h4>
+            <div
+                style="margin-bottom:16px; font-size:0.84rem; color:var(--text-secondary); background:rgba(0,0,0,0.1); padding:12px; border-radius:8px; border:1px solid var(--border-color); line-height:1.8;">
+                📚 <strong>+10 XP</strong> par chapitre de quiz réussi (score ≥ 80%)<br>
+                ⚔️ <strong>Défis de code :</strong> 🌱 Facile: +10 | ⚡ Moyen: +20 | 🔥 Difficile: +50 XP<br>
+                🏅 <strong>+50 XP</strong> par badge obtenu
+            </div>
+            <!-- Contribution List -->
+            <h4
+                style="margin:0 0 10px; font-size:0.9rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+                Détail de vos contributions</h4>
+            <div id="xp-breakdown-list">
+                <div style="text-align:center; color:var(--text-secondary); padding:20px;">
+                    <i class="fas fa-spinner fa-spin"></i> Chargement...
+                </div>
+            </div>
+            <div style="text-align:right; margin-top:20px;">
+                <button onclick="document.getElementById('xp-modal-overlay').classList.remove('active')"
+                    class="btn secondary" style="padding:8px 20px;">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Edit Profile Modal -->
     <div class="modal-overlay" id="edit-modal">
         <div class="modal-content">
             <h3>Modifier mes informations</h3>
             <form id="edit-profile-form">
                 <div class="form-group">
-                    <label>Prénom</label>
+                    <label>Pseudo</label>
                     <input type="text" id="edit-name" value="{{ current_user.name }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Nom</label>
-                    <input type="text" id="edit-lastname" value="{{ current_user.last_name or '' }}">
                 </div>
                 <div class="form-group">
                     <label>Date de Naissance</label>
                     <input type="date" id="edit-dob" value="{{ current_user.date_of_birth or '' }}">
                 </div>
                 <div class="form-group">
-                    <label>Année de première inscription à l'université</label>
+                    <label>Année d'étude (Université)</label>
                     <select id="edit-study">
                         <option value="">Sélectionner une année</option>
                         {% set current_year = now().year if now else 2024 %}
@@ -674,6 +879,62 @@
                     const avg = count > 0 ? Math.round(totalScore / count) : 0;
                     document.getElementById('stat-score').textContent = avg + '%';
 
+                    // ── XP & Level rendering ──────────────────────────────
+                    const xpTotal = stats.xp_total || 0;
+                    const level = stats.level || { num: 1, name: 'Novice', color: '#6c757d', glow: 'rgba(108,117,125,0.5)', icon: '🌱', min_xp: 0, next_xp: 50 };
+                    const xpToNext = stats.xp_to_next || 0;
+                    const breakdown = stats.xp_breakdown || [];
+
+                    // XP stat card
+                    document.getElementById('stat-xp').textContent = xpTotal + ' XP';
+
+                    // Level badge in profile header
+                    const badgeEl = document.getElementById('level-badge');
+                    badgeEl.textContent = `${level.icon} ${level.name}`;
+                    badgeEl.style.color = level.color;
+                    badgeEl.style.setProperty('--level-glow', level.glow);
+
+                    // XP Progress bar
+                    const fillEl = document.getElementById('xp-bar-fill');
+                    const barLabel = document.getElementById('xp-bar-label');
+                    fillEl.style.background = level.color;
+                    if (level.next_xp) {
+                        const pct = Math.min(100, Math.round(((xpTotal - level.min_xp) / (level.next_xp - level.min_xp)) * 100));
+                        fillEl.style.width = pct + '%';
+                        barLabel.textContent = `${xpTotal} / ${level.next_xp} XP → ${level.next_level_name}`;
+                    } else {
+                        fillEl.style.width = '100%';
+                        barLabel.textContent = `${xpTotal} XP — Niveau Max 👑`;
+                    }
+
+                    // XP Modal
+                    document.getElementById('xp-modal-total').textContent = xpTotal + ' XP';
+                    const modalBadge = document.getElementById('xp-modal-level-badge');
+                    modalBadge.textContent = `${level.icon} ${level.name}`;
+                    modalBadge.style.color = level.color;
+                    modalBadge.style.setProperty('--level-glow', level.glow);
+
+                    // Highlight current level in ladder
+                    const ladderItems = document.querySelectorAll('#xp-level-ladder .level-ladder-item');
+                    ladderItems.forEach(item => item.classList.remove('current'));
+                    if (ladderItems[level.num - 1]) {
+                        ladderItems[level.num - 1].classList.add('current');
+                        ladderItems[level.num - 1].style.borderColor = level.color;
+                        ladderItems[level.num - 1].style.background = level.glow.replace('0.5', '0.1');
+                    }
+
+                    // Breakdown list
+                    const bList = document.getElementById('xp-breakdown-list');
+                    if (breakdown.length === 0) {
+                        bList.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:20px;">Aucune contribution pour l'instant. Complétez des quiz et des défis !</div>`;
+                    } else {
+                        bList.innerHTML = breakdown.map(item =>
+                            `<div class="xp-row"><span>${item.icon} ${item.label}</span><span class="xp-pill">+${item.xp} XP</span></div>`
+                        ).join('');
+                    }
+                    // ── end XP & Level ────────────────────────────────────
+
+
                     const chapterList = document.getElementById('chapter-list');
                     chapterList.innerHTML = '';
 
@@ -715,179 +976,183 @@
                         }
                     }
 
-                    // Render Charts using Chart.js
-                    // Advanced Stats Initialization (Phase 6)
-                    const adv = data.progress.advanced_stats || {
-                        challenge_topic_dist: {},
-                        challenge_diff_dist: { 'Easy': 0, 'Medium': 0, 'Hard': 0 },
-                        daily_avg_quiz_score: [],
-                        quiz_evolution_per_chapter: {}
-                    };
-
-                    // Set global Chart.js defaults for a polished look
-                    Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#888';
-                    Chart.defaults.font.family = "'Segoe UI', 'Inter', sans-serif";
-                    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(22,27,34,0.95)';
-                    Chart.defaults.plugins.tooltip.cornerRadius = 8;
-                    Chart.defaults.plugins.tooltip.padding = 10;
-
-                    // 1. Topic Distribution Chart (Doughnut)
-                    const topicLabels = Object.keys(adv.challenge_topic_dist || {});
-                    const topicValues = Object.values(adv.challenge_topic_dist || {});
-                    const topicColors = ['#4a6ee0', '#2ecc71', '#f39c12', '#e74c3c', '#1abc9c', '#9b59b6', '#3498db', '#e67e22'];
-                    new Chart(document.getElementById('topicChart'), {
-                        type: 'doughnut',
-                        data: {
-                            labels: topicLabels.length > 0 ? topicLabels : ['Aucun'],
-                            datasets: [{
-                                data: topicValues.length > 0 ? topicValues : [1],
-                                backgroundColor: topicColors,
-                                borderWidth: 2,
-                                borderColor: 'transparent',
-                                hoverOffset: 8
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            cutout: '65%',
-                            plugins: {
-                                legend: { position: 'right', labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' } },
-                                tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} résolu(s)` } }
-                            }
-                        }
-                    });
-
-                    // 2. Difficulty Distribution Chart (Bar)
-                    const diffLabels = ['Facile', 'Moyen', 'Difficile'];
-                    const diffValues = [adv.challenge_diff_dist.Easy, adv.challenge_diff_dist.Medium, adv.challenge_diff_dist.Hard];
-                    const diffColors = ['rgba(46,204,113,0.85)', 'rgba(241,196,15,0.85)', 'rgba(231,76,60,0.85)'];
-                    const diffBorders = ['#2ecc71', '#f1c40f', '#e74c3c'];
-                    new Chart(document.getElementById('difficultyChart'), {
-                        type: 'bar',
-                        data: {
-                            labels: diffLabels,
-                            datasets: [{
-                                label: 'Défis Réussis',
-                                data: diffValues,
-                                backgroundColor: diffColors,
-                                borderColor: diffBorders,
-                                borderWidth: 2,
-                                borderRadius: 8,
-                                borderSkipped: false
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                                x: { grid: { display: false } }
-                            },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-
-                    // 3. Daily Average Score Chart (Line with gradient fill)
-                    const dailyLabels = adv.daily_avg_quiz_score.map(d => d.day);
-                    const dailyValues = adv.daily_avg_quiz_score.map(d => d.avg);
-                    const dailyCtx = document.getElementById('dailyScoreChart').getContext('2d');
-                    const dailyGrad = dailyCtx.createLinearGradient(0, 0, 0, 300);
-                    dailyGrad.addColorStop(0, 'rgba(74, 110, 224, 0.35)');
-                    dailyGrad.addColorStop(1, 'rgba(74, 110, 224, 0.0)');
-                    new Chart(dailyCtx, {
-                        type: 'line',
-                        data: {
-                            labels: dailyLabels,
-                            datasets: [{
-                                label: 'Moyenne Journalière (%)',
-                                data: dailyValues,
-                                borderColor: '#4a6ee0',
-                                backgroundColor: dailyGrad,
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 5,
-                                pointBackgroundColor: '#4a6ee0',
-                                pointBorderColor: '#fff',
-                                pointBorderWidth: 2,
-                                pointHoverRadius: 8
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            scales: {
-                                y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' } },
-                                x: { grid: { display: false } }
-                            },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-
-                    // 4. Per-Chapter Evolution Chart
-                    const chapterEvolutionCtx = document.getElementById('chapterEvolutionChart').getContext('2d');
-                    let evolutionChart;
-                    const chapterSelect = document.getElementById('chapterSelect');
-
-                    // Populate select
-                    Object.keys(adv.quiz_evolution_per_chapter).forEach(chap => {
-                        const opt = document.createElement('option');
-                        opt.value = chap;
-                        opt.textContent = chap.toUpperCase();
-                        chapterSelect.appendChild(opt);
-                    });
-
-                    const renderEvolution = (filter) => {
-                        if (evolutionChart) evolutionChart.destroy();
-
-                        const datasets = [];
-                        const allTimestamps = new Set();
-
-                        const getStableColor = (str) => {
-                            let hash = 0;
-                            for (let i = 0; i < str.length; i++) {
-                                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                            }
-                            return `hsl(${Math.abs(hash) % 360}, 70%, 50%)`;
+                    if (typeof Chart !== 'undefined' && typeof frappe !== 'undefined') {
+                        // Render Charts using Chart.js
+                        // Advanced Stats Initialization (Phase 6)
+                        const adv = data.progress.advanced_stats || {
+                            challenge_topic_dist: {},
+                            challenge_diff_dist: { 'Easy': 0, 'Medium': 0, 'Hard': 0 },
+                            daily_avg_quiz_score: [],
+                            quiz_evolution_per_chapter: {}
                         };
 
-                        Object.entries(adv.quiz_evolution_per_chapter).forEach(([chap, entries]) => {
-                            if (filter !== 'all' && filter !== chap) return;
+                        // Set global Chart.js defaults for a polished look
+                        Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#888';
+                        Chart.defaults.font.family = "'Segoe UI', 'Inter', sans-serif";
+                        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(22,27,34,0.95)';
+                        Chart.defaults.plugins.tooltip.cornerRadius = 8;
+                        Chart.defaults.plugins.tooltip.padding = 10;
 
-                            datasets.push({
-                                label: chap.toUpperCase(),
-                                data: entries.map(e => ({ x: new Date(e.ts), y: e.score })),
-                                borderColor: getStableColor(chap),
-                                tension: 0.2,
-                                fill: false
-                            });
-                        });
-
-                        evolutionChart = new Chart(chapterEvolutionCtx, {
-                            type: 'line',
-                            data: { datasets: datasets },
+                        // 1. Topic Distribution Chart (Doughnut)
+                        const topicLabels = Object.keys(adv.challenge_topic_dist || {});
+                        const topicValues = Object.values(adv.challenge_topic_dist || {});
+                        const topicColors = ['#4a6ee0', '#2ecc71', '#f39c12', '#e74c3c', '#1abc9c', '#9b59b6', '#3498db', '#e67e22'];
+                        new Chart(document.getElementById('topicChart'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: topicLabels.length > 0 ? topicLabels : ['Aucun'],
+                                datasets: [{
+                                    data: topicValues.length > 0 ? topicValues : [1],
+                                    backgroundColor: topicColors,
+                                    borderWidth: 2,
+                                    borderColor: 'transparent',
+                                    hoverOffset: 8
+                                }]
+                            },
                             options: {
                                 responsive: true,
-                                scales: {
-                                    x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
-                                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (%)' } }
+                                cutout: '65%',
+                                plugins: {
+                                    legend: { position: 'right', labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' } },
+                                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} résolu(s)` } }
                                 }
                             }
                         });
-                    };
 
-                    chapterSelect.addEventListener('change', (e) => renderEvolution(e.target.value));
-                    renderEvolution('all');
-
-                    // 5. Activity Heatmap (Phase 7)
-                    if (data.progress.activity_map) {
-                        new frappe.Chart("#heatmap-chart", {
-                            type: 'heatmap',
+                        // 2. Difficulty Distribution Chart (Bar)
+                        const diffLabels = ['Facile', 'Moyen', 'Difficile'];
+                        const diffValues = [adv.challenge_diff_dist.Easy, adv.challenge_diff_dist.Medium, adv.challenge_diff_dist.Hard];
+                        const diffColors = ['rgba(46,204,113,0.85)', 'rgba(241,196,15,0.85)', 'rgba(231,76,60,0.85)'];
+                        const diffBorders = ['#2ecc71', '#f1c40f', '#e74c3c'];
+                        new Chart(document.getElementById('difficultyChart'), {
+                            type: 'bar',
                             data: {
-                                dataPoints: data.progress.activity_map,
-                                start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
-                                end: new Date()
+                                labels: diffLabels,
+                                datasets: [{
+                                    label: 'Défis Réussis',
+                                    data: diffValues,
+                                    backgroundColor: diffColors,
+                                    borderColor: diffBorders,
+                                    borderWidth: 2,
+                                    borderRadius: 8,
+                                    borderSkipped: false
+                                }]
                             },
-                            countLabel: 'Activités',
-                            colors: ['#ebedf0', '#d6e4ff', '#84aaff', '#3366ff', '#1a3380']
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                                    x: { grid: { display: false } }
+                                },
+                                plugins: { legend: { display: false } }
+                            }
                         });
+
+                        // 3. Daily Average Score Chart (Line with gradient fill)
+                        const dailyLabels = adv.daily_avg_quiz_score.map(d => d.day);
+                        const dailyValues = adv.daily_avg_quiz_score.map(d => d.avg);
+                        const dailyCtx = document.getElementById('dailyScoreChart').getContext('2d');
+                        const dailyGrad = dailyCtx.createLinearGradient(0, 0, 0, 300);
+                        dailyGrad.addColorStop(0, 'rgba(74, 110, 224, 0.35)');
+                        dailyGrad.addColorStop(1, 'rgba(74, 110, 224, 0.0)');
+                        new Chart(dailyCtx, {
+                            type: 'line',
+                            data: {
+                                labels: dailyLabels,
+                                datasets: [{
+                                    label: 'Moyenne Journalière (%)',
+                                    data: dailyValues,
+                                    borderColor: '#4a6ee0',
+                                    backgroundColor: dailyGrad,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 5,
+                                    pointBackgroundColor: '#4a6ee0',
+                                    pointBorderColor: '#fff',
+                                    pointBorderWidth: 2,
+                                    pointHoverRadius: 8
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' } },
+                                    x: { grid: { display: false } }
+                                },
+                                plugins: { legend: { display: false } }
+                            }
+                        });
+
+                        // 4. Per-Chapter Evolution Chart
+                        const chapterEvolutionCtx = document.getElementById('chapterEvolutionChart').getContext('2d');
+                        let evolutionChart;
+                        const chapterSelect = document.getElementById('chapterSelect');
+
+                        // Populate select
+                        Object.keys(adv.quiz_evolution_per_chapter).forEach(chap => {
+                            const opt = document.createElement('option');
+                            opt.value = chap;
+                            opt.textContent = chap.toUpperCase();
+                            chapterSelect.appendChild(opt);
+                        });
+
+                        const renderEvolution = (filter) => {
+                            if (evolutionChart) evolutionChart.destroy();
+
+                            const datasets = [];
+                            const allTimestamps = new Set();
+
+                            const getStableColor = (str) => {
+                                let hash = 0;
+                                for (let i = 0; i < str.length; i++) {
+                                    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                                }
+                                return `hsl(${Math.abs(hash) % 360}, 70%, 50%)`;
+                            };
+
+                            Object.entries(adv.quiz_evolution_per_chapter).forEach(([chap, entries]) => {
+                                if (filter !== 'all' && filter !== chap) return;
+
+                                datasets.push({
+                                    label: chap.toUpperCase(),
+                                    data: entries.map(e => ({ x: new Date(e.ts), y: e.score })),
+                                    borderColor: getStableColor(chap),
+                                    tension: 0.2,
+                                    fill: false
+                                });
+                            });
+
+                            evolutionChart = new Chart(chapterEvolutionCtx, {
+                                type: 'line',
+                                data: { datasets: datasets },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Score (%)' } }
+                                    }
+                                }
+                            });
+                        };
+
+                        chapterSelect.addEventListener('change', (e) => renderEvolution(e.target.value));
+                        renderEvolution('all');
+
+                        // 5. Activity Heatmap (Phase 7)
+                        if (data.progress.activity_map) {
+                            new frappe.Chart("#heatmap-chart", {
+                                type: 'heatmap',
+                                data: {
+                                    dataPoints: data.progress.activity_map,
+                                    start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+                                    end: new Date()
+                                },
+                                countLabel: 'Activités',
+                                colors: ['#ebedf0', '#d6e4ff', '#84aaff', '#3366ff', '#1a3380']
+                            });
+                        }
+                    } else {
+                        console.warn("Chart.js ou frappe-charts n'est pas disponible, les graphiques ne seront pas affichés.");
                     }
 
                     // Render Badges with premium shape system
@@ -947,7 +1212,6 @@
                             showBadgeNotifications(unreadBadges);
                         }
                     }
-
                 }
             } catch (err) {
                 console.error("Failed to load progress", err);
@@ -1006,7 +1270,6 @@
             btn.disabled = true;
 
             const name = document.getElementById('edit-name').value;
-            const lastName = document.getElementById('edit-lastname').value;
             const dob = document.getElementById('edit-dob').value;
             const study = document.getElementById('edit-study').value;
 
@@ -1016,7 +1279,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         name: name,
-                        last_name: lastName,
                         date_of_birth: dob,
                         study_year: study
                     })
@@ -1025,7 +1287,6 @@
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('display-name').textContent = name;
-                    document.getElementById('display-lastname').textContent = lastName;
                     document.getElementById('display-dob').textContent = dob || 'Non spécifiée';
                     document.getElementById('display-study').textContent = study || 'Non spécifiée';
                     modal.classList.remove('active');

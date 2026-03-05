@@ -1,0 +1,49 @@
+{
+  "title": "Tour Circulaire des Stations d'Essence",
+  "topic": "Queues",
+  "difficulty": "Hard",
+  "description": "### Tour circulaire des stations d'essence\n\nVous avez `N` stations en cercle.\n\nPour chaque station `i`:\n- `petrol[i]`: carburant disponible\n- `distance[i]`: carburant nécessaire pour aller à la station suivante\n\nTrouvez l'indice de départ (0-based) permettant de compléter un tour entier.\n\nSinon, affichez `-1`.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Puis `N` lignes: `petrol distance`\n\n#### Format de sortie\n- Un entier\n\n#### Exemple\n**Entrée**\n```\n4\n4 6\n6 5\n7 3\n4 5\n```\n**Sortie**\n```\n1\n```",
+  "template_code": "Algorithme TourCirculaire;\nVar\n    N, i : Entier;\n    P[100000], D[100000] : Entier;\n    total, tank, start : Entier;\nDebut\n    Lire(N);\n    Pour i := 0 a N - 1 Faire\n        Lire(P[i], D[i]);\n    FinPour\n\n    total := 0;\n    tank := 0;\n    start := 0;\n\n    Pour i := 0 a N - 1 Faire\n        total := total + (P[i] - D[i]);\n        tank := tank + (P[i] - D[i]);\n\n        Si tank < 0 Alors\n            start := i + 1;\n            tank := 0;\n        FinSi\n    FinPour\n\n    Si total >= 0 Alors Ecrire(start); Sinon Ecrire(-1); FinSi\nFin.",
+  "test_cases": [
+    {
+      "input": "4\n4 6\n6 5\n7 3\n4 5\n",
+      "expected_output": "1\n",
+      "is_public": true
+    },
+    {
+      "input": "3\n1 5\n10 3\n3 4\n",
+      "expected_output": "1\n",
+      "is_public": true
+    },
+    {
+      "input": "3\n2 3\n3 4\n4 3\n",
+      "expected_output": "2\n",
+      "is_public": false
+    },
+    {
+      "input": "2\n1 2\n2 3\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n6 4\n3 6\n7 3\n4 5\n5 2\n",
+      "expected_output": "2\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n5 5\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n3 4\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "4\n8 4\n1 4\n2 3\n4 4\n",
+      "expected_output": "0\n",
+      "is_public": false
+    }
+  ]
+}

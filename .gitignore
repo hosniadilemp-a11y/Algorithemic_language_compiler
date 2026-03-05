@@ -3,8 +3,8 @@
 # ============================================================
 docs/CoursAlgo
 examples/Tests
-src/web/data
 tests/*.py
+
 # --- Python cache ---
 __pycache__/
 *.py[cod]
@@ -17,7 +17,7 @@ env/
 .venv/
 .env/
 
-# --- PLY parser cache (auto-generated, causes conflicts) ---
+# --- PLY parser cache ---
 src/compiler/parser.out
 src/compiler/parsetab.py
 
@@ -34,65 +34,60 @@ build/
 *.swo
 *.sublime-project
 *.sublime-workspace
-*.DS_Store     # macOS
-Thumbs.db      # Windows
+*.DS_Store
+Thumbs.db
 
 # --- Logs & temporary files ---
 *.log
 *.tmp
 nul
-examples/Tests/
-generated_lire.py
-output.py
-debug_output.py
-test_addr.py
-test_alloc.py
-test_local.py
-test_nil_output.py
-test_poly.py
-test_poly_local.algo
-test_r_addr.algo
-test_sc_output.py
-test_user.py
-test_user2.py
-test_user3.py
-test_user_code.algo
-test_user_code.py
-test_user_poly2.algo
-test_alloc_loop.algo
-run_test.py
-appsvision.txt
-review.txt
-promets.txt
 
-# --- Maintenance & Cleanup ---
-check_db.py
-check_exercises.py
-check_results.txt
-patch_app.py
-patch_buttons.py
-run_examples.py
-test_results.txt
-traceback_debug.txt
-src/web/repair_json_content.py
-src/web/seed_additional_quizzes.py
-src/web/seed_from_json.py
-src/web/verify_db.py
-tests/test_multi_eval_fix.py
-tests/verify_sizes.py
-fix_chapters.py
+# --- SCRATCH FILES (Generated during development) ---
+check_braces*.py
+check.js
+test.js
+test_script.js
+script_*.js
+*.txt
+!README.md
+!requirements.txt
+!Badges.txt
+!OAUTH_SETUP_INSTRUCTIONS.md
+!README_DEPLOY.md
 
-# --- Quizzes & Database ---
-src/web/data/quizzes/*
-!src/web/data/quizzes/.gitkeep
-!src/web/algocompiler.db
+# --- DATABASE & USER DATA (DO NOT COMMIT) ---
+# # Ignore all SQLite databases to protect user privacy
+# src/web/*.db
+# src/web/*.db-journal
+# src/web/*.db-shm
+# src/web/*.db-wal
+# algocompiler.db
+# *.db
+
+# # --- SOURCE DATASET (DO COMMIT) ---
+# # These are the original JSONs for quizzes/problems
+# !src/web/data/
+# !src/web/data/quizzes/
+# !src/web/data/quizzes/*.json
+# !src/web/data/quizzes/.gitkeep
 
 # --- Archive / draft files ---
 archive/
 ppts/
 
-# --- Local problem solution notes (do not commit) ---
-src/web/data/problem_solutions_txt/
+# # --- Local problem solution notes ---
+# src/web/data/problem_solutions_txt/
 
-# Local-only admin app
+# Local-only tools
 local_admin/
+update_users_db.py
+fix_chapters.py
+patch_*.py
+run_examples.py
+check_*.py
+verify_*.py
+seed_additional_quizzes.py
+repair_json_content.py
+traceback_debug.txt
+check_results.txt
+test_results.txt

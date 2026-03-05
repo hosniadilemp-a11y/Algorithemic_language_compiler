@@ -109,7 +109,8 @@ def signup():
     if request.method == 'POST':
         email = request.form.get('email')
         name = request.form.get('name')
-        last_name = request.form.get('last_name')
+        security_question = request.form.get('security_question')
+        security_answer = request.form.get('security_answer')
         date_of_birth_str = request.form.get('date_of_birth')
         study_year = request.form.get('study_year')
         password = request.form.get('password')
@@ -147,8 +148,9 @@ def signup():
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(
             email=email, 
-            name=name, 
-            last_name=last_name, 
+            name=name,
+            security_question=security_question,
+            security_answer=security_answer,
             date_of_birth=date_of_birth, 
             study_year=study_year, 
             password_hash=hashed_password
@@ -252,16 +254,34 @@ def forgot_password():
         user = User.query.filter_by(email=email).first()
         
         if user and user.password_hash:
-            # EMAIL VERIFICATION FROZEN: skip sending reset code email
-            # set reset session directly and jump to new_password page
             session['reset_email'] = user.email
-            session['reset_verified'] = True
-            flash('Saisissez votre nouveau mot de passe.', 'info')
-            return redirect(url_for('auth.new_password'))
+            session['reset_verified'] = False
+            return redirect(url_for('auth.security_check'))
         else:
             flash('Aucun compte (avec mot de passe) n\'est associé à cet e-mail.', 'danger')
             
     return render_template('auth/forgot_password.html')
+
+@auth_bp.route('/security_check', methods=['GET', 'POST'])
+def security_check():
+    email = session.get('reset_email')
+    if not email:
+        return redirect(url_for('auth.forgot_password'))
+        
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return redirect(url_for('auth.forgot_password'))
+        
+    if request.method == 'POST':
+        answer = request.form.get('security_answer')
+        if answer and answer.strip().lower() == user.security_answer.strip().lower():
+            session['reset_verified'] = True
+            flash('Parfait ! Saisissez votre nouveau mot de passe.', 'info')
+            return redirect(url_for('auth.new_password'))
+        else:
+            flash('Réponse incorrecte.', 'danger')
+            
+    return render_template('auth/security_check.html', question=user.security_question)
 
 @auth_bp.route('/verify_reset', methods=['GET', 'POST'])
 def verify_reset():

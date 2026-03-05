@@ -1,0 +1,69 @@
+{
+  "title": "Palindrome",
+  "topic": "Strings",
+  "difficulty": "Medium",
+  "description": "### Vérification de palindrome\n\nOn vous donne une chaîne.\n\nDéterminez si elle se lit de la même façon de gauche à droite et de droite à gauche.\n\n#### Format d'entrée\n- Une ligne: la chaîne\n\n#### Format de sortie\n- `Yes` si palindrome\n- `No` sinon\n\n#### Exemple\n**Entrée**\n```\nradar\n```\n**Sortie**\n```\nYes\n```",
+  "template_code": "Algorithme EstPalindrome;\nVar\n    s[200] : Chaine;\n    i, n : Entier;\n    ok : Booleen;\nDebut\n    // Lecture deja predefinie\n    Lire(s);\n\n    // TODO: ecrire votre idee ici\n    // ok <- Vrai si palindrome sinon Faux\n\n    // Affichage deja predefini\n    Si ok Alors\n        Ecrire('Vrai');\n    Sinon\n        Ecrire('Faux');\n    FinSi;\nFin.",
+  "test_cases": [
+    {
+      "input": "kayak\n",
+      "expected_output": "Vrai\n",
+      "is_public": true
+    },
+    {
+      "input": "algo\n",
+      "expected_output": "Faux\n",
+      "is_public": true
+    },
+    {
+      "input": "radar\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "bonjour\n",
+      "expected_output": "Faux\n",
+      "is_public": false
+    },
+    {
+      "input": "abba\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "abcba\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "abca\n",
+      "expected_output": "Faux\n",
+      "is_public": false
+    },
+    {
+      "input": "a\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "aa\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "ab\n",
+      "expected_output": "Faux\n",
+      "is_public": false
+    },
+    {
+      "input": "level\n",
+      "expected_output": "Vrai\n",
+      "is_public": false
+    },
+    {
+      "input": "levels\n",
+      "expected_output": "Faux\n",
+      "is_public": false
+    }
+  ]
+}

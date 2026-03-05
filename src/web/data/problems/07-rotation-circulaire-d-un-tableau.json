@@ -1,0 +1,69 @@
+{
+  "title": "Rotation Circulaire d'un Tableau",
+  "topic": "Arrays",
+  "difficulty": "Hard",
+  "description": "### Rotation circulaire d'un tableau\n\nOn vous donne un tableau de taille `N` et un entier `K`.\n\nEffectuez une rotation circulaire à droite de `K` positions.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Ligne 2: `K`\n- Ligne 3: `N` entiers\n\n#### Format de sortie\n- Le tableau après rotation, séparé par des espaces\n\n#### Exemple\n**Entrée**\n```\n5\n2\n1 2 3 4 5\n```\n**Sortie**\n```\n4 5 1 2 3\n```",
+  "template_code": "Algorithme RotationDroite;\nVar\n    N, K, i, pos : Entier;\n    T[1000], R[1000] : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(N);\n    Pour i <- 0 a N - 1 Faire\n        Lire(T[i]);\n    FinPour;\n    Lire(K);\n\n    // TODO: ecrire votre idee ici\n    // Remplir R[0..N-1] avec la rotation\n\n    // Affichage deja predefini\n    Pour i <- 0 a N - 1 Faire\n        Ecrire(R[i], ' ');\n    FinPour;\nFin.",
+  "test_cases": [
+    {
+      "input": "5\n1 2 3 4 5\n2\n",
+      "expected_output": "4 5 1 2 3\n",
+      "is_public": true
+    },
+    {
+      "input": "4\n10 20 30 40\n1\n",
+      "expected_output": "40 10 20 30\n",
+      "is_public": true
+    },
+    {
+      "input": "3\n1 2 3\n0\n",
+      "expected_output": "1 2 3\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n1 2 3\n3\n",
+      "expected_output": "1 2 3\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n1 2 3\n4\n",
+      "expected_output": "3 1 2\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n0 1 2 3 4 5\n2\n",
+      "expected_output": "4 5 0 1 2 3\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n99\n10\n",
+      "expected_output": "99\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n-1 -2 -3 -4 -5\n2\n",
+      "expected_output": "-4 -5 -1 -2 -3\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n7 6 5 4 3 2 1\n5\n",
+      "expected_output": "5 4 3 2 1 7 6\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n1 1 1 2 2 2 3 3\n3\n",
+      "expected_output": "2 3 3 1 1 1 2 2\n",
+      "is_public": false
+    },
+    {
+      "input": "4\n100 200 300 400\n8\n",
+      "expected_output": "100 200 300 400\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n9 0 8 0 7\n6\n",
+      "expected_output": "7 9 0 8 0\n",
+      "is_public": false
+    }
+  ]
+}

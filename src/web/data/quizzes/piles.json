@@ -1,0 +1,827 @@
+[
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Principe",
+        "text":  "Principe de fonctionnement de la Pile (Stack) ?",
+        "explanation":  "Dernier arrivé, premier sorti. Reponse correcte: LIFO (Last In, First Out). Ici, la notion \u0027Principe\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "FIFO (First In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler retire l\u0027element du sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO (Last In, First Out)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Depiler ajoute un nouvel element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Opérations",
+        "text":  "Opération pour ajouter ?",
+        "explanation":  "Empiler. Reponse correcte: Empiler (Push). Ici, la notion \u0027Opérations\u0027 s\u0027applique: les fichiers servent au stockage persistant; le mode d\u0027ouverture et la gestion de fin de fichier determinent le comportement de lecture/ecriture.",
+        "choices":  [
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler retire l\u0027element du sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler (Push)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Opérations",
+        "text":  "Où empile et dépile-t-on ?",
+        "explanation":  "Toujours au Sommet. Reponse correcte: Exclusivement au Sommet (Top) de la pile. Ici, la notion \u0027Opérations\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Exclusivement au Sommet (Top) de la pile",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Depiler ajoute un nouvel element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Peek retire l\u0027element observe",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Applications",
+        "text":  "Application réelle d\u0027une pile ?",
+        "explanation":  "Ctrl+Z (Undo). Reponse correcte: La fonction Annuler (Ctrl+Z). Ici, la notion \u0027Applications\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Spooler d\u0027impression",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Peek retire l\u0027element observe",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La fonction Annuler (Ctrl+Z)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une pile est ideale pour BFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Pratique",
+        "text":  "Pile vide. Empile 10, 20. Dépile X. Valeur X et Sommet ?",
+        "explanation":  "X=20, Sommet=10. Reponse correcte: X = 20, Sommet = 10. Ici, la notion \u0027Pratique\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Peek retire l\u0027element observe",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile est ideale pour BFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X = 20, Sommet = 10",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une file est la structure naturelle pour DFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X = 10, Sommet = 20",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "tat",
+        "text":  "Vérifier File non Pleine avant Empiler (sur tableau) ?",
+        "explanation":  "Vrai, sinon Stack Overflow. Reponse correcte: Vrai. Ici, la notion \u0027tat\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Une pile est ideale pour BFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une file est la structure naturelle pour DFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fond est accessible en O(1) sans manipulation",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Processeur",
+        "text":  "Que fait le pointeur d\u0027instruction avec les appels fonctions ?",
+        "explanation":  "Il empile les adresses de retour (Call stack). Reponse correcte: La pile d\u0027appels mémoires (Call Stack). Ici, la notion \u0027Processeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+        "choices":  [
+                        {
+                            "text":  "Une file est la structure naturelle pour DFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fond est accessible en O(1) sans manipulation",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La pile d\u0027appels mémoires (Call Stack)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La file d\u0027attente d\u0027IRQ",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Stack Overflow signifie depiler sur pile vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile ne peut pas etre implementee par liste chainee",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Manipulation",
+        "text":  "Accès au fond d\u0027une pile sans perdre l\u0027ordre final ?",
+        "explanation":  "On a besoin d\u0027une pile intermédiaire. Reponse correcte: Il faut inévitablement déverser dans une seconde pile temporaire. Ici, la notion \u0027Manipulation\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fond est accessible en O(1) sans manipulation",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Stack Overflow signifie depiler sur pile vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Il faut inévitablement déverser dans une seconde pile temporaire",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "On lit index 0 instantanément",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile ne peut pas etre implementee par liste chainee",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Evaluation math",
+        "text":  "Expression post-fixée avec pile ?",
+        "explanation":  "Empilant opérandes, lors d\u0027un opérateur on dépile et calcule. Reponse correcte: Empiler nombres, dépiler lors d\u0027un opérateur, empiler résultat. Ici, la notion \u0027Evaluation math\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Stack Overflow signifie depiler sur pile vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile ne peut pas etre implementee par liste chainee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO signifie First In, First Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler nombres, dépiler lors d\u0027un opérateur, empiler résultat",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Ignorer cette approche",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Synthèse",
+        "text":  "Cas de l\u0027assiette rangée ?",
+        "explanation":  "Pile. Reponse correcte: Une Pile. Ici, la notion \u0027Synthèse\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Une File",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une Pile",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une pile ne peut pas etre implementee par liste chainee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO signifie First In, First Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les parentheses se verifient mieux avec une file",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Parcours Graphe",
+        "text":  "Lors d\u0027un parcours \u0027En Profondeur\u0027 (DFS), la structure idéale est...",
+        "explanation":  "La pile. On empile les voisins à explorer en descendant. Reponse correcte: Une Pile (Stack, souvent implicite via récursivité). Ici, la notion \u0027Parcours Graphe\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+        "choices":  [
+                        {
+                            "text":  "LIFO signifie First In, First Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les parentheses se verifient mieux avec une file",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une Pile (Stack, souvent implicite via récursivité)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La File circulaire asynchrone",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le sommet doit pointer vers le dernier maillon en O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les variables locales sont stockees uniquement dans le tas",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Erreur Célèbre",
+        "text":  "Que signifie Stack Overflow dans le monde de la programmation ?",
+        "explanation":  "Dépassement de la capacité de la pile (souvent dû à une récursivité infinie). Reponse correcte: Un dépassement de la mémoire allouée à la pile d\u0027exécution du programme. Ici, la notion \u0027Erreur Célèbre\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Les parentheses se verifient mieux avec une file",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le sommet doit pointer vers le dernier maillon en O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un dépassement de la mémoire allouée à la pile d\u0027exécution du programme",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Les variables locales sont stockees uniquement dans le tas",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile est forcement triee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile d\u0027assiettes ayant atteint virtuellement le plafond",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Implémentation",
+        "text":  "Dans une implémentation Liste Chaînée d\u0027une Pile, où fait-on pointer \u0027Sommet\u0027 ?",
+        "explanation":  "Sur la Tête de la liste chaînée (pour garder O(1)). Reponse correcte: Vers le premier élément de la liste (La Tête). Ici, la notion \u0027Implémentation\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Le sommet doit pointer vers le dernier maillon en O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vers l\u0027avant-dernier maillon",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vers le premier élément de la liste (La Tête)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Les variables locales sont stockees uniquement dans le tas",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Conversion",
+        "text":  "La pile est essentielle pour évaluer ou convertir quelle notation mathématique bien connue ?",
+        "explanation":  "La Notation Polonaise Inverse (NPI / Postfixée). Reponse correcte: La Notation Polonaise Inverse (RPN / Postfixée). Ici, la notion \u0027Conversion\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "La Notation Polonaise Inverse (RPN / Postfixée)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Les équations différentielles de second degré",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les variables locales sont stockees uniquement dans le tas",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Balises HTML",
+        "text":  "Comment un parseur vérifie-t-il que des balises (HTML ou parenthèses) sont bien équilibrées ?",
+        "explanation":  "En empilant la balise ouvrante, et en la dépilant lors d\u0027une balise fermante. Reponse correcte: En ouvrant une balise on empile, en la fermant on dépile et on compare. Ici, la notion \u0027Balises HTML\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile est forcement triee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "En ouvrant une balise on empile, en la fermant on dépile et on compare",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Depiler et Peek font exactement la meme chose",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Il génère un tableau aléatoire",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Variables locales",
+        "text":  "Où sont stockées temporairement la majorité des variables locales de fonctions en C ou Algo ?",
+        "explanation":  "Sur la pile (Call Stack). Reponse correcte: Dans la zone mémoire appelée la Pile (Stack segment). Ici, la notion \u0027Variables locales\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Sur un registre périphérique USB",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans la zone mémoire appelée la Pile (Stack segment)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Depiler et Peek font exactement la meme chose",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO (First In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler retire l\u0027element du sommet",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Exercice",
+        "text":  "P = Vide. Empile(A). Empile(B). Empile(C). Depile(X). Que vaut Sommet ?",
+        "explanation":  "C est dépilé. Le sommet est B. Reponse correcte: L\u0027élément \u0027B\u0027. Ici, la notion \u0027Exercice\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "L\u0027élément \u0027B\u0027",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "FIFO (First In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Empiler retire l\u0027element du sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027élément \u0027A\u0027",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027élément \u0027C\u0027",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Avantage",
+        "text":  "Lequel est un AVANTAGE de la pile implémentée en Tableau statique vs Liste chaînée ?",
+        "explanation":  "Pas de pointeurs, accès direct mémoire. Reponse correcte: conomie de mémoire (pas de pointeurs) et vitesse pure. Ici, la notion \u0027Avantage\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "conomie de mémoire (pas de pointeurs) et vitesse pure",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Empiler retire l\u0027element du sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Depiler ajoute un nouvel element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Taille extensible à l\u0027infini",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Peek retire l\u0027element observe",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Palindrome",
+        "text":  "Comment utiliser utilement une pile pour vérifier si un mot est un Palindrome ?",
+        "explanation":  "Empiler la première moitié, et dépiler pour comparer avec la deuxième. Reponse correcte: On empile la 1ère moitié des lettres, puis on dépile en comparant avec la 2ème. Ici, la notion \u0027Palindrome\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "On empile tout et on fait la somme ASCII",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Depiler ajoute un nouvel element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "On empile la 1ère moitié des lettres, puis on dépile en comparant avec la 2ème",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Lecture",
+        "text":  "Quelle fonction système permet d\u0027observer l\u0027élément au sommet de la pile SANS le retirer ?",
+        "explanation":  "C\u0027est souvent appelé Peek(Pile). Reponse correcte: La fonction \u0027Sommet_Lien(P)\u0027 ou \u0027Peek(P)\u0027. Ici, la notion \u0027Lecture\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Les operations se font a la base",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Il n\u0027y a pas d\u0027autre choix que Pop(P)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Peek retire l\u0027element observe",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile est ideale pour BFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est la structure naturelle pour DFS",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La fonction \u0027Sommet_Lien(P)\u0027 ou \u0027Peek(P)\u0027",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "LIFO - Piege",
+        "difficulty":  "Hard",
+        "explanation":  "Depiler() retire 2, puis on empile 3, puis le dernier Depiler() retire 3. Reponse correcte: 3. Ici, la notion \u0027LIFO - Piege\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "text":  "Pile vide. Empiler(1), Empiler(2), Depiler(), Empiler(3), Depiler(). Quelle valeur est depilee en dernier ?",
+        "choices":  [
+                        {
+                            "text":  "3",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La pile est deja vide au second Depiler",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Impossible a determiner",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Parentheses",
+        "difficulty":  "Hard",
+        "explanation":  "Chaque ouvrante doit etre fermee dans l\u0027ordre inverse. Reponse correcte: ([{}]). Ici, la notion \u0027Parentheses\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "text":  "Quelle sequence est correctement equilibree pour un verificateur base sur pile ?",
+        "choices":  [
+                        {
+                            "text":  "([{}])",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "([)]",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "((())",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "){[]}",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "[({})]]",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Aucune, une pile ne gere pas ce cas",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Peek vs Pop",
+        "difficulty":  "Medium",
+        "explanation":  "Peek/Sommet lit sans retirer, Pop/Depiler retire l\u0027element. Reponse correcte: Peek(P) ou Sommet(P). Ici, la notion \u0027Peek vs Pop\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "text":  "Si Sommet(P)=9, quelle operation lit 9 sans modifier la pile ?",
+        "choices":  [
+                        {
+                            "text":  "Peek(P) ou Sommet(P)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Depiler(P)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vider(P)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler(P,9)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Inverser(P)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Aucune operation ne permet cela",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Trace LIFO",
+        "difficulty":  "Hard",
+        "explanation":  "Le dernier entre sort en premier: X=C puis Y=B. Reponse correcte: X=C et Y=B. C\u0027est le principe LIFO.",
+        "text":  "Pile vide. Empiler(A), Empiler(B), Empiler(C), Depiler(X), Depiler(Y). Que valent X et Y ?",
+        "choices":  [
+                        {
+                            "text":  "X=C et Y=B",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "X=A et Y=B",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X=B et Y=C",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X=C et Y=A",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X=A et Y=C",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Impossible car Depiler vide la pile d\u0027un coup",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Pile et Recursivite",
+        "difficulty":  "Medium",
+        "explanation":  "Chaque appel memorise son contexte (variables locales et adresse de retour) sur le sommet, puis le recupere au retour. Reponse correcte: Parce que chaque appel empile son contexte et se depile au retour.",
+        "text":  "Pourquoi la recursivite utilise naturellement une pile d\u0027appels ?",
+        "choices":  [
+                        {
+                            "text":  "Parce que chaque appel empile son contexte et se depile au retour",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Parce qu\u0027une pile execute toujours en FIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Parce qu\u0027une file ne peut pas stocker d\u0027adresse",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Parce que la recursivite interdit les variables locales",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Parce que les appels sont automatiquement tries",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Parce que Depiler ajoute un nouvel appel",
+                            "is_correct":  false
+                        }
+                    ]
+    }
+]

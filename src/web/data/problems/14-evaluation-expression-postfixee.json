@@ -1,0 +1,49 @@
+{
+  "title": "Évaluation d'une Expression Postfixée (Pile Chaînée)",
+  "topic": "Stacks",
+  "difficulty": "Hard",
+  "description": "### Évaluation d'une expression postfixée avec pile chaînée\n\nÉvaluez une expression en notation postfixée (RPN).\n\nLes tokens sont séparés par des espaces, opérateurs autorisés: `+ - * /`.\n\nUtilisez une pile chaînée d'entiers.\n\n#### Format d'entrée\n- Une ligne: expression postfixée\n\n#### Format de sortie\n- Un entier\n\n#### Exemple\n**Entrée**\n```\n5 1 2 + 4 * + 3 -\n```\n**Sortie**\n```\n14\n```",
+  "template_code": "Type Element = Enregistrement\nDebut\n    val  : Entier;\n    suiv : ^Element;\nFin;\n\nType Pile = Enregistrement\nDebut\n    sommet : ^Element;\nFin;\n\nProcedure Init(Var P : Pile)\nDebut\n    P.sommet := NIL;\nFin;\n\nProcedure Empiler(Var P : Pile, v : Entier)\nVar n : ^Element;\nDebut\n    n := allouer(taille(Element));\n    n->val := v;\n    n->suiv := P.sommet;\n    P.sommet := n;\nFin;\n\nProcedure Depiler(Var P : Pile, Var v : Entier)\nVar t : ^Element;\nDebut\n    t := P.sommet;\n    v := t->val;\n    P.sommet := t->suiv;\n    liberer(t);\nFin;\n\nAlgorithme EvalPostfixe;\nVar\n    P : Pile;\n    tok[100] : Chaine;\n    a, b, r : Entier;\nDebut\n    Init(P);\n\n    TantQue LireToken(tok) Faire\n        // TODO: si nombre -> Empiler\n        // TODO: si operateur -> Depiler b puis a, calculer, Empiler resultat\n    FinTantQue\n\n    Depiler(P, r);\n    Ecrire(r);\nFin.",
+  "test_cases": [
+    {
+      "input": "2 3 +\n",
+      "expected_output": "5\n",
+      "is_public": true
+    },
+    {
+      "input": "5 1 2 + 4 * + 3 -\n",
+      "expected_output": "14\n",
+      "is_public": true
+    },
+    {
+      "input": "10 2 /\n",
+      "expected_output": "5\n",
+      "is_public": false
+    },
+    {
+      "input": "8 3 - 2 *\n",
+      "expected_output": "10\n",
+      "is_public": false
+    },
+    {
+      "input": "7 2 3 * -\n",
+      "expected_output": "1\n",
+      "is_public": false
+    },
+    {
+      "input": "9 5 2 + *\n",
+      "expected_output": "63\n",
+      "is_public": false
+    },
+    {
+      "input": "12 3 / 2 +\n",
+      "expected_output": "6\n",
+      "is_public": false
+    },
+    {
+      "input": "4 2 + 3 5 1 - * +\n",
+      "expected_output": "18\n",
+      "is_public": false
+    }
+  ]
+}

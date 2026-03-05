@@ -1,0 +1,827 @@
+﻿[
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Definition",
+        "text":  "A quoi sert principalement un fichier en algorithmique ?",
+        "explanation":  "Un fichier sert au stockage persistant: les donnees restent disponibles apres la fin du programme, contrairement a la RAM. Reponse correcte: stocker durablement des donnees sur disque.",
+        "choices":  [
+                        {
+                            "text":  "Stocker durablement des donnees sur disque",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Accelerer automatiquement le processeur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Remplacer toutes les variables RAM",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Executer le programme plus vite sans calcul",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Eviter toute erreur de logique",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Transformer une file en pile",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Mode Lecture",
+        "text":  "Quel mode d\u0027ouverture permet d\u0027utiliser Lire() correctement ?",
+        "explanation":  "Lire() exige un flux ouvert en lecture. En mode ecriture, on ne lit pas le contenu existant. Reponse correcte: mode LECTURE.",
+        "choices":  [
+                        {
+                            "text":  "Mode LECTURE",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Mode ECRITURE",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Mode AJOUT",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Mode SUPPRESSION",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Mode BOUCLE",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Mode COMPILATION",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Modes",
+        "text":  "Quelle difference essentielle entre ECRITURE et AJOUT ?",
+        "explanation":  "Le mode ECRITURE recree ou ecrase generalement le contenu, alors que AJOUT ecrit a la fin sans detruire l\u0027existant. Reponse correcte: ECRITURE ecrase, AJOUT ecrit a la fin.",
+        "choices":  [
+                        {
+                            "text":  "ECRITURE ecrase, AJOUT ecrit a la fin",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "AJOUT lit plus vite que LECTURE",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "ECRITURE et AJOUT sont strictement identiques",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "AJOUT supprime la premiere ligne",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "ECRITURE ne permet pas Fermer()",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "AJOUT ne peut ecrire que des entiers",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Fermeture",
+        "text":  "Pourquoi Fermer(F) est important apres ecriture ?",
+        "explanation":  "Fermer force la vidange finale du tampon et libere la ressource. Sans fermeture, certaines donnees peuvent ne jamais atteindre le disque. Reponse correcte: garantir l\u0027ecriture finale et liberer le fichier.",
+        "choices":  [
+                        {
+                            "text":  "Garantir l\u0027ecriture finale et liberer le fichier",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Convertir le fichier texte en binaire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dupliquer automatiquement le fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Compresser obligatoirement le contenu",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Interdire toute lecture future",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Remplacer EOF par NIL",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Texte vs Binaire",
+        "text":  "Quel enonce est correct pour Texte vs Binaire ?",
+        "explanation":  "Un fichier texte stocke des caracteres lisibles, tandis qu\u0027un fichier binaire stocke des octets structures selon un format. Reponse correcte: texte lisible humain, binaire octets bruts.",
+        "choices":  [
+                        {
+                            "text":  "Texte lisible humain, binaire en octets bruts",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Le binaire est uniquement pour Internet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le texte est toujours plus compact",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Texte et binaire n\u0027ont aucune difference",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un fichier binaire ne peut pas etre lu",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le texte ne peut contenir que des chiffres",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "EOF",
+        "text":  "Comment detecter proprement la fin de fichier lors d\u0027une lecture ?",
+        "explanation":  "On utilise un test de fin de fichier (EOF/FinDeFichier) dans la boucle de lecture pour eviter de lire au-dela des donnees disponibles. Reponse correcte: tester FinDeFichier(F).",
+        "choices":  [
+                        {
+                            "text":  "Tester FinDeFichier(F) / EOF",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Attendre une erreur systematique",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Verifier que le programme ne plante pas",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Comparer le fichier a NIL",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Compter uniquement les lignes paires",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Supposer que 100 lectures suffisent",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Acces",
+        "text":  "Acces sequentiel signifie :",
+        "explanation":  "En sequentiel, on lit dans l\u0027ordre depuis la position courante; pour atteindre un element loin, il faut parcourir les precedents. Reponse correcte: lecture dans l\u0027ordre, pas de saut direct natif.",
+        "choices":  [
+                        {
+                            "text":  "Lecture dans l\u0027ordre sans saut direct natif",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Acces instantane a n\u0027importe quelle position",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Lecture uniquement de la derniere ligne",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ecriture obligatoire avant chaque lecture",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Suppression automatique des anciennes lignes",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Acces reserve aux fichiers binaires",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Erreur courante",
+        "text":  "Que se passe-t-il si on ouvre en LECTURE un fichier inexistant ?",
+        "explanation":  "Le systeme ne trouve pas la ressource demandee; cela produit une erreur d\u0027ouverture qu\u0027il faut gerer. Reponse correcte: erreur/exception de fichier introuvable.",
+        "choices":  [
+                        {
+                            "text":  "Erreur ou exception: fichier introuvable",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Le fichier est cree automatiquement avec du contenu",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le programme ignore l\u0027erreur et continue",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fichier est ouvert en mode AJOUT",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La lecture retourne toujours 0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le systeme efface le dossier courant",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Buffer",
+        "text":  "Pourquoi l\u0027ecriture disque est souvent tamponnee (buffer) ?",
+        "explanation":  "Le tampon regroupe plusieurs petites ecritures en operations disque plus efficaces. C\u0027est un compromis performance/fiabilite, d\u0027ou l\u0027importance de Fermer ou Flush. Reponse correcte: reduire le cout des acces disque.",
+        "choices":  [
+                        {
+                            "text":  "Reduire le cout des acces disque en regroupant les ecritures",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Rendre impossible toute perte de donnees",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Interdire l\u0027utilisation de EOF",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Transformer automatiquement le texte en binaire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Forcer l\u0027ordre alphabetique des lignes",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Eviter d\u0027utiliser Fermer(F)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Pointeur de fichier",
+        "text":  "Apres une lecture reussie d\u0027un enregistrement, le pointeur de lecture :",
+        "explanation":  "Une lecture consomme des donnees et avance la position courante. La prochaine lecture commence donc juste apres. Reponse correcte: il avance vers l\u0027element suivant.",
+        "choices":  [
+                        {
+                            "text":  "Avance vers l\u0027element suivant",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Revient automatiquement au debut",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Se place toujours a la fin du fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Devient NIL",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Recule d\u0027une position",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ne change jamais",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Ajout",
+        "text":  "En mode AJOUT, que fait une operation d\u0027ecriture ?",
+        "explanation":  "Le mode ajout preserve le contenu existant et place les nouvelles donnees a la fin logique du fichier. Reponse correcte: ecriture en fin de fichier.",
+        "choices":  [
+                        {
+                            "text":  "Ecrit a la fin du fichier",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Ecrase toujours le premier bloc",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Remplace le milieu du fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Supprime les lignes vides",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Lit puis ecrit automatiquement",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ne peut ecrire que des reels",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Acces direct",
+        "text":  "Quel est l\u0027avantage principal de l\u0027acces direct ?",
+        "explanation":  "L\u0027acces direct permet de viser une position/enregistrement precis sans relire tout ce qui precede. Reponse correcte: sauter directement a une position cible.",
+        "choices":  [
+                        {
+                            "text":  "Sauter directement a une position cible",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Garantir que le fichier est trie",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Supprimer le besoin de fermer le fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Transformer un acces sequentiel en recursion",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Eviter tout calcul d\u0027offset",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Doubler automatiquement la capacite disque",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Modele logique",
+        "text":  "En algorithmique, on manipule generalement un fichier :",
+        "explanation":  "Le programme travaille avec un descripteur/nom logique; le systeme fait le lien avec le fichier physique. Reponse correcte: via un nom logique associe au fichier physique.",
+        "choices":  [
+                        {
+                            "text":  "Via un nom logique associe au fichier physique",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "En pilotant directement les pistes du disque",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "En modifiant le firmware du disque",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "En evitant tout systeme de fichiers",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Seulement via des pointeurs de liste chainee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Uniquement en memoire RAM",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Mise a jour sure",
+        "text":  "Pour mettre a jour un gros fichier de facon sure, bonne pratique :",
+        "explanation":  "On ecrit dans un fichier temporaire valide, puis on remplace l\u0027ancien pour limiter le risque de corruption en cas d\u0027echec. Reponse correcte: ecrire temp puis renommer/remplacer.",
+        "choices":  [
+                        {
+                            "text":  "Ecrire dans un fichier temporaire puis renommer",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Ecraser l\u0027original bloc par bloc sans verification",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ne jamais fermer le fichier pendant la mise a jour",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Supprimer d\u0027abord l\u0027ancien puis esperer que l\u0027ecriture reussit",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faire uniquement des ajouts meme pour modifier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ignorer les erreurs d\u0027ecriture",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Concurrence",
+        "text":  "Deux processus ecrivent dans le meme fichier en meme temps sans coordination. Risque principal ?",
+        "explanation":  "Sans verrou/strategie de synchronisation, les ecritures peuvent se chevaucher et produire des donnees incoherentes. Reponse correcte: corruption ou interleaving des donnees.",
+        "choices":  [
+                        {
+                            "text":  "Corruption/interleaving des donnees",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Le fichier devient automatiquement en lecture seule",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF disparait du systeme",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le systeme trie les ecritures sans conflit",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Aucun risque si le fichier est texte",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le mode AJOUT empeche toujours toute collision",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Lecture de lignes",
+        "text":  "Dans un fichier texte, que represente surtout le caractere fin de ligne ?",
+        "explanation":  "La fin de ligne delimite des enregistrements textuels (lignes). Ce n\u0027est ni EOF ni une erreur. Reponse correcte: separateur de lignes.",
+        "choices":  [
+                        {
+                            "text":  "Un separateur de lignes",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La fin definitive du fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une indication que la ligne est corrompue",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un ordre de suppression de la ligne suivante",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un marqueur reserve au mode binaire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un signal que le buffer est vide",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "Fichier initial contient: A. Puis AJOUT(B), AJOUT(C). Contenu final ?",
+        "explanation":  "En mode ajout, chaque ecriture va en fin sans ecraser le contenu deja present. Reponse correcte: A puis B puis C (dans cet ordre).",
+        "choices":  [
+                        {
+                            "text":  "A puis B puis C",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "C puis B puis A",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Seulement C",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "B puis C (A perdu)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A puis C puis B",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Fichier vide car AJOUT ne persiste pas",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "Fichier initial contient: A. Ouvrir en ECRITURE puis ecrire B. Contenu final ?",
+        "explanation":  "Le mode ecriture recree/ecrase le fichier avant d\u0027ecrire. L\u0027ancien contenu A est perdu. Reponse correcte: seulement B.",
+        "choices":  [
+                        {
+                            "text":  "Seulement B",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "A puis B",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "B puis A",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A seulement",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Fichier vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A et B en alternance",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "EOF piege",
+        "text":  "Proposition exacte sur EOF :",
+        "explanation":  "Dans beaucoup d\u0027implementations, EOF est constate apres tentative de lecture au-dela de la fin, pas simplement en arrivant sur le dernier octet. Reponse correcte: EOF devient vrai apres une lecture qui depasse la fin.",
+        "choices":  [
+                        {
+                            "text":  "EOF devient vrai apres une lecture qui depasse la fin",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "EOF est vrai des l\u0027ouverture du fichier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF est vrai juste avant de lire le dernier caractere",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF remplace toujours la verification d\u0027erreur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF n\u0027existe qu\u0027en mode binaire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF signifie que le fichier est corrompu",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Acces direct",
+        "text":  "Pour des enregistrements de taille fixe T, l\u0027offset du i-eme (indexation 1..n) est :",
+        "explanation":  "Avec une indexation a partir de 1, le premier enregistrement est a l\u0027offset 0, donc le i-eme est a (i-1)*T. Reponse correcte: (i-1)*T.",
+        "choices":  [
+                        {
+                            "text":  "(i - 1) * T",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "i * T",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "(i + 1) * T",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "T / i",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "i + T",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Toujours 0 quel que soit i",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Crash et buffer",
+        "text":  "Si le programme se termine brutalement avant Fermer/Flush, effet possible ?",
+        "explanation":  "Les donnees encore en tampon peuvent ne pas etre ecrites physiquement. Le fichier peut donc etre incomplet. Reponse correcte: perte partielle des dernieres ecritures.",
+        "choices":  [
+                        {
+                            "text":  "Perte partielle des dernieres ecritures",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Aucun effet car le buffer est toujours vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fichier devient automatiquement complet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le systeme restaure l\u0027ancienne version a coup sur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Toutes les donnees futures seront bloquees",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "EOF passe a faux definitivement",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Compatibilite binaire",
+        "text":  "Pourquoi lire un fichier binaire avec une mauvaise structure est dangereux ?",
+        "explanation":  "Si la taille/ordre des champs ne correspond pas, les octets sont interpretes de travers et les valeurs deviennent fausses. Reponse correcte: interpretation erronee des octets.",
+        "choices":  [
+                        {
+                            "text":  "Les octets sont interpretes avec une structure incorrecte",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Le texte devient toujours plus lisible",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Cela n\u0027a aucun impact en mode lecture",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le systeme corrige automatiquement les champs",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La lecture binaire ignore la taille des enregistrements",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le compilateur interdit toute lecture binaire",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucle de lecture",
+        "text":  "Quel schema de boucle est le plus robuste pour lire jusqu\u0027a la fin ?",
+        "explanation":  "Le schema robuste est: tenter lire, traiter si succes, puis retenter. Tester EOF uniquement avant la premiere lecture peut rater des cas limites. Reponse correcte: boucle basee sur succes de lecture / test EOF apres tentative.",
+        "choices":  [
+                        {
+                            "text":  "Boucler tant que la lecture reussit (ou EOF apres tentative)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Tester EOF une seule fois avant toute lecture",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Lire un nombre fixe de lignes sans controle",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Arreter des qu\u0027une ligne est vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Fermer puis reouvrir a chaque ligne",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ignorer les erreurs de lecture",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Droits d\u0027acces",
+        "text":  "Si un fichier est ouvert en mode LECTURE seul, que fait une ecriture ?",
+        "explanation":  "Le descripteur n\u0027autorise pas l\u0027ecriture; la tentative doit echouer (erreur ou exception selon l\u0027environnement). Reponse correcte: erreur d\u0027ecriture due au mode.",
+        "choices":  [
+                        {
+                            "text":  "Erreur: ecriture non autorisee dans ce mode",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Le systeme bascule automatiquement en AJOUT",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027ecriture est redirigee en RAM",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fichier est ecrase puis reouvert",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027operation est ignoree sans consequence",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le fichier est converti en binaire",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Validation des entrees",
+        "text":  "Lors de la lecture d\u0027un entier depuis un fichier texte, bonne pratique ?",
+        "explanation":  "Le contenu lu est du texte; il faut verifier/convertir avant usage numerique pour eviter des erreurs de type. Reponse correcte: valider puis convertir la valeur lue.",
+        "choices":  [
+                        {
+                            "text":  "Valider puis convertir la valeur lue",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Supposer que chaque ligne est toujours un entier valide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ignorer les lignes invalides sans controle",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ecrire directement dans le fichier pour corriger",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Forcer EOF a faux si conversion echoue",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Lire en mode AJOUT pour securiser la conversion",
+                            "is_correct":  false
+                        }
+                    ]
+    }
+]

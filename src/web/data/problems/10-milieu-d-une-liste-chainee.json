@@ -1,0 +1,49 @@
+{
+  "title": "Milieu d'une Liste Chaînée",
+  "topic": "Linked Lists",
+  "difficulty": "Easy",
+  "description": "### Trouver le milieu d'une liste chaînée\n\nLa liste est donnée avec `Val[]` et `index[]` (`-1` pour `NIL`), tête `liste[0]`.\n\nCalculez le nœud milieu par la méthode du lièvre et de la tortue.\n\nPour une taille paire, on retient le **deuxième** milieu.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Ligne 2: `N` entiers `Val[i]`\n- Ligne 3: `N` entiers `index[i]`\n\n#### Format de sortie\n- `valeur_du_milieu position_milieu`\n- `position_milieu` commence à `1`\n\n#### Exemple\n**Entrée**\n```\n6\n1 2 3 4 5 6\n1 2 3 4 5 -1\n```\n**Sortie**\n```\n4 4\n```",
+  "template_code": "Type Noeud = Enregistrement\nDebut\n    valeur  : Entier;\n    suivant : ^Noeud;\nFin;\n\nAlgorithme Detection_Milieu_Liste;\nVar\n    tete, lent, rapide, liste[1000] : ^Noeud;\n    i, N, position_milieu           : Entier;\n    Val[1000], index[1000]          : Entier;\nDebut\n    Lire(N);\n\n    Pour i := 0 a N - 1 Faire\n        Lire(Val[i]);\n    FinPour\n\n    Pour i := 0 a N - 1 Faire\n        Lire(index[i]);\n    FinPour\n\n    // 1) Creation des noeuds\n    Pour i := 0 a N - 1 Faire\n        liste[i] := allouer(Taille(Noeud));\n        liste[i]->valeur := Val[i];\n    FinPour\n\n    // 2) Etablissement des liens\n    Pour i := 0 a N - 1 Faire\n        Si index[i] = -1 Alors\n            liste[i]->suivant := NIL;\n        Sinon\n            liste[i]->suivant := liste[index[i]];\n        FinSi;\n    FinPour\n\n    tete := liste[0];\n\n    // 3) Milieu (lièvre/tortue)\n    Si tete = NIL Alors\n        Ecrire(\"Liste vide\");\n    Sinon\n        lent := tete;\n        rapide := tete;\n        position_milieu := 1;\n\n        TantQue rapide <> NIL ET rapide->suivant <> NIL Faire\n            lent := lent->suivant;\n            rapide := rapide->suivant->suivant;\n            position_milieu := position_milieu + 1;\n        FinTantQue\n\n        Ecrire(lent->valeur, \" \", position_milieu);\n    FinSi\nFin.",
+  "test_cases": [
+    {
+      "input": "5\n10 20 30 40 50\n1 2 3 4 -1\n",
+      "expected_output": "30 3\n",
+      "is_public": true
+    },
+    {
+      "input": "6\n1 2 3 4 5 6\n1 2 3 4 5 -1\n",
+      "expected_output": "4 4\n",
+      "is_public": true
+    },
+    {
+      "input": "1\n99\n-1\n",
+      "expected_output": "99 1\n",
+      "is_public": false
+    },
+    {
+      "input": "2\n8 9\n1 -1\n",
+      "expected_output": "9 2\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n3 3 3 3 3 3 3\n1 2 3 4 5 6 -1\n",
+      "expected_output": "3 4\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n5 1 9 2 7 4 6 8\n1 2 3 4 5 6 7 -1\n",
+      "expected_output": "7 5\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n-5 -2 -1\n1 2 -1\n",
+      "expected_output": "-2 2\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n7 9 11 13 15\n2 4 -1 1 3\n",
+      "expected_output": "11 2\n",
+      "is_public": false
+    }
+  ]
+}

@@ -1,0 +1,827 @@
+[
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Principe",
+        "text":  "Principe fondamental d\u0027une File (Queue) ?",
+        "explanation":  "Premier Arrivé, Premier Servi (FIFO). Reponse correcte: FIFO (First In, First Out). Ici, la notion \u0027Principe\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Ajouter et retirer uniquement au sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO (Last In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO (First In, First Out)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Opérations",
+        "text":  "L\u0027opération qui ajoute un élément s\u0027appelle ?",
+        "explanation":  "Enfiler ou Enqueue. Reponse correcte: Enfiler (Enqueue). Ici, la notion \u0027Opérations\u0027 s\u0027applique: les fichiers servent au stockage persistant; le mode d\u0027ouverture et la gestion de fin de fichier determinent le comportement de lecture/ecriture.",
+        "choices":  [
+                        {
+                            "text":  "Ajouter et retirer uniquement au sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dépiler (Pop)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler (Enqueue)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Opérations",
+        "text":  "Où s\u0027effectuent ajouts et retraits ?",
+        "explanation":  "Ajout Queue, Retrait Tête. Reponse correcte: Ajout à l\u0027Arrière (Queue), Retrait à l\u0027Avant (Tête). Ici, la notion \u0027Opérations\u0027 s\u0027applique: les fichiers servent au stockage persistant; le mode d\u0027ouverture et la gestion de fin de fichier determinent le comportement de lecture/ecriture.",
+        "choices":  [
+                        {
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ajout à l\u0027Arrière (Queue), Retrait à l\u0027Avant (Tête)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Tout à l\u0027avant",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Structure",
+        "text":  "Une File peut être implémentée via un Tableau statique.",
+        "explanation":  "Vrai, souvent circulaire. Reponse correcte: Vrai, on gère un index de Tête et un de Queue. Ici, la notion \u0027Structure\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Faux, c\u0027est obligatoirement une liste chaînée",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est strictement LIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La tete est la position d\u0027ajout principal",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vrai, on gère un index de Tête et un de Queue",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "File Circulaire",
+        "text":  "Intérêt de la file circulaire en tableau ?",
+        "explanation":  "Réutiliser les cases du début. Reponse correcte: viter le gaspillage d\u0027espace au début du tableau lors des défilements. Ici, la notion \u0027File Circulaire\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Tri automatique",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est strictement LIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La tete est la position d\u0027ajout principal",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "viter le gaspillage d\u0027espace au début du tableau lors des défilements",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La queue est la position de retrait principal",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "tat",
+        "text":  "Il faut vérifier si la file est vide avant de Défiler.",
+        "explanation":  "Vrai, pour ne pas défiler le vide. Reponse correcte: Vrai. Ici, la notion \u0027tat\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "La tete est la position d\u0027ajout principal",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La queue est la position de retrait principal",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Underflow signifie enfiler dans une file pleine",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Exercice",
+        "text":  "F vide. Enfiler(1); Enfiler(2); Défiler(); Enfiler(3). Que reste-il ?",
+        "explanation":  "1 sort. 2 et 3 restent. Reponse correcte: [2, 3]. Ici, la notion \u0027Exercice\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "La queue est la position de retrait principal",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "[2, 3]",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "[3, 2]",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Underflow signifie enfiler dans une file pleine",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "[1, 3]",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Applications",
+        "text":  "Où utilise-t-on une File en informatique ?",
+        "explanation":  "File d\u0027attente d\u0027impression (Spooler). Reponse correcte: La gestion des travaux d\u0027impression envoyés vers une imprimante. Ici, la notion \u0027Applications\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Underflow signifie enfiler dans une file pleine",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La fonction Ctrl+Z",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Overflow signifie retirer dans une file vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file de priorite respecte toujours FIFO strict",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La gestion des travaux d\u0027impression envoyés vers une imprimante",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "BFS utilise une pile et non une file",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Implémentation Liste",
+        "text":  "Si `Queue` et `Tete` pointent sur le même maillon ?",
+        "explanation":  "La file a 1 élément. Reponse correcte: La file contient exactement 1 seul élément. Ici, la notion \u0027Implémentation Liste\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Overflow signifie retirer dans une file vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file de priorite respecte toujours FIFO strict",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Elle est vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La file contient exactement 1 seul élément",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "BFS utilise une pile et non une file",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Synthèse",
+        "text":  "Mot-clé pour File ?",
+        "explanation":  "FIFO. Reponse correcte: FIFO. Ici, la notion \u0027Synthèse\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "LIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file de priorite respecte toujours FIFO strict",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "BFS utilise une pile et non une file",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FILO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La file circulaire supprime le besoin de deux indices",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Erreur",
+        "text":  "Qu\u0027est-ce que l\u0027OverFlow dans une file ?",
+        "explanation":  "Quand on essaie d\u0027Enfiler mais que le support de stockage est vide ou dépassé. Reponse correcte: Tenter d\u0027enfiler dans une file basée sur tableau qui est déjà pleine. Ici, la notion \u0027Erreur\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Tenter d\u0027enfiler dans une file basée sur tableau qui est déjà pleine",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Tenter de défiler une file vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "BFS utilise une pile et non une file",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La file circulaire supprime le besoin de deux indices",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans une file chainee, Enfiler est toujours O(n)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Erreur",
+        "text":  "Qu\u0027est-ce que l\u0027UnderFlow dans une file ?",
+        "explanation":  "Quand on essaie de retirer de rien. Reponse correcte: Tenter de défiler (retirer) alors que la file est vide. Ici, la notion \u0027Erreur\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Tenter de défiler (retirer) alors que la file est vide",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La file circulaire supprime le besoin de deux indices",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Tenter d\u0027enfiler un fichier trop lourd",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans une file chainee, Enfiler est toujours O(n)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Calcul de taille",
+        "text":  "Dans une file circulaire tableau avec Tete (T) et Queue (Q) et Capacite MAX. Comment trouver le nombre d\u0027éléments ?",
+        "explanation":  "Modulo math: (Q - T + MAX) % MAX. Reponse correcte: (Queue - Tête + Max) Modulo Max. Ici, la notion \u0027Calcul de taille\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Queue moins Tête, toujours",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans une file chainee, Enfiler est toujours O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans une file chainee, Defiler est toujours O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO veut dire First In, Last Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "(Queue - Tête + Max) Modulo Max",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Priorité",
+        "text":  "Qu\u0027est-ce qu\u0027une File de Priorité ?",
+        "explanation":  "Une file où l\u0027élément sorti est celui avec le plus haut degré d\u0027importance, pas le plus vieux. Reponse correcte: Une file où le retrait se fait selon un score/priorité et non l\u0027ordre d\u0027arrivée. Ici, la notion \u0027Priorité\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Une file où le retrait se fait selon un score/priorité et non l\u0027ordre d\u0027arrivée",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file uniquement réservée aux administrateurs",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Dans une file chainee, Defiler est toujours O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "FIFO veut dire First In, Last Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est identique a une pile",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Opérations Pointeur",
+        "text":  "Dans une file implémentée en liste chaînée, complexité de Enfiler et Défiler si l\u0027on a les pointeurs Tete et Queue ?",
+        "explanation":  "O(1) pour les deux ! Reponse correcte: O(1) pour l\u0027enfilement et O(1) pour le défilement. Ici, la notion \u0027Opérations Pointeur\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "O(n) et O(n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "O(1) pour l\u0027enfilement et O(1) pour le défilement",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "FIFO veut dire First In, Last Out",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est identique a une pile",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO (Last In, First Out)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Structure à Deux Piles",
+        "text":  "Peut-on simuler le comportement d\u0027une File en utilisant uniquement DEUX Piles ?",
+        "explanation":  "Oui, en empilant sur P1, et pour défiler, on renverse tout dans P2. Reponse correcte: Oui, c\u0027est l\u0027algorithme classique d\u0027implémentation d\u0027une file avec 2 piles. Ici, la notion \u0027Structure à Deux Piles\u0027 s\u0027applique: une pile suit LIFO: le dernier element ajoute est le premier retire, et les operations se font au sommet.",
+        "choices":  [
+                        {
+                            "text":  "Oui, c\u0027est l\u0027algorithme classique d\u0027implémentation d\u0027une file avec 2 piles",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une file est identique a une pile",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "LIFO (Last In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ajouter et retirer uniquement au sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de compilation.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Arbres",
+        "text":  "Lors d\u0027un parcours \u0027En Largeur\u0027 (BFS) d\u0027un arbre binaire, quelle structure est indispensable ?",
+        "explanation":  "La file d\u0027attente. Reponse correcte: Une File (Queue). Ici, la notion \u0027Arbres\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+        "choices":  [
+                        {
+                            "text":  "LIFO (Last In, First Out)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ajouter et retirer uniquement au sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une Pile (Stack)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une File (Queue)",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Comparaison",
+        "text":  "A la caisse d\u0027un supermarché, la structure de données humaine formée est :",
+        "explanation":  "Une file. Reponse correcte: Une file d\u0027attente FIFO. Ici, la notion \u0027Comparaison\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+        "choices":  [
+                        {
+                            "text":  "Ajouter et retirer uniquement au sommet",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une pile d\u0027assiettes LIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file d\u0027attente FIFO",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Vérification",
+        "text":  "Dans une File tableau basique non circulaire, quand la Queue atteint MAX, la file est considérée Pleine...",
+        "explanation":  "Même si on a défilé des éléments au début. D\u0027où la nécessité de la rendre circulaire. Reponse correcte: Même s\u0027il y a des cases vides créées à l\u0027avant par des défilements antérieurs. Ici, la notion \u0027Vérification\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "Il n\u0027y a pas de problème, on repousse tout au début gratuitement",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Defiler signifie ajouter un element",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Même s\u0027il y a des cases vides créées à l\u0027avant par des défilements antérieurs",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une file est strictement LIFO",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La tete est la position d\u0027ajout principal",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Cas extrême",
+        "text":  "Dans une file circulaire, comment distinguer File Pleine et File Vide ?",
+        "explanation":  "Une méthode est de garder une variable \u0027NbElements\u0027 ou laisser une case vide intentionnelle. Reponse correcte: Utiliser un compteur d\u0027éléments ou sacrifier une case du tableau comme marge. Ici, la notion \u0027Cas extrême\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "choices":  [
+                        {
+                            "text":  "La structure deviendra une constante figée.",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Vérifier si Tête vaut -1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Utiliser un compteur d\u0027éléments ou sacrifier une case du tableau comme marge",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "La complexité sera toujours de O(n^2).",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Enfiler signifie retirer l\u0027element de tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une file est strictement LIFO",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "File Circulaire",
+        "difficulty":  "Hard",
+        "explanation":  "(Queue - Tete + MAX) mod MAX = (1 - 6 + 8) mod 8 = 3. Reponse correcte: 3. Ici, la notion \u0027File Circulaire\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "text":  "Dans une file circulaire de taille MAX=8, Tete=6 et Queue=1. Combien d\u0027elements sont stockes (avec la formule modulo) ?",
+        "choices":  [
+                        {
+                            "text":  "3",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "5",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "7",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0 car Queue \u003c Tete",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "8 car la file est circulaire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "2 (on ne compte pas la case Queue)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "FIFO - Piege",
+        "difficulty":  "Hard",
+        "explanation":  "Defiler retire A -\u003e [B,C], Enfiler D -\u003e [B,C,D], Defiler retire B -\u003e [C,D], tete = C. Reponse correcte: C. Ici, la notion \u0027FIFO - Piege\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "text":  "Etat initial: [A,B,C] (A en tete). Apres Defiler(), Enfiler(D), Defiler(), quel element sera en tete ?",
+        "choices":  [
+                        {
+                            "text":  "C",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "B",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "D",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La file devient vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Impossible sans connaitre MAX",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Complexite",
+        "difficulty":  "Medium",
+        "explanation":  "Les deux operations modifient des pointeurs en temps constant. Reponse correcte: O(1) pour Enfiler et O(1) pour Defiler. Ici, la notion \u0027Complexite\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+        "text":  "Avec une file implementee par liste chainee ayant pointeurs Tete et Queue, la complexite de Enfiler et Defiler est ?",
+        "choices":  [
+                        {
+                            "text":  "O(1) pour Enfiler et O(1) pour Defiler",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "O(n) pour Enfiler et O(1) pour Defiler",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "O(1) pour Enfiler et O(n) pour Defiler",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "O(n) pour les deux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "O(log n) pour les deux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ca depend uniquement du langage",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "Exercice FIFO",
+        "difficulty":  "Hard",
+        "explanation":  "X recoit 4. La file restante est [7,9], donc la tete est 7. Reponse correcte: 7. FIFO conserve l\u0027ordre d\u0027arrivee pour la sortie.",
+        "text":  "File vide. Enfiler(4), Enfiler(7), Defiler(X), Enfiler(9). Quelle est la tete a la fin ?",
+        "choices":  [
+                        {
+                            "text":  "7",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "9",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "4",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La file est vide",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Impossible sans connaitre MAX",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "La tete est toujours le dernier element ajoute",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "concept":  "File Circulaire",
+        "difficulty":  "Medium",
+        "explanation":  "Conserver une case vide permet de distinguer clairement les etats pleine et vide avec la meme formule sur les indices. Reponse correcte: Pour differencier file pleine et file vide sans ambiguite.",
+        "text":  "Dans une file circulaire de capacite MAX, pourquoi reserve-t-on parfois une case vide ?",
+        "choices":  [
+                        {
+                            "text":  "Pour differencier file pleine et file vide sans ambiguite",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Pour trier automatiquement les elements",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Pour transformer la file en pile",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Parce que FIFO exige une case inutilisee",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Pour accelerer Defiler a O(log n)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Pour stocker uniquement des booleens",
+                            "is_correct":  false
+                        }
+                    ]
+    }
+]

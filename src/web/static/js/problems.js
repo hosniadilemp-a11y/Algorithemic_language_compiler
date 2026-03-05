@@ -65,7 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="problem-meta">
                         <span class="topic-tag"><i class="fas fa-tag"></i> ${p.topic}</span>
                         <span class="difficulty-badge difficulty-${p.difficulty}">${translateDifficulty(p.difficulty)}</span>
-                        <span class="solver-count"><i class="fas fa-users"></i> ${p.solvers || 0}</span>
+                        <span class="solver-count"><i class="fas fa-user-clock"></i> Pris: ${p.attempted_users || 0}</span>
+                        <span class="solver-count"><i class="fas fa-percentage"></i> Réussite: ${(p.success_rate ?? 0)}%</span>
                         ${isSolved ? '<span class="done-badge"><i class="fas fa-check-circle"></i> Terminé</span>' : ''}
                     </div>
                 </div>

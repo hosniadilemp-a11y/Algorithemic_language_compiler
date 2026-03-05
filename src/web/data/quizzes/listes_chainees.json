@@ -1,0 +1,1654 @@
+[
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Définition",
+
+        "text":  "Qu\u0027est-ce qu\u0027une liste chaînée ?",
+
+        "explanation":  "Une séquence d\u0027éléments où chaque nœud pointe vers le suivant. Reponse correcte: Une structure de données dynamique composée de nœuds liés par pointeurs. Ici, la notion \u0027Définition\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une structure de données dynamique composée de nœuds liés par pointeurs",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un tableau de taille fixe",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Acces direct en O(1) a n\u0027importe quel index",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le dernier maillon pointe toujours vers la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Nud",
+
+        "text":  "De quoi est composé un \u0027Nud\u0027 dans une liste chaînée simple ?",
+
+        "explanation":  "Une donnée et un pointeur Suivant. Reponse correcte: Une valeur (donnée) et un pointeur vers le nœud suivant. Ici, la notion \u0027Nud\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une valeur (donnée) et un pointeur vers le nœud suivant",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Le dernier maillon pointe toujours vers la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un entier et un booléen",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Allocation",
+
+        "text":  "La taille d\u0027une liste chaînée peut varier dynamiquement.",
+
+        "explanation":  "Vrai, via pointeurs. Reponse correcte: Vrai, la mémoire est gérée à l\u0027exécution. Ici, la notion \u0027Allocation\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Vrai, la mémoire est gérée à l\u0027exécution",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Faux, la taille est fixée à la compilation",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Perdre Tete libere automatiquement toute la memoire",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Structure",
+
+        "text":  "Que contient le pointeur \u0027Suivant\u0027 du tout DERNIER nœud ?",
+
+        "explanation":  "NIL ou NULL. Reponse correcte: NIL (ou NULL). Ici, la notion \u0027Structure\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Perdre Tete libere automatiquement toute la memoire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "NIL (ou NULL)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027adresse du premier nœud",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Tête",
+
+        "text":  "Si `Tete` = `NIL`. Que déduit-on ?",
+
+        "explanation":  "La liste est vide. Reponse correcte: La liste est complètement vide. Ici, la notion \u0027Tête\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La liste est complètement vide",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Perdre Tete libere automatiquement toute la memoire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une liste chainee est forcement de taille fixe",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La liste est pleine",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Insertion",
+
+        "text":  "Particularité de l\u0027insertion en Tête (début) ?",
+
+        "explanation":  "C\u0027est immédiat, complexité O(1). Reponse correcte: C\u0027est une opération en temps constant O(1). Ici, la notion \u0027Insertion\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Perdre Tete libere automatiquement toute la memoire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Il faut décaler tous les autres éléments O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une opération en temps constant O(1)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Une liste chainee est forcement de taille fixe",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un maillon contient uniquement une donnee sans pointeur",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Parcours",
+
+        "text":  "Boucle adaptée pour parcourir une liste via pointeur P ?",
+
+        "explanation":  "TantQue P \u003c\u003e NIL Faire ... Reponse correcte: TantQue P \u003c\u003e NIL Faire ... P := P->Suivant;. Ici, la notion \u0027Parcours\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une liste chainee est forcement de taille fixe",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Pour i := 1 à Taille Faire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un maillon contient uniquement une donnee sans pointeur",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Il n\u0027existe pas de pointeur Precedent en liste double",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "TantQue P \u003c\u003e NIL Faire ... P := P->Suivant;",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Accès",
+
+        "text":  "On peut accéder instantanément au 100ème élément.",
+
+        "explanation":  "Faux, accès séquentiel O(n). Reponse correcte: Faux, l\u0027accès est strictement séquentiel. Ici, la notion \u0027Accès\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un maillon contient uniquement une donnee sans pointeur",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Il n\u0027existe pas de pointeur Precedent en liste double",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une liste chainee ne peut stocker que des entiers",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Vrai, via un index direct",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Faux, l\u0027accès est strictement séquentiel",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Libération",
+
+        "text":  "Que se passe-t-il si vous perdez le pointeur Tete sans Libérer ?",
+
+        "explanation":  "Fuite de mémoire. Reponse correcte: Une fuite de mémoire (Memory Leak). Ici, la notion \u0027Libération\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "La liste est automatiquement supprimée",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une fuite de mémoire (Memory Leak)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Il n\u0027existe pas de pointeur Precedent en liste double",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une liste chainee ne peut stocker que des entiers",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "P := P->Suivant->Suivant recule de deux maillons",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Pointeur",
+
+        "text":  "A quoi sert le symbole `^` ?",
+
+        "explanation":  "Déréférencer un pointeur. Reponse correcte: Accéder à la valeur pointée par l\u0027adresse. Ici, la notion \u0027Pointeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une liste chainee ne peut stocker que des entiers",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Accéder à la valeur pointée par l\u0027adresse",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "P := P->Suivant->Suivant recule de deux maillons",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Multiplier des pointeurs entre eux",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tete = NIL signifie liste pleine",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le symbole ^ alloue automatiquement un nouveau maillon",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Insertion Milieu",
+
+        "text":  "Insérer un nœud entre A et B nécessite de...",
+
+        "explanation":  "Nouv->Suiv := B, A->Suiv := Nouv Reponse correcte: Lier le Nouveau à B, puis A au Nouveau. Ici, la notion \u0027Insertion Milieu\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "P := P->Suivant->Suivant recule de deux maillons",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Lier le Nouveau à B, puis A au Nouveau",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "craser B et mettre le Nouveau",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tete = NIL signifie liste pleine",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La complexité sera toujours de O(n^2).",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Suppression Tête",
+
+        "text":  "Pour supprimer le premier élément, comment mettre à jour Tete ?",
+
+        "explanation":  "Tete := Tete->Suivant, suivi d\u0027un Liberer sur l\u0027ex-tete. Reponse correcte: Tete := Tete->Suivant. Ici, la notion \u0027Suppression Tête\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Tete = NIL signifie liste pleine",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tete := Tete->Suivant",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "La complexité sera toujours de O(n^2).",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le symbole ^ alloue automatiquement un nouveau maillon",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Inverser une liste oblige a recreer tous les maillons",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tete := NIL",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Double Chaînage",
+
+        "text":  "Qu\u0027apporte une liste DOUBLEMENT chaînée ?",
+
+        "explanation":  "Pouvoir parcourir en arrière grâce au pointeur \u0027Precedent\u0027. Reponse correcte: Un pointeur vers le nœud précédent, permettant le parcours arrière. Ici, la notion \u0027Double Chaînage\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un pointeur vers le nœud précédent, permettant le parcours arrière",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Le symbole ^ alloue automatiquement un nouveau maillon",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Elle double la vitesse du processeur",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La complexité sera toujours de O(n^2).",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Inverser une liste oblige a recreer tous les maillons",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Recherche",
+
+        "text":  "Quelle est la complexité de recherche d\u0027une valeur dans une liste chaînée simple de taille n ?",
+
+        "explanation":  "On doit tout parcourir : O(n). Reponse correcte: O(n) dans le pire des cas. Ici, la notion \u0027Recherche\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Inverser une liste oblige a recreer tous les maillons",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le parcours d\u0027une liste se fait uniquement avec index direct",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une liste simple offre toujours une recherche en O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Acces direct en O(1) a n\u0027importe quel index",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "O(1) car on a des pointeurs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "O(n) dans le pire des cas",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Liste Circulaire",
+
+        "text":  "Dans une liste circulaire simple, vers quoi pointe le dernier élément ?",
+
+        "explanation":  "Il pointe vers la Tête. Reponse correcte: Vers le premier élément de la liste (Tête). Ici, la notion \u0027Liste Circulaire\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Le parcours d\u0027une liste se fait uniquement avec index direct",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une liste simple offre toujours une recherche en O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Vers le premier élément de la liste (Tête)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Vers l\u0027avant-dernier élément",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Acces direct en O(1) a n\u0027importe quel index",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Tableau vs Liste",
+
+        "text":  "Quel est le grand inconvénient d\u0027une liste chaînée face au tableau ?",
+
+        "explanation":  "Les pointeurs coûtent de la mémoire mémoire supplémentaire, et l\u0027accès n\u0027est pas indexé. Reponse correcte: L\u0027absence d\u0027accès direct par index et le coût mémoire des pointeurs. Ici, la notion \u0027Tableau vs Liste\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "L\u0027absence d\u0027accès direct par index et le coût mémoire des pointeurs",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Une liste simple offre toujours une recherche en O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Acces direct en O(1) a n\u0027importe quel index",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le dernier maillon pointe toujours vers la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La liste ne peut stocker que des Entiers",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Suppression Fin",
+
+        "text":  "Pour supprimer de la FIN d\u0027une liste chaînée simple (sans queue pointer), il faut :",
+
+        "explanation":  "Parcourir jusqu\u0027à l\u0027avant-dernier nœud. Reponse correcte: Parcourir la liste pour trouver l\u0027avant-dernier nœud et modifier son \u0027Suivant\u0027. Ici, la notion \u0027Suppression Fin\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Acces direct en O(1) a n\u0027importe quel index",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Aller directement au bout en O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le dernier maillon pointe toujours vers la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Parcourir la liste pour trouver l\u0027avant-dernier nœud et modifier son \u0027Suivant\u0027",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Opérations Pointeur",
+
+        "text":  "Que signifie `P := P->Suivant->Suivant` ?",
+
+        "explanation":  "Sauter 2 maillons d\u0027un coup. Reponse correcte: P avance de deux maillons dans la liste. Ici, la notion \u0027Opérations Pointeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Le dernier maillon pointe toujours vers la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "P recule de deux maillons",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "P avance de deux maillons dans la liste",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Mémoire",
+
+        "text":  "Où sont stockés les maillons d\u0027une liste chaînée pendant l\u0027exécution ?",
+
+        "explanation":  "Dans le Tas (Heap). Reponse correcte: Dans la zone du Tas (Heap dynamique). Ici, la notion \u0027Mémoire\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le champ Suivant du dernier maillon contient la tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Dans le processeur directement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Dans la zone du Tas (Heap dynamique)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Algorithmique",
+
+        "text":  "Comment inverser une liste chaînée simple ?",
+
+        "explanation":  "Manipuler les pointeurs pour que chaque Suivant pointe sur l\u0027élément précédent. Reponse correcte: Changer la direction des pointeurs \u0027Suivant\u0027 sans recréer de maillons. Ici, la notion \u0027Algorithmique\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "L\u0027insertion en tete est toujours O(n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Supprimer en fin sans pointeur queue est O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Perdre Tete libere automatiquement toute la memoire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Inverser chaque valeur une par une par swap",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Changer la direction des pointeurs \u0027Suivant\u0027 sans recréer de maillons",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Insertion",
+
+        "difficulty":  "Hard",
+
+        "explanation":  "Il faut d\u0027abord lier N vers B, puis A vers N. Reponse correcte: N->Suivant := B puis A->Suivant := N. Ici, la notion \u0027Insertion\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "text":  "Pour inserer un maillon N entre A et B (A-\u003eSuivant = B), quel ordre evite de perdre B ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "N->Suivant := B puis A->Suivant := N",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "A->Suivant := N puis N->Suivant := B",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "B->Suivant := N puis N->Suivant := A",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "A := N puis N->Suivant := B",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "N->Suivant := A puis A->Suivant := B",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027ordre n\u0027a aucune importance",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Suppression Tete",
+
+        "difficulty":  "Medium",
+
+        "explanation":  "Il faut liberer l\u0027ancienne tete pour eviter une fuite memoire. Reponse correcte: Liberer l\u0027ancienne tete. Ici, la notion \u0027Suppression Tete\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "text":  "Suppression du premier maillon: quelle etape est indispensable apres Tete := Tete->Suivant ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Liberer l\u0027ancienne tete",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Mettre Tete := NIL dans tous les cas",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Recreer toute la liste",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Trier la liste",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Doubler tous les pointeurs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Aucune etape supplementaire",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Complexite",
+
+        "difficulty":  "Hard",
+
+        "explanation":  "Il faut parcourir jusqu\u0027au dernier maillon. Reponse correcte: O(n). Ici, la notion \u0027Complexite\u0027 s\u0027applique: une file suit FIFO: l\u0027ordre de sortie respecte l\u0027ordre d\u0027arrivee, avec retrait en tete et ajout en queue.",
+
+        "text":  "Sans pointeur vers la fin (queue), inserer en fin d\u0027une liste chainee simple coute en general :",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "O(n)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "O(log n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "O(n log n)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Toujours O(1) grace aux pointeurs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Impossible a definir",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Insertion Tete",
+
+        "difficulty":  "Hard",
+
+        "explanation":  "On relie d\u0027abord N a l\u0027ancienne tete, puis on met Tete sur N. Reponse correcte: N->Suivant := Tete puis Tete := N.",
+
+        "text":  "Pour inserer un nouveau maillon N en tete, quel enchainement est correct ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "N->Suivant := Tete puis Tete := N",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Tete := N puis N->Suivant := Tete",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "N->Suivant := NIL puis Tete := N",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tete->Suivant := N puis Tete := NIL",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Il faut parcourir toute la liste avant insertion",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Insertion en tete est impossible en liste simple",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Cycle",
+
+        "difficulty":  "Medium",
+
+        "explanation":  "Un parcours TantQue P \u003c\u003e NIL ne se termine jamais si aucun maillon n\u0027a Suivant = NIL. Reponse correcte: Le parcours n\u0027atteint jamais NIL.",
+
+        "text":  "Quel symptome indique qu\u0027une liste chainee contient probablement un cycle ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Le parcours n\u0027atteint jamais NIL",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Le premier maillon contient une valeur negative",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La liste devient automatiquement triee",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La tete vaut NIL des le debut",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Chaque insertion prend O(1)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le compilateur refuse toute boucle TantQue",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    }
+
+]
+

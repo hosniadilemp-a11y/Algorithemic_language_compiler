@@ -133,45 +133,8 @@
 </head>
 
 <body class="course-standalone-body">
-    <header>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <a href="/" class="logo" style="text-decoration: none;">
-                <i class="fas fa-terminal"></i> AlgoCompiler
-            </a>
-
-            <nav class="nav-main">
-                <a href="/" class="btn secondary highlight" title="Retour au compilateur">
-                    <i class="fas fa-code"></i> <span>Éditeur</span>
-                </a>
-                <a href="/course" class="btn secondary highlight" title="Cours d'algorithmique">
-                    <i class="fas fa-graduation-cap"></i> <span>Cours</span>
-                </a>
-                <a href="/problems" class="btn secondary highlight" title="Défis de codage">
-                    <i class="fas fa-laptop-code"></i> <span>Défis</span>
-                </a>
-                <a href="/leaderboard" class="btn secondary highlight" title="Classement">
-                    <i class="fas fa-trophy"></i> <span>Classement</span>
-                </a>
-            </nav>
-        </div>
-
-        <div class="controls">
-            <button class="btn secondary" data-theme-toggle title="Basculer le thème">
-                <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
-            </button>
-            <div class="separator"></div>
-            {% if current_user.is_authenticated %}
-            <a href="/progress" class="btn secondary auth-btn" title="Mon Profil"><i class="fas fa-user-circle"></i>
-                <span>{{ current_user.name }}</span></a>
-            <a href="{{ url_for('auth.logout') }}" class="btn auth-btn"
-                style="color: #dc3545; border: 1px solid #dc3545; background: transparent;" title="Déconnexion"><i
-                    class="fas fa-sign-out-alt"></i></a>
-            {% else %}
-            <a href="{{ url_for('auth.login') }}" class="btn secondary auth-btn"><i class="fas fa-sign-in-alt"></i>
-                Connexion</a>
-            {% endif %}
-        </div>
-    </header>
+    {% set header_custom_controls = "" %}
+    {% include 'partials/navbar.html' %}
 
     <div class="leaderboard-container">
         <div class="leaderboard-header">
@@ -185,64 +148,101 @@
                     <tr>
                         <th class="rank-cell">Rang</th>
                         <th>Étudiant</th>
+                        <th>Niveau</th>
                         <th>Score Global</th>
                         <th>Réalisations</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 40px;">
+                        <td colspan="5" style="text-align: center; padding: 40px;">
                             <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Chargement du classement...
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div id="leaderboard-footer"
+                style="text-align: center; padding: 20px; border-top: 1px solid var(--border-color); display: none;">
+                <button id="show-all-btn" class="btn secondary highlight">
+                    <i class="fas fa-chevron-down"></i> Voir tout le classement
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
+        let fullLeaderboard = [];
+        let showingFull = false;
+
         document.addEventListener('DOMContentLoaded', async () => {
             const body = document.getElementById('leaderboard-body');
+            const footer = document.getElementById('leaderboard-footer');
+            const showAllBtn = document.getElementById('show-all-btn');
+
             try {
                 const res = await fetch('/api/leaderboard');
                 const data = await res.json();
                 if (data.success) {
-                    body.innerHTML = '';
-                    data.leaderboard.forEach((entry, index) => {
-                        const rank = index + 1;
-                        let rankClass = '';
-                        let rankIcon = rank;
-                        if (rank === 1) { rankClass = 'rank-1'; rankIcon = '<i class="fas fa-medal"></i>'; }
-                        if (rank === 2) { rankClass = 'rank-2'; rankIcon = '<i class="fas fa-medal"></i>'; }
-                        if (rank === 3) { rankClass = 'rank-3'; rankIcon = '<i class="fas fa-medal"></i>'; }
+                    fullLeaderboard = data.leaderboard;
+                    renderLeaderboard(10);
 
-                        body.innerHTML += `
-                            <tr>
-                                <td class="rank-cell ${rankClass}">${rankIcon}</td>
-                                <td>
-                                    <div class="user-cell">
-                                        <div class="user-avatar" style="background: ${getStableColor(entry.name)}">${entry.name[0].upper()}</div>
-                                        <div>
-                                            <div style="font-weight: bold;">${entry.name} ${entry.last_name}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="score-cell">${entry.score} pts</td>
-                                <td>
-                                    <div class="stats-badges">
-                                        <span class="stat-item" title="Quiz réussis"><i class="fas fa-check-circle"></i> ${entry.quizzes}</span>
-                                        <span class="stat-item" title="Défis réussis"><i class="fas fa-code"></i> ${entry.challenges}</span>
-                                        <span class="stat-item" title="Badges obtenus"><i class="fas fa-award"></i> ${entry.badges}</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                    if (fullLeaderboard.length > 10) {
+                        footer.style.display = 'block';
+                    }
                 }
             } catch (err) {
-                body.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Erreur lors du chargement.</td></tr>';
+                body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">Erreur lors du chargement.</td></tr>';
             }
+
+            showAllBtn.addEventListener('click', () => {
+                showingFull = true;
+                renderLeaderboard(fullLeaderboard.length);
+                footer.style.display = 'none';
+            });
         });
+
+        function renderLeaderboard(limit) {
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = '';
+
+            fullLeaderboard.slice(0, limit).forEach((entry, index) => {
+                const rank = index + 1;
+                let rankClass = '';
+                let rankIcon = rank;
+                if (rank === 1) { rankClass = 'rank-1'; rankIcon = '<i class="fas fa-medal"></i>'; }
+                if (rank === 2) { rankClass = 'rank-2'; rankIcon = '<i class="fas fa-medal"></i>'; }
+                if (rank === 3) { rankClass = 'rank-3'; rankIcon = '<i class="fas fa-medal"></i>'; }
+
+                const level = entry.level || { name: 'Novice', icon: '🌱', color: '#6c757d' };
+
+                body.innerHTML += `
+                    <tr>
+                        <td class="rank-cell ${rankClass}">${rankIcon}</td>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar" style="background: ${getStableColor(entry.name)}">${entry.name[0].upper()}</div>
+                                <div>
+                                    <div style="font-weight: bold;">${entry.name}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="level-badge" style="color: ${level.color}; border: 1px solid ${level.color}; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; background: rgba(0,0,0,0.1);">
+                                ${level.icon} ${level.name}
+                            </span>
+                        </td>
+                        <td class="score-cell">${entry.score} pts</td>
+                        <td>
+                            <div class="stats-badges">
+                                <span class="stat-item" title="Quiz réussis"><i class="fas fa-check-circle"></i> ${entry.quizzes}</span>
+                                <span class="stat-item" title="Défis réussis"><i class="fas fa-code"></i> ${entry.challenges}</span>
+                                <span class="stat-item" title="Badges obtenus"><i class="fas fa-award"></i> ${entry.badges}</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
         function getStableColor(str) {
             let hash = 0;
@@ -255,6 +255,7 @@
         String.prototype.upper = function () { return this.toUpperCase(); }
     </script>
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/level_pill.js') }}"></script>
 </body>
 
 </html>

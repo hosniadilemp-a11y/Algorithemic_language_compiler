@@ -37,7 +37,10 @@ app = Flask(__name__)
 # Basic Config
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(16))
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Mail Config (Resend defaults for easier testing)
@@ -46,7 +49,7 @@ app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465))
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'false').lower() in ['true', 'on', '1']
 app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'true').lower() in ['true', 'on', '1']
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'resend')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '---')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'onboarding@resend.dev')
 
 # OAuth Config Placeholder
@@ -350,7 +353,10 @@ def save_quiz_progress():
             # Check interpretation
             all_correct = (score == total)
             none_correct = (score == 0)
-            
+
+            # Capture level before save
+            old_xp, _, old_level, _ = compute_xp_and_level(current_user.id)
+
             attempt = QuizAttempt(
                 user_id=current_user.id,
                 chapter_id=chapter.id,
@@ -363,7 +369,21 @@ def save_quiz_progress():
             db.session.add(attempt)
             db.session.commit()
 
-        return jsonify({'success': True, 'saved': current_user.is_authenticated})
+            # Capture level after save
+            new_xp, _, new_level, new_xp_to_next = compute_xp_and_level(current_user.id)
+            level_up = new_level['num'] > old_level['num']
+
+            return jsonify({
+                'success': True,
+                'saved': True,
+                'xp_earned': new_xp - old_xp,
+                'xp_total': new_xp,
+                'level': new_level,
+                'level_up': level_up,
+                'xp_to_next': new_xp_to_next
+            })
+
+        return jsonify({'success': True, 'saved': False})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -823,25 +843,45 @@ def get_problems():
         solved_submissions = ChallengeSubmission.query.filter_by(user_id=current_user.id, passed=True).all()
         solved_ids = {s.problem_id for s in solved_submissions}
 
-    # Count distinct solvers for each problem
-    solver_counts = db.session.query(
-        ChallengeSubmission.problem_id, 
-        func.count(distinct(ChallengeSubmission.user_id))
-    ).filter(ChallengeSubmission.passed == True).group_by(ChallengeSubmission.problem_id).all()
-    
+    # Count distinct users who attempted each problem
+    attempt_counts = (
+        db.session.query(
+            ChallengeSubmission.problem_id,
+            func.count(distinct(ChallengeSubmission.user_id))
+        )
+        .group_by(ChallengeSubmission.problem_id)
+        .all()
+    )
+    attempt_map = {prob_id: count for prob_id, count in attempt_counts}
+
+    # Count distinct users who solved each problem
+    solver_counts = (
+        db.session.query(
+            ChallengeSubmission.problem_id,
+            func.count(distinct(ChallengeSubmission.user_id))
+        )
+        .filter(ChallengeSubmission.passed == True)
+        .group_by(ChallengeSubmission.problem_id)
+        .all()
+    )
     solver_map = {prob_id: count for prob_id, count in solver_counts}
     
     return jsonify({
         'success': True,
-        'problems': [{
-            'id': p.id,
-            'title': p.title,
-            'topic': p.topic,
-            'difficulty': p.difficulty,
-            'solved': p.id in solved_ids if current_user.is_authenticated else None,
-            'solvers': solver_map.get(p.id, 0),
-            'description': p.description[:150] + '...' if p.description and len(p.description) > 150 else p.description
-        } for p in problems]
+        'problems': [
+            {
+                'id': p.id,
+                'title': p.title,
+                'topic': p.topic,
+                'difficulty': p.difficulty,
+                'solved': p.id in solved_ids if current_user.is_authenticated else None,
+                'attempted_users': attempt_map.get(p.id, 0),
+                'solvers': solver_map.get(p.id, 0),
+                'success_rate': round((solver_map.get(p.id, 0) / attempt_map.get(p.id, 1)) * 100, 1) if attempt_map.get(p.id, 0) else 0,
+                'description': p.description[:150] + '...' if p.description and len(p.description) > 150 else p.description
+            }
+            for p in problems
+        ]
     })
 
 @app.route('/api/problems/<int:problem_id>', methods=['GET'])
@@ -974,8 +1014,13 @@ def submit_code():
     all_passed = all(r['passed'] for r in results) if results else False
     
     # Save submission if user is logged in and it's a full submission
+    level_up_info = None
     if current_user.is_authenticated and execute_all:
         score_percent = sum(1 for r in results if r['passed']) / len(results) * 100 if results else 0
+
+        # Capture level before save
+        old_xp, _, old_level, _ = compute_xp_and_level(current_user.id)
+
         submission = ChallengeSubmission(
             user_id=current_user.id,
             problem_id=problem.id,
@@ -986,12 +1031,157 @@ def submit_code():
         )
         db.session.add(submission)
         db.session.commit()
-    
+
+        # Capture level after save
+        new_xp, _, new_level, new_xp_to_next = compute_xp_and_level(current_user.id)
+        if new_level['num'] > old_level['num']:
+            level_up_info = {
+                'level_up': True,
+                'new_level': new_level,
+                'xp_earned': new_xp - old_xp,
+                'xp_total': new_xp,
+                'xp_to_next': new_xp_to_next
+            }
+
     return jsonify({
         'success': True,
         'all_passed': all_passed,
-        'results': results
+        'results': results,
+        **(level_up_info or {})
     })
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# XP POINTS & LEVEL SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
+LEVEL_DEFS = [
+    # (min_xp, level_num, name_fr, color, glow, icon, special_requirement_key)
+    (0,    1, "Novice",      "#6c757d", "rgba(108,117,125,0.5)", "⌨️", None),
+    (50,   2, "Initié",      "#0dcaf0", "rgba(13,202,240,0.5)",  "💻", None),
+    (200,  3, "Apprenti",    "#fd7e14", "rgba(253,126,20,0.5)",  "🛠️", None),
+    (500,  4, "Confirmé",    "#0d6efd", "rgba(13,110,253,0.5)",  "⚙️", None),
+    (1200, 5, "Expert",      "#ffc107", "rgba(255,193,7,0.5)",   "🚀", None),
+    (3000, 6, "Maître",      "#a855f7", "rgba(168,85,247,0.5)",  "♾️", "master_criteria"),
+]
+
+def compute_xp_and_level(user_id):
+    """Return (xp_total, xp_breakdown, level_dict, xp_to_next) for a user."""
+    from web.models import QuizAttempt, ChallengeSubmission, UserBadge, Chapter
+
+    quiz_attempts = QuizAttempt.query.filter_by(user_id=user_id).all()
+    submissions   = ChallengeSubmission.query.filter_by(user_id=user_id, passed=True).all()
+    badges        = UserBadge.query.filter_by(user_id=user_id).all()
+
+    chapters = {c.id: c.identifier for c in Chapter.query.all()}
+
+    breakdown = []
+    xp = 0
+
+    # Quiz XP — per chapter, count the BEST attempt (if score >= 80%) → +10 XP
+    chapter_best = {}
+    for qa in quiz_attempts:
+        pct = qa.score / qa.total_questions if qa.total_questions else 0
+        if pct >= 0.8:
+            prev = chapter_best.get(qa.chapter_id, 0)
+            chapter_best[qa.chapter_id] = max(prev, qa.score)
+    for cid, best_score in chapter_best.items():
+        ident = chapters.get(cid, f"Chap {cid}")
+        breakdown.append({"label": f"Quiz — {ident.capitalize()}", "xp": 10, "icon": "📚"})
+        xp += 10
+
+    # Challenge XP — per unique passed problem → scaled by difficulty
+    passed_pids = set()
+    for sub in submissions:
+        if sub.problem_id not in passed_pids:
+            passed_pids.add(sub.problem_id)
+    
+    if passed_pids:
+        passed_problems = Problem.query.filter(Problem.id.in_(passed_pids)).all()
+        for p in passed_problems:
+            if p.difficulty == 'Easy':
+                val = 10
+                icon = "🌱"
+            elif p.difficulty == 'Medium':
+                val = 20
+                icon = "⚡"
+            elif p.difficulty == 'Hard':
+                val = 50
+                icon = "🔥"
+            else:
+                val = 25
+                icon = "⚔️"
+            breakdown.append({"label": f"Défi #{p.id} ({p.difficulty})", "xp": val, "icon": icon})
+            xp += val
+
+    # Badge XP — per badge → +50 XP
+    from web.models import UserBadge as UB
+    badge_map = {
+        "streak_3": "Séquence 3 Jours", "streak_7": "Séquence 7 Jours",
+        "course_1": "Premier Pas", "course_3": "Étudiant Assidu",
+        "course_7": "Érudit", "course_10_master": "Algo Master",
+        "chall_1": "Développeur", "chall_5": "Codeur",
+        "chall_10_beg": "Débutant Challenges", "chall_20_int": "Intermédiaire Challenges",
+        "chall_50_adv": "Avancé Challenges", "chall_100_mast": "Maître des Défis",
+        "hacker_bronze": "Hacker Bronze", "hacker_gold": "Hacker Or",
+        "hacker_platinum": "Hacker Platine", "hacker_diamond": "Hacker Diamant",
+        "hacker_master": "Maître Hacker", "hacker_grandmaster": "Grand Maître Hacker",
+    }
+    for ub in badges:
+        label = badge_map.get(ub.badge_id, ub.badge_id)
+        breakdown.append({"label": f"Badge : {label}", "xp": 50, "icon": "🏅"})
+        xp += 50
+
+    # Determine level
+    # Check master criteria for level 6
+    total_challenges = len(passed_pids)
+    all_quiz_pct = 0
+    if quiz_attempts:
+        # average of best % per chapter
+        chapter_pct = {}
+        for qa in quiz_attempts:
+            p = qa.score / qa.total_questions * 100 if qa.total_questions else 0
+            chapter_pct[qa.chapter_id] = max(chapter_pct.get(qa.chapter_id, 0), p)
+        all_quiz_pct = sum(chapter_pct.values()) / len(chapter_pct) if chapter_pct else 0
+
+    master_ok = (xp >= 3000 and all_quiz_pct >= 95 and total_challenges >= 50)
+    
+    current_level = LEVEL_DEFS[0]
+    for lvl in LEVEL_DEFS:
+        min_xp, lnum, name, color, glow, icon, special = lvl
+        if special == "master_criteria":
+            if master_ok:
+                current_level = lvl
+        elif xp >= min_xp:
+            current_level = lvl
+
+    # XP to next level
+    next_xp = None
+    for lvl in LEVEL_DEFS:
+        if lvl[0] > xp:
+            next_xp = lvl[0]
+            break
+    # If we're level 6 (max) and criteria met, no next level
+    if current_level[1] == 6:
+        xp_to_next = 0
+        next_level_name = None
+    elif next_xp is not None:
+        xp_to_next = next_xp - xp
+        next_level_name = [l[2] for l in LEVEL_DEFS if l[0] == next_xp][0]
+    else:
+        xp_to_next = 0
+        next_level_name = None
+
+    level_dict = {
+        "num": current_level[1],
+        "name": current_level[2],
+        "color": current_level[3],
+        "glow": current_level[4],
+        "icon": current_level[5],
+        "min_xp": current_level[0],
+        "next_xp": next_xp,
+        "next_level_name": next_level_name,
+    }
+    return xp, breakdown, level_dict, xp_to_next
 
 @app.route('/api/user/progress', methods=['GET'])
 def get_user_progress():
@@ -1169,9 +1359,9 @@ def get_user_progress():
     if chapter_prob_passed("Arrays") >= 20: badges_to_award.append("maitre_tableaux")
     if chapter_prob_passed("Strings") >= 20: badges_to_award.append("maitre_chaines")
     if chapter_prob_passed("Enregistrements") >= 20: badges_to_award.append("maitre_enregistrements")
-    if chapter_prob_passed("Listes_Chainees") >= 2: badges_to_award.append("maitre_listes") # as per Badges.txt 02
+    if chapter_prob_passed("Listes_Chainees") >= 20: badges_to_award.append("maitre_listes")
     if chapter_prob_passed("Files") >= 20: badges_to_award.append("maitre_files")
-    if chapter_prob_passed("Piles") >= 2: badges_to_award.append("maitre_piles") # as per txt 02
+    if chapter_prob_passed("Piles") >= 20: badges_to_award.append("maitre_piles")
 
     # Query existing badges to see what's new
     existing_badges = {ub.badge_id: ub for ub in UserBadge.query.filter_by(user_id=current_user.id).all()}
@@ -1216,9 +1406,9 @@ def get_user_progress():
         "maitre_tableaux": {"name": "Maitre des Tableaux", "desc": "20 problèmes sur Arrays", "icon": "fas fa-table", "category": "maitre"},
         "maitre_chaines": {"name": "Maitre des Chaines", "desc": "20 problèmes sur Strings", "icon": "fas fa-font", "category": "maitre"},
         "maitre_enregistrements": {"name": "Maitre des Enregistrements", "desc": "20 problèmes d'Enregistrements", "icon": "fas fa-address-card", "category": "maitre"},
-        "maitre_listes": {"name": "Maitre des Listes Chainees", "desc": "2 problèmes sur LinkedList", "icon": "fas fa-link", "category": "maitre"},
+        "maitre_listes": {"name": "Maitre des Listes Chainees", "desc": "20 problèmes sur LinkedList", "icon": "fas fa-link", "category": "maitre"},
         "maitre_files": {"name": "Maitre des Files", "desc": "20 problèmes sur Files", "icon": "fas fa-layer-group", "category": "maitre"},
-        "maitre_piles": {"name": "Maitre des Piles", "desc": "2 problèmes sur Piles", "icon": "fas fa-bars", "category": "maitre"},
+        "maitre_piles": {"name": "Maitre des Piles", "desc": "20 problèmes sur Piles", "icon": "fas fa-bars", "category": "maitre"},
     }
     
     # Send up all definitions, marking which ones the user earned vs locked
@@ -1248,6 +1438,9 @@ def get_user_progress():
             activity_map[d.isoformat()] = sum(1 for sub in submissions if sub.timestamp.date() == d) + \
                                          sum(1 for qa in quiz_attempts if qa.timestamp.date() == d)
 
+    # XP and Level computation
+    xp_total, xp_breakdown, level_dict, xp_to_next = compute_xp_and_level(current_user.id)
+
     return jsonify({
         'success': True,
         'progress': {
@@ -1263,6 +1456,10 @@ def get_user_progress():
             'topic_counts': topic_counts,
             'badges': badges_response,
             'activity_map': activity_map,
+            'xp_total': xp_total,
+            'xp_breakdown': xp_breakdown,
+            'level': level_dict,
+            'xp_to_next': xp_to_next,
             'advanced_stats': {
                 'challenge_topic_dist': challenge_topic_dist,
                 'challenge_diff_dist': challenge_diff_dist,
@@ -1283,17 +1480,24 @@ def get_leaderboard():
     leaderboard = []
     
     for user in users:
-        # Calculate Power Score
+        # Calculate Power Score using the same formula as compute_xp_and_level
+        xp_total, _, level_dict, _ = compute_xp_and_level(user.id)
+        
+        # Breakdown counters for display in the table
         q_count = QuizAttempt.query.filter_by(user_id=user.id).filter(QuizAttempt.score / QuizAttempt.total_questions >= 0.8).count()
         c_count = ChallengeSubmission.query.filter_by(user_id=user.id, passed=True).count()
         b_count = UserBadge.query.filter_by(user_id=user.id).count()
         
-        score = (q_count * 10) + (c_count * 25) + (b_count * 50)
-        
         leaderboard.append({
             'name': user.name,
-            'last_name': user.last_name or '',
-            'score': score,
+            'score': xp_total,
+            'level': {
+                'num': level_dict['num'],
+                'name': level_dict['name'],
+                'icon': level_dict['icon'],
+                'color': level_dict['color'],
+                'glow': level_dict['glow']
+            },
             'quizzes': q_count,
             'challenges': c_count,
             'badges': b_count
@@ -1304,10 +1508,11 @@ def get_leaderboard():
     
     return jsonify({
         'success': True,
-        'leaderboard': leaderboard[:20]  # Top 20
+        'leaderboard': leaderboard
     })
 
 @app.route('/badges')
+@login_required
 def badges_page():
     return render_template('badges.html')
 
@@ -1344,15 +1549,13 @@ def update_profile():
         return jsonify({'success': False, 'error': 'No data provided'}), 400
     
     name = data.get('name')
-    last_name = data.get('last_name')
     dob_str = data.get('date_of_birth')
     study_year = data.get('study_year')
     
     if not name:
-        return jsonify({'success': False, 'error': 'Le prénom est requis'}), 400
+        return jsonify({'success': False, 'error': 'Le pseudo est requis'}), 400
         
     current_user.name = name
-    current_user.last_name = last_name
     current_user.study_year = study_year
     
     if dob_str:
@@ -1372,4 +1575,3 @@ def update_profile():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port, use_reloader=True)
-

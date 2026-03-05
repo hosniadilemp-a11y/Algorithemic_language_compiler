@@ -1,0 +1,1021 @@
+[
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "text":  "Qu\u0027est-ce qu\u0027un algorithme au sens strict ?",
+        "explanation":  "Un algorithme est une suite finie et précise d\u0027instructions. Ce n\u0027est pas le code lui-même (qui dépend du langage), ni juste une idée vague. Reponse correcte: Une suite finie d\u0027instructions pour résoudre un problème. Ici, la notion \u0027Définition\u0027 s\u0027applique: on valide la reponse par trace d\u0027execution ou par application directe de la definition algorithmique.",
+        "choices":  [
+                        {
+                            "text":  "Une suite finie d\u0027instructions pour résoudre un problème",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Un programme informatique écrit en C ou Python",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une liste de souhaits non ordonnée",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un composant matériel de l\u0027ordinateur",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "text":  "Une recette de cuisine est un exemple d\u0027algorithme dans la vie réelle.",
+        "explanation":  "Vrai. Elle comprend des entrées (ingrédients), des instructions précises (étapes), et une sortie (le plat). Reponse correcte: Vrai. Ici, la notion \u0027Définition\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Variables",
+        "text":  "Que représente concrètement une \u0027Variable\u0027 ?",
+        "explanation":  "Une variable agit comme un tiroir dans la RAM avec une étiquette (le nom) et un contenu (la valeur). Reponse correcte: Un espace nommé dans la mémoire (RAM) pour stocker une valeur. Ici, la notion \u0027Variables\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        {
+                            "text":  "Un espace nommé dans la mémoire (RAM) pour stocker une valeur",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une instruction qui répète une action",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Un nombre qui ne change jamais",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le disque dur de l\u0027ordinateur",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Types",
+        "text":  "Quel type de donnée utiliseriez-vous pour stocker l\u0027âge d\u0027une personne ?",
+        "explanation":  "L\u0027âge est un nombre entier (ex: 18, 45). On n\u0027utilise pas de virgule pour un âge typique. Reponse correcte: Entier. Ici, la notion \u0027Types\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Entier",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Reel",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Chaine",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Booleen",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Easy",
+        "concept":  "Affectation",
+        "text":  "Que fait l\u0027instruction `A := 5` ?",
+        "explanation":  "L\u0027opérateur `:=` est l\u0027affectation. Il place la valeur située à droite dans la variable située à gauche. Reponse correcte: Elle place la valeur 5 dans la variable A. Ici, la notion \u0027Affectation\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        {
+                            "text":  "Elle place la valeur 5 dans la variable A",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Elle vérifie si A est égal à 5",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Elle ajoute 5 à la variable A",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Elle affiche le chiffre 5 à l\u0027écran",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Easy",
+        "concept":  "Variables",
+        "text":  "Il est possible de changer la valeur d\u0027une CONSTANTE au milieu de l\u0027algorithme.",
+        "explanation":  "Faux. Par définition, une constante est verrouillée dès sa déclaration et ne peut plus être modifiée. Reponse correcte: Faux. Ici, la notion \u0027Variables\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Opérateurs",
+        "text":  "Quel est le résultat de l\u0027opération `10 % 3` (10 modulo 3) ?",
+        "explanation":  "Le modulo (%) donne le reste de la division entière. 10 divisé par 3 fait 3, et il reste 1. Reponse correcte: 1. Ici, la notion \u0027Opérateurs\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        {
+                            "text":  "1",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "3.33",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "3",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Logique",
+        "text":  "Si `A = Vrai` et `B = Faux`, quelle est la valeur de l\u0027expression `(A Ou B)` ?",
+        "explanation":  "L\u0027opérateur \u0027Ou\u0027 retourne Vrai si au moins l\u0027une des deux conditions est Vraie. Ici, A est Vrai. Reponse correcte: Vrai. Ici, la notion \u0027Logique\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "NIL",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Logique",
+        "text":  "Si `A = Vrai` et `B = Faux`, quelle est la valeur de l\u0027expression `(A Et B)` ?",
+        "explanation":  "L\u0027opérateur \u0027Et\u0027 exige que TOUTES les conditions soient Vraies. Ici, B étant Faux, l\u0027ensemble est Faux. Reponse correcte: Faux. Ici, la notion \u0027Logique\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Faux",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "NIL",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Affectation",
+        "text":  "Si `X = 10` et `Y = 20`. Après l\u0027instruction `X := Y`, que valent X et Y ?",
+        "explanation":  "La valeur de Y (20) est copiée dans X. Y conserve sa valeur. Donc les deux valent 20. Reponse correcte: X = 20, Y = 20. Ici, la notion \u0027Affectation\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "X = 20, Y = 20",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "X = 10, Y = 20",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X = 20, Y = 10",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X = 0, Y = 0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Conditions",
+        "text":  "Dans une structure `Si... Alors... Sinon`, quand le bloc `Sinon` est-il exécuté ?",
+        "explanation":  "Le bloc `Sinon` est l\u0027alternative exécutée uniquement si la condition initiale testée dans le `Si` est évaluée à Faux. Reponse correcte: Quand la condition du Si est Fausse. Ici, la notion \u0027Conditions\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+        "choices":  [
+                        {
+                            "text":  "Quand la condition du Si est Fausse",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Quand la condition du Si est Vraie",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Toujours, à la fin du Si",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Au hasard",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Boucles",
+        "text":  "Laquelle de ces boucles exécute SON BLOC d\u0027instructions TOUJOURS AU MOINS UNE FOIS, peu importe la condition ?",
+        "explanation":  "La boucle `Repeter... Jusqua` teste sa condition à la fin de la boucle. Le code à l\u0027intérieur est donc lu au moins une fois avant le premier test. Reponse correcte: Repeter ... Jusqua. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Repeter ... Jusqua",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "TantQue ... Faire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Pour ... Faire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Si ... Alors",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Boucles",
+        "text":  "Si je sais exactement que je dois afficher 5 fois le mot \u0027Bonjour\u0027, quelle boucle est la plus appropriée ?",
+        "explanation":  "La boucle `Pour` est conçue spécifiquement pour les itérations dont le nombre exact est connu à l\u0027avance (ex: de 1 à 5). Reponse correcte: Pour. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Pour",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "TantQue",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Repeter",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Si",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Medium",
+        "concept":  "Types",
+        "text":  "Le type \u0027Chaine\u0027 consomme généralement moins de mémoire que le type \u0027Booleen\u0027.",
+        "explanation":  "Faux. Un Booleen tient souvent sur 1 octet (voire 1 bit). Une Chaîne occupe au moins 1 octet *par caractère*. Reponse correcte: Faux. Ici, la notion \u0027Types\u0027 s\u0027applique: une chaine manipule du texte: concatenation, longueur et comparaison se font sur des caracteres, pas sur des valeurs numeriques.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Algorithmique",
+        "text":  "Pour échanger les valeurs de A et B en utilisant une variable temporaire \u0027T\u0027, quel est le bon ordre d\u0027instructions ?",
+        "explanation":  "On sauvegarde A dans T, puis on écrase A avec B, et enfin on met dans B l\u0027ancienne valeur de A sauvegardée dans T. Reponse correcte: T:=A; A:=B; B:=T;. Ici, la notion \u0027Algorithmique\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "T:=A; A:=B; B:=T;",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "A:=T; T:=B; B:=A;",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A:=B; B:=T; T:=A;",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "T:=B; B:=A; A:=T;",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Algorithmique",
+        "text":  "Tracez cet algorithme brèf : `A:=5; B:=10; A:=A+B; B:=A-B; A:=A-B;`. Que se passe-t-il ?",
+        "explanation":  "C\u0027est la méthode mathématique pour inverser deux variables (Swap) sans utiliser de variable temporelle.  la fin, A=10 et B=5. Reponse correcte: Les valeurs de A et B sont échangées (A=10, B=5). Ici, la notion \u0027Algorithmique\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Les valeurs de A et B sont échangées (A=10, B=5)",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "A devient 15 et B devient 0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A devient 5 et B devient 10 (rien ne change)",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "C\u0027est une erreur de syntaxe",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "Combien de fois la boucle `Pour i := 2 a 5 Faire` va-t-elle s\u0027exécuter ?",
+        "explanation":  "Elle s\u0027exécute pour i=2, i=3, i=4, et i=5. Cela fait un total de 4 itérations. Reponse correcte: 4 fois. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "4 fois",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "5 fois",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "3 fois",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une infinité de fois",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "Trace d\u0027exécution : `i:=0; TantQue i \u003c 3 Faire i:=i+2; Fin TantQue;`. Que vaut `i` à la fin ?",
+        "explanation":  "Tour 1: i=0, devient 2. (2\u003c3 est vrai). Tour 2: i=2, devient 4. (4\u003c3 est faux). La boucle s\u0027arrête. i vaut 4. Reponse correcte: 4. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "4",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "3",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Conditions",
+        "text":  "Dans `Si (X \u003e 5) Alors... Sinon Si (X \u003e 10) Alors...`. Que se passe-t-il si X vaut 15 ?",
+        "explanation":  "X (15) est plus grand que 5, donc la PREMIRE condition est Vraie. Son bloc s\u0027exécute, et le code ignore le reste des `Sinon Si`, même si 15 est aussi \u003e 10. Reponse correcte: Seul le bloc du premier Si (X \u003e 5) est exécuté. Ici, la notion \u0027Conditions\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Seul le bloc du premier Si (X \u003e 5) est exécuté",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Seul le bloc du Sinon Si (X \u003e 10) est exécuté",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Les deux blocs sont exécutés l\u0027un après l\u0027autre",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Le code plante",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Types",
+        "text":  "Que produira la ligne : `Ecrire(\"5\" + \"5\");` ?",
+        "explanation":  "Puisque les 5 sont entre guillemets, ce sont des Chaînes de caractères. Le signe + agit comme une concaténation, collant les textes bout à bout. Reponse correcte: 55. Ici, la notion \u0027Types\u0027 s\u0027applique: chaque type de donnee a un usage precis (nombre, texte, booleen) et doit correspondre a la nature de l\u0027information.",
+        "choices":  [
+                        {
+                            "text":  "55",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "10",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Une erreur",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Affectation",
+        "text":  "Si A vaut 7, que fait `A := A + 1` ?",
+        "explanation":  "On lit A (7), on ajoute 1 puis on reecrit 8 dans A. Reponse correcte: A devient 8. Ici, la notion \u0027Affectation\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "A devient 8",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "A reste 7",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "A devient 1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur de syntaxe",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Pieges",
+        "text":  "Dans un pseudo-code classique, quelle ligne teste l\u0027egalite ?",
+        "explanation":  "`=` sert au test d\u0027egalite, `:=` sert a l\u0027affectation. Reponse correcte: Si X = 5 Alors. Ici, la notion \u0027Pieges\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Si X = 5 Alors",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Si X := 5 Alors",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "X \u003c-? 5",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ecrire(X = 5 = Vrai)",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Medium",
+        "concept":  "Constantes",
+        "text":  "Une constante peut etre initialisee une seule fois puis ne plus changer.",
+        "explanation":  "Vrai. Une constante est fixe apres declaration. Reponse correcte: Vrai. Ici, la notion \u0027Constantes\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "Combien d\u0027iterations pour `Pour i := 1 a 1 Faire` ?",
+        "explanation":  "La borne debut et fin sont identiques, donc une seule iteration. Reponse correcte: 1. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "1",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Infini",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "Que se passe-t-il si la condition d\u0027une boucle TantQue est initialement fausse ?",
+        "explanation":  "Le corps n\u0027est jamais execute. Reponse correcte: Aucune iteration. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Aucune iteration",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Une iteration minimale",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Deux iterations",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur systematique",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Logique",
+        "text":  "Valeur de `Non(Vrai Et Faux)` ?",
+        "explanation":  "Vrai Et Faux = Faux, puis Non(Faux) = Vrai. Reponse correcte: Vrai. Ici, la notion \u0027Logique\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "NIL",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Indefini",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "Trace: `x:=2; y:=x; x:=5;` quelle est la valeur de y ?",
+        "explanation":  "y recoit la copie de x au moment de l\u0027affectation, donc y reste 2. Reponse correcte: 2. Ici, la notion \u0027Trace\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        {
+                            "text":  "2",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "5",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Types",
+        "text":  "Quel type convient pour stocker vrai/faux ?",
+        "explanation":  "Le type booleen represente les valeurs logiques. Reponse correcte: Booleen. Ici, la notion \u0027Types\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Booleen",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Chaine",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Reel",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Entier",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Operateurs",
+        "text":  "Resultat de `17 % 5` ?",
+        "explanation":  "17 = 3*5 + 2, reste 2. Reponse correcte: 2. Ici, la notion \u0027Operateurs\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        {
+                            "text":  "2",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "3",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Hard",
+        "concept":  "Pieges",
+        "text":  "`X := X + 1` est impossible car X apparait des deux cotes.",
+        "explanation":  "Faux. C\u0027est l\u0027incrementation classique. Reponse correcte: Faux. Ici, la notion \u0027Pieges\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Conditions",
+        "text":  "Quelle structure choisit entre deux branches ?",
+        "explanation":  "La structure conditionnelle `Si ... Sinon`. Reponse correcte: Si ... Sinon. Ici, la notion \u0027Conditions\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+        "choices":  [
+                        {
+                            "text":  "Si ... Sinon",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Pour",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "TantQue",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Repeter",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "`n:=3; TantQue n\u003e0 Faire n:=n-1; Fin TantQue;` n final ?",
+        "explanation":  "n descend de 3 a 0 puis la condition devient fausse. Reponse correcte: 0. Ici, la notion \u0027Trace\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "0",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "-1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "3",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Pieges",
+        "text":  "Dans `Si A \u003e 0 Ou B \u003e 0`, quand est-ce faux ?",
+        "explanation":  "`Ou` est faux seulement si les deux conditions sont fausses. Reponse correcte: Si A \u003c= 0 et B \u003c= 0. Ici, la notion \u0027Pieges\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Si A \u003c= 0 et B \u003c= 0",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Si A \u003e 0 et B \u003e 0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Si A \u003e 0 et B \u003c= 0",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Si A \u003c= 0 et B \u003e 0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "I/O",
+        "text":  "Quel mot-cle sert a lire une valeur utilisateur ?",
+        "explanation":  "`Lire` lit une entree. Reponse correcte: Lire. Ici, la notion \u0027I/O\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        {
+                            "text":  "Lire",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Ecrire",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Retourner",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "AfficherSi",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "`Pour i := 5 a 3 Faire` (pas implicite +1). Combien d\u0027iterations ?",
+        "explanation":  "Debut \u003e fin avec pas croissant, donc 0 iteration. Reponse correcte: 0. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "0",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Erreur obligatoire",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Medium",
+        "concept":  "Algorithmique",
+        "text":  "Un algorithme doit terminer en un nombre fini d\u0027etapes.",
+        "explanation":  "Vrai, c\u0027est une propriete fondamentale. Reponse correcte: Vrai. Ici, la notion \u0027Algorithmique\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "`a:=1; b:=2; c:=a; a:=b; b:=c;` valeur de b a la fin ?",
+        "explanation":  "c prend 1, a prend 2, b prend c donc 1. Reponse correcte: 1. Ici, la notion \u0027Trace\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        {
+                            "text":  "1",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "3",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "0",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Priorite",
+        "text":  "Sans parenthese, quelle operation est prioritaire ?",
+        "explanation":  "En general, multiplication/division avant addition/soustraction. Reponse correcte: Multiplication. Ici, la notion \u0027Priorite\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        {
+                            "text":  "Multiplication",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Addition",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Affectation",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Ecriture",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Types",
+        "text":  "Quel type pour une moyenne 13.75 ?",
+        "explanation":  "Un reel accepte les decimales. Reponse correcte: Reel. Ici, la notion \u0027Types\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "Reel",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Entier",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Booleen",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Chaine obligatoire",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "TrueFalse",
+        "difficulty":  "Hard",
+        "concept":  "Pieges",
+        "text":  "`Si X = 0 Alors` modifie X.",
+        "explanation":  "Faux. C\u0027est un test logique, pas une affectation. Reponse correcte: Faux. Ici, la notion \u0027Pieges\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  true
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Boucles",
+        "text":  "Une boucle infinie survient quand...",
+        "explanation":  "...la condition de sortie ne devient jamais fausse. Reponse correcte: la condition d\u0027arret n\u0027est jamais atteinte. Ici, la notion \u0027Boucles\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        {
+                            "text":  "la condition d\u0027arret n\u0027est jamais atteinte",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "la variable est booleenne",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "on utilise Pour",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "on utilise modulo",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Medium",
+        "concept":  "Logique",
+        "text":  "Valeur de `(Vrai Et Non Faux)` ?",
+        "explanation":  "Non Faux = Vrai, donc Vrai Et Vrai = Vrai. Reponse correcte: Vrai. Ici, la notion \u0027Logique\u0027 s\u0027applique: la logique booleenne suit des tables de verite strictes (ET, OU, NON), sans interpretation ambigue.",
+        "choices":  [
+                        {
+                            "text":  "Vrai",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "Faux",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "Indefini",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "NIL",
+                            "is_correct":  false
+                        }
+                    ]
+    },
+    {
+        "type":  "MCQ",
+        "difficulty":  "Hard",
+        "concept":  "Trace",
+        "text":  "`x:=4; x:=x%3; x:=x+2;` valeur finale de x ?",
+        "explanation":  "4%3=1, puis 1+2=3. Reponse correcte: 3. Ici, la notion \u0027Trace\u0027 s\u0027applique: l\u0027affectation copie une valeur vers une variable; elle n\u0027est pas un test d\u0027egalite.",
+        "choices":  [
+                        {
+                            "text":  "3",
+                            "is_correct":  true
+                        },
+                        {
+                            "text":  "2",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "1",
+                            "is_correct":  false
+                        },
+                        {
+                            "text":  "4",
+                            "is_correct":  false
+                        }
+                    ]
+    }
+]

@@ -283,6 +283,101 @@
       margin-top: 4px;
     }
 
+    .insights-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 18px;
+    }
+
+    .insights-block {
+      background: #0f141b;
+      border: 1px solid #243041;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .insights-block h4 {
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .insights-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .insight-metric {
+      background: #0d1117;
+      border: 1px solid #283548;
+      border-radius: 10px;
+      padding: 11px 12px;
+    }
+
+    .insight-metric .im-label {
+      font-size: 0.74rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.45px;
+      margin-bottom: 4px;
+    }
+
+    .insight-metric .im-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #e6edf3;
+    }
+
+    .insight-online {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .online-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.35);
+      font-weight: 700;
+    }
+
+    .spot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .spot-card {
+      border: 1px solid #2a3647;
+      border-radius: 10px;
+      padding: 10px;
+      background: #0d1117;
+      font-size: 0.83rem;
+    }
+
+    .spot-title {
+      color: #8b949e;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.45px;
+    }
+
+    .spot-name {
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
     /* ── Panels ── */
     .panel {
       background: #161b22;
@@ -670,6 +765,16 @@
     .mini-table td {
       padding: 8px 10px;
     }
+
+    @media (max-width: 1180px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .insights-layout {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -784,6 +889,67 @@
               jours)</span></div>
           <canvas id="activityChart" height="80"></canvas>
         </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title"><i class="fas fa-bolt"></i> Vue d'ensemble avancée</span></div>
+          <div class="insights-layout">
+            <div>
+              <div class="insights-block">
+                <h4>Top 10 Utilisateurs Actifs</h4>
+                <div class="table-wrap">
+                  <table class="mini-table">
+                    <thead>
+                      <tr>
+                        <th>Rang</th>
+                        <th>Utilisateur</th>
+                        <th>Score</th>
+                        <th>Dernière activité</th>
+                      </tr>
+                    </thead>
+                    <tbody id="topActiveUsersBody">
+                      <tr><td colspan="4" style="color:#8b949e;">Chargement…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="insights-block">
+                <h4>Classement Utilisateurs (Performance)</h4>
+                <div class="table-wrap">
+                  <table class="mini-table">
+                    <thead>
+                      <tr>
+                        <th>Rang</th>
+                        <th>Utilisateur</th>
+                        <th>Réussite</th>
+                        <th>Quiz Moy.</th>
+                      </tr>
+                    </thead>
+                    <tbody id="rankedUsersBody">
+                      <tr><td colspan="4" style="color:#8b949e;">Chargement…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="insights-block insight-online">
+                <div>
+                  <h4 style="margin-bottom:4px;">Connectés en ce moment</h4>
+                  <div style="font-size:0.78rem;color:#8b949e;">Estimation: activité < 5 min</div>
+                </div>
+                <div class="online-pill"><i class="fas fa-circle"></i> <span id="onlineNowCount">0</span></div>
+              </div>
+              <div class="insights-block">
+                <h4>Indicateurs Clés</h4>
+                <div id="insightsMetrics" class="insights-metric-grid"></div>
+              </div>
+              <div class="insights-block">
+                <h4>Spotlight Problèmes</h4>
+                <div id="problemSpotlight" class="spot-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- USERS -->
@@ -883,8 +1049,14 @@
             <div class="panel-header">
               <span class="panel-title" id="qPanelTitle"><i class="fas fa-question-circle"></i> Sélectionnez un
                 chapitre</span>
-              <button class="btn btn-success btn-sm" id="addQBtn" style="display:none;" onclick="openQuestionModal()"><i
-                  class="fas fa-plus"></i> Question</button>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <button class="btn btn-info btn-sm" id="exportQCsvBtn" style="display:none;" onclick="exportQuestionsCsv()"><i
+                    class="fas fa-file-export"></i> CSV</button>
+                <button class="btn btn-info btn-sm" id="importQCsvBtn" style="display:none;" onclick="triggerImportQuestionsCsv()"><i
+                    class="fas fa-file-import"></i> Import CSV</button>
+                <button class="btn btn-success btn-sm" id="addQBtn" style="display:none;" onclick="openQuestionModal()"><i
+                    class="fas fa-plus"></i> Question</button>
+              </div>
             </div>
             <div class="table-wrap">
               <table>
@@ -1035,10 +1207,11 @@
 
   <!-- Toast -->
   <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastMsg"></span></div>
+  <input type="file" id="qCsvFileInput" accept=".csv,text/csv" style="display:none;">
 
   <script>
     // ── State ────────────────────────────────────────────────────────────────────
-    let allUsers = [], allProblems = [], allChapters = [], currentChapterId = null;
+    let allUsers = [], allProblems = [], allChapters = [], currentChapterId = null, currentChapterTitle = '';
     let editingProblemId = null, editingQuestionId = null, editingChapterId = null;
     let actChart = null, currentDetailUserId = null;
 
@@ -1060,6 +1233,12 @@
     }
     function closeModal(id) { $(id).classList.remove('open'); }
     function fmtDate(iso) { return iso ? iso.slice(0, 10) : '—'; }
+    function fmtDateTime(iso) {
+      if (!iso) return '—';
+      const dt = new Date(iso);
+      if (isNaN(dt.getTime())) return iso;
+      return dt.toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    }
     function diffTag(d) {
       const m = { Easy: 'tag-easy', Medium: 'tag-medium', Hard: 'tag-hard' };
       const l = { Easy: 'Facile', Medium: 'Moyen', Hard: 'Difficile' };
@@ -1103,7 +1282,11 @@
 
     // ── Overview ─────────────────────────────────────────────────────────────────
     async function loadOverview() {
-      const [ov, act] = await Promise.all([api('/admin/api/stats/overview'), api('/admin/api/stats/activity?days=30')]);
+      const [ov, act, insights] = await Promise.all([
+        api('/admin/api/stats/overview'),
+        api('/admin/api/stats/activity?days=30'),
+        api('/admin/api/stats/insights')
+      ]);
       $('kpi-users').textContent = ov.total_users;
       $('kpi-problems').textContent = ov.total_problems;
       $('kpi-chapters').textContent = ov.total_chapters;
@@ -1111,6 +1294,8 @@
       $('kpi-subs').textContent = ov.total_submissions;
       $('kpi-passed').textContent = ov.passed_submissions;
       $('kpi-badges').textContent = ov.total_badges_awarded;
+
+      renderOverviewInsights(insights);
 
       if (actChart) actChart.destroy();
       const ctx = $('activityChart').getContext('2d');
@@ -1124,6 +1309,66 @@
       });
     }
 
+    function renderOverviewInsights(insights) {
+      const summary = insights.summary || {};
+      $('onlineNowCount').textContent = summary.online_now ?? 0;
+
+      const activeRows = insights.top_active_users || [];
+      $('topActiveUsersBody').innerHTML = activeRows.length
+        ? activeRows.map(u => `<tr>
+            <td>#${u.rank}</td>
+            <td><strong>${u.name}</strong><br><span style="color:#8b949e;font-size:0.75rem;">${u.email || ''}</span></td>
+            <td>${u.activity_score}</td>
+            <td>${fmtDateTime(u.last_activity)}</td>
+          </tr>`).join('')
+        : '<tr><td colspan="4" style="color:#8b949e;">Aucune donnée</td></tr>';
+
+      const rankedRows = insights.ranked_users || [];
+      $('rankedUsersBody').innerHTML = rankedRows.length
+        ? rankedRows.map(u => `<tr>
+            <td>#${u.rank}</td>
+            <td><strong>${u.name}</strong></td>
+            <td>${u.success_rate}%</td>
+            <td>${u.avg_quiz_score}%</td>
+          </tr>`).join('')
+        : '<tr><td colspan="4" style="color:#8b949e;">Aucune donnée</td></tr>';
+
+      const metrics = [
+        { label: 'Actifs 24h', value: summary.active_24h ?? 0 },
+        { label: 'Nouveaux 7j', value: summary.new_users_7d ?? 0 },
+        { label: 'Soumissions 24h', value: summary.submissions_24h ?? 0 },
+        { label: 'Taux réussite 7j', value: `${summary.pass_rate_7d ?? 0}%` },
+        { label: 'Temps moy. soumission 7j', value: `${summary.avg_submission_time_7d ?? 0}s` },
+        { label: 'Score quiz moyen 7j', value: `${summary.avg_quiz_score_7d ?? 0}%` },
+        { label: 'Questions quiz', value: summary.total_questions ?? 0 },
+        { label: 'Cas de test total', value: summary.total_test_cases ?? 0 },
+        { label: 'Tests publics', value: summary.public_test_cases ?? 0 },
+        { label: 'Tests cachés', value: summary.hidden_test_cases ?? 0 },
+        { label: 'Problèmes sans test caché', value: summary.problems_without_hidden_tests ?? 0 },
+      ];
+      $('insightsMetrics').innerHTML = metrics.map(m => `
+        <div class="insight-metric">
+          <div class="im-label">${m.label}</div>
+          <div class="im-value">${m.value}</div>
+        </div>
+      `).join('');
+
+      const hardest = insights.problem_spotlight?.hardest;
+      const easiest = insights.problem_spotlight?.easiest;
+      $('problemSpotlight').innerHTML = `
+        <div class="spot-card">
+          <div class="spot-title">Plus difficile</div>
+          <div class="spot-name">${hardest ? hardest.title : '—'}</div>
+          <div style="color:#8b949e;">Taux: ${hardest ? hardest.pass_rate : 0}% | Tentatives: ${hardest ? hardest.attempts : 0}</div>
+        </div>
+        <div class="spot-card">
+          <div class="spot-title">Plus facile</div>
+          <div class="spot-name">${easiest ? easiest.title : '—'}</div>
+          <div style="color:#8b949e;">Taux: ${easiest ? easiest.pass_rate : 0}% | Tentatives: ${easiest ? easiest.attempts : 0}</div>
+        </div>
+      `;
+    }
+
     // ── Users ─────────────────────────────────────────────────────────────────────
     async function loadUsers() {
       const d = await api('/admin/api/stats/users');
@@ -1132,13 +1377,13 @@
     }
     function filterUsers() {
       const q = $('userSearch').value.toLowerCase();
-      renderUsers(allUsers.filter(u => (u.name + ' ' + u.last_name + ' ' + u.email).toLowerCase().includes(q)));
+      renderUsers(allUsers.filter(u => (u.name + ' ' + u.email).toLowerCase().includes(q)));
     }
     function renderUsers(users) {
       $('userTable').innerHTML = users.length === 0
         ? '<tr><td colspan="10" style="text-align:center;color:#8b949e;padding:30px;">Aucun utilisateur trouvé</td></tr>'
         : users.map(u => `<tr>
-      <td><strong>${u.name} ${u.last_name}</strong></td>
+      <td><strong>${u.name}</strong></td>
       <td style="color:#8b949e;">${u.email}</td>
       <td>${fmtDate(u.created_at)}</td>
       <td>${fmtDate(u.last_activity)}</td>
@@ -1154,7 +1399,7 @@
       currentDetailUserId = uid;
       const d = await api(`/admin/api/stats/users/${uid}`);
       const u = d.user;
-      $('userModalTitle').textContent = `${u.name} ${u.last_name} — ${u.email}`;
+      $('userModalTitle').textContent = `${u.name} — ${u.email}`;
       $('userDetailContent').innerHTML = `
     <div>
       <h4 style="margin-bottom:12px;color:#8b949e;font-size:0.85rem;text-transform:uppercase;">Derniers Quiz</h4>
@@ -1304,8 +1549,11 @@
     }
     async function selectChapter(id, title) {
       currentChapterId = id;
+      currentChapterTitle = title;
       $('qPanelTitle').innerHTML = `<i class="fas fa-question-circle"></i> ${title}`;
       $('addQBtn').style.display = 'flex';
+      $('exportQCsvBtn').style.display = 'inline-flex';
+      $('importQCsvBtn').style.display = 'inline-flex';
       const d = await api(`/admin/api/questions?chapter_id=${id}`);
       $('questionTable').innerHTML = d.items.map(q => `<tr>
     <td style="color:#8b949e;">#${q.id}</td>
@@ -1334,7 +1582,7 @@
     }
     async function deleteQuestion(id) {
       if (!confirm('Supprimer cette question ?')) return;
-      try { await api(`/admin/api/questions/${id}`, { method: 'DELETE' }); toast('Question supprimée.'); selectChapter(currentChapterId, $('qPanelTitle').textContent.trim()); }
+      try { await api(`/admin/api/questions/${id}`, { method: 'DELETE' }); toast('Question supprimée.'); selectChapter(currentChapterId, currentChapterTitle); }
       catch (e) { toast(e.message, 'error'); }
     }
     function addChoice(text = '', isCorrect = false) {
@@ -1355,9 +1603,63 @@
         if (editingQuestionId) await api(`/admin/api/questions/${editingQuestionId}`, { method: 'PUT', body: JSON.stringify(body) });
         else await api('/admin/api/questions', { method: 'POST', body: JSON.stringify(body) });
         toast('Question sauvegardée !'); closeModal('qModal');
-        selectChapter(currentChapterId, $('qPanelTitle').textContent.trim());
+        selectChapter(currentChapterId, currentChapterTitle);
       } catch (e) { toast(e.message, 'error'); }
     }
+
+    function triggerImportQuestionsCsv() {
+      if (!currentChapterId) return toast('Sélectionnez un chapitre', 'error');
+      $('qCsvFileInput').click();
+    }
+
+    async function exportQuestionsCsv() {
+      if (!currentChapterId) return toast('Sélectionnez un chapitre', 'error');
+      try {
+        const res = await fetch(`/admin/api/questions/export_csv?chapter_id=${currentChapterId}`);
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || 'Export CSV impossible');
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chapter_${currentChapterId}_questions.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        toast('CSV exporté');
+      } catch (e) {
+        toast(e.message, 'error');
+      }
+    }
+
+    $('qCsvFileInput').addEventListener('change', async (evt) => {
+      const file = evt.target.files && evt.target.files[0];
+      if (!file) return;
+      if (!currentChapterId) {
+        $('qCsvFileInput').value = '';
+        return toast('Sélectionnez un chapitre', 'error');
+      }
+      const replace = confirm('Remplacer toutes les questions du chapitre avant import ?');
+      try {
+        const form = new FormData();
+        form.append('chapter_id', String(currentChapterId));
+        form.append('replace', replace ? 'true' : 'false');
+        form.append('file', file);
+        const res = await fetch('/admin/api/questions/import_csv', { method: 'POST', body: form });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Import CSV impossible');
+        toast(`CSV importé: ${data.inserted} question(s)`);
+        await selectChapter(currentChapterId, currentChapterTitle);
+        await loadChapters();
+      } catch (e) {
+        toast(e.message, 'error');
+      } finally {
+        $('qCsvFileInput').value = '';
+      }
+    });
 
     // Close modals on background click
     document.querySelectorAll('.modal-bg').forEach(bg => bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); }));

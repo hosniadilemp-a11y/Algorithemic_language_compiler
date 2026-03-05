@@ -1,0 +1,49 @@
+{
+  "title": "Parenthèses Valides avec Pile (Liste Chaînée)",
+  "topic": "Stacks",
+  "difficulty": "Easy",
+  "description": "### Parenthèses valides avec pile chaînée\n\nVérifiez si une expression contenant `()[]{}` est correctement parenthésée.\n\nUtilisez explicitement une pile implémentée avec une liste chaînée (`Empiler`, `Depiler`, `EstVide`).\n\n#### Format d'entrée\n- Une ligne: expression\n\n#### Format de sortie\n- `Valid` ou `Invalid`\n\n#### Exemple\n**Entrée**\n```\n([{}])\n```\n**Sortie**\n```\nValid\n```",
+  "template_code": "Type Element = Enregistrement\nDebut\n    car  : Caractere;\n    suiv : ^Element;\nFin;\n\nType Pile = Enregistrement\nDebut\n    sommet : ^Element;\nFin;\n\nProcedure Init(Var P : Pile)\nDebut\n    P.sommet := NIL;\nFin;\n\nProcedure Empiler(Var P : Pile, c : Caractere)\nVar n : ^Element;\nDebut\n    n := allouer(taille(Element));\n    n->car := c;\n    n->suiv := P.sommet;\n    P.sommet := n;\nFin;\n\nProcedure Depiler(Var P : Pile, Var c : Caractere)\nVar tmp : ^Element;\nDebut\n    tmp := P.sommet;\n    c := tmp->car;\n    P.sommet := tmp->suiv;\n    liberer(tmp);\nFin;\n\nFonction EstVide(P : Pile) : Booleen\nDebut\n    Retourner(P.sommet = NIL);\nFin;\n\nFonction Correspond(o : Caractere, f : Caractere) : Booleen\nDebut\n    Si o = '(' Et f = ')' Alors Retourner(Vrai); FinSi\n    Si o = '[' Et f = ']' Alors Retourner(Vrai); FinSi\n    Si o = '{' Et f = '}' Alors Retourner(Vrai); FinSi\n    Retourner(Faux);\nFin;\n\nAlgorithme ParenthesesValides;\nVar\n    S[5000] : Chaine;\n    i : Entier;\n    c, top : Caractere;\n    P : Pile;\n    ok : Booleen;\nDebut\n    Lire(S);\n    Init(P);\n    ok := Vrai;\n\n    Pour i := 0 a Longueur(S) - 1 Faire\n        c := S[i];\n        // TODO: empiler les ouvrants\n        // TODO: pour un fermant, verifier sommet + correspondance\n    FinPour\n\n    Si Non EstVide(P) Alors ok := Faux; FinSi\n\n    Si ok Alors Ecrire(\"Valid\"); Sinon Ecrire(\"Invalid\"); FinSi\nFin.",
+  "test_cases": [
+    {
+      "input": "()[]{}\n",
+      "expected_output": "Valid\n",
+      "is_public": true
+    },
+    {
+      "input": "([{}])\n",
+      "expected_output": "Valid\n",
+      "is_public": true
+    },
+    {
+      "input": "(]\n",
+      "expected_output": "Invalid\n",
+      "is_public": false
+    },
+    {
+      "input": "([)]\n",
+      "expected_output": "Invalid\n",
+      "is_public": false
+    },
+    {
+      "input": "(((())))\n",
+      "expected_output": "Valid\n",
+      "is_public": false
+    },
+    {
+      "input": "(((()))\n",
+      "expected_output": "Invalid\n",
+      "is_public": false
+    },
+    {
+      "input": "{[()]}[]\n",
+      "expected_output": "Valid\n",
+      "is_public": false
+    },
+    {
+      "input": "{[(])}\n",
+      "expected_output": "Invalid\n",
+      "is_public": false
+    }
+  ]
+}

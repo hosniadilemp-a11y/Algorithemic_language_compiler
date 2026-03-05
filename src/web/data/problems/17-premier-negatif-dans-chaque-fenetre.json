@@ -1,0 +1,49 @@
+{
+  "title": "Premier Négatif dans Chaque Fenêtre (File Chaînée)",
+  "topic": "Queues",
+  "difficulty": "Medium",
+  "description": "### Premier négatif dans chaque fenêtre (file chaînée)\n\nPour chaque fenêtre glissante de taille `K`, affichez le premier nombre négatif.\n\nS'il n'y a aucun négatif dans la fenêtre, affichez `0`.\n\nUtilisez une file chaînée d'indices.\n\n#### Format d'entrée\n- Ligne 1: `N K`\n- Ligne 2: `N` entiers\n\n#### Format de sortie\n- `N-K+1` entiers séparés par des espaces\n\n#### Exemple\n**Entrée**\n```\n8 3\n12 -1 -7 8 -15 30 16 28\n```\n**Sortie**\n```\n-1 -1 -7 -15 -15 0\n```",
+  "template_code": "Type Maillon = Enregistrement\nDebut\n    idx  : Entier;\n    suiv : ^Maillon;\nFin;\n\nType FileIdx = Enregistrement\nDebut\n    tete  : ^Maillon;\n    queue : ^Maillon;\nFin;\n\nProcedure Init(Var F : FileIdx)\nDebut\n    F.tete := NIL;\n    F.queue := NIL;\nFin;\n\nProcedure Enfiler(Var F : FileIdx, i : Entier)\nVar n : ^Maillon;\nDebut\n    n := allouer(taille(Maillon));\n    n->idx := i;\n    n->suiv := NIL;\n    Si F.tete = NIL Alors\n        F.tete := n; F.queue := n;\n    Sinon\n        F.queue->suiv := n; F.queue := n;\n    FinSi\nFin;\n\nProcedure Defiler(Var F : FileIdx, Var i : Entier)\nVar t : ^Maillon;\nDebut\n    t := F.tete;\n    i := t->idx;\n    F.tete := t->suiv;\n    Si F.tete = NIL Alors F.queue := NIL; FinSi\n    liberer(t);\nFin;\n\nFonction EstVide(F : FileIdx) : Booleen\nDebut\n    Retourner(F.tete = NIL);\nFin;\n\nFonction Premier(F : FileIdx) : Entier\nDebut\n    Retourner(F.tete->idx);\nFin;\n\nAlgorithme PremierNegatifFenetre;\nVar\n    N, K, i, debutFenetre, idxTmp : Entier;\n    T[100000] : Entier;\n    F : FileIdx;\nDebut\n    Lire(N, K);\n    Pour i := 0 a N - 1 Faire Lire(T[i]); FinPour\n\n    Init(F);\n\n    Pour i := 0 a N - 1 Faire\n        debutFenetre := i - K + 1;\n\n        // TODO: retirer de tete les indices hors fenetre\n        // TODO: si T[i] < 0 alors Enfiler(F, i)\n        // TODO: si i >= K-1, afficher T[Premier(F)] ou 0\n    FinPour\nFin.",
+  "test_cases": [
+    {
+      "input": "8 3\n12 -1 -7 8 -15 30 16 28\n",
+      "expected_output": "-1 -1 -7 -15 -15 0\n",
+      "is_public": true
+    },
+    {
+      "input": "5 2\n1 2 3 4 5\n",
+      "expected_output": "0 0 0 0\n",
+      "is_public": true
+    },
+    {
+      "input": "6 3\n-5 -2 -3 4 5 6\n",
+      "expected_output": "-5 -2 -3 0\n",
+      "is_public": false
+    },
+    {
+      "input": "5 1\n2 -1 3 -4 5\n",
+      "expected_output": "0 -1 0 -4 0\n",
+      "is_public": false
+    },
+    {
+      "input": "7 4\n1 -2 3 -4 5 -6 7\n",
+      "expected_output": "-2 -2 -4 -4\n",
+      "is_public": false
+    },
+    {
+      "input": "4 4\n-1 2 3 4\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "4 4\n1 2 3 4\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "9 3\n-1 2 -3 4 -5 6 -7 8 -9\n",
+      "expected_output": "-1 -3 -3 -5 -5 -7 -7\n",
+      "is_public": false
+    }
+  ]
+}

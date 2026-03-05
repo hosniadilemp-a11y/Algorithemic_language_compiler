@@ -1,0 +1,132 @@
+[
+    {
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "question":  "Qu\u0027est-ce que l\u0027allocation dynamique ?",
+        "explanation":  "Réservez à l\u0027exécution. Reponse correcte: Réservation de mémoire pendant l\u0027exécution. Ici, la notion \u0027Définition\u0027 s\u0027applique: l\u0027allocation dynamique reserve de la memoire a l\u0027execution, et chaque zone allouee doit etre correctement liberee.",
+        "choices":  [
+                        "Réservation de mémoire pendant l\u0027exécution",
+                        "Réservation lors de la compilation",
+                        "Une façon de copier des fichiers",
+                        "Un type de boucle"
+                    ],
+        "answer":  "Réservation de mémoire pendant l\u0027exécution"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Opération",
+        "question":  "Instruction pour allouer en Algo ?",
+        "explanation":  "allouer(P) Reponse correcte: allouer(P). Ici, la notion \u0027Opération\u0027 s\u0027applique: l\u0027allocation dynamique reserve de la memoire a l\u0027execution, et chaque zone allouee doit etre correctement liberee.",
+        "choices":  [
+                        "allouer(P)",
+                        "nouveau()",
+                        "creer()",
+                        "malloc()"
+                    ],
+        "answer":  "allouer(P)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Libération",
+        "question":  "Si on ne libère pas la mémoire...",
+        "explanation":  "Fuite de mémoire. Reponse correcte: Fuite de mémoire (Memory Leak). Ici, la notion \u0027Libération\u0027 s\u0027applique: une condition execute une branche precise selon la valeur booleenne du test.",
+        "choices":  [
+                        "Fuite de mémoire (Memory Leak)",
+                        "Erreur de syntaxe",
+                        "Le PC s\u0027éteint",
+                        "Le programme s\u0027accélère"
+                    ],
+        "answer":  "Fuite de mémoire (Memory Leak)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Zone de mémoire",
+        "question":  "Où se fait l\u0027allocation dynamique ?",
+        "explanation":  "Dans le Tas (Heap). Reponse correcte: Dans le Tas (Heap). Ici, la notion \u0027Zone de mémoire\u0027 s\u0027applique: l\u0027allocation dynamique reserve de la memoire a l\u0027execution, et chaque zone allouee doit etre correctement liberee.",
+        "choices":  [
+                        "Dans le Tas (Heap)",
+                        "Dans la Pile (Stack)",
+                        "Sur le disque dur",
+                        "Dans le registre CPU"
+                    ],
+        "answer":  "Dans le Tas (Heap)"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Pointeur",
+        "question":  "Que contient un pointeur après libération si non remis à NIL ?",
+        "explanation":  "Un pointeur fantôme (Dangling pointer). Reponse correcte: Un pointeur fantôme (Dangling pointer). Ici, la notion \u0027Pointeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+        "choices":  [
+                        "Un pointeur fantôme (Dangling pointer)",
+                        "Zéro",
+                        "NIL",
+                        "La valeur 999"
+                    ],
+        "answer":  "Un pointeur fantôme (Dangling pointer)"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Pointeur",
+        "question":  "L\u0027opérateur ^ sert à ?",
+        "explanation":  "Déréférencer. Reponse correcte: Accéder à la valeur pointée (Déréférencement). Ici, la notion \u0027Pointeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+        "choices":  [
+                        "Accéder à la valeur pointée (Déréférencement)",
+                        "Adresser la variable",
+                        "Multiplier par deux",
+                        "Calculer une puissance"
+                    ],
+        "answer":  "Accéder à la valeur pointée (Déréférencement)"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "NIL",
+        "question":  "Que vaut un pointeur non initialisé ou vide ?",
+        "explanation":  "NIL ou NULL. Reponse correcte: NIL (NULL). Ici, la notion \u0027NIL\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+        "choices":  [
+                        "NIL (NULL)",
+                        "Zéro",
+                        "Un nombre aléatoire",
+                        "1"
+                    ],
+        "answer":  "NIL (NULL)"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Tableaux Dynamiques",
+        "question":  "Un tableau dynamique est géré via ?",
+        "explanation":  "Pointeurs et allocation. Reponse correcte: Un pointeur sur le premier élément alloué. Ici, la notion \u0027Tableaux Dynamiques\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Un pointeur sur le premier élément alloué",
+                        "Un tableau classique sans limite",
+                        "Un fichier texte",
+                        "Une variable globale"
+                    ],
+        "answer":  "Un pointeur sur le premier élément alloué"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Taille",
+        "question":  "L\u0027opérateur taille() sert à ?",
+        "explanation":  "Taille de la donnée (sizeof). Reponse correcte: Connaître la taille en octets d\u0027un type. Ici, la notion \u0027Taille\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Connaître la taille en octets d\u0027un type",
+                        "Compter le nombre de variables",
+                        "Mesurer la vitesse du CPU",
+                        "Allouer de la mémoire"
+                    ],
+        "answer":  "Connaître la taille en octets d\u0027un type"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Erreur",
+        "question":  "Tentative d\u0027accès à P^ alors que P = NIL ?",
+        "explanation":  "Segfault. Reponse correcte: Erreur violente (Segmentation Fault). Ici, la notion \u0027Erreur\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "Erreur violente (Segmentation Fault)",
+                        "P^ vaut zéro",
+                        "Le programme s\u0027arrête proprement",
+                        "Il crée la variable"
+                    ],
+        "answer":  "Erreur violente (Segmentation Fault)"
+    }
+]

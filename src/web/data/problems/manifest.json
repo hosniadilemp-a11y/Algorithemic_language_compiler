@@ -1,0 +1,21 @@
+{
+  "files": [
+    "01-addition-basique.json",
+    "02-min-et-max-d-un-tableau-1d.json",
+    "03-somme-des-diagonales-d-une-matrice.json",
+    "04-premier-caractere-non-repet.json",
+    "05-palindrome.json",
+    "06-tri-de-tableau.json",
+    "07-rotation-circulaire-d-un-tableau.json",
+    "08-somme-maximale-d-un-sous-tableau.json",
+    "09-cycle-detection-dans-liste-chainee.json",
+    "10-milieu-d-une-liste-chainee.json",
+    "11-supprimer-doublons-liste-ordonnee.json",
+    "12-parentheses-valides-avec-pile.json",
+    "13-next-greater-element.json",
+    "14-evaluation-expression-postfixee.json",
+    "15-nombres-binaires-avec-file.json",
+    "16-tour-circulaire-station-essence.json",
+    "17-premier-negatif-dans-chaque-fenetre.json"
+  ]
+}

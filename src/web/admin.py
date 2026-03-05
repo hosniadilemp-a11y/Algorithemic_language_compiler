@@ -6,9 +6,11 @@ Completely separate from the main user auth (Flask-Login).
 import datetime
 import functools
 import os
+import csv
+import io
 
-from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
-from sqlalchemy import func
+from flask import Blueprint, Response, jsonify, redirect, render_template, request, session, url_for
+from sqlalchemy import case, func
 from werkzeug.security import generate_password_hash
 
 from web.models import (
@@ -120,6 +122,250 @@ def stats_activity():
     return jsonify({'labels': list(activity.keys()), 'values': list(activity.values())})
 
 
+@admin_bp.route('/api/stats/insights')
+@admin_required
+def stats_insights():
+    now = datetime.datetime.utcnow()
+    online_cutoff = now - datetime.timedelta(minutes=5)
+    d1 = now - datetime.timedelta(days=1)
+    d7 = now - datetime.timedelta(days=7)
+
+    users = User.query.all()
+    user_ids = [u.id for u in users]
+    user_map = {u.id: u for u in users}
+
+    quiz_rows = (
+        db.session.query(
+            QuizAttempt.user_id,
+            func.count(QuizAttempt.id).label('quiz_count'),
+            func.avg((QuizAttempt.score * 100.0) / func.nullif(QuizAttempt.total_questions, 0)).label('avg_quiz_score'),
+            func.max(QuizAttempt.timestamp).label('last_quiz_at')
+        )
+        .group_by(QuizAttempt.user_id)
+        .all()
+    )
+    quiz_map = {r.user_id: r for r in quiz_rows}
+
+    sub_rows = (
+        db.session.query(
+            ChallengeSubmission.user_id,
+            func.count(ChallengeSubmission.id).label('sub_count'),
+            func.sum(case((ChallengeSubmission.passed == True, 1), else_=0)).label('passed_count'),
+            func.avg(ChallengeSubmission.time_taken_seconds).label('avg_sub_time'),
+            func.max(ChallengeSubmission.timestamp).label('last_sub_at')
+        )
+        .group_by(ChallengeSubmission.user_id)
+        .all()
+    )
+    sub_map = {r.user_id: r for r in sub_rows}
+
+    # Distinct challenge engagement (avoids inflated scores from repeated submissions)
+    challenge_distinct_rows = (
+        db.session.query(
+            ChallengeSubmission.user_id,
+            func.count(func.distinct(ChallengeSubmission.problem_id)).label('distinct_challenges'),
+            func.count(func.distinct(case((ChallengeSubmission.passed == True, ChallengeSubmission.problem_id), else_=None))).label('distinct_solved')
+        )
+        .group_by(ChallengeSubmission.user_id)
+        .all()
+    )
+    challenge_distinct_map = {r.user_id: r for r in challenge_distinct_rows}
+
+    # Distinct quiz chapter coverage
+    quiz_chapter_rows = (
+        db.session.query(
+            QuizAttempt.user_id,
+            func.count(func.distinct(QuizAttempt.chapter_id)).label('quiz_chapters')
+        )
+        .group_by(QuizAttempt.user_id)
+        .all()
+    )
+    quiz_chapter_map = {r.user_id: int(r.quiz_chapters or 0) for r in quiz_chapter_rows}
+
+    # Recent activity intensity (24h / 7d)
+    recent_quiz_24h = (
+        db.session.query(QuizAttempt.user_id, func.count(QuizAttempt.id).label('cnt'))
+        .filter(QuizAttempt.timestamp >= d1)
+        .group_by(QuizAttempt.user_id)
+        .all()
+    )
+    recent_sub_24h = (
+        db.session.query(ChallengeSubmission.user_id, func.count(ChallengeSubmission.id).label('cnt'))
+        .filter(ChallengeSubmission.timestamp >= d1)
+        .group_by(ChallengeSubmission.user_id)
+        .all()
+    )
+    recent_quiz_7d = (
+        db.session.query(QuizAttempt.user_id, func.count(QuizAttempt.id).label('cnt'))
+        .filter(QuizAttempt.timestamp >= d7)
+        .group_by(QuizAttempt.user_id)
+        .all()
+    )
+    recent_sub_7d = (
+        db.session.query(ChallengeSubmission.user_id, func.count(ChallengeSubmission.id).label('cnt'))
+        .filter(ChallengeSubmission.timestamp >= d7)
+        .group_by(ChallengeSubmission.user_id)
+        .all()
+    )
+    r24_map = {}
+    r7_map = {}
+    for row in recent_quiz_24h:
+        r24_map[row.user_id] = r24_map.get(row.user_id, 0) + int(row.cnt or 0)
+    for row in recent_sub_24h:
+        r24_map[row.user_id] = r24_map.get(row.user_id, 0) + int(row.cnt or 0)
+    for row in recent_quiz_7d:
+        r7_map[row.user_id] = r7_map.get(row.user_id, 0) + int(row.cnt or 0)
+    for row in recent_sub_7d:
+        r7_map[row.user_id] = r7_map.get(row.user_id, 0) + int(row.cnt or 0)
+
+    badge_rows = (
+        db.session.query(UserBadge.user_id, func.count(UserBadge.id).label('badge_count'))
+        .group_by(UserBadge.user_id)
+        .all()
+    )
+    badge_map = {r.user_id: int(r.badge_count or 0) for r in badge_rows}
+
+    ranked = []
+    # Use the same XP source as profile/leaderboard to keep scores consistent.
+    try:
+        from web.app import compute_xp_and_level
+    except Exception:
+        compute_xp_and_level = None
+    online_now = 0
+    active_24h = 0
+    for uid in user_ids:
+        u = user_map[uid]
+        q = quiz_map.get(uid)
+        s = sub_map.get(uid)
+        ds = challenge_distinct_map.get(uid)
+        quiz_count = int(getattr(q, 'quiz_count', 0) or 0)
+        sub_count = int(getattr(ds, 'distinct_challenges', 0) or 0)
+        passed_count = int(getattr(ds, 'distinct_solved', 0) or 0)
+        badge_count = int(badge_map.get(uid, 0))
+        quiz_chapters = int(quiz_chapter_map.get(uid, 0))
+        recent_24h_actions = int(r24_map.get(uid, 0))
+        recent_7d_actions = int(r7_map.get(uid, 0))
+        avg_quiz_score = float(getattr(q, 'avg_quiz_score', 0) or 0)
+
+        last_quiz_at = getattr(q, 'last_quiz_at', None)
+        last_sub_at = getattr(s, 'last_sub_at', None)
+        dates = [d for d in [last_quiz_at, last_sub_at] if d]
+        last_activity = max(dates) if dates else None
+
+        if last_activity and last_activity >= online_cutoff:
+            online_now += 1
+        if last_activity and last_activity >= d1:
+            active_24h += 1
+
+        total_actions = quiz_chapters + sub_count
+        success_rate = round((passed_count / sub_count * 100), 1) if sub_count else 0
+        xp_total = 0
+        if compute_xp_and_level is not None:
+            try:
+                xp_total, _, _, _ = compute_xp_and_level(uid)
+            except Exception:
+                xp_total = 0
+
+        # Main displayed score now follows profile/leaderboard XP exactly.
+        activity_score = int(xp_total or 0)
+
+        ranked.append({
+            'id': uid,
+            'name': u.name,
+            'email': u.email,
+            'quiz_count': quiz_count,
+            'quiz_chapters': quiz_chapters,
+            'challenge_count': sub_count,
+            'passed_count': passed_count,
+            'badge_count': badge_count,
+            'avg_quiz_score': round(avg_quiz_score, 1),
+            'success_rate': success_rate,
+            'total_actions': total_actions,
+            'recent_24h_actions': recent_24h_actions,
+            'recent_7d_actions': recent_7d_actions,
+            'activity_score': activity_score,
+            'xp_total': activity_score,
+            'last_activity': last_activity.isoformat() if last_activity else None,
+        })
+
+    top_active_users = sorted(
+        ranked,
+        key=lambda x: (x['activity_score'], x['recent_24h_actions'], x['recent_7d_actions'], x['last_activity'] or ''),
+        reverse=True
+    )[:10]
+    ranked_users = sorted(
+        ranked,
+        key=lambda x: (x['success_rate'], x['avg_quiz_score'], x['total_actions']),
+        reverse=True
+    )[:10]
+
+    for i, item in enumerate(top_active_users, start=1):
+        item['rank'] = i
+    for i, item in enumerate(ranked_users, start=1):
+        item['rank'] = i
+
+    new_users_7d = User.query.filter(User.created_at >= d7).count()
+    submissions_24h = ChallengeSubmission.query.filter(ChallengeSubmission.timestamp >= d1).count()
+
+    submissions_7d = ChallengeSubmission.query.filter(ChallengeSubmission.timestamp >= d7).all()
+    passed_7d = sum(1 for s in submissions_7d if s.passed)
+    pass_rate_7d = round((passed_7d / len(submissions_7d) * 100), 1) if submissions_7d else 0
+    avg_sub_time_7d = round(
+        sum((s.time_taken_seconds or 0) for s in submissions_7d) / len(submissions_7d), 1
+    ) if submissions_7d else 0
+
+    quiz_7d = QuizAttempt.query.filter(QuizAttempt.timestamp >= d7).all()
+    avg_quiz_score_7d = 0
+    if quiz_7d:
+        vals = [(q.score / q.total_questions * 100) for q in quiz_7d if q.total_questions]
+        avg_quiz_score_7d = round(sum(vals) / len(vals), 1) if vals else 0
+
+    total_questions = Question.query.count()
+    total_test_cases = TestCase.query.count()
+    public_test_cases = TestCase.query.filter_by(is_public=True).count()
+    hidden_test_cases = total_test_cases - public_test_cases
+
+    problems = Problem.query.all()
+    problems_without_hidden_tests = 0
+    per_problem = []
+    for p in problems:
+        has_hidden = any(not bool(tc.is_public) for tc in p.test_cases)
+        if not has_hidden:
+            problems_without_hidden_tests += 1
+        subs = ChallengeSubmission.query.filter_by(problem_id=p.id).all()
+        attempts = len(subs)
+        passed = sum(1 for s in subs if s.passed)
+        pass_rate = round((passed / attempts * 100), 1) if attempts else 0
+        per_problem.append({'title': p.title, 'attempts': attempts, 'pass_rate': pass_rate})
+
+    attempted = [x for x in per_problem if x['attempts'] > 0]
+    hardest = min(attempted, key=lambda x: x['pass_rate']) if attempted else None
+    easiest = max(attempted, key=lambda x: x['pass_rate']) if attempted else None
+
+    return jsonify({
+        'summary': {
+            'online_now': online_now,
+            'active_24h': active_24h,
+            'new_users_7d': new_users_7d,
+            'submissions_24h': submissions_24h,
+            'pass_rate_7d': pass_rate_7d,
+            'avg_submission_time_7d': avg_sub_time_7d,
+            'avg_quiz_score_7d': avg_quiz_score_7d,
+            'total_questions': total_questions,
+            'total_test_cases': total_test_cases,
+            'public_test_cases': public_test_cases,
+            'hidden_test_cases': hidden_test_cases,
+            'problems_without_hidden_tests': problems_without_hidden_tests,
+        },
+        'top_active_users': top_active_users,
+        'ranked_users': ranked_users,
+        'problem_spotlight': {
+            'hardest': hardest,
+            'easiest': easiest,
+        }
+    })
+
+
 # ── Analytics: Users list ─────────────────────────────────────────────────────
 @admin_bp.route('/api/stats/users')
 @admin_required
@@ -133,8 +379,17 @@ def stats_users():
             scores = [q.score / q.total_questions * 100 for q in q_list if q.total_questions]
             avg_score = round(sum(scores) / len(scores), 1) if scores else 0
 
-        c_total = ChallengeSubmission.query.filter_by(user_id=u.id).count()
-        c_passed = ChallengeSubmission.query.filter_by(user_id=u.id, passed=True).count()
+        # Count distinct challenges, not raw submission attempts.
+        c_total = (
+            db.session.query(func.count(func.distinct(ChallengeSubmission.problem_id)))
+            .filter(ChallengeSubmission.user_id == u.id)
+            .scalar()
+        ) or 0
+        c_passed = (
+            db.session.query(func.count(func.distinct(ChallengeSubmission.problem_id)))
+            .filter(ChallengeSubmission.user_id == u.id, ChallengeSubmission.passed == True)
+            .scalar()
+        ) or 0
         badge_count = UserBadge.query.filter_by(user_id=u.id).count()
 
         last_quiz = QuizAttempt.query.filter_by(user_id=u.id).order_by(QuizAttempt.timestamp.desc()).first()
@@ -143,7 +398,7 @@ def stats_users():
         last_activity = max(dates).isoformat() if dates else None
 
         result.append({
-            'id': u.id, 'name': u.name, 'last_name': u.last_name or '',
+            'id': u.id, 'name': u.name,
             'email': u.email,
             'created_at': u.created_at.isoformat() if u.created_at else None,
             'last_activity': last_activity,
@@ -169,7 +424,7 @@ def stats_user_detail(user_id):
 
     return jsonify({
         'user': {
-            'id': u.id, 'name': u.name, 'last_name': u.last_name or '',
+            'id': u.id, 'name': u.name,
             'email': u.email, 'study_year': u.study_year,
             'created_at': u.created_at.isoformat() if u.created_at else None,
         },
@@ -255,6 +510,20 @@ def _normalize_prob(payload):
 @admin_required
 def admin_list_problems():
     return jsonify({'items': [_prob_json(p) for p in Problem.query.order_by(Problem.id).all()]})
+
+
+@admin_bp.route('/api/problems/topics', methods=['GET'])
+@admin_required
+def admin_list_problem_topics():
+    rows = (
+        db.session.query(Problem.topic)
+        .filter(Problem.topic.isnot(None))
+        .distinct()
+        .order_by(Problem.topic.asc())
+        .all()
+    )
+    items = [str(row[0]).strip() for row in rows if str(row[0]).strip()]
+    return jsonify({'items': items})
 
 
 @admin_bp.route('/api/problems/<int:pid>', methods=['GET'])
@@ -464,3 +733,151 @@ def admin_delete_question(qid):
         return jsonify({'error': 'Not found'}), 404
     db.session.delete(q); db.session.commit()
     return jsonify({'ok': True})
+
+
+def _parse_choice_indices(raw_value):
+    if raw_value is None:
+        return []
+    parts = str(raw_value).replace(',', '|').split('|')
+    result = []
+    for part in parts:
+        item = part.strip()
+        if not item:
+            continue
+        try:
+            idx = int(item)
+        except Exception:
+            continue
+        if idx > 0:
+            result.append(idx)
+    return result
+
+
+@admin_bp.route('/api/questions/export_csv', methods=['GET'])
+@admin_required
+def admin_export_questions_csv():
+    chapter_id = request.args.get('chapter_id', type=int)
+    if not chapter_id:
+        return jsonify({'error': 'chapter_id is required'}), 400
+
+    chapter = db.session.get(Chapter, chapter_id)
+    if not chapter:
+        return jsonify({'error': 'Chapter not found'}), 404
+
+    questions = Question.query.filter_by(chapter_id=chapter_id).order_by(Question.id.asc()).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['chapter_id', 'concept', 'type', 'difficulty', 'text', 'explanation', 'choices', 'correct_indices'])
+
+    for q in questions:
+        sorted_choices = sorted(q.choices, key=lambda c: c.id)
+        choices = [c.text for c in sorted_choices]
+        correct_indices = [str(i + 1) for i, c in enumerate(sorted_choices) if c.is_correct]
+        writer.writerow([
+            q.chapter_id,
+            q.concept,
+            q.type,
+            q.difficulty,
+            q.text,
+            q.explanation,
+            '||'.join(choices),
+            '|'.join(correct_indices),
+        ])
+
+    csv_bytes = output.getvalue()
+    output.close()
+
+    filename = f"chapter_{chapter_id}_questions.csv"
+    return Response(
+        csv_bytes,
+        mimetype='text/csv; charset=utf-8',
+        headers={'Content-Disposition': f'attachment; filename=\"{filename}\"'}
+    )
+
+
+@admin_bp.route('/api/questions/import_csv', methods=['POST'])
+@admin_required
+def admin_import_questions_csv():
+    try:
+        chapter_id = int(request.form.get('chapter_id', '0'))
+    except Exception:
+        return jsonify({'error': 'chapter_id is required'}), 400
+
+    chapter = db.session.get(Chapter, chapter_id)
+    if not chapter:
+        return jsonify({'error': 'Chapter not found'}), 404
+
+    uploaded = request.files.get('file')
+    if not uploaded:
+        return jsonify({'error': 'CSV file is required'}), 400
+
+    replace_existing = str(request.form.get('replace', 'false')).lower() in ('1', 'true', 'yes', 'on')
+
+    try:
+        raw = uploaded.read().decode('utf-8-sig')
+    except Exception:
+        return jsonify({'error': 'Unable to read CSV file (utf-8 expected)'}), 400
+
+    try:
+        reader = csv.DictReader(io.StringIO(raw))
+        required = {'concept', 'type', 'difficulty', 'text', 'explanation', 'choices', 'correct_indices'}
+        if not reader.fieldnames or not required.issubset(set(reader.fieldnames)):
+            return jsonify({'error': 'Invalid CSV columns. Required: concept,type,difficulty,text,explanation,choices,correct_indices'}), 400
+
+        rows = list(reader)
+        if not rows:
+            return jsonify({'error': 'CSV is empty'}), 400
+
+        if replace_existing:
+            q_ids = [q.id for q in Question.query.filter_by(chapter_id=chapter_id).all()]
+            if q_ids:
+                Choice.query.filter(Choice.question_id.in_(q_ids)).delete(synchronize_session=False)
+                Question.query.filter_by(chapter_id=chapter_id).delete(synchronize_session=False)
+                db.session.flush()
+
+        inserted = 0
+        for i, row in enumerate(rows, start=2):
+            concept = str(row.get('concept', '')).strip()
+            q_type = str(row.get('type', 'MCQ')).strip() or 'MCQ'
+            difficulty = str(row.get('difficulty', 'Medium')).strip() or 'Medium'
+            text = str(row.get('text', ''))
+            explanation = str(row.get('explanation', ''))
+            raw_choices = str(row.get('choices', ''))
+            choices = [c.strip() for c in raw_choices.split('||') if c.strip()]
+            correct_indices = _parse_choice_indices(row.get('correct_indices', ''))
+
+            if not concept or not text.strip() or not explanation.strip():
+                raise ValueError(f'Line {i}: concept, text and explanation are required')
+            if len(choices) < 2:
+                raise ValueError(f'Line {i}: at least 2 choices are required (separate with ||)')
+            if not correct_indices:
+                raise ValueError(f'Line {i}: correct_indices is required (example: 1 or 1|3)')
+            if any(idx < 1 or idx > len(choices) for idx in correct_indices):
+                raise ValueError(f'Line {i}: correct_indices out of range')
+
+            q = Question(
+                chapter_id=chapter_id,
+                type=q_type,
+                difficulty=difficulty,
+                concept=concept,
+                text=text,
+                explanation=explanation
+            )
+            db.session.add(q)
+            db.session.flush()
+
+            correct_set = set(correct_indices)
+            for idx, choice_text in enumerate(choices, start=1):
+                db.session.add(Choice(
+                    question_id=q.id,
+                    text=choice_text,
+                    is_correct=(idx in correct_set)
+                ))
+            inserted += 1
+
+        db.session.commit()
+        return jsonify({'ok': True, 'inserted': inserted, 'chapter_id': chapter_id, 'replace': replace_existing})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400

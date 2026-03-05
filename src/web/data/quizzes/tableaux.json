@@ -1,0 +1,132 @@
+[
+    {
+        "difficulty":  "Easy",
+        "concept":  "Définition",
+        "question":  "Qu\u0027est-ce qu\u0027un tableau ?",
+        "explanation":  "Structure regroupant des éléments du même type. Reponse correcte: Une collection d\u0027éléments de même type. Ici, la notion \u0027Définition\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Une collection d\u0027éléments de même type",
+                        "Un recueil de types variés",
+                        "Un fichier texte",
+                        "Une variable simple"
+                    ],
+        "answer":  "Une collection d\u0027éléments de même type"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Indices",
+        "question":  "Le premier indice en pseudo-code classique est souvent ?",
+        "explanation":  "Index 1 en algo classique. Reponse correcte: 1. Ici, la notion \u0027Indices\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "1",
+                        "0",
+                        "-1",
+                        "NIL"
+                    ],
+        "answer":  "1"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Taille",
+        "question":  "Peut-on changer la taille d\u0027un tableau statique après déclaration ?",
+        "explanation":  "La taille est fixe à la compilation. Reponse correcte: Non, elle est fixe. Ici, la notion \u0027Taille\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Non, elle est fixe",
+                        "Oui, avec redimensionner()",
+                        "Seulement si le tableau est vide",
+                        "Oui, à tout moment"
+                    ],
+        "answer":  "Non, elle est fixe"
+    },
+    {
+        "difficulty":  "Easy",
+        "concept":  "Homogénéité",
+        "question":  "Un tableau peut contenir à la fois entiers et chaines ?",
+        "explanation":  "Il doit être homogène. Reponse correcte: Non, tableau homogène. Ici, la notion \u0027Homogénéité\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Non, tableau homogène",
+                        "Oui, tableau hétérogène",
+                        "Seulement dans une matrice",
+                        "Oui, si on utilise des pointeurs"
+                    ],
+        "answer":  "Non, tableau homogène"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Accès",
+        "question":  "Complexité de l\u0027accès au i-ème élément ?",
+        "explanation":  "Accès direct. Reponse correcte: O(1). Ici, la notion \u0027Accès\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "O(1)",
+                        "O(N)",
+                        "O(log N)",
+                        "O(N^2)"
+                    ],
+        "answer":  "O(1)"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Matrice",
+        "question":  "Comment lire T[i, j] ?",
+        "explanation":  "Ligne i, colonne j. Reponse correcte: lément ligne i, colonne j. Ici, la notion \u0027Matrice\u0027 s\u0027applique: on applique ici la definition du concept demande et la regle de calcul associee.",
+        "choices":  [
+                        "lément ligne i, colonne j",
+                        "lément ligne j, colonne i",
+                        "La somme de i et j",
+                        "L\u0027adresse de i*j"
+                    ],
+        "answer":  "lément ligne i, colonne j"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Déclaration",
+        "question":  "T : Tableau[1..10] de Entier. Combien d\u0027éléments ?",
+        "explanation":  "1 à 10 inclusivement. Reponse correcte: 10. Ici, la notion \u0027Déclaration\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "10",
+                        "9",
+                        "11",
+                        "Inconnu"
+                    ],
+        "answer":  "10"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Boucles",
+        "question":  "Boucle la plus adaptée pour parcourir un tableau de taille N ?",
+        "explanation":  "Pour i de 1 à N. Reponse correcte: Boucle Pour. Ici, la notion \u0027Boucles\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Boucle Pour",
+                        "Boucle Tant Que",
+                        "Boucle Répéter",
+                        "Aucune boucle"
+                    ],
+        "answer":  "Boucle Pour"
+    },
+    {
+        "difficulty":  "Hard",
+        "concept":  "Dépassement",
+        "question":  "Si on accède à T[N+1] pour un tableau de taille N ?",
+        "explanation":  "Erreur Out of bounds. Reponse correcte: Erreur d\u0027index hors limites. Ici, la notion \u0027Dépassement\u0027 s\u0027applique: un tableau offre un acces par indice et impose de respecter les bornes et la logique d\u0027indexation.",
+        "choices":  [
+                        "Erreur d\u0027index hors limites",
+                        "Il retourne 0",
+                        "Il crée la case automatiquement",
+                        "Il accède au premier élément"
+                    ],
+        "answer":  "Erreur d\u0027index hors limites"
+    },
+    {
+        "difficulty":  "Medium",
+        "concept":  "Recherche",
+        "question":  "Meilleur tri pour pouvoir faire une recherche dichotomique ?",
+        "explanation":  "Le tableau doit d\u0027abord être trié. Reponse correcte: Le tableau doit être trié. Ici, la notion \u0027Recherche\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+        "choices":  [
+                        "Le tableau doit être trié",
+                        "Aucune condition requise",
+                        "Le tableau doit être vide",
+                        "Le tableau doit être petit"
+                    ],
+        "answer":  "Le tableau doit être trié"
+    }
+]

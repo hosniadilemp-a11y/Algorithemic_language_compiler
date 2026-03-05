@@ -385,6 +385,25 @@ document.addEventListener('DOMContentLoaded', () => {
             data.problem_id = problemId;
 
             if (executeAll) {
+                // Check for level-up before redirecting
+                if (data.level_up && data.new_level && typeof Swal !== 'undefined') {
+                    const lvl = data.new_level;
+                    const xpEarned = data.xp_earned > 0 ? ` (+${data.xp_earned} XP)` : '';
+                    await Swal.fire({
+                        title: '🎉 Nouveau Niveau !',
+                        html: `<div style="font-size:3rem; margin-bottom:10px;">${lvl.icon}</div>
+                               <div style="font-size:1.3rem; font-weight:800; color:${lvl.color};">${lvl.name}</div>
+                               <div style="margin-top:10px; color:#888; font-size:0.9rem;">Vous avez gagné${xpEarned} et atteint le niveau <strong style="color:${lvl.color}">${lvl.name}</strong> !<br>Continuez comme ça !</div>`,
+                        background: document.body.classList.contains('light-theme') ? '#ffffff' : '#161b22',
+                        color: document.body.classList.contains('light-theme') ? '#24292f' : '#c9d1d9',
+                        confirmButtonColor: lvl.color,
+                        confirmButtonText: 'Voir les Résultats 🚀',
+                        allowOutsideClick: false,
+                        showClass: { popup: 'animate__animated animate__bounceIn' }
+                    });
+                    // Invalidate cached level so header refreshes
+                    localStorage.removeItem('algo_user_level_cache');
+                }
                 // Save to session cache and redirect
                 sessionStorage.setItem('algo_submission_result', JSON.stringify(data));
                 window.location.href = '/submission_results';

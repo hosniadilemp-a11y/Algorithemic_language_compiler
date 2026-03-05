@@ -1,0 +1,1654 @@
+[
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Définition",
+
+        "text":  "Qu\u0027est-ce qu\u0027un enregistrement (Structure) ?",
+
+        "explanation":  "Permet de regrouper plusieurs champs de types différents sous une même entité. Reponse correcte: Une structure de données pouvant regrouper des champs de types différents. Ici, la notion \u0027Définition\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un enregistrement impose un seul type pour tous les champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une structure de données pouvant regrouper des champs de types différents",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un tableau où tous les éléments sont obligatoirement du même type",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Deux enregistrements sont toujours compares bit a bit par defaut",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Accès",
+
+        "text":  "Si `E` est un enregistrement et `Nom` est l\u0027un de ses champs. Comment y accéder ?",
+
+        "explanation":  "On utilise l\u0027opérateur point (.). Reponse correcte: E.Nom. Ici, la notion \u0027Accès\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "E.Nom",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Nom(E)",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "E[Nom]",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "E-\u003eNom",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Définition",
+
+        "text":  "Un enregistrement peut-il contenir un autre enregistrement ?",
+
+        "explanation":  "Oui, c\u0027est l\u0027imbrication d\u0027enregistrements. Reponse correcte: Oui, c\u0027est tout à fait possible. Ici, la notion \u0027Définition\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Deux enregistrements sont toujours compares bit a bit par defaut",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une affectation d\u0027enregistrement modifie automatiquement la source",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Oui, c\u0027est tout à fait possible",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Non, seuls les types primitifs sont autorisés",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Déclaration",
+
+        "text":  "Lors de la déclaration d\u0027un enregistrement, que faut-il spécifier pour chaque composant ?",
+
+        "explanation":  "Chaque champ a besoin d\u0027un identifiant et d\u0027un type. Reponse correcte: L\u0027identifiant du champ et son type. Ici, la notion \u0027Déclaration\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une affectation d\u0027enregistrement modifie automatiquement la source",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027identifiant du champ et son type",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Seulement l\u0027identifiant du champ",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Affectation",
+
+        "text":  "Si P1 et P2 sont de même type enregistrement. Que fait `P1 := P2` ?",
+
+        "explanation":  "L\u0027affectation globale copie champ par champ P2 dans P1. Reponse correcte: Tous les champs de P2 sont copiés un par un dans P1. Ici, la notion \u0027Affectation\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab[3].Nom et Tab.Nom[3] sont equivalents",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tous les champs de P2 sont copiés un par un dans P1",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "P->Nom est invalide meme si P est un pointeur vers enregistrement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "On obtient une erreur, il faut affecter champ par champ",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Tableaux",
+
+        "text":  "Pour un tableau de 10 enregistrements \u0027Etudiant\u0027. Comment lire la Note du 5ème ?",
+
+        "explanation":  "Tab[5].Note accède d\u0027abord au 5ème élément, puis à son champ. Reponse correcte: Tab[5].Note. Ici, la notion \u0027Tableaux\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Tab.Note[5]",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab.5.Note",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab[5].Note",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Tab[3].Nom et Tab.Nom[3] sont equivalents",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Comparaison",
+
+        "text":  "Peut-on utiliser `Si P1 = P2` pour vérifier l\u0027égalité totale des enregistrements ?",
+
+        "explanation":  "En algorithmique classique, cela est interdit. Il faut comparer champ par champ. Reponse correcte: Non, en général il faut comparer chaque champ individuellement. Ici, la notion \u0027Comparaison\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "P->Nom est invalide meme si P est un pointeur vers enregistrement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Non, en général il faut comparer chaque champ individuellement",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement ne peut pas etre utilise dans un tableau",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un type enregistrement alloue la memoire de toutes ses variables",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Passer un enregistrement volumineux par valeur evite toute copie",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Oui, la machine fait une comparaison de bits automatiques",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Conception",
+
+        "text":  "Pour gérer 100 contacts (Nom, Numéro), quelle est la meilleure modélisation ?",
+
+        "explanation":  "Un Tableau contenant 100 éléments de type Enregistrement (Contact). Reponse correcte: Un tableau dont les éléments sont des enregistrements. Ici, la notion \u0027Conception\u0027 s\u0027applique: le resultat depend du nombre reel d\u0027iterations et du moment ou la condition est evaluee.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un tableau dont les éléments sont des enregistrements",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement ne peut pas etre utilise dans un tableau",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un type enregistrement alloue la memoire de toutes ses variables",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Passer un enregistrement volumineux par valeur evite toute copie",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement contenant 100 champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Cela nécessite d\u0027importer une bibliothèque externe spéciale.",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Type vs Variable",
+
+        "text":  "Différence entre Type Enregistrement et Variable de ce type ?",
+
+        "explanation":  "Le Type est le modèle, la variable est l\u0027instanciation en mémoire. Reponse correcte: Le TYPE décrit le modèle, la variable alloue la mémoire. Ici, la notion \u0027Type vs Variable\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un type enregistrement alloue la memoire de toutes ses variables",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Passer un enregistrement volumineux par valeur evite toute copie",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le TYPE réserve la mémoire, la variable en libère",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La taille d\u0027un enregistrement est toujours la somme exacte sans alignement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Le TYPE décrit le modèle, la variable alloue la mémoire",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un champ pointeur vers le meme type est impossible",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Flexibilité",
+
+        "text":  "Un enregistrement peut avoir \u0027Titre\u0027 (Chaine) et \u0027Annee\u0027 (Entier) simultanément.",
+
+        "explanation":  "Vrai, contrairement au tableau qui est homogène. Reponse correcte: Vrai. Ici, la notion \u0027Flexibilité\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Faux",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Passer un enregistrement volumineux par valeur evite toute copie",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La complexité sera toujours de O(n^2).",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La taille d\u0027un enregistrement est toujours la somme exacte sans alignement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Vrai",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Initialisation",
+
+        "text":  "Les champs d\u0027une variable de type pointeur vers un enregistrement après allocation avec `allouer()` contiennent quoi par défaut ?",
+
+        "explanation":  "Après allocation, le contenu est indéterminé (ou garbage). Reponse correcte: Des valeurs indéterminées (ordures mémoires). Ici, la notion \u0027Initialisation\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "La taille d\u0027un enregistrement est toujours la somme exacte sans alignement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Des valeurs indéterminées (ordures mémoires)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Un champ pointeur vers le meme type est impossible",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "NIL ou NULL pour tous les champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La valeur 0 pour les entiers",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Pointeur",
+
+        "text":  "Si `P` pointe vers un enregistrement `Contact`, comment accéder au `Nom` ?",
+
+        "explanation":  "On déréférence P avec P^ puis on accède au champ. Reponse correcte: P->Nom. Ici, la notion \u0027Pointeur\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "P.Nom",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "P->Nom",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "P-\u003eNom",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un champ pointeur vers le meme type est impossible",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Nom->P",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Lire(E) est toujours obligatoire pour un enregistrement",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Différence",
+
+        "text":  "Quelle est la différence MAJEURE entre un Tableau et un Enregistrement ?",
+
+        "explanation":  "Tableau = Homogène (même type), Enregistrement = Hétérogène (types variés). Reponse correcte: Un tableau est homogène, un enregistrement peut être hétérogène. Ici, la notion \u0027Différence\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un tableau est homogène, un enregistrement peut être hétérogène",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027enregistrement est dynamique, le tableau est statique",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Lire(E) est toujours obligatoire pour un enregistrement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement remplace toujours une liste chainee",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Les champs sont inaccessibles avec la notation point",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Limites",
+
+        "text":  "Combien de champs un enregistrement peut-il contenir ?",
+
+        "explanation":  "Logiquement aucune limite stricte, la limitation est fixée par le langage ou la RAM. Reponse correcte: Théoriquement aucune limite, dépend du compilateur. Ici, la notion \u0027Limites\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Théoriquement aucune limite, dépend du compilateur",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "C\u0027est une erreur de compilation.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement remplace toujours une liste chainee",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un maximum de 255 champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Les champs sont inaccessibles avec la notation point",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un tableau est preferable meme pour des donnees heterogenes",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Paramètre",
+
+        "text":  "Passer un enregistrement volumineux par VALEUR (Donnée) à une fonction implique quoi ?",
+
+        "explanation":  "Une copie complète en mémoire, ce qui est lourd. Préférer passage par variable (Donnée/Résultat). Reponse correcte: Une copie complète de tous les champs dans la pile. Ici, la notion \u0027Paramètre\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Les champs sont inaccessibles avec la notation point",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un tableau est preferable meme pour des donnees heterogenes",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement impose un seul type pour tous les champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Juste la copie de son adresse",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une copie complète de tous les champs dans la pile",
+
+                            "is_correct":  true
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Tableau de Pointeurs",
+
+        "text":  "Un tableau `Tab` contient des pointeurs vers des Enregistrements. Comment lire le champ `Val` du 3e élément ?",
+
+        "explanation":  "On accède au pointeur Tab[3], on le déréférence (Tab[3]^), puis on accède à Val. Reponse correcte: Tab[3]->Val. Ici, la notion \u0027Tableau de Pointeurs\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Un tableau est preferable meme pour des donnees heterogenes",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement impose un seul type pour tous les champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab^[3].Val",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab[3]->Val",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Tab[3].Val^",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Stockage",
+
+        "text":  "Comment les champs d\u0027un enregistrement sont-ils stockés en mémoire RAM ?",
+
+        "explanation":  "Généralement de façon contiguë (les uns à côté des autres). Reponse correcte: De façon contiguë (adjacente). Ici, la notion \u0027Stockage\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "De façon contiguë (adjacente)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Chaque champ dans un fichier différent",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un enregistrement impose un seul type pour tous les champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La complexité sera toujours de O(n^2).",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "parpillés aléatoirement dans la RAM",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Easy",
+
+        "concept":  "Taille",
+
+        "text":  "Comment calculer la taille en mémoire d\u0027un enregistrement ?",
+
+        "explanation":  "C\u0027est grosso modo la somme de la taille de ses champs (avec parfois du padding). Reponse correcte: La somme de l\u0027encombrement de tous ses champs. Ici, la notion \u0027Taille\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "La somme de l\u0027encombrement de tous ses champs",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027acces a un champ se fait uniquement avec des crochets []",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Deux enregistrements sont toujours compares bit a bit par defaut",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une affectation d\u0027enregistrement modifie automatiquement la source",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La taille du champ le plus grand multipliée par le nombre de champs",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Structures Récursives",
+
+        "text":  "Un enregistrement peut-il avoir un champ qui est un pointeur vers son propre type ?",
+
+        "explanation":  "Oui, c\u0027est le principe des listes chaînées et arbres. Reponse correcte: Oui, c\u0027est la base des structures de données récursives (listes, arbres). Ici, la notion \u0027Structures Récursives\u0027 s\u0027applique: une liste chainee se manipule en ajustant correctement les pointeurs, sinon on perd des maillons ou on cree des fuites memoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "La structure deviendra une constante figée.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Oui, c\u0027est la base des structures de données récursives (listes, arbres)",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Deux enregistrements sont toujours compares bit a bit par defaut",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Non, cela crée un paradoxe infini de compilation",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Une affectation d\u0027enregistrement modifie automatiquement la source",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Lecture",
+
+        "text":  "Peut-on faire `Lire(E)` où `E` est un enregistrement entier ?",
+
+        "explanation":  "En algo, non. Il faut lire champ par champ (Ex: Lire(E.Nom); Lire(E.Age);). Reponse correcte: Non, il faut lire (ou afficher) chaque champ individuellement. Ici, la notion \u0027Lecture\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Une affectation d\u0027enregistrement modifie automatiquement la source",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Un champ imbrique est interdit en algorithmique",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027index dépassera automatiquement la taille maximale.",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab[3].Nom et Tab.Nom[3] sont equivalents",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Non, il faut lire (ou afficher) chaque champ individuellement",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Oui, le compilateur demande tous les champs d\u0027un coup",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Type Heterogene",
+
+        "difficulty":  "Medium",
+
+        "explanation":  "Un enregistrement regroupe des champs de types differents sous une meme entite. Reponse correcte: Stocker Nom (Chaine), Age (Entier), Moyenne (Reel) pour un etudiant. Ici, la notion \u0027Type Heterogene\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "text":  "Quel cas justifie le mieux un enregistrement plutot qu\u0027un tableau simple ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Stocker Nom (Chaine), Age (Entier), Moyenne (Reel) pour un etudiant",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Stocker 100 notes Entier uniquement",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Stocker seulement des booleens",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Compter le nombre de lignes d\u0027un fichier",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Implementer une pile",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Aucun, le tableau remplace toujours un enregistrement",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Affectation - Piege",
+
+        "difficulty":  "Hard",
+
+        "explanation":  "L\u0027affectation copie les valeurs. Modifier P2 ensuite ne modifie pas P1. Reponse correcte: P1.Age garde l\u0027ancienne valeur copiee depuis P2. Ici, la notion \u0027Affectation - Piege\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "text":  "P1 et P2 sont du meme type enregistrement. Apres P1 := P2 puis P2.Age := 30, que devient P1.Age ?",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "P1.Age garde l\u0027ancienne valeur copiee depuis P2",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "P1.Age devient automatiquement 30",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "P1 devient NIL",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Les deux ages deviennent indetermines",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Erreur de compilation obligatoire",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Ca depend uniquement du systeme",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "concept":  "Imbrication",
+
+        "difficulty":  "Hard",
+
+        "explanation":  "Le champ Adresse est lui-meme un enregistrement contenant Ville. Reponse correcte: Adresse est un champ enregistrement imbrique qui contient Ville. Ici, la notion \u0027Imbrication\u0027 s\u0027applique: un enregistrement regroupe des champs nommes, souvent de types differents, accessibles via la notation par point.",
+
+        "text":  "Si Etu.Adresse.Ville est valide, cela signifie que :",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Adresse est un champ enregistrement imbrique qui contient Ville",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Ville est un tableau indexe par Adresse",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Etu est une liste chainee",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La notation point est interdite sur 2 niveaux",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Adresse est forcement un pointeur NULL",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La syntaxe est toujours equivalente a Etu[Adresse][Ville]",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Hard",
+
+        "concept":  "Tableau d\u0027Enregistrements",
+
+        "text":  "Si Tab est un tableau d\u0027enregistrements Etudiant, comment acceder a l\u0027age du 4e etudiant ?",
+
+        "explanation":  "On selectionne d\u0027abord l\u0027element du tableau puis son champ. Reponse correcte: Tab[4].Age. L\u0027ordre index puis champ est obligatoire.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "Tab[4].Age",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "Tab.Age[4]",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Age.Tab[4]",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab(4).Age",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab[Age].4",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Tab-\u003e4-\u003eAge",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    },
+
+    {
+
+        "type":  "MCQ",
+
+        "difficulty":  "Medium",
+
+        "concept":  "Affectation",
+
+        "text":  "Apres R1 := R2, puis R2.Nom := \"Lina\", que peut-on dire de R1.Nom ?",
+
+        "explanation":  "L\u0027affectation copie les champs de R2 vers R1 au moment de l\u0027operation. Reponse correcte: R1.Nom garde la valeur copiee avant la modification de R2.",
+
+        "choices":  [
+
+                        {
+
+                            "text":  "R1.Nom garde la valeur copiee avant la modification de R2",
+
+                            "is_correct":  true
+
+                        },
+
+                        {
+
+                            "text":  "R1.Nom devient automatiquement \"Lina\"",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "R1 devient NIL",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "Les deux noms deviennent vides",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "L\u0027instruction est toujours interdite",
+
+                            "is_correct":  false
+
+                        },
+
+                        {
+
+                            "text":  "La copie ne concerne que les champs numeriques",
+
+                            "is_correct":  false
+
+                        }
+
+                    ]
+
+    }
+
+]
+

@@ -1,0 +1,69 @@
+{
+  "title": "Somme Maximale d'un Sous-Tableau",
+  "topic": "Algorithms",
+  "difficulty": "Hard",
+  "description": "### Somme maximale d'un sous-tableau contigu\n\nOn vous donne un tableau d'entiers (positifs, négatifs ou nuls).\n\nTrouvez la plus grande somme possible d'un sous-tableau **contigu**.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Ligne 2: `N` entiers\n\n#### Format de sortie\n- Un entier: la somme maximale\n\n#### Exemple\n**Entrée**\n```\n8\n-2 -3 4 -1 -2 1 5 -3\n```\n**Sortie**\n```\n7\n```\nLe sous-tableau `4 -1 -2 1 5` donne la somme maximale `7`.",
+  "template_code": "Algorithme SousTableauMax;\nVar\n    N, i, x : Entier;\n    T[10000] : Entier;\n    meilleur, courant : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(N);\n    Pour i <- 0 a N - 1 Faire\n        Lire(T[i]);\n    FinPour;\n\n    // TODO: ecrire votre idee ici\n    // Calculer meilleur\n\n    // Affichage deja predefini\n    Ecrire(meilleur);\nFin.",
+  "test_cases": [
+    {
+      "input": "8\n-2 -3 4 -1 -2 1 5 -3\n",
+      "expected_output": "7\n",
+      "is_public": true
+    },
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "expected_output": "15\n",
+      "is_public": true
+    },
+    {
+      "input": "4\n-1 -2 -3 -4\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n9\n",
+      "expected_output": "9\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n3 -2 5 -1 6 -3\n",
+      "expected_output": "11\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n0 0 0 0 0 0 0\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "9\n-5 4 -1 7 -8 6 2 -1 3\n",
+      "expected_output": "10\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n-2 1 -3 4 -1\n",
+      "expected_output": "4\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n2 -1 2 3 4 -5\n",
+      "expected_output": "10\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n-2 -1 -2 -3 -4 -5\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "10\n1 -1 1 -1 1 -1 1 -1 1 -1\n",
+      "expected_output": "1\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n5 -9 6 -2 3 -1 2 -1\n",
+      "expected_output": "8\n",
+      "is_public": false
+    }
+  ]
+}

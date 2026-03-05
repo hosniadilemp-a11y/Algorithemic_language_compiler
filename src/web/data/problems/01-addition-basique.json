@@ -1,0 +1,69 @@
+{
+  "title": "Addition Basique",
+  "topic": "Basics",
+  "difficulty": "Easy",
+  "description": "### Addition de deux entiers\n\nVous devez lire deux entiers et afficher leur somme.\n\nCe défi valide les bases de la lecture, de l'affectation et de l'affichage.\n\n#### Objectif\n- Lire `a` et `b`\n- Calculer `a + b`\n- Afficher le résultat\n\n#### Format d'entrée\n- Ligne 1: entier `a`\n- Ligne 2: entier `b`\n\n#### Format de sortie\n- Un entier: `a + b`\n\n#### Exemple\n**Entrée**\n```\n7\n5\n```\n**Sortie**\n```\n12\n```",
+  "template_code": "Algorithme AdditionBasique;\nVar\n    A, B, S : Entier;\nDebut\n    // Lecture deja predefinie\n    Lire(A);\n    Lire(B);\n\n    // TODO: ecrire votre idee ici\n    // S <- ...\n\n    // Affichage deja predefini\n    Ecrire(S);\nFin.",
+  "test_cases": [
+    {
+      "input": "5\n7\n",
+      "expected_output": "12\n",
+      "is_public": true
+    },
+    {
+      "input": "-10\n20\n",
+      "expected_output": "10\n",
+      "is_public": true
+    },
+    {
+      "input": "0\n0\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "999\n1\n",
+      "expected_output": "1000\n",
+      "is_public": false
+    },
+    {
+      "input": "-5\n-6\n",
+      "expected_output": "-11\n",
+      "is_public": false
+    },
+    {
+      "input": "42\n-42\n",
+      "expected_output": "0\n",
+      "is_public": false
+    },
+    {
+      "input": "123\n456\n",
+      "expected_output": "579\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n-999\n",
+      "expected_output": "-998\n",
+      "is_public": false
+    },
+    {
+      "input": "700\n300\n",
+      "expected_output": "1000\n",
+      "is_public": false
+    },
+    {
+      "input": "-1000\n1001\n",
+      "expected_output": "1\n",
+      "is_public": false
+    },
+    {
+      "input": "8\n8\n",
+      "expected_output": "16\n",
+      "is_public": false
+    },
+    {
+      "input": "-250\n50\n",
+      "expected_output": "-200\n",
+      "is_public": false
+    }
+  ]
+}

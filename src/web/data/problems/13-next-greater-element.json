@@ -1,0 +1,49 @@
+{
+  "title": "Next Greater Element avec Pile Chaînée",
+  "topic": "Stacks",
+  "difficulty": "Medium",
+  "description": "### Next Greater Element avec pile chaînée\n\nPour chaque élément `T[i]`, trouvez le premier élément strictement plus grand à sa droite.\n\nSi aucun n'existe, la réponse pour cette position est `-1`.\n\nUtilisez une pile chaînée d'indices.\n\n#### Format d'entrée\n- Ligne 1: `N`\n- Ligne 2: `N` entiers\n\n#### Format de sortie\n- `N` entiers séparés par des espaces\n\n#### Exemple\n**Entrée**\n```\n4\n4 5 2 25\n```\n**Sortie**\n```\n5 25 25 -1\n```",
+  "template_code": "Type Maillon = Enregistrement\nDebut\n    idx  : Entier;\n    suiv : ^Maillon;\nFin;\n\nType PileIdx = Enregistrement\nDebut\n    sommet : ^Maillon;\nFin;\n\nProcedure Init(Var P : PileIdx)\nDebut\n    P.sommet := NIL;\nFin;\n\nProcedure Empiler(Var P : PileIdx, i : Entier)\nVar n : ^Maillon;\nDebut\n    n := allouer(taille(Maillon));\n    n->idx := i;\n    n->suiv := P.sommet;\n    P.sommet := n;\nFin;\n\nProcedure Depiler(Var P : PileIdx, Var i : Entier)\nVar t : ^Maillon;\nDebut\n    t := P.sommet;\n    i := t->idx;\n    P.sommet := t->suiv;\n    liberer(t);\nFin;\n\nFonction EstVide(P : PileIdx) : Booleen\nDebut\n    Retourner(P.sommet = NIL);\nFin;\n\nFonction Sommet(P : PileIdx) : Entier\nDebut\n    Retourner(P.sommet->idx);\nFin;\n\nAlgorithme NextGreater;\nVar\n    N, i, j : Entier;\n    T[100000], R[100000] : Entier;\n    P : PileIdx;\nDebut\n    Lire(N);\n    Pour i := 1 a N Faire\n        Lire(T[i]);\n        R[i] := -1;\n    FinPour\n\n    Init(P);\n\n    Pour i := 1 a N Faire\n        // TODO: tant que pile non vide et T[i] > T[Sommet(P)], remplir R[]\n        // TODO: Empiler(P, i)\n    FinPour\n\n    Pour i := 1 a N Faire\n        Ecrire(R[i]);\n        Si i < N Alors Ecrire(\" \" ); FinSi\n    FinPour\nFin.",
+  "test_cases": [
+    {
+      "input": "4\n4 5 2 25\n",
+      "expected_output": "5 25 25 -1\n",
+      "is_public": true
+    },
+    {
+      "input": "5\n13 7 6 12 10\n",
+      "expected_output": "-1 12 12 -1 -1\n",
+      "is_public": true
+    },
+    {
+      "input": "3\n1 2 3\n",
+      "expected_output": "2 3 -1\n",
+      "is_public": false
+    },
+    {
+      "input": "3\n3 2 1\n",
+      "expected_output": "-1 -1 -1\n",
+      "is_public": false
+    },
+    {
+      "input": "6\n2 1 2 4 3 5\n",
+      "expected_output": "4 2 4 5 5 -1\n",
+      "is_public": false
+    },
+    {
+      "input": "1\n9\n",
+      "expected_output": "-1\n",
+      "is_public": false
+    },
+    {
+      "input": "5\n5 5 5 5 5\n",
+      "expected_output": "-1 -1 -1 -1 -1\n",
+      "is_public": false
+    },
+    {
+      "input": "7\n1 3 2 4 2 6 1\n",
+      "expected_output": "3 4 4 6 6 -1 -1\n",
+      "is_public": false
+    }
+  ]
+}

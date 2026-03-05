@@ -93,6 +93,20 @@
                 <button type="submit" class="btn-auth btn-primary-auth">S'inscrire</button>
             </form>
 
+            <div class="auth-divider">ou s'inscrire avec</div>
+
+            <div class="social-login-container">
+                <a href="{{ url_for('auth.oauth_login', provider='google') }}" class="btn-auth btn-google">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18"
+                        alt="Google">
+                    Google
+                </a>
+                <a href="{{ url_for('auth.oauth_login', provider='github') }}" class="btn-auth btn-github">
+                    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+                    GitHub
+                </a>
+            </div>
+
             <div class="divider">Déjà membre ?</div>
 
             <div style="text-align: center;">

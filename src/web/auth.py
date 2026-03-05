@@ -390,17 +390,23 @@ def oauth_auth(provider):
             
         # Find user or create
         user = User.query.filter_by(email=email).first()
-        if not user:
-             user = User(email=email, name=name, oauth_provider=provider, oauth_id=oauth_id, email_verified=True)
-             db.session.add(user)
-             db.session.commit()
-        else:
+        if user:
+             # Check lockout
+             if user.lockout_until and user.lockout_until > datetime.utcnow():
+                 flash('Votre compte est temporairement bloqué. Réessayez plus tard.', 'danger')
+                 return redirect(url_for('auth.login'))
+                 
              # Update oauth info if missing
              if not user.oauth_provider:
                  user.oauth_provider = provider
                  user.oauth_id = oauth_id
                  user.email_verified = True
                  db.session.commit()
+        else:
+             # Create new user
+             user = User(email=email, name=name, oauth_provider=provider, oauth_id=oauth_id, email_verified=True)
+             db.session.add(user)
+             db.session.commit()
                  
         login_user(user, remember=True)
         return redirect(url_for('index'))

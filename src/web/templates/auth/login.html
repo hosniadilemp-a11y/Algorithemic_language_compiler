@@ -28,14 +28,62 @@
             font-weight: 700;
         }
 
+        .social-login-container {
+            margin-bottom: 25px;
+        }
+
         .btn-google {
-            background: #db4437;
-            color: white;
+            background: #fff;
+            color: #444;
+            border: 1px solid #ddd !important;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background: #f8f8f8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-github {
-            background: #333;
+            background: #24292e;
             color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-github:hover {
+            background: #1b1f23;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .divider-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .divider-container::before,
+        .divider-container::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider-container:not(:empty)::before {
+            margin-right: .5em;
+        }
+
+        .divider-container:not(:empty)::after {
+            margin-left: .5em;
         }
     </style>
 </head>
@@ -84,6 +132,20 @@
                 </div>
                 <button type="submit" class="btn-auth btn-primary-auth">Se connecter</button>
             </form>
+
+            <div class="auth-divider">ou continuer avec</div>
+
+            <div class="social-login-container">
+                <a href="{{ url_for('auth.oauth_login', provider='google') }}" class="btn-auth btn-google">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18"
+                        alt="Google">
+                    Google
+                </a>
+                <a href="{{ url_for('auth.oauth_login', provider='github') }}" class="btn-auth btn-github">
+                    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+                    GitHub
+                </a>
+            </div>
 
             <div class="divider">Nouveau sur AlgoCompiler ?</div>
 

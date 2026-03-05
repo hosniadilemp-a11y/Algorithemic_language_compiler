@@ -1057,3 +1057,103 @@ body.light-theme .form-control:focus {
 .form-control::placeholder {
     color: var(--course-muted);
 }
+
+/* Social Login Styles */
+.social-login-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.btn-auth.btn-google {
+    background: #fff !important;
+    color: #444 !important;
+    border: 1px solid #ddd !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-auth.btn-google:hover {
+    background: #f8f8f8 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-auth.btn-github {
+    background: #24292e !important;
+    color: white !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-auth.btn-github:hover {
+    background: #1b1f23 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: var(--course-muted);
+    font-size: 0.9rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--course-line);
+}
+
+.auth-divider:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.auth-divider:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.alert-danger {
+    background: rgba(248, 81, 73, 0.1);
+    color: #f85149;
+    border: 1px solid rgba(248, 81, 73, 0.2);
+}
+
+.alert-success {
+    background: rgba(46, 160, 67, 0.1);
+    color: #3fb950;
+    border: 1px solid rgba(46, 160, 67, 0.2);
+}
+
+.alert-warning {
+    background: rgba(210, 153, 34, 0.1);
+    color: #d29922;
+    border: 1px solid rgba(210, 153, 34, 0.2);
+}
+
+.alert-info {
+    background: rgba(88, 166, 255, 0.1);
+    color: #58a6ff;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+}

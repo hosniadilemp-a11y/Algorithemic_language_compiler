@@ -55,23 +55,7 @@ script_*.js
 !OAUTH_SETUP_INSTRUCTIONS.md
 !README_DEPLOY.md
 
-# --- DATABASE & USER DATA (DO NOT COMMIT) ---
-# Ignore all SQLite databases and instance folders to protect user privacy
-instance/
-**/instance/
-*.db
-*.db-journal
-*.db-shm
-*.db-wal
-src/web/*.db
-algocompiler.db
 
-# --- SOURCE DATASET (DO COMMIT) ---
-# These are the original JSONs for quizzes/problems
-!src/web/data/
-!src/web/data/quizzes/
-!src/web/data/quizzes/*.json
-!src/web/data/quizzes/.gitkeep
 
 # --- Archive / draft files ---
 archive/

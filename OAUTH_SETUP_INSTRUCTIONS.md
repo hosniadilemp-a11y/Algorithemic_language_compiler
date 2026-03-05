@@ -15,15 +15,15 @@ Les clés API OAuth (Google et GitHub) nécessitent que vous configuriez des app
    - Type d'application: **Application Web**.
    - Nom: "AlgoCompiler Web".
    - **Origines JavaScript autorisées** : 
-     - `http://127.0.0.1:5000`
      - `http://localhost:5000`
+     - `https://algorithemic-language-compiler.onrender.com`
    - **URI de redirection autorisés** :
-     - `http://127.0.0.1:5000/auth/google`
-     - `http://localhost:5000/auth/google` (assurez-vous que l'URI correspond exactement à la route dans votre code Flask).
+     - `http://localhost:5000/auth/google`
+     - `https://algorithemic-language-compiler.onrender.com/auth/google`
 5. Copiez le **Client ID** et le **Client Secret**.
-6. Définissez-les comme variables d'environnement dans votre terminal ou votre fichier `.env` :
-   - `export GOOGLE_CLIENT_ID="votre_client_id_ici"`
-   - `export GOOGLE_CLIENT_SECRET="votre_secret_ici"`
+6. Définissez-les comme variables d'environnement dans votre terminal (local) ou dans le dashboard **Render** (Environment) :
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
 
 ---
 
@@ -34,14 +34,14 @@ Les clés API OAuth (Google et GitHub) nécessitent que vous configuriez des app
 3. Cliquez sur **OAuth Apps** > **New OAuth App**.
 4. Remplissez le formulaire :
    - **Application name**: AlgoCompiler
-   - **Homepage URL**: `http://127.0.0.1:5000` (ou l'URL de votre site en production)
-   - **Authorization callback URL**: `http://127.0.0.1:5000/auth/github`
+   - **Homepage URL**: `https://algorithemic-language-compiler.onrender.com`
+   - **Authorization callback URL**: `https://algorithemic-language-compiler.onrender.com/auth/github`
 5. Cliquez sur **Register application**.
 6. Sur la page suivante, vous verrez votre **Client ID**. Copiez-le.
 7. Cliquez sur **Generate a new client secret** et copiez le texte généré.
-8. Définissez-les comme variables d'environnement :
-   - `export GITHUB_CLIENT_ID="votre_client_id_ici"`
-   - `export GITHUB_CLIENT_SECRET="votre_secret_ici"`
+8. Définissez-les comme variables d'environnement dans **Render** :
+   - `GITHUB_CLIENT_ID`
+   - `GITHUB_CLIENT_SECRET`
 
 ---
 

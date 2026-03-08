@@ -44,7 +44,8 @@ nul
 
 # --- SCRATCH FILES (Generated during development) ---
 check_braces*.py
-check.js
+
+
 test.js
 test_script.js
 script_*.js

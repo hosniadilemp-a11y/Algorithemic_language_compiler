@@ -877,15 +877,15 @@ def send_input():
 
 @app.route('/api/problems', methods=['GET'])
 def get_problems():
-    topic = request.args.get('topic')
-    difficulty = request.args.get('difficulty')
+    topics = request.args.getlist('topic')
+    difficulties = request.args.getlist('difficulty')
     
     query = Problem.query
-    if topic:
-        query = query.filter_by(topic=topic)
-    if difficulty:
-        query = query.filter_by(difficulty=difficulty)
-        
+    if topics:
+        query = query.filter(Problem.topic.in_(topics))
+    if difficulties:
+        query = query.filter(Problem.difficulty.in_(difficulties))
+    
     problems = query.all()
     
     # Get solved problems for the current user if authenticated

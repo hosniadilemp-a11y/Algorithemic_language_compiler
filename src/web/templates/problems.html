@@ -22,37 +22,83 @@
         {% endset %}
         {% include 'partials/navbar.html' %}
 
-        <div class="problems-container">
-            <div class="problems-header">
-                <h1><i class="fas fa-laptop-code"></i> Défis de Codage</h1>
-                <p>Pratiquez l'algorithmique avec notre série d'exercices.</p>
-            </div>
+        <div class="problems-layout">
+            <aside class="problems-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-filter"></i> Filtres</h3>
+                    <button id="reset-filters" class="btn-reset" title="Réinitialiser tous les filtres">
+                        <i class="fas fa-undo-alt"></i> Réinitialiser
+                    </button>
+                </div>
 
-            <div class="problems-filter-bar">
-                <select id="topic-filter">
-                    <option value="">Tous les thèmes</option>
-                    <option value="Basics">Bases</option>
-                    <option value="Arrays">Tableaux</option>
-                    <option value="Strings">Chaînes de caractères</option>
-                    <option value="Algorithms">Algorithmes</option>
-                    <option value="Functions">Fonctions</option>
-                    <option value="Linked Lists">Listes Chaînées</option>
-                    <option value="Stacks">Piles</option>
-                    <option value="Queues">Files</option>
-                </select>
+                <div class="filter-section">
+                    <h4><i class="fas fa-tags"></i> Thèmes</h4>
+                    <div class="filter-options" id="topic-filters">
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Basics">
+                            <span>Bases</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Arrays">
+                            <span>Tableaux</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Strings">
+                            <span>Chaînes</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Algorithms">
+                            <span>Algorithmes</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Functions">
+                            <span>Fonctions</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Linked Lists">
+                            <span>Listes Chaînées</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Stacks">
+                            <span>Piles</span>
+                        </label>
+                        <label class="filter-chip">
+                            <input type="checkbox" name="topic" value="Queues">
+                            <span>Files</span>
+                        </label>
+                    </div>
+                </div>
 
-                <select id="difficulty-filter">
-                    <option value="">Toutes les difficultés</option>
-                    <option value="Easy">Facile</option>
-                    <option value="Medium">Moyen</option>
-                    <option value="Hard">Difficile</option>
-                </select>
-            </div>
+                <div class="filter-section">
+                    <h4><i class="fas fa-layer-group"></i> Difficulté</h4>
+                    <div class="filter-options" id="difficulty-filters">
+                        <label class="filter-chip difficulty-Easy">
+                            <input type="checkbox" name="difficulty" value="Easy">
+                            <span>Facile</span>
+                        </label>
+                        <label class="filter-chip difficulty-Medium">
+                            <input type="checkbox" name="difficulty" value="Medium">
+                            <span>Moyen</span>
+                        </label>
+                        <label class="filter-chip difficulty-Hard">
+                            <input type="checkbox" name="difficulty" value="Hard">
+                            <span>Difficile</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
 
-            <div class="problems-list" id="problems-list">
-                <!-- List populated via JS -->
-                <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Chargement des défis...</div>
-            </div>
+            <main class="problems-main">
+                <div class="problems-header">
+                    <h1><i class="fas fa-laptop-code"></i> Défis de Codage</h1>
+                    <p>Pratiquez l'algorithmique avec notre série d'exercices.</p>
+                </div>
+
+                <div class="problems-list" id="problems-list">
+                    <!-- List populated via JS -->
+                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Chargement des défis...</div>
+                </div>
+            </main>
         </div>
     </div>
     <script src="{{ url_for('static', filename='theme.js') }}"></script>

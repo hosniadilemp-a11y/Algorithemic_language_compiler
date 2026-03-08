@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const problemsList = document.getElementById('problems-list');
-    const topicFilter = document.getElementById('topic-filter');
-    const difficultyFilter = document.getElementById('difficulty-filter');
+    const topicFilters = document.querySelectorAll('#topic-filters input[type="checkbox"]');
+    const difficultyFilters = document.querySelectorAll('#difficulty-filters input[type="checkbox"]');
+    const resetBtn = document.getElementById('reset-filters');
 
     function getCookie(name) {
         const raw = document.cookie
@@ -22,12 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchProblems() {
-        const topic = topicFilter.value;
-        const difficulty = difficultyFilter.value;
+        const topics = Array.from(topicFilters).filter(i => i.checked).map(i => i.value);
+        const difficulties = Array.from(difficultyFilters).filter(i => i.checked).map(i => i.value);
 
         let url = '/api/problems?';
-        if (topic) url += `topic=${topic}&`;
-        if (difficulty) url += `difficulty=${difficulty}`;
+        topics.forEach(t => url += `topic=${encodeURIComponent(t)}&`);
+        difficulties.forEach(d => url += `difficulty=${encodeURIComponent(d)}&`);
 
         try {
             problemsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Chargement des défis...</div>';
@@ -47,26 +48,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderProblems(problems) {
         if (!problems || problems.length === 0) {
-            problemsList.innerHTML = '<div class="no-results">Aucun défi trouvé pour ces critères.</div>';
+            problemsList.innerHTML = '<div class="no-results" style="text-align:center; padding: 40px; color: #888;">' +
+                '<i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; display: block; opacity: 0.5;"></i>' +
+                'Aucun défi trouvé pour ces critères.</div>';
             return;
         }
 
         const solved = getSolvedProblems();
 
         problemsList.innerHTML = problems.map(p => {
-            // Use API 'solved' status if provided, otherwise fallback to cookie
             const isSolved = (p.solved !== null && p.solved !== undefined) ? p.solved : solved.has(p.id);
 
             return `
             <div class="problem-card ${isSolved ? 'solved' : ''}">
                 <div class="problem-info">
                     <h3>${p.title}</h3>
-                    <p class="problem-snippet">${p.description ? p.description.replace(/<[^>]*>?/gm, '').replace(/[#*`]/g, '').trim().substring(0, 100) + '...' : ''}</p>
+                    <p class="problem-snippet">${p.description ? p.description.replace(/<[^>]*>?/gm, '').replace(/[#*`]/g, '').trim().substring(0, 150) + '...' : ''}</p>
                     <div class="problem-meta">
                         <span class="topic-tag"><i class="fas fa-tag"></i> ${p.topic}</span>
                         <span class="difficulty-badge difficulty-${p.difficulty}">${translateDifficulty(p.difficulty)}</span>
-                        <span class="solver-count"><i class="fas fa-user-clock"></i> Pris: ${p.attempted_users || 0}</span>
-                        <span class="solver-count"><i class="fas fa-percentage"></i> Réussite: ${(p.success_rate ?? 0)}%</span>
+                        <span class="solver-count" title="Utilisateurs ayant tenté"><i class="fas fa-user-clock"></i> ${p.attempted_users || 0}</span>
+                        <span class="solver-count" title="Taux de réussite"><i class="fas fa-percentage"></i> ${(p.success_rate ?? 0)}%</span>
                         ${isSolved ? '<span class="done-badge"><i class="fas fa-check-circle"></i> Terminé</span>' : ''}
                     </div>
                 </div>
@@ -87,8 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    topicFilter.addEventListener('change', fetchProblems);
-    difficultyFilter.addEventListener('change', fetchProblems);
+    // Add listeners to all checkboxes
+    [...topicFilters, ...difficultyFilters].forEach(checkbox => {
+        checkbox.addEventListener('change', fetchProblems);
+    });
+
+    // Reset logic
+    resetBtn.addEventListener('click', () => {
+        [...topicFilters, ...difficultyFilters].forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        fetchProblems();
+    });
 
     // Initial load
     fetchProblems();

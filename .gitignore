@@ -54,8 +54,8 @@ script_*.js
 !Badges.txt
 !OAUTH_SETUP_INSTRUCTIONS.md
 !README_DEPLOY.md
-*.db
-src/web/*.db
+# --- Database files ---
+# (Database is now tracked as requested)
 
 # --- Archive / draft files ---
 archive/

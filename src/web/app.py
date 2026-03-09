@@ -70,10 +70,24 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(16))
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
+    # Attempt to detect which driver to use
+    use_psycopg3 = False
+    try:
+        import psycopg
+        use_psycopg3 = True
+    except ImportError:
+        pass
+    
     if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql+psycopg://', 1)
+        driver = 'postgresql+psycopg://' if use_psycopg3 else 'postgresql://'
+        database_url = database_url.replace('postgres://', driver, 1)
     elif database_url.startswith('postgresql://'):
-        database_url = database_url.replace('postgresql://', 'postgresql+psycopg://', 1)
+        if use_psycopg3:
+            database_url = database_url.replace('postgresql://', 'postgresql+psycopg://', 1)
+    
+    # Hide password in logs
+    safe_log_url = database_url.split('@')[-1] if '@' in database_url else "HIDDEN"
+    print(f">>> CONFIGURED DATABASE_URL: {safe_log_url} (Psycopg3: {use_psycopg3})", flush=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

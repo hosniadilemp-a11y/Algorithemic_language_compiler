@@ -1,18 +1,24 @@
 import sys
 import os
+import secrets
+import logging
 # Add parent directory to path to allow importing 'compiler'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+print(">>> [DEBUG] APP STARTING UP...", flush=True)
 
 from flask import Flask, render_template, request, jsonify, Response
 from flask_login import current_user, login_required
 import io
 import contextlib
 from compiler.parser import parser, compile_algo
+print(">>> [DEBUG] PARSER IMPORTED", flush=True)
 
 from web.debugger import TraceRunner
 from web.models import db, Chapter, Question, Choice, Problem, TestCase, User, QuizAttempt, ChallengeSubmission, UserBadge
 from web.extensions import login_manager, oauth, mail
 from web.sandbox.runner import execute_code
+print(">>> [DEBUG] MODELS AND EXTENSIONS IMPORTED", flush=True)
 from sqlalchemy import func, distinct
 import json
 import secrets
@@ -71,6 +77,32 @@ if database_url:
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or f"sqlite:///{os.path.join(BASE_DIR, 'algocompiler.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+safe_uri = app.config['SQLALCHEMY_DATABASE_URI'].split('@')[-1] if '@' in app.config['SQLALCHEMY_DATABASE_URI'] else "sqlite"
+print(f">>> [DEBUG] SQLALCHEMY_DATABASE_URI: {safe_uri}", flush=True)
+
+try:
+    print(">>> [DEBUG] INITIALIZING DB...", flush=True)
+    db.init_app(app)
+    with app.app_context():
+        print(">>> [DEBUG] ENSURING TABLES EXIST (db.create_all)...", flush=True)
+        db.create_all()
+        print(">>> [DEBUG] DB TABLES CHECKED/CREATED OK", flush=True)
+        
+        # Auto-seed if empty
+        if Question.query.count() == 0 and not os.environ.get('SKIP_SEED'):
+            print(">>> [DEBUG] DB EMPTY. SEEDING FROM JSON...", flush=True)
+            try:
+                from web.seed_from_json import seed_from_json
+                seed_from_json()
+                print(">>> [DEBUG] SEEDING COMPLETED", flush=True)
+            except Exception as seed_err:
+                print(f">>> [DEBUG] SEEDING FAILED (NON-FATAL): {seed_err}", flush=True)
+except Exception as e:
+    print(f">>> [CRITICAL] DB SETUP FAILED: {e}", flush=True)
+    import traceback
+    traceback.print_exc()
+    sys.stdout.flush()
+
 # Mail Config (Resend defaults for easier testing)
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.resend.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465))
@@ -87,7 +119,6 @@ app.config['GITHUB_CLIENT_ID'] = os.environ.get('GITHUB_CLIENT_ID', 'placeholder
 app.config['GITHUB_CLIENT_SECRET'] = os.environ.get('GITHUB_CLIENT_SECRET', 'placeholder')
 
 # Initialize extensions
-db.init_app(app)
 login_manager.init_app(app)
 oauth.init_app(app)
 mail.init_app(app)
@@ -103,29 +134,6 @@ app.register_blueprint(auth_bp)
 # Register Admin Blueprint (Teacher Dashboard at /admin)
 from web.admin import admin_bp
 app.register_blueprint(admin_bp)
-
-# Ensure database tables exist and seed data if empty
-print(f"DEBUG: Using database URI: {app.config['SQLALCHEMY_DATABASE_URI'].split('@')[-1] if '@' in app.config['SQLALCHEMY_DATABASE_URI'] else app.config['SQLALCHEMY_DATABASE_URI']}")
-try:
-    with app.app_context():
-        print("DEBUG: Ensuring database tables exist (db.create_all)...")
-        db.create_all()
-        print("DEBUG: Database tables created/checked.")
-        
-        # Auto-seed if empty
-        if Question.query.count() == 0 and not os.environ.get('SKIP_SEED'):
-            print("DEBUG: Production DB is empty. Seeding quiz data...")
-            try:
-                from web.seed_from_json import seed_from_json
-                seed_from_json()
-                print("DEBUG: Seeding completed successfully.")
-            except Exception as e:
-                print(f"DEBUG: Failed to auto-seed: {e}")
-except Exception as e:
-    print(f"CRITICAL ERROR DURING APP STARTUP: {e}")
-    import traceback
-    traceback.print_exc()
-
 
 # Correct path to examples and fixtures
 EXAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'examples'))

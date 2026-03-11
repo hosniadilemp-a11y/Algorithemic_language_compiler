@@ -11,7 +11,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-primary);
             margin: 0;
             overflow-y: auto !important;
         }
@@ -20,10 +20,10 @@
             max-width: 800px;
             margin: 40px auto;
             padding: 40px;
-            background: var(--panel-bg);
+            background: var(--pane-bg);
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
         }
 
         .text-center {
@@ -70,10 +70,10 @@
         .comparison-card {
             flex: 1;
             min-width: 250px;
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(128, 128, 128, 0.08);
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             text-align: center;
         }
 
@@ -135,7 +135,7 @@
                     <i class="fas fa-globe-americas" style="font-size: 2rem; color: #ff8a00; margin-bottom: 10px;"></i>
                     <h4>Avant : Forte Latence</h4>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">Serveur distant de la BD = Temps de
-                        réponse très lent à cause des allers-retours sur des milliers de kilomètres.</p>
+                        réponse très lent à cause des allers-retour sur des milliers de kilomètres.</p>
                 </div>
                 <div class="comparison-card">
                     <i class="fas fa-bolt" style="font-size: 2rem; color: #2ea44e; margin-bottom: 10px;"></i>
@@ -154,7 +154,7 @@
 
         <div class="text-center" style="margin-top: 40px;">
             <a href="/" class="btn secondary highlight"
-                style="padding: 10px 20px; font-size: 1.1rem; color: var(--text-color);">
+                style="padding: 10px 20px; font-size: 1.1rem; color: var(--text-primary);">
                 <i class="fas fa-arrow-left"></i> Retour à l'Éditeur
             </a>
         </div>

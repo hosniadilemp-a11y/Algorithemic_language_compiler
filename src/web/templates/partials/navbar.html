@@ -1,16 +1,26 @@
-<div class="global-announcement"
-    style="background: linear-gradient(90deg, #ff8a00, #e52e71); color: white; text-align: center; padding: 12px 20px; font-weight: 500; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(229, 46, 113, 0.4); position: relative; z-index: 1050; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+<div class="global-announcement" id="global-announcement-banner"
+    style="display: none; background: linear-gradient(90deg, #ff8a00, #e52e71); color: white; text-align: center; padding: 12px 40px 12px 20px; font-weight: 500; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(229, 46, 113, 0.4); position: relative; z-index: 1050; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
     <span style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
         <span style="font-size: 1.2rem;">🎉</span>
         <span>
             <strong>Nouvelle Mise à Jour !</strong> L'adresse d'AlgoCompiler a changé pour
             <a href="/announcement"
-                style="color: #fff; text-decoration: underline; font-weight: 800; padding: 0 5px; background: rgba(0,0,0,0.2); border-radius: 4px; margin: 0 5px; box-shadow: 0 0 10px rgba(255,255,255,0.2);">https://algocompiler.onrender.com</a>.
+                style="color: #fff; text-decoration: underline; font-weight: 800; padding: 0 5px; background: rgba(0,0,0,0.2); border-radius: 4px; margin: 0 5px; box-shadow: 0 0 10px rgba(255,255,255,0.2); transition: background 0.2s;">https://algocompiler.onrender.com</a>.
             Pensez à mettre à jour vos favoris, l'ancien lien sera supprimé !
         </span>
         <span style="font-size: 1.2rem;">🚀</span>
     </span>
+    <button
+        onclick="document.getElementById('global-announcement-banner').style.display='none'; localStorage.setItem('hide-banner-v1', 'true');"
+        style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+        <i class="fas fa-times"></i>
+    </button>
 </div>
+<script>
+    if (localStorage.getItem('hide-banner-v1') !== 'true') {
+        document.getElementById('global-announcement-banner').style.display = 'block';
+    }
+</script>
 
 <header>
     <div style="display: flex; align-items: center; gap: 15px;">
@@ -41,6 +51,9 @@
     <div class="controls">
         {{ header_custom_controls | safe }}
 
+        <a href="/announcement" class="btn secondary highlight" title="Voir les annonces de mise à jour">
+            <i class="fas fa-bullhorn"></i> <span class="theme-label">Annonces</span>
+        </a>
         <button class="btn secondary" data-theme-toggle title="Basculer le thème">
             <i class="fas fa-sun"></i> <span class="theme-label">Mode Clair</span>
         </button>

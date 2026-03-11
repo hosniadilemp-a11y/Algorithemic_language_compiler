@@ -209,8 +209,8 @@
             panel.classList.remove('active');
         });
 
-        const SUPABASE_URL = "VOTRE_SUPABASE_URL_ICI";
-        const SUPABASE_ANON_KEY = "VOTRE_SUPABASE_ANON_KEY_ICI";
+        const SUPABASE_URL = "{{ INJECTED_SUPABASE_URL or 'VOTRE_SUPABASE_URL_ICI' }}";
+        const SUPABASE_ANON_KEY = "{{ INJECTED_SUPABASE_ANON_KEY or 'VOTRE_SUPABASE_ANON_KEY_ICI' }}";
 
         // Uniquement initialiser le chat si Supabase est configuré
         if (SUPABASE_URL === "VOTRE_SUPABASE_URL_ICI") {

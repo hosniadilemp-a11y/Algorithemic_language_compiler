@@ -147,6 +147,13 @@ mail.init_app(app)
 def load_user(user_id):
     return db.session.get(User, int(user_id))
 
+@app.context_processor
+def inject_supabase_credentials():
+    return {
+        'INJECTED_SUPABASE_URL': os.environ.get('SUPABASE_URL', ''),
+        'INJECTED_SUPABASE_ANON_KEY': os.environ.get('SUPABASE_ANON_KEY', '')
+    }
+
 # Register Auth Blueprint
 from web.auth import auth_bp
 app.register_blueprint(auth_bp)

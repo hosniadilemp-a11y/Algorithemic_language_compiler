@@ -13,11 +13,12 @@
             background: var(--bg-color);
             color: var(--text-color);
             margin: 0;
+            overflow-y: auto !important;
         }
 
         .announcement-container {
             max-width: 800px;
-            margin: 80px auto;
+            margin: 40px auto;
             padding: 40px;
             background: var(--panel-bg);
             border-radius: 12px;
@@ -63,20 +64,30 @@
             display: flex;
             gap: 20px;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .comparison-card {
             flex: 1;
+            min-width: 250px;
             background: rgba(0, 0, 0, 0.05);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             text-align: center;
         }
+
+        .edu-box {
+            background: rgba(74, 110, 224, 0.1);
+            border-left: 4px solid #4a6ee0;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
-<body class="light-theme"> <!-- Default to light theme or match app.js -->
+<body class="light-theme">
 
     {% set header_custom_controls = "" %}
     {% include 'partials/navbar.html' %}
@@ -84,53 +95,60 @@
     <div class="announcement-container">
         <div class="text-center mb-4">
             <i class="fas fa-rocket" style="font-size: 4rem; color: #e52e71; margin-bottom: 20px;"></i>
-            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">AlgoCompiler a Déménagé !</h1>
-            <p style="font-size: 1.2rem; color: var(--text-secondary);">Nous avons migré vers une nouvelle
-                infrastructure pour plus de rapidité.</p>
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">AlgoCompiler Évolue !</h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary);">Une nouvelle infrastructure pour une plateforme
+                ultra-rapide.</p>
         </div>
 
         <div class="migration-box">
             <h3 style="margin-top: 0; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-link" style="color: #e52e71;"></i> Nouvelle Adresse
+                <i class="fas fa-link" style="color: #e52e71;"></i> Nouveau Lien d'Accès
             </h3>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;">Veuillez désormais utiliser le lien suivant :</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;">Chers étudiants, veuillez désormais utiliser et
+                enregistrer ce nouveau lien :</p>
             <div class="text-center">
                 <a href="https://algocompiler.onrender.com" class="main-link">https://algocompiler.onrender.com</a>
             </div>
             <p style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9rem; text-align: center;">
-                ⚠️ <em>L'ancienne adresse sera supprimée de manière imminente. Mettez à jour vos favoris !</em>
+                ⚠️ <em>L'ancienne adresse va être désactivée. Mettez à jour vos favoris !</em>
             </p>
         </div>
 
-        <div>
-            <h2 style="border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">
-                <i class="fas fa-microchip" style="color: var(--accent);"></i> Pourquoi ce changement ?
+        <div class="edu-box">
+            <h2 style="margin-top: 0; color: #4a6ee0;">
+                <i class="fas fa-graduation-cap"></i> Minute Pédagogique : La Latence Réseau
             </h2>
+            <p style="line-height: 1.6;">En informatique, la <strong>latence</strong> est le temps que met une
+                information pour voyager d'un point A à un point B. Même si les données voyagent presque à la vitesse de
+                la lumière (dans les fibres optiques), la distance géographique joue un rôle critique.</p>
 
-            <p style="line-height: 1.6; margin-bottom: 15px;">
-                Auparavant, notre serveur web et notre base de données étaient hébergés dans des <strong>régions
-                    géographiques différentes</strong>.
+            <p style="line-height: 1.6;">
+                Jusqu'à présent, notre <strong>Serveur Web</strong> (qui fait tourner le code Python) et notre
+                <strong>Base de Données</strong> (qui stocke vos défis et scores) étaient situés sur des continents
+                différents. À chaque fois que vous chargiez une page, le serveur devait traverser l'océan pour demander
+                les données à la base de données, attendre la réponse, et seulement ensuite vous envoyer la page. Cela
+                créait des lenteurs visibles.
             </p>
 
             <div class="comparison">
                 <div class="comparison-card">
-                    <i class="fas fa-server" style="font-size: 2rem; color: #ff8a00; margin-bottom: 10px;"></i>
+                    <i class="fas fa-globe-americas" style="font-size: 2rem; color: #ff8a00; margin-bottom: 10px;"></i>
                     <h4>Avant : Forte Latence</h4>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">Serveur distant de la BD = Temps de
-                        réponse très lent lors des interrogations (délai).</p>
+                        réponse très lent à cause des allers-retours sur des milliers de kilomètres.</p>
                 </div>
                 <div class="comparison-card">
                     <i class="fas fa-bolt" style="font-size: 2rem; color: #2ea44e; margin-bottom: 10px;"></i>
-                    <h4>Aujourd'hui : Vitesse Optimisée</h4>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Serveur Web (Render) et BD (Supabase)
-                        sont hébergés dans la <strong>même région</strong>.</p>
+                    <h4>Aujourd'hui : Colocalisation</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Le Serveur Web et la Base de Données
+                        sont <strong>colocalisés</strong> dans la même région (même centre de données).</p>
                 </div>
             </div>
 
             <p style="line-height: 1.6;">
-                Grâce à cette nouvelle architecture (colocalisation), le délai d'interrogation de la base de données est
-                presque instantané.
-                Le site charge beaucoup plus vite, la connexion est plus fluide et l'expérience globale est optimisée !
+                <strong>Le Résultat :</strong> Le temps de trajet des données est passé de centaines de millisecondes à
+                moins d'une milliseconde ! Le site est maintenant instantané. C'est un concept fondamental en
+                architecture logicielle : rapprocher le calcul de la donnée.
             </p>
         </div>
 

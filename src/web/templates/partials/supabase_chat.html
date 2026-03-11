@@ -226,13 +226,36 @@
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ... existing user info code ...
+        // User Info (Injecté par Flask/Jinja)
         const currentUser = "{{ current_user.name if current_user.is_authenticated else 'Anonyme' }}";
         const isAuthenticated = ("{{ 'true' if current_user.is_authenticated else 'false' }}" === "true");
 
-        // ... existing functions ...
-        function appendMessage(user, text, isMine) { /* ... */ }
-        function appendSystemMessage(text) { /* ... */ }
+        function appendMessage(user, text, isMine) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${isMine ? 'mine' : 'theirs'}`;
+
+            if (!isMine) {
+                const userSpan = document.createElement('span');
+                userSpan.className = 'chat-username';
+                userSpan.innerText = user;
+                msgDiv.appendChild(userSpan);
+            }
+
+            const textSpan = document.createElement('span');
+            textSpan.innerText = text;
+            msgDiv.appendChild(textSpan);
+
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function appendSystemMessage(text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message system';
+            msgDiv.innerText = text;
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
         // Connect to Supabase Realtime Channel
         const room = supabaseClient.channel('global-chat');
@@ -245,7 +268,7 @@
             if (status === 'SUBSCRIBED') {
                 appendSystemMessage("Connecté au réseau temps réel. ✅");
             } else if (status === 'CHANNEL_ERROR') {
-                appendSystemMessage("Erreur de connexion. Vérifiez vos clés API dans Render.");
+                appendSystemMessage("Erreur de connexion : Vérifiez vos clés API dans Render.");
                 if (err) console.error("Supabase Channel Error:", err);
             } else if (status === 'CLOSED') {
                 appendSystemMessage("Connexion fermée.");

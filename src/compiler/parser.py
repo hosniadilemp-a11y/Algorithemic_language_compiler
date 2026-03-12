@@ -73,6 +73,13 @@ def get_default_value(type_name):
     if t == 'booleen': return 'False'
     if t == 'caractere': return "''"
     if 'pointeur' in t or t.startswith('pointeur_') or t.startswith('^'): return 'None'  # NIL pointer
+    # Fixed-size string field: TABLEAU_CHAINE_N
+    if t.startswith('tableau_chaine_'):
+        try:
+            n = int(t.split('_')[-1])
+            return f"['\\0'] * {n}"
+        except:
+            return "['\\0']"
     # User-defined record type — emit empty dict initialiser
     if type_name in record_types:
         return _build_record_init(type_name)
@@ -115,7 +122,16 @@ def check_type_compatibility(var_type, expr_type):
     
     # Allow types with internal structure if base matches
     if v_type.startswith('tableau_') and e_type.startswith('tableau_'):
+         # Allow different sizes for fixed strings
+         if v_type.startswith('tableau_chaine_') and e_type.startswith('tableau_chaine_'):
+             return True
          return v_type == e_type
+
+    # Allow Chaine <-> TABLEAU_CHAINE_N interchange (fixed strings)
+    if (v_type == 'chaine' and e_type.startswith('tableau_chaine_')) or (
+        e_type == 'chaine' and v_type.startswith('tableau_chaine_')
+    ):
+        return True
     
     if v_type.startswith('matrice_') and e_type.startswith('matrice_'):
          return v_type == e_type
@@ -1139,6 +1155,13 @@ def p_expression_field_access(p):
     field_type = 'UNKNOWN'
     if rec_type in record_types:
         field_type = record_types[rec_type].get(field_name, 'UNKNOWN')
+        if field_type == 'UNKNOWN':
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Champ inconnu: '{field_name}' n'existe pas dans l'enregistrement {rec_type}",
+                "type": "Semantic Error"
+            })
     p[0] = (f"{rec_code}['{field_name}']", field_type)
 
 def p_expression_arrow_access(p):
@@ -1150,6 +1173,13 @@ def p_expression_arrow_access(p):
     field_type = 'UNKNOWN'
     if rec_type in record_types:
         field_type = record_types[rec_type].get(field_name, 'UNKNOWN')
+        if field_type == 'UNKNOWN':
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Champ inconnu: '{field_name}' n'existe pas dans l'enregistrement {rec_type}",
+                "type": "Semantic Error"
+            })
     # ->field is shorthand for (ptr^).field, i.e. ptr._get()[field]
     p[0] = (f"({ptr_code})._get()['{field_name}']", field_type)
 
@@ -1162,7 +1192,28 @@ def p_statement_assign_field(p):
     rec_code, rec_type = p[1]
     field_name = p[3]
     val_code, val_type = p[5]
-    p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}{rec_code}['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
+    field_type = 'UNKNOWN'
+    if rec_type in record_types:
+        field_type = record_types[rec_type].get(field_name, 'UNKNOWN')
+        if field_type == 'UNKNOWN':
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Champ inconnu: '{field_name}' n'existe pas dans l'enregistrement {rec_type}",
+                "type": "Semantic Error"
+            })
+    if field_type != 'UNKNOWN' and val_type != 'UNKNOWN':
+        if not check_type_compatibility(field_type, val_type):
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Type mismatch: Cannot assign {val_type} to {field_name} ({field_type})",
+                "type": "Semantic Error"
+            })
+    if field_type == 'CHAINE' or field_type.startswith('TABLEAU_CHAINE_'):
+        p[0] = f"{get_indent()}{rec_code}['{field_name}'] = _algo_assign_fixed_string({rec_code}['{field_name}'], {val_code})"
+    else:
+        p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}{rec_code}['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 def p_statement_assign_arrow_field(p):
     '''statement : expression ARROW ID ASSIGN expression SEMICOLON'''
@@ -1170,7 +1221,29 @@ def p_statement_assign_arrow_field(p):
     field_name = p[3]
     val_code, val_type = p[5]
     # ptr->field := val  is  ptr._get()['field'] = val
-    p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}({ptr_code})._get()['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
+    rec_type = ptr_type.replace('POINTEUR_', '', 1) if ptr_type.startswith('POINTEUR_') else 'UNKNOWN'
+    field_type = 'UNKNOWN'
+    if rec_type in record_types:
+        field_type = record_types[rec_type].get(field_name, 'UNKNOWN')
+        if field_type == 'UNKNOWN':
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Champ inconnu: '{field_name}' n'existe pas dans l'enregistrement {rec_type}",
+                "type": "Semantic Error"
+            })
+    if field_type != 'UNKNOWN' and val_type != 'UNKNOWN':
+        if not check_type_compatibility(field_type, val_type):
+            parser_errors.append({
+                "line": p.lineno(3),
+                "column": 0,
+                "message": f"Type mismatch: Cannot assign {val_type} to {field_name} ({field_type})",
+                "type": "Semantic Error"
+            })
+    if field_type == 'CHAINE' or field_type.startswith('TABLEAU_CHAINE_'):
+        p[0] = f"{get_indent()}({ptr_code})._get()['{field_name}'] = _algo_assign_fixed_string(({ptr_code})._get()['{field_name}'], {val_code})"
+    else:
+        p[0] = f"{get_indent()}_tmp_val = {val_code}\n{get_indent()}({ptr_code})._get()['{field_name}'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val"
 
 def p_statements(p):
     '''statements : statements statement

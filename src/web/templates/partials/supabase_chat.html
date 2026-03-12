@@ -79,12 +79,33 @@
         align-items: center;
     }
 
-    .chat-close-btn {
+    .chat-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chat-mute-btn, .chat-sound-btn, .chat-close-btn {
         background: none;
         border: none;
         color: white;
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+    }
+
+    .chat-mute-btn.active, .chat-sound-btn.active {
+        color: #ffb86c;
+    }
+
+    .chat-mute-btn:hover, .chat-sound-btn:hover, .chat-close-btn:hover {
+        opacity: 1;
     }
 
     .chat-messages {
@@ -183,7 +204,15 @@
     <div id="chat-panel">
         <div class="chat-header">
             <span><i class="fas fa-users"></i> Chat Communautaire</span>
-            <button class="chat-close-btn" id="chat-close-btn"><i class="fas fa-times"></i></button>
+            <div class="chat-header-actions">
+                <button class="chat-mute-btn" id="chat-mute-btn" title="Désactiver les notifications">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="chat-sound-btn" id="chat-sound-btn" title="Couper le son">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="chat-close-btn" id="chat-close-btn" title="Fermer"><i class="fas fa-times"></i></button>
+            </div>
         </div>
         <div class="chat-messages" id="chat-messages-container">
             <div class="chat-message system">Bienvenue dans le chat global d'AlgoCompiler !</div>
@@ -220,6 +249,53 @@
         let unreadCount = 0;
 
         const badge = document.getElementById('chat-notification-badge');
+        const muteBtn = document.getElementById('chat-mute-btn'); // This is now for Notifications
+        const soundBtn = document.getElementById('chat-sound-btn');
+
+        // Notification Sound
+        const PING_URL = 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3';
+        const notificationSound = new Audio(PING_URL);
+
+        let isNotificationsMuted = localStorage.getItem('chat_notifications_muted') === 'true';
+        let isSoundMuted = localStorage.getItem('chat_sound_muted') === 'true';
+
+        function updateMuteUI() {
+            if (muteBtn) {
+                muteBtn.innerHTML = isNotificationsMuted ? '<i class="fas fa-bell-slash"></i>' : '<i class="fas fa-bell"></i>';
+                muteBtn.title = isNotificationsMuted ? "Réactiver les notifications" : "Désactiver les notifications";
+                muteBtn.classList.toggle('active', isNotificationsMuted);
+            }
+            if (soundBtn) {
+                soundBtn.innerHTML = isSoundMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+                soundBtn.title = isSoundMuted ? "Réactiver le son" : "Couper le son";
+                soundBtn.classList.toggle('active', isSoundMuted);
+            }
+        }
+
+        updateMuteUI();
+
+        if (muteBtn) {
+            muteBtn.addEventListener('click', () => {
+                isNotificationsMuted = !isNotificationsMuted;
+                localStorage.setItem('chat_notifications_muted', isNotificationsMuted);
+                updateMuteUI();
+            });
+        }
+
+        if (soundBtn) {
+            soundBtn.addEventListener('click', () => {
+                isSoundMuted = !isSoundMuted;
+                localStorage.setItem('chat_sound_muted', isSoundMuted);
+                updateMuteUI();
+            });
+        }
+
+        function playNotificationSound() {
+            // Only play sound if NOT muted AND notifications are NOT fully muted
+            if (!isSoundMuted && !isNotificationsMuted) {
+                notificationSound.play().catch(e => console.log("Sound play blocked by browser:", e));
+            }
+        }
 
         toggleBtn.addEventListener('click', () => {
             isChatOpen = !isChatOpen;
@@ -312,7 +388,8 @@
                 }
             } catch (err) {
                 console.error("Erreur chargement historique:", err);
-                appendSystemMessage("Impossible de charger l'historique.");
+                const errorMsg = err.message || JSON.stringify(err);
+                appendSystemMessage("Impossible de charger l'historique : " + errorMsg);
             }
         }
 
@@ -330,12 +407,11 @@
                     badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
                     badge.style.display = 'flex';
 
-                    // Subtle animation
-                    toggleBtn.style.transform = 'scale(1.1)';
-                    setTimeout(() => { if (!isChatOpen) toggleBtn.style.transform = ''; }, 200);
+                    // Play sound
+                    playNotificationSound();
 
-                    // Show Toast Notification
-                    if (window.AppToast) {
+                    // Show Toast Notification (if NOT muted)
+                    if (window.AppToast && !isNotificationsMuted) {
                         window.AppToast.show(
                             user_name, 
                             text, 
@@ -343,6 +419,10 @@
                             () => { toggleBtn.click(); }
                         );
                     }
+
+                    // Subtle animation
+                    toggleBtn.style.transform = 'scale(1.1)';
+                    setTimeout(() => { if (!isChatOpen) toggleBtn.style.transform = ''; }, 200);
                 }
             }
         }).subscribe(async (status, err) => {
@@ -373,7 +453,8 @@
                 
                 if (error) {
                     console.error("Erreur envoi message:", error);
-                    appendSystemMessage("Erreur lors de l'envoi du message.");
+                    const errorMsg = error.message || JSON.stringify(error);
+                    appendSystemMessage("Erreur lors de l'envoi du message : " + errorMsg);
                 }
             };
 

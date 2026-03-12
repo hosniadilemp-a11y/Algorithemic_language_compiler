@@ -867,17 +867,31 @@ Fin.`);
             function addCategory(rawName, files) {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'example-category';
+                // Load state from local storage. Default is collapsed (true).
+                const isCollapsed = localStorage.getItem(`example-category-${rawName}`) !== 'false';
+                
+                if (isCollapsed) {
+                    categoryDiv.classList.add('collapsed');
+                }
 
                 const title = document.createElement('div');
                 title.className = 'example-category-title';
-
-                if (categoryMeta[rawName]) {
-                    title.innerHTML = `<i class="${categoryMeta[rawName].icon}"></i> ${categoryMeta[rawName].label}`;
-                } else {
-                    title.innerHTML = `<i class="fas fa-folder"></i> ${rawName}`;
-                }
+                
+                const iconHtml = categoryMeta[rawName] ? `<i class="${categoryMeta[rawName].icon}"></i>` : `<i class="fas fa-folder"></i>`;
+                const labelHtml = categoryMeta[rawName] ? categoryMeta[rawName].label : rawName;
+                
+                title.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <span>${iconHtml} ${labelHtml}</span>
+                        <i class="fas fa-chevron-down toggle-icon" style="transition: transform 0.2s; ${isCollapsed ? 'transform: rotate(-90deg);' : ''}"></i>
+                    </div>
+                `;
 
                 categoryDiv.appendChild(title);
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'example-category-content';
+                contentDiv.style.display = isCollapsed ? 'none' : 'block';
 
                 files.forEach(file => {
                     const btn = document.createElement('button');
@@ -891,17 +905,32 @@ Fin.`);
                         btn.classList.add('tutorial');
                         btn.innerHTML = `<i class="fas fa-graduation-cap"></i> ${file.name.replace('00_Tutoriel_', '').replace('.algo', '').replace(/_/g, ' ')}`;
                     } else {
-                        btn.innerHTML = `<i class="fas fa-file-code"></i> ${file.name}`;
+                        btn.innerHTML = `<i class="fas fa-file-code"></i> ${file.name.replace('.algo', '').replace(/_/g, ' ')}`;
                     }
 
                     // Attach click handler cleanly
                     btn.addEventListener('click', () => loadExampleFile(file.path));
 
-                    categoryDiv.appendChild(btn);
+                    contentDiv.appendChild(btn);
                 });
+                
+                title.addEventListener('click', () => {
+                    const willCollapse = contentDiv.style.display !== 'none';
+                    contentDiv.style.display = willCollapse ? 'none' : 'block';
+                    categoryDiv.classList.toggle('collapsed', willCollapse);
+                    const icon = title.querySelector('.toggle-icon');
+                    if(icon) {
+                        icon.style.transform = willCollapse ? 'rotate(-90deg)' : 'rotate(0deg)';
+                    }
+                    localStorage.setItem(`example-category-${rawName}`, willCollapse ? 'true' : 'false');
+                    updateGlobalExpandCollapseButtons();
+                });
+
+                categoryDiv.appendChild(contentDiv);
 
                 if (examplesContent) examplesContent.appendChild(categoryDiv);
             }
+
         } catch (e) {
             console.error("Failed to load examples", e);
             if (examplesContent) examplesContent.innerHTML = `<div class="text-danger p-3"><i class="fas fa-exclamation-triangle"></i> Erreur lors du chargement des exemples.</div>`;
@@ -912,6 +941,89 @@ Fin.`);
         }
     }
     loadExamples();
+
+    // Global Expand/Collapse Buttons Logic
+    const expandAllBtn = document.getElementById('expand-all-btn');
+    const collapseAllBtn = document.getElementById('collapse-all-btn');
+
+    function updateGlobalExpandCollapseButtons() {
+        if (!expandAllBtn || !collapseAllBtn) return;
+        const allCategories = document.querySelectorAll('.example-category');
+        if (allCategories.length === 0) return;
+
+        let allExpanded = true;
+        let allCollapsed = true;
+
+        allCategories.forEach(cat => {
+            if (cat.classList.contains('collapsed')) {
+                allExpanded = false;
+            } else {
+                allCollapsed = false;
+            }
+        });
+
+        expandAllBtn.style.display = allExpanded ? 'none' : 'block';
+        collapseAllBtn.style.display = allExpanded ? 'block' : 'none';
+        
+        // If entirely collapsed, make sure expand is shown.
+        if (allCollapsed) {
+            expandAllBtn.style.display = 'block';
+            collapseAllBtn.style.display = 'none';
+        }
+    }
+
+    if (expandAllBtn) {
+        expandAllBtn.addEventListener('click', () => {
+            const categories = document.querySelectorAll('.example-category');
+            categories.forEach(cat => {
+                const title = cat.querySelector('.example-category-title');
+                const contentDiv = cat.querySelector('.example-category-content');
+                if (cat.classList.contains('collapsed')) {
+                    contentDiv.style.display = 'block';
+                    cat.classList.remove('collapsed');
+                    const icon = title.querySelector('.toggle-icon');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                    
+                    // Hack to get the rawName. Assumes ID or specific class isn't available easily. 
+                    // Better approach is data attributes, but this relies on structure.
+                    // Instead of full sync, clear or set local storage based on icon.
+                }
+            });
+            // Clear local storage for all example categories to 'expanded' (false collapsed) 
+            for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key && key.startsWith('example-category-')) {
+                     localStorage.setItem(key, 'false');
+                 }
+            }
+            updateGlobalExpandCollapseButtons();
+        });
+    }
+
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener('click', () => {
+             const categories = document.querySelectorAll('.example-category');
+             categories.forEach(cat => {
+                const title = cat.querySelector('.example-category-title');
+                const contentDiv = cat.querySelector('.example-category-content');
+                if (!cat.classList.contains('collapsed')) {
+                    contentDiv.style.display = 'none';
+                    cat.classList.add('collapsed');
+                    const icon = title.querySelector('.toggle-icon');
+                    if (icon) icon.style.transform = 'rotate(-90deg)';
+                }
+            });
+            // Set local storage for all example categories to 'collapsed' (true)
+            for (let i = 0; i < localStorage.length; i++) {
+                 const key = localStorage.key(i);
+                 if (key && key.startsWith('example-category-')) {
+                     localStorage.setItem(key, 'true');
+                 }
+            }
+            updateGlobalExpandCollapseButtons();
+        });
+    }
+
 
     // Fetch and load a specific example file
     async function loadExampleFile(filename) {

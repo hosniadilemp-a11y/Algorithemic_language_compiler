@@ -23,6 +23,12 @@ echo -e "${BLUE}Stopping any existing server instances...${NC}"
 pkill -f "python3 src/web/app.py" 2>/dev/null
 sleep 1
 
+# Load environment variables from AlgoCompiler.env if it exists
+if [ -f "AlgoCompiler.env" ]; then
+    echo -e "${BLUE}Loading environment variables from AlgoCompiler.env...${NC}"
+    export $(grep -v '^#' AlgoCompiler.env | xargs)
+fi
+
 # Clear parser cache to ensure latest changes are loaded
 echo -e "${BLUE}Clearing parser cache...${NC}"
 rm -f src/compiler/parser.out src/compiler/parsetab.py 2>/dev/null

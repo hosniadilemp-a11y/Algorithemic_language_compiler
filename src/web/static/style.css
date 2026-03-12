@@ -839,6 +839,19 @@ body.light-theme [data-type*="BOOLEEN"] td:nth-child(4) {
     border-bottom: 1px solid #44475a;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: color 0.2s, border-bottom-color 0.2s;
+    user-select: none;
+}
+
+.example-category-title:hover {
+    color: #d6b4ff;
+    border-bottom-color: #6272a4;
+}
+
+.example-category-content {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 body.light-theme .examples-header h3 {
@@ -848,6 +861,11 @@ body.light-theme .examples-header h3 {
 body.light-theme .example-category-title {
     color: #57606a;
     border-bottom-color: #d0d7de;
+}
+
+body.light-theme .example-category-title:hover {
+    color: #24292f;
+    border-bottom-color: #8c959f;
 }
 
 /* Category Specific Colors in Light Mode */

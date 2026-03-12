@@ -1,4 +1,4 @@
-# Algo: Gestion_Bibliotheque_Municipale
+# Algo: TutorielPointeurs
 import sys
 import builtins
 
@@ -163,7 +163,7 @@ def _algo_liberer(ptr):
             ptr.base_var = None
             ptr.var_name = None
 
-_algo_record_sizes = {'Auteur': 88, 'Livre': 97, 'Adherent': 50, 'Pret': 15}
+_algo_record_sizes = {}
 
 def _algo_taille(type_name):
     t = type_name.lower()
@@ -187,7 +187,7 @@ def _algo_allouer_record(record_dict):
     return ptr
 
 global _algo_vars_info
-_algo_vars_info = {"Init_Auteur.a": {"addr": 1000, "size": 88, "element_size": 88, "type": "Auteur"}, "Init_Auteur.id": {"addr": 1088, "size": 4, "element_size": 4, "type": "Entier"}, "Init_Auteur.nom": {"addr": 1092, "size": 1, "element_size": 1, "type": "Chaine"}, "Init_Auteur.nat": {"addr": 1093, "size": 1, "element_size": 1, "type": "Chaine"}, "Init_Livre.l": {"addr": 1094, "size": 97, "element_size": 97, "type": "Livre"}, "Init_Livre.code": {"addr": 1191, "size": 1, "element_size": 1, "type": "Chaine"}, "Init_Livre.tit": {"addr": 1192, "size": 1, "element_size": 1, "type": "Chaine"}, "Init_Livre.auth": {"addr": 1193, "size": 4, "element_size": 4, "type": "Entier"}, "Init_Livre.y": {"addr": 1197, "size": 4, "element_size": 4, "type": "Entier"}, "Init_Livre.p": {"addr": 1201, "size": 8, "element_size": 8, "type": "Reel"}, "Booleen_Peut_Emprunter.a": {"addr": 1209, "size": 50, "element_size": 50, "type": "Adherent"}, "Entier_Chercher_Auteur.catalogue": {"addr": 1259, "size": 440, "element_size": 88, "type": "TABLEAU_5"}, "Entier_Chercher_Auteur.n": {"addr": 1699, "size": 4, "element_size": 4, "type": "Entier"}, "Entier_Chercher_Auteur.id": {"addr": 1703, "size": 4, "element_size": 4, "type": "Entier"}, "Entier_Chercher_Auteur.i": {"addr": 1707, "size": 4, "element_size": 4, "type": "Entier"}, "Enregistrer_Pret.p": {"addr": 1711, "size": 15, "element_size": 15, "type": "Pret"}, "Enregistrer_Pret.l": {"addr": 1726, "size": 97, "element_size": 97, "type": "Livre"}, "Enregistrer_Pret.a": {"addr": 1823, "size": 50, "element_size": 50, "type": "Adherent"}, "Enregistrer_Pret.d": {"addr": 1873, "size": 1, "element_size": 1, "type": "Chaine"}, "Traiter_Retour.p": {"addr": 1874, "size": 15, "element_size": 15, "type": "Pret"}, "Traiter_Retour.l": {"addr": 1889, "size": 97, "element_size": 97, "type": "Livre"}, "Traiter_Retour.a": {"addr": 1986, "size": 50, "element_size": 50, "type": "Adherent"}, "Afficher_Details_Livre.l": {"addr": 2036, "size": 97, "element_size": 97, "type": "Livre"}, "Afficher_Details_Livre.cat_auth": {"addr": 2133, "size": 440, "element_size": 88, "type": "TABLEAU_5"}, "Afficher_Details_Livre.n_auth": {"addr": 2573, "size": 4, "element_size": 4, "type": "Entier"}, "Afficher_Details_Livre.idx": {"addr": 2577, "size": 4, "element_size": 4, "type": "Entier"}, "Afficher_Bilan_Adherent.a": {"addr": 2581, "size": 50, "element_size": 50, "type": "Adherent"}, "Reel_Calculer_Valeur_Stock.stock": {"addr": 2631, "size": 970, "element_size": 97, "type": "TABLEAU_10"}, "Reel_Calculer_Valeur_Stock.n": {"addr": 3601, "size": 4, "element_size": 4, "type": "Entier"}, "Reel_Calculer_Valeur_Stock.i": {"addr": 3605, "size": 4, "element_size": 4, "type": "Entier"}, "Reel_Calculer_Valeur_Stock.total": {"addr": 3609, "size": 8, "element_size": 8, "type": "Reel"}, "Rechercher_Par_Auteur.auth_nom": {"addr": 3617, "size": 1, "element_size": 1, "type": "Chaine"}, "Rechercher_Par_Auteur.stock": {"addr": 3618, "size": 970, "element_size": 97, "type": "TABLEAU_10"}, "Rechercher_Par_Auteur.n": {"addr": 4588, "size": 4, "element_size": 4, "type": "Entier"}, "Rechercher_Par_Auteur.cat_auth": {"addr": 4592, "size": 440, "element_size": 88, "type": "TABLEAU_5"}, "Rechercher_Par_Auteur.na": {"addr": 5032, "size": 4, "element_size": 4, "type": "Entier"}, "Rechercher_Par_Auteur.idx_a": {"addr": 5036, "size": 4, "element_size": 4, "type": "Entier"}, "Rechercher_Par_Auteur.id_a": {"addr": 5040, "size": 4, "element_size": 4, "type": "Entier"}, "Rechercher_Par_Auteur.i": {"addr": 5044, "size": 4, "element_size": 4, "type": "Entier"}, "les_auteurs": {"addr": 5048, "size": 440, "element_size": 88, "type": "Auteur"}, "le_stock": {"addr": 5488, "size": 970, "element_size": 97, "type": "Livre"}, "les_membres": {"addr": 6458, "size": 250, "element_size": 50, "type": "Adherent"}, "les_prets": {"addr": 6708, "size": 150, "element_size": 15, "type": "Pret"}, "valeur_totale": {"addr": 6858, "size": 8, "element_size": 8, "type": "Reel"}, "i": {"addr": 6866, "size": 4, "element_size": 4, "type": "Entier"}}
+_algo_vars_info = {"p": {"addr": 1000, "size": 1, "element_size": 1, "type": "POINTEUR_Entier"}, "n": {"addr": 1001, "size": 4, "element_size": 4, "type": "Entier"}}
 
 
 class Pointer:
@@ -323,189 +323,35 @@ class Pointer:
         (self + i)._set(value)
 
 
-les_auteurs = [{'identifiant': 0, 'nom_complet': ['\0'] * 50, 'nationalite': ['\0'] * 30, 'nombre_oeuvres': 0} for _ in range(5)] # Tableau de Auteur
-le_stock = [{'isbn': ['\0'] * 20, 'titre': ['\0'] * 60, 'id_auteur': 0, 'annee_pub': 0, 'est_dispo': False, 'prix_u': 0.0} for _ in range(10)] # Tableau de Livre
-les_membres = [{'num_carte': 0, 'nom': ['\0'] * 40, 'date_adh': "", 'livres_en_main': 0, 'suspendu': False} for _ in range(5)] # Tableau de Adherent
-les_prets = [{'id_pret': 0, 'isbn_livre': "", 'id_adherent': 0, 'date_depart': "", 'rendu': False, 'delai_jours': 0} for _ in range(10)] # Tableau de Pret
-valeur_totale = 0.0 # Reel
-i = 0 # Entier
+p = Pointer("p", globals()) # POINTEUR_Entier
+n = 0 # Entier
 
 
-def Init_Auteur(a, id, nom, nat):
-    _tmp_val = id
-    a['identifiant'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = nom
-    a['nom_complet'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = nat
-    a['nationalite'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = 0
-    a['nombre_oeuvres'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-
-def Init_Livre(l, code, tit, auth, y, p):
-    _tmp_val = code
-    l['isbn'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = tit
-    l['titre'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = auth
-    l['id_auteur'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = y
-    l['annee_pub'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = p
-    l['prix_u'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-    _tmp_val = True
-    l['est_dispo'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-
-def Booleen_Peut_Emprunter(a):
-    if a['suspendu']:
-        return (False)
-    if a['livres_en_main'] >= 3:
-        return (False)
-    return (True)
-
-def Entier_Chercher_Auteur(catalogue, n, id):
-    i = 0 # Entier
-
-    for i in range(0, n - 1 + 1):
-        if catalogue[i]['identifiant'] == id:
-            return (i)
-    return (-(1))
-
-def Enregistrer_Pret(p, l, a, d):
-    if l['est_dispo'] and Booleen_Peut_Emprunter(a):
-        _tmp_val = 5000 + a['num_carte']
-        p['id_pret'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = l['isbn']
-        p['isbn_livre'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = a['num_carte']
-        p['id_adherent'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = d
-        p['date_depart'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = False
-        p['rendu'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = 15
-        p['delai_jours'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = False
-        l['est_dispo'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = a['livres_en_main'] + 1
-        a['livres_en_main'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _algo_ecrire('[SUCCES] Pret enregistre pour ')
-        _algo_ecrire(a['nom'])
-        _algo_ecrire('\n')
-    else:
-        _algo_ecrire("[ERREUR] Impossible d'emprunter ")
-        _algo_ecrire(l['titre'])
-        _algo_ecrire('\n')
-
-def Traiter_Retour(p, l, a):
-    if p['rendu'] == False:
-        _tmp_val = True
-        p['rendu'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = True
-        l['est_dispo'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _tmp_val = a['livres_en_main'] - 1
-        a['livres_en_main'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-        _algo_ecrire('[RETOUR] Livre ')
-        _algo_ecrire(l['titre'])
-        _algo_ecrire(' rendu par ')
-        _algo_ecrire(a['nom'])
-        _algo_ecrire('\n')
-
-def Afficher_Details_Livre(l, cat_auth, n_auth):
-    idx = 0 # Entier
-
-    idx = Entier_Chercher_Auteur(cat_auth, n_auth, l['id_auteur'])
-    _algo_ecrire('* TITRE : ')
-    _algo_ecrire(l['titre'])
-    _algo_ecrire(' (ISBN: ')
-    _algo_ecrire(l['isbn'])
-    _algo_ecrire(')\n')
-    if idx != -(1):
-        _algo_ecrire('  AUTEUR: ')
-        _algo_ecrire(cat_auth[idx]['nom_complet'])
-        _algo_ecrire(' [')
-        _algo_ecrire(cat_auth[idx]['nationalite'])
-        _algo_ecrire(']\n')
-    _algo_ecrire('  ETAT  : ')
-    if l['est_dispo']:
-        _algo_ecrire('DISPONIBLE\n')
-    else:
-        _algo_ecrire('EMPRUNTE\n')
-
-def Afficher_Bilan_Adherent(a):
-    _algo_ecrire('Adherent : ')
-    _algo_ecrire(a['nom'])
-    _algo_ecrire(' (Carte n°')
-    _algo_ecrire(a['num_carte'])
-    _algo_ecrire(')\n')
-    _algo_ecrire('   Livres actifs : ')
-    _algo_ecrire(a['livres_en_main'])
-    _algo_ecrire('\n')
-    if a['suspendu']:
-        _algo_ecrire('   *** STATUT : SUSPENDU ***\n')
-
-def Reel_Calculer_Valeur_Stock(stock, n):
-    i = 0 # Entier
-    total = 0.0 # Reel
-
-    total = 0.0
-    for i in range(0, n - 1 + 1):
-        total = total + stock[i]['prix_u']
-    return (total)
-
-def Rechercher_Par_Auteur(auth_nom, stock, n, cat_auth, na):
-    i = 0
-    id_a = 0
-    idx_a = 0 # Entier
-
-    _algo_ecrire("\nResultats pour l'auteur : ")
-    _algo_ecrire(auth_nom)
-    _algo_ecrire('\n')
-    for i in range(0, na - 1 + 1):
-        if cat_auth[i]['nom_complet'] == auth_nom:
-            id_a = cat_auth[i]['identifiant']
-            for j in range(0, n - 1 + 1):
-                if stock[j]['id_auteur'] == id_a:
-                    _algo_ecrire('  - ')
-                    _algo_ecrire(stock[j]['titre'])
-                    _algo_ecrire('\n')
 
 
-Init_Auteur(les_auteurs[0], 1, 'Victor Hugo', 'Francais')
-Init_Auteur(les_auteurs[1], 2, 'Albert Camus', 'Francais')
-Init_Auteur(les_auteurs[2], 3, 'Kateb Yacine', 'Algerien')
-Init_Livre(le_stock[0], '978-2070409', 'Les Miserables', 1, 1862, 25.5)
-Init_Livre(le_stock[1], '978-2070360', "L'Etranger", 2, 1942, 12.0)
-Init_Livre(le_stock[2], '978-2020228', 'Nedjma', 3, 1956, 18.0)
-Init_Livre(le_stock[3], '978-2070410', 'Notre-Dame de Paris', 1, 1831, 22.0)
-_tmp_val = 1001
-les_membres[0]['num_carte'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = 'Samy'
-les_membres[0]['nom'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = 0
-les_membres[0]['livres_en_main'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = False
-les_membres[0]['suspendu'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = 1002
-les_membres[1]['num_carte'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = 'Amine'
-les_membres[1]['nom'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = 2
-les_membres[1]['livres_en_main'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_tmp_val = True
-les_membres[1]['suspendu'] = _tmp_val._clone() if hasattr(_tmp_val, '_clone') else _tmp_val
-_algo_ecrire('=== LOGICIEL DE GESTION DE BIBLIOTHEQUE ===\n')
-_algo_ecrire('\nInventaire actuel :\n')
-Afficher_Details_Livre(le_stock[0], les_auteurs, 3)
-Afficher_Details_Livre(le_stock[1], les_auteurs, 3)
-Afficher_Details_Livre(le_stock[2], les_auteurs, 3)
-_algo_ecrire('\n--- Simulation de transaction ---\n')
-Enregistrer_Pret(les_prets[0], le_stock[0], les_membres[0], '23/02/2026')
-Enregistrer_Pret(les_prets[1], le_stock[2], les_membres[1], '23/02/2026')
-Rechercher_Par_Auteur('Victor Hugo', le_stock, 4, les_auteurs, 3)
-_algo_ecrire('\nBilan Adherent Samy :\n')
-Afficher_Bilan_Adherent(les_membres[0])
-valeur_totale = Reel_Calculer_Valeur_Stock(le_stock, 4)
-_algo_ecrire('\nValeur patrimoniale de la bibliotheque : ')
-_algo_ecrire(valeur_totale)
-_algo_ecrire(' Euros\n')
-_algo_ecrire('\nExécution terminée.\n')
+_algo_ecrire('=== 🔗 Tutoriel : Les Pointeurs ===\n')
+n = 10
+_tmp_p = Pointer("n", globals(), alloc_name="n")
+p._assign(Pointer("p_ptr_src", globals(), index=0, base_var=_tmp_p) if isinstance(_tmp_p, list) and not hasattr(_tmp_p, '_get_target_container') else _tmp_p)
+_algo_ecrire('Valeur de n : ', n, '\n')
+_algo_ecrire('Adresse de n (p) : ', p, '\n')
+_algo_ecrire('Contenu pointé par p (p^) : ', (p)._get(), '\n')
+_algo_ecrire('\n--- Modification via le pointeur (p^ := 20) ---\n')
+p._set(20)
+_algo_ecrire('Nouvelle valeur de n : ', n, ' (n a été modifié !)\n')
+_algo_ecrire('Contenu pointé par p : ', (p)._get(), '\n')
+_algo_ecrire('\n--- Modification de n (n := 30) ---\n')
+n = 30
+_algo_ecrire('Le contenu pointé par p a aussi changé : ', (p)._get(), '\n')
+_algo_ecrire('\n--- Allocation Dynamique (Allouer) ---\n')
+_tmp_p = _algo_allouer(_algo_taille('Entier'), element_size=4)
+p._assign(Pointer("p_ptr_src", globals(), index=0, base_var=_tmp_p) if isinstance(_tmp_p, list) and not hasattr(_tmp_p, '_get_target_container') else _tmp_p)
+p._set(100)
+_algo_ecrire('Nouvelle adresse dans le TAS : ', p, '\n')
+_algo_ecrire('Valeur à cette adresse : ', (p)._get(), '\n')
+_algo_ecrire('\n--- Libération (Liberer) et NIL ---\n')
+_algo_liberer(p)
+_tmp_p = None
+p._assign(Pointer("p_ptr_src", globals(), index=0, base_var=_tmp_p) if isinstance(_tmp_p, list) and not hasattr(_tmp_p, '_get_target_container') else _tmp_p)
+_algo_ecrire('p est maintenant : ', p, " (NIL représente l'absence d'adresse)\n")
+_algo_ecrire('\nFin du tutoriel.\n')

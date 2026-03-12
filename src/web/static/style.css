@@ -1219,3 +1219,75 @@ kbd {
     line-height: 1.6;
     white-space: nowrap;
 }
+
+/* CodeMirror autocomplete styling (main + challenge) */
+.CodeMirror-hints {
+    background: #121722;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    padding: 6px;
+    font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    max-height: 280px;
+}
+
+.CodeMirror-hint {
+    color: #d6dbe8;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+.CodeMirror-hint-active {
+    background: rgba(64, 105, 255, 0.18);
+    color: #ffffff;
+}
+
+.hint-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e8ecf7;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.hint-badge-snippet { background: rgba(0, 194, 255, 0.18); border-color: rgba(0, 194, 255, 0.35); }
+.hint-badge-variable { background: rgba(83, 230, 157, 0.18); border-color: rgba(83, 230, 157, 0.35); }
+.hint-badge-type { background: rgba(255, 177, 66, 0.18); border-color: rgba(255, 177, 66, 0.35); }
+.hint-badge-builtin { background: rgba(189, 116, 255, 0.18); border-color: rgba(189, 116, 255, 0.35); }
+.hint-badge-keyword { background: rgba(255, 107, 130, 0.18); border-color: rgba(255, 107, 130, 0.35); }
+.hint-badge-operator { background: rgba(143, 161, 255, 0.18); border-color: rgba(143, 161, 255, 0.35); }
+.hint-badge-atom { background: rgba(116, 209, 255, 0.18); border-color: rgba(116, 209, 255, 0.35); }
+.hint-badge-field { background: rgba(255, 214, 116, 0.18); border-color: rgba(255, 214, 116, 0.35); }
+
+body.light-theme .CodeMirror-hints {
+    background: #ffffff;
+    border: 1px solid rgba(12, 18, 28, 0.12);
+    box-shadow: 0 10px 22px rgba(12, 18, 28, 0.12);
+}
+
+body.light-theme .CodeMirror-hint {
+    color: #1f2430;
+}
+
+body.light-theme .CodeMirror-hint-active {
+    background: rgba(50, 90, 200, 0.12);
+    color: #0b1220;
+}
+
+body.light-theme .hint-badge {
+    color: #1f2430;
+    border-color: rgba(12, 18, 28, 0.12);
+}

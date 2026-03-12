@@ -46,15 +46,23 @@
             displayText: "Algorithme (full structure)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "pour": {
-            text: "Pour i := 0 a 10 Faire\n    // Code ici\nFinPour;",
+            text: "Pour i := 0 a 10 Faire\n    // Code ici\nFin Pour;",
             displayText: "Pour ... Faire (loop)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
+            }
+        },
+        "pout": {
+            text: "Pour i := 0 a 10 Faire\n    // Code ici\nFin Pour;",
+            displayText: "Pout (alias for Pour)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "si": {
@@ -62,23 +70,31 @@
             displayText: "Si ... Alors (if)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
+            }
+        },
+        "si_sinon": {
+            text: "Si condition Alors\n    // Code ici\nSinon\n    // Code ici\nFin Si;",
+            displayText: "Si ... Alors ... Sinon (if/else)",
+            className: "hint-snippet",
+            render: function (element, self, data) {
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "tantque": {
-            text: "TantQue condition Faire\n    // Code ici\nFinTantQue;",
+            text: "TantQue condition Faire\n    // Code ici\nFin TantQue;",
             displayText: "TantQue ... Faire (while)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "tanque": {
-            text: "TantQue condition Faire\n    // Code ici\nFinTantQue;",
+            text: "TantQue condition Faire\n    // Code ici\nFin TantQue;",
             displayText: "Tanque (alias for TantQue)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "repeter": {
@@ -86,7 +102,7 @@
             displayText: "Repeter ... Jusqua (loop)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "repre": {
@@ -94,7 +110,7 @@
             displayText: "Repre (alias for Repeter)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "ecrire": {
@@ -102,7 +118,7 @@
             displayText: "Ecrire(\"\") (print)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "lire": {
@@ -110,7 +126,7 @@
             displayText: "Lire(\"\") (read)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "type": {
@@ -118,7 +134,7 @@
             displayText: "Type ... = Enregistrement (record)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "enregistrement": {
@@ -126,7 +142,7 @@
             displayText: "Enregistrement (record body)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "fonction": {
@@ -134,7 +150,7 @@
             displayText: "Fonction ... (function)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         },
         "procedure": {
@@ -142,62 +158,255 @@
             displayText: "Procedure ... (procedure)",
             className: "hint-snippet",
             render: function (element, self, data) {
-                element.innerHTML = '<span class="hint-icon hint-snippet-icon">⚡</span> ' + data.displayText;
+                element.innerHTML = '<span class="hint-badge hint-badge-snippet">SNIP</span> ' + data.displayText;
             }
         }
     };
 
-    // Extract user-defined record type names for dynamic autocompletion
-    function extractRecordTypes(code) {
-        var types = [];
+    function hashCode(str) {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash) + str.charCodeAt(i);
+            hash |= 0;
+        }
+        return hash;
+    }
+
+    var parseCache = { hash: null, recordTypes: {}, recordTypesLower: {}, recordTypeList: [], variables: [], varMap: {}, fields: [] };
+
+    function parseRecordTypes(code) {
+        var types = {};
+        var typesLower = {};
+        var list = [];
         var seen = {};
-        var typeMatches = code.matchAll(/^\s*Type\s+([a-zA-Z_][a-zA-Z0-9_-]*)\s*=/gim);
-        for (let match of typeMatches) {
-            var name = match[1];
-            if (!seen[name]) {
-                seen[name] = true;
-                types.push({
-                    text: name,
-                    displayText: name + " (Enregistrement)",
+        var typeBlocks = code.matchAll(/^\s*Type\s+([a-zA-Z_][a-zA-Z0-9_-]*)\s*=\s*Enregistrement([\s\S]*?)(?:^\s*Fin\s*;)/gim);
+        for (let match of typeBlocks) {
+            var typeName = match[1];
+            var body = match[2] || "";
+            var fields = [];
+            var fieldMatches = body.matchAll(/([a-zA-Z_][a-zA-Z0-9_-]*)\s*(\[\s*\d+\s*\])?\s*:\s*([a-zA-Z_][a-zA-Z0-9_-]*)/g);
+            for (let fm of fieldMatches) {
+                var fname = fm[1];
+                var sizeToken = fm[2];
+                var ftype = fm[3];
+                var size = null;
+                if (sizeToken) {
+                    var n = sizeToken.replace(/[\[\]\s]/g, '');
+                    size = n || null;
+                }
+                var typeStr = size ? ("TABLEAU_" + ftype + "_" + size) : ftype;
+                fields.push({
+                    name: fname,
+                    nameDisplay: size ? (fname + "[" + size + "]") : fname,
+                    type: typeStr,
+                    baseType: ftype,
+                    arraySize: size
+                });
+            }
+            types[typeName] = fields;
+            typesLower[typeName.toLowerCase()] = fields;
+            if (!seen[typeName]) {
+                seen[typeName] = true;
+                list.push({
+                    text: typeName,
+                    displayText: typeName + " (Enregistrement)",
                     type: "type",
-                    render: function (element, self, data) {
-                        element.innerHTML = '<span class="hint-icon hint-type-icon">📋</span> ' + data.displayText;
-                    }
+                    render: createRenderFunction("TYPE", "hint-badge-type")
                 });
             }
         }
-        return types;
+        return { types: types, typesLower: typesLower, list: list };
     }
 
-    // Helper function to create render function for different types
-    function createRenderFunction(icon, className) {
-        return function (element, self, data) {
-            var displayText = data.displayText || data.text;
-            element.innerHTML = '<span class="hint-icon ' + className + '">' + icon + '</span> ' + displayText;
-        };
-    }
+    function parseVarDecls(block, outVars) {
+        var decls = block.split(';');
+        decls.forEach(function (decl) {
+            var parts = decl.split(':');
+            if (parts.length < 2) return;
+            var namesPart = parts[0].trim();
+            var typePart = parts.slice(1).join(':').trim();
+            if (!namesPart || !typePart) return;
+            var tableauMatch = typePart.match(/^Tableau\s+de\s+([a-zA-Z_][a-zA-Z0-9_-]*)/i);
+            var rawType = tableauMatch ? ("TABLEAU_" + tableauMatch[1]) : (typePart.match(/^([^\s]+)/) || [])[1];
+            if (!rawType) return;
 
-    // Extract declared variables from code
-    function extractVariables(code) {
-        var variables = [];
-        var varBlockMatch = code.match(/Var\s+([\s\S]*?)(?=Debut|Const|$)/i);
-
-        if (varBlockMatch) {
-            var varBlock = varBlockMatch[1];
-            // Match variable declarations: name : Type or name[size] : Type (support hyphens)
-            var varMatches = varBlock.matchAll(/([a-zA-Z_][a-zA-Z0-9_-]*)\s*(?:\[\d+\])?\s*:\s*([a-zA-Z]+)/gi);
-
-            for (let match of varMatches) {
-                variables.push({
-                    text: match[1],
-                    displayText: match[1] + " : " + match[2],
+            namesPart.split(',').forEach(function (nameRaw) {
+                var nm = nameRaw.trim();
+                if (!nm) return;
+                var nmMatch = nm.match(/^([a-zA-Z_][a-zA-Z0-9_-]*)(\[\s*\d+\s*\])?$/);
+                if (!nmMatch) return;
+                var name = nmMatch[1];
+                var sizeToken = nmMatch[2];
+                var size = null;
+                if (sizeToken) size = sizeToken.replace(/[\[\]\s]/g, '');
+                var typeStr = rawType;
+                if (size && /chaine/i.test(rawType)) {
+                    typeStr = "TABLEAU_Chaine_" + size;
+                } else if (size) {
+                    typeStr = "TABLEAU_" + rawType + "_" + size;
+                }
+                outVars.push({
+                    text: name,
+                    displayText: name + " : " + rawType,
                     type: "variable",
-                    varType: match[2]
+                    varType: typeStr,
+                    rawType: rawType
                 });
-            }
+            });
+        });
+    }
+
+    function extractVariablesAndParams(code) {
+        var variables = [];
+        var varBlocks = code.matchAll(/^\s*Var\s+([\s\S]*?)(?=^\s*(Debut|Const|Type|Fonction|Procedure|Algorithme)\b|$)/gim);
+        for (let match of varBlocks) {
+            parseVarDecls(match[1] || "", variables);
+        }
+
+        var paramBlocks = code.matchAll(/^\s*(Fonction|Procedure)\s+[a-zA-Z_][a-zA-Z0-9_-]*\s*\(([^)]*)\)/gim);
+        for (let match of paramBlocks) {
+            parseVarDecls(match[2] || "", variables);
         }
 
         return variables;
+    }
+
+    function buildFieldList(recordTypes) {
+        var fields = [];
+        Object.keys(recordTypes).forEach(function (typeName) {
+            recordTypes[typeName].forEach(function (f) {
+                fields.push({
+                    text: f.nameDisplay,
+                    displayText: f.nameDisplay + " : " + f.baseType + " (" + typeName + ")",
+                    type: "field",
+                    render: createRenderFunction("FIELD", "hint-badge-field")
+                });
+            });
+        });
+        return fields;
+    }
+
+    function getParsed(code) {
+        var h = hashCode(code);
+        if (parseCache.hash === h) return parseCache;
+        var rec = parseRecordTypes(code);
+        var vars = extractVariablesAndParams(code);
+        var varMap = {};
+        vars.forEach(function (v) { varMap[v.text] = v; });
+        parseCache = {
+            hash: h,
+            recordTypes: rec.types,
+            recordTypesLower: rec.typesLower,
+            recordTypeList: rec.list,
+            variables: vars,
+            varMap: varMap,
+            fields: buildFieldList(rec.types)
+        };
+        return parseCache;
+    }
+
+    // Helper function to create render function for different types
+    function createRenderFunction(label, className) {
+        return function (element, self, data) {
+            var displayText = data.displayText || data.text;
+            element.innerHTML = '<span class="hint-badge ' + className + '">' + label + '</span> ' + displayText;
+        };
+    }
+
+    function resolveTypeFromExpr(expr, parsed) {
+        var tokens = [];
+        var parts = expr.split(/(\.|->)/).filter(Boolean);
+        for (var i = 0; i < parts.length; i++) {
+            var p = parts[i].trim();
+            if (!p) continue;
+            if (p === "." || p === "->") {
+                tokens.push(p);
+            } else {
+                tokens.push(p);
+            }
+        }
+        if (!tokens.length) return null;
+
+        function getBaseName(token) {
+            var m = token.match(/^([a-zA-Z_][a-zA-Z0-9_-]*)(\s*\[[^\]]+\])?$/);
+            if (!m) return { name: token, hasIndex: false };
+            return { name: m[1], hasIndex: !!m[2] };
+        }
+
+        var first = getBaseName(tokens[0]);
+        var v = parsed.varMap[first.name];
+        if (!v) return null;
+        var currentType = v.varType || v.rawType || v.displayText;
+
+        function stripPointer(t) {
+            if (!t) return t;
+            if (t.startsWith('^')) return t.slice(1);
+            if (t.startsWith('POINTEUR_')) return t.slice('POINTEUR_'.length);
+            return t;
+        }
+
+        function arrayElemType(t) {
+            if (!t) return t;
+            if (t.startsWith('TABLEAU_')) {
+                var parts = t.split('_');
+                if (parts.length >= 3) return parts.slice(1, parts.length - 1).join('_');
+            }
+            return t;
+        }
+
+        if (first.hasIndex) currentType = arrayElemType(currentType);
+
+        for (var i = 1; i < tokens.length; i += 2) {
+            var op = tokens[i];
+            var next = tokens[i + 1];
+            if (!next) break;
+            var field = getBaseName(next);
+            var recType = currentType;
+            if (op === "->") {
+                recType = stripPointer(currentType);
+            }
+            var keyLower = (recType || "").toLowerCase();
+            var fields = parsed.recordTypes[recType] || parsed.recordTypesLower[keyLower];
+            if (!fields) return null;
+            var found = null;
+            for (var j = 0; j < fields.length; j++) {
+                if (fields[j].name === field.name) { found = fields[j]; break; }
+            }
+            if (!found) return null;
+            currentType = found.type;
+            if (field.hasIndex) currentType = arrayElemType(currentType);
+        }
+        return currentType;
+    }
+
+    function getFieldSuggestions(cm, cursor, parsed) {
+        var line = cm.getLine(cursor.line);
+        var upto = line.slice(0, cursor.ch);
+        var m = upto.match(/([a-zA-Z_][a-zA-Z0-9_-]*(?:\s*\[[^\]]*\])?(?:\s*(?:->|\.)\s*[a-zA-Z_][a-zA-Z0-9_-]*(?:\s*\[[^\]]*\])?)*)\s*(->|\.)\s*([a-zA-Z_][a-zA-Z0-9_-]*)?$/);
+        if (!m) return null;
+        var expr = m[1];
+        var partial = m[3] || "";
+        var t = resolveTypeFromExpr(expr, parsed);
+        if (!t) return null;
+        var recType = t.startsWith('^') ? t.slice(1) : t;
+        if (recType.startsWith('POINTEUR_')) recType = recType.slice('POINTEUR_'.length);
+        var fields = parsed.recordTypes[recType] || parsed.recordTypesLower[(recType || "").toLowerCase()];
+        if (!fields) return null;
+        var list = fields.filter(function (f) {
+            return f.name.toLowerCase().indexOf(partial.toLowerCase()) === 0;
+        }).map(function (f) {
+            return {
+                text: f.nameDisplay,
+                displayText: f.nameDisplay + " : " + f.baseType,
+                type: "field",
+                render: createRenderFunction("FIELD", "hint-badge-field")
+            };
+        });
+        return {
+            list: list,
+            from: CodeMirror.Pos(cursor.line, cursor.ch - partial.length),
+            to: CodeMirror.Pos(cursor.line, cursor.ch)
+        };
     }
 
     // Get context-aware suggestions
@@ -255,6 +464,13 @@
         var word = line.slice(start, end).toLowerCase();
         var curWord = line.slice(start, cursor.ch);
 
+        var parsed = getParsed(cm.getValue());
+
+        var fieldContext = getFieldSuggestions(cm, cursor, parsed);
+        if (fieldContext && fieldContext.list.length > 0) {
+            return fieldContext;
+        }
+
         // Check for context-specific suggestions first
         var contextSuggestions = getContextSuggestions(cm, cursor);
         if (contextSuggestions && contextSuggestions.length > 0) {
@@ -281,7 +497,7 @@
                     text: kw,
                     displayText: kw,
                     type: "keyword",
-                    render: createRenderFunction("🔑", "hint-keyword-icon")
+                    render: createRenderFunction("KW", "hint-badge-keyword")
                 });
             }
         });
@@ -293,7 +509,7 @@
                     text: type,
                     displayText: type,
                     type: "type",
-                    render: createRenderFunction("📐", "hint-type-icon")
+                    render: createRenderFunction("TYPE", "hint-badge-type")
                 });
             }
         });
@@ -305,7 +521,7 @@
                     text: fn + "()",
                     displayText: fn + "()",
                     type: "builtin",
-                    render: createRenderFunction("⚙️", "hint-builtin-icon")
+                    render: createRenderFunction("FN", "hint-badge-builtin")
                 });
             }
         });
@@ -317,7 +533,7 @@
                     text: atom,
                     displayText: atom,
                     type: "atom",
-                    render: createRenderFunction("💡", "hint-atom-icon")
+                    render: createRenderFunction("LIT", "hint-badge-atom")
                 });
             }
         });
@@ -329,25 +545,30 @@
                     text: op,
                     displayText: op,
                     type: "operator",
-                    render: createRenderFunction("➕", "hint-operator-icon")
+                    render: createRenderFunction("OP", "hint-badge-operator")
                 });
             }
         });
 
         // Add variables from code
-        var variables = extractVariables(cm.getValue());
-        variables.forEach(function (v) {
+        parsed.variables.forEach(function (v) {
             if (v.text.toLowerCase().indexOf(word) === 0) {
-                v.render = createRenderFunction("📦", "hint-variable-icon");
+                v.render = createRenderFunction("VAR", "hint-badge-variable");
                 suggestions.push(v);
             }
         });
 
         // Add user-defined record type names
-        var recordTypes = extractRecordTypes(cm.getValue());
-        recordTypes.forEach(function (rt) {
+        parsed.recordTypeList.forEach(function (rt) {
             if (rt.text.toLowerCase().indexOf(word) === 0) {
                 suggestions.push(rt);
+            }
+        });
+
+        // Add record fields (lower priority)
+        parsed.fields.forEach(function (f) {
+            if (f.text.toLowerCase().indexOf(word) === 0) {
+                suggestions.push(f);
             }
         });
 
@@ -380,7 +601,7 @@
             if (!aExact && bExact) return 1;
 
             // Then by type priority
-            var typePriority = { "variable": 0, "snippet": 1, "keyword": 2, "type": 3, "builtin": 4, "atom": 5, "operator": 6 };
+            var typePriority = { "variable": 0, "snippet": 1, "keyword": 2, "type": 3, "builtin": 4, "atom": 5, "operator": 6, "field": 7 };
             var aPriority = typePriority[a.type] || 99;
             var bPriority = typePriority[b.type] || 99;
             if (aPriority !== bPriority) return aPriority - bPriority;

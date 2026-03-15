@@ -405,12 +405,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.removeItem('algo_user_level_cache');
                 }
                 // Save to session cache and redirect
+                if (data.all_passed) {
+                    sessionStorage.setItem('algo_confetti', '1');
+                }
                 sessionStorage.setItem('algo_submission_result', JSON.stringify(data));
                 window.location.href = '/submission_results';
             } else {
                 if (data.success) {
                     clearRunError();
                     renderTestResultsInContext(data);
+                    if (data.all_passed && typeof window.launchConfetti === 'function') {
+                        window.launchConfetti();
+                    }
                 } else {
                     renderRunError(data.error || 'Erreur d’exécution', formatErrorDetails(data.details));
                 }

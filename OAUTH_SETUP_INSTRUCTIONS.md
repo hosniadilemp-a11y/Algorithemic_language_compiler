@@ -26,6 +26,8 @@ Les clés API OAuth (Google et GitHub) nécessitent que vous configuriez des app
    - `GOOGLE_CLIENT_SECRET`
 
 ---
+Occurrences de  99 :  1
+Occurrences de  99 :  1
 
 ### Configuration GitHub OAuth
 
@@ -43,7 +45,7 @@ Les clés API OAuth (Google et GitHub) nécessitent que vous configuriez des app
    - `GITHUB_CLIENT_ID`
    - `GITHUB_CLIENT_SECRET`
 
----
+--
 
 ### Configuration Email (SMTP)
 

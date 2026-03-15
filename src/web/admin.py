@@ -8,9 +8,11 @@ import functools
 import os
 import csv
 import io
+import json
 
 from flask import Blueprint, Response, jsonify, redirect, render_template, request, session, url_for
 from sqlalchemy import case, func
+from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash
 
 from web.models import (
@@ -622,6 +624,7 @@ def _prob_json(p):
     return {
         'id': p.id, 'title': p.title, 'description': p.description,
         'topic': p.topic, 'difficulty': p.difficulty, 'template_code': p.template_code,
+        'is_published': bool(p.is_published),
         'test_cases': [
             {'id': tc.id, 'input': tc.input_data, 'expected_output': tc.expected_output, 'is_public': bool(tc.is_public)}
             for tc in sorted(p.test_cases, key=lambda x: x.id)
@@ -636,12 +639,15 @@ def _normalize_prob(payload):
     tcs = payload.get('test_cases', [])
     if not isinstance(tcs, list):
         raise ValueError("'test_cases' must be a list")
-    return {
+    data = {
         'title': str(payload['title']).strip(), 'description': str(payload['description']),
         'topic': str(payload['topic']).strip(), 'difficulty': str(payload['difficulty']).strip(),
         'template_code': str(payload.get('template_code', '')),
         'test_cases': [{'input': str(t.get('input', '')), 'expected_output': str(t.get('expected_output', '')), 'is_public': bool(t.get('is_public', False))} for t in tcs],
     }
+    if 'is_published' in payload:
+        data['is_published'] = bool(payload.get('is_published'))
+    return data
 
 
 @admin_bp.route('/api/problems', methods=['GET'])
@@ -677,7 +683,8 @@ def admin_create_problem():
     try:
         data = _normalize_prob(request.get_json(force=True))
         p = Problem(title=data['title'], description=data['description'], topic=data['topic'],
-                    difficulty=data['difficulty'], template_code=data['template_code'])
+                    difficulty=data['difficulty'], template_code=data['template_code'],
+                    is_published=bool(data.get('is_published', False)))
         db.session.add(p)
         db.session.flush()
         for tc in data['test_cases']:
@@ -700,6 +707,8 @@ def admin_update_problem(pid):
         p.title = data['title']; p.description = data['description']
         p.topic = data['topic']; p.difficulty = data['difficulty']
         p.template_code = data['template_code']
+        if 'is_published' in data:
+            p.is_published = bool(data.get('is_published'))
         TestCase.query.filter_by(problem_id=p.id).delete()
         db.session.flush()
         for tc in data['test_cases']:
@@ -717,8 +726,82 @@ def admin_delete_problem(pid):
     p = db.session.get(Problem, pid)
     if not p:
         return jsonify({'error': 'Not found'}), 404
+    ChallengeSubmission.query.filter_by(problem_id=p.id).delete()
     db.session.delete(p); db.session.commit()
     return jsonify({'ok': True})
+
+
+@admin_bp.route('/api/problems/<int:pid>/publish', methods=['POST'])
+@admin_required
+def admin_publish_problem(pid):
+    p = db.session.get(Problem, pid)
+    if not p:
+        return jsonify({'error': 'Not found'}), 404
+    data = request.get_json(force=True) or {}
+    if 'is_published' not in data:
+        return jsonify({'error': 'is_published required'}), 400
+    p.is_published = bool(data.get('is_published'))
+    db.session.commit()
+    return jsonify(_prob_json(p))
+
+
+@admin_bp.route('/api/problems/import_json', methods=['POST'])
+@admin_required
+def admin_import_problems_json():
+    files = request.files.getlist('files')
+    if not files:
+        return jsonify({'error': 'No files uploaded'}), 400
+
+    required = ['title', 'topic', 'difficulty', 'description', 'template_code', 'test_cases']
+    inserted = 0
+    errors = []
+
+    for f in files:
+        try:
+            payload = json.load(f)
+            missing = [k for k in required if k not in payload]
+            if missing:
+                raise ValueError(f"Missing fields: {', '.join(missing)}")
+            if not isinstance(payload.get('test_cases'), list):
+                raise ValueError("'test_cases' must be a list")
+            if not str(payload.get('title', '')).strip():
+                raise ValueError("'title' is required")
+            if not str(payload.get('topic', '')).strip():
+                raise ValueError("'topic' is required")
+            if not str(payload.get('difficulty', '')).strip():
+                raise ValueError("'difficulty' is required")
+            if not str(payload.get('description', '')).strip():
+                raise ValueError("'description' is required")
+
+            p = Problem(
+                title=str(payload['title']).strip(),
+                description=str(payload['description']),
+                topic=str(payload['topic']).strip(),
+                difficulty=str(payload['difficulty']).strip(),
+                template_code=str(payload.get('template_code', '')),
+                is_published=False,
+            )
+            db.session.add(p)
+            db.session.flush()
+
+            for tc in payload['test_cases']:
+                db.session.add(TestCase(
+                    problem_id=p.id,
+                    input_data=str(tc.get('input', '')),
+                    expected_output=str(tc.get('expected_output', '')),
+                    is_public=bool(tc.get('is_public', False)),
+                ))
+
+            db.session.commit()
+            inserted += 1
+        except IntegrityError:
+            db.session.rollback()
+            errors.append({'file': getattr(f, 'filename', 'unknown'), 'error': 'Title already exists'})
+        except Exception as e:
+            db.session.rollback()
+            errors.append({'file': getattr(f, 'filename', 'unknown'), 'error': str(e)})
+
+    return jsonify({'inserted': inserted, 'errors': errors})
 
 
 # ── Chapters CRUD ─────────────────────────────────────────────────────────────
@@ -934,6 +1017,31 @@ def admin_export_questions_csv():
     )
 
 
+@admin_bp.route('/api/questions/export_json', methods=['GET'])
+@admin_required
+def admin_export_questions_json():
+    chapter_id = request.args.get('chapter_id', type=int)
+    if not chapter_id:
+        return jsonify({'error': 'chapter_id is required'}), 400
+
+    chapter = db.session.get(Chapter, chapter_id)
+    if not chapter:
+        return jsonify({'error': 'Chapter not found'}), 404
+
+    questions = Question.query.filter_by(chapter_id=chapter_id).order_by(Question.id.asc()).all()
+    payload = {
+        'chapter_id': chapter_id,
+        'chapter_title': chapter.title,
+        'questions': [_q_json(q) for q in questions],
+    }
+    filename = f"chapter_{chapter_id}_questions.json"
+    return Response(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        mimetype='application/json; charset=utf-8',
+        headers={'Content-Disposition': f'attachment; filename=\"{filename}\"'}
+    )
+
+
 @admin_bp.route('/api/questions/import_csv', methods=['POST'])
 @admin_required
 def admin_import_questions_csv():
@@ -1016,6 +1124,67 @@ def admin_import_questions_csv():
 
         db.session.commit()
         return jsonify({'ok': True, 'inserted': inserted, 'chapter_id': chapter_id, 'replace': replace_existing})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400
+
+
+@admin_bp.route('/api/questions/import_json', methods=['POST'])
+@admin_required
+def admin_import_questions_json():
+    try:
+        chapter_id = int(request.form.get('chapter_id', '0'))
+    except Exception:
+        return jsonify({'error': 'chapter_id is required'}), 400
+
+    chapter = db.session.get(Chapter, chapter_id)
+    if not chapter:
+        return jsonify({'error': 'Chapter not found'}), 404
+
+    uploaded = request.files.get('file')
+    if not uploaded:
+        return jsonify({'error': 'JSON file is required'}), 400
+
+    replace_existing = str(request.form.get('replace', 'false')).lower() in ('1', 'true', 'yes', 'on')
+
+    try:
+        payload = json.load(uploaded)
+    except Exception:
+        return jsonify({'error': 'Invalid JSON file'}), 400
+
+    questions = payload.get('questions') if isinstance(payload, dict) else payload
+    if not isinstance(questions, list):
+        return jsonify({'error': 'JSON must be an array of questions or {questions: [...]}'}), 400
+
+    try:
+        if replace_existing:
+            q_ids = [q.id for q in Question.query.filter_by(chapter_id=chapter_id).all()]
+            if q_ids:
+                Choice.query.filter(Choice.question_id.in_(q_ids)).delete(synchronize_session=False)
+                Question.query.filter_by(chapter_id=chapter_id).delete(synchronize_session=False)
+                db.session.flush()
+
+        inserted = 0
+        for q in questions:
+            q_payload = {
+                'chapter_id': chapter_id,
+                'type': q.get('type', 'MCQ'),
+                'difficulty': q.get('difficulty', 'Medium'),
+                'concept': q.get('concept', ''),
+                'text': q.get('text', ''),
+                'explanation': q.get('explanation', ''),
+                'choices': q.get('choices', []),
+            }
+            data = _normalize_q(q_payload)
+            nq = Question(chapter_id=data['chapter_id'], type=data['type'], difficulty=data['difficulty'],
+                          concept=data['concept'], text=data['text'], explanation=data['explanation'])
+            db.session.add(nq); db.session.flush()
+            for c in data['choices']:
+                db.session.add(Choice(question_id=nq.id, text=c['text'], is_correct=c['is_correct']))
+            inserted += 1
+
+        db.session.commit()
+        return jsonify({'inserted': inserted})
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const topicFilters = document.querySelectorAll('#topic-filters input[type="checkbox"]');
     const difficultyFilters = document.querySelectorAll('#difficulty-filters input[type="checkbox"]');
     const resetBtn = document.getElementById('reset-filters');
+    const FILTER_KEY = 'algo_problem_filters';
 
     function getCookie(name) {
         const raw = document.cookie
@@ -43,6 +44,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             problemsList.innerHTML = `<div class="error-msg">Erreur de connexion serveur: ${error.message}</div>`;
+        }
+    }
+
+    function saveFilters() {
+        const topics = Array.from(topicFilters).filter(i => i.checked).map(i => i.value);
+        const difficulties = Array.from(difficultyFilters).filter(i => i.checked).map(i => i.value);
+        try {
+            localStorage.setItem(FILTER_KEY, JSON.stringify({ topics, difficulties }));
+        } catch (e) {
+            // ignore storage errors
+        }
+    }
+
+    function restoreFilters() {
+        try {
+            const raw = localStorage.getItem(FILTER_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            const topics = new Set(data.topics || []);
+            const diffs = new Set(data.difficulties || []);
+            topicFilters.forEach(cb => { cb.checked = topics.has(cb.value); });
+            difficultyFilters.forEach(cb => { cb.checked = diffs.has(cb.value); });
+        } catch (e) {
+            // ignore parse errors
         }
     }
 
@@ -91,7 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add listeners to all checkboxes
     [...topicFilters, ...difficultyFilters].forEach(checkbox => {
-        checkbox.addEventListener('change', fetchProblems);
+        checkbox.addEventListener('change', () => {
+            saveFilters();
+            fetchProblems();
+        });
     });
 
     // Reset logic
@@ -99,9 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
         [...topicFilters, ...difficultyFilters].forEach(checkbox => {
             checkbox.checked = false;
         });
+        try { localStorage.removeItem(FILTER_KEY); } catch (e) {}
         fetchProblems();
     });
 
     // Initial load
+    restoreFilters();
     fetchProblems();
 });

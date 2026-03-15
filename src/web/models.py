@@ -42,6 +42,7 @@ class Problem(db.Model):
     description = db.Column(db.Text, nullable=False) # store Markdown or HTML
     topic = db.Column(db.String(100), nullable=False, index=True)
     difficulty = db.Column(db.String(50), nullable=False, index=True) # Easy, Medium, Hard
+    is_published = db.Column(db.Boolean, default=False, nullable=False, index=True)
     template_code = db.Column(db.Text, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     

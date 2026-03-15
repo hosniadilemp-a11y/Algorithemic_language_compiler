@@ -454,6 +454,12 @@
             box-shadow: 0 0 20px rgba(229, 57, 53, 0.25);
             background: rgba(229, 57, 53, 0.07);
         }
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
 
         /* ============================================
            HEATMAP CENTERING + STYLING
@@ -1146,16 +1152,24 @@
 
                         // 5. Activity Heatmap (Phase 7)
                         if (data.progress.activity_map) {
-                            new frappe.Chart("#heatmap-chart", {
-                                type: 'heatmap',
-                                data: {
-                                    dataPoints: data.progress.activity_map,
-                                    start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
-                                    end: new Date()
-                                },
-                                countLabel: 'Activités',
-                                colors: ['#ebedf0', '#d6e4ff', '#84aaff', '#3366ff', '#1a3380']
-                            });
+                            const points = data.progress.activity_map;
+                            if (Object.keys(points).length === 0) {
+                                document.getElementById('heatmap-chart').innerHTML = `
+                                    <div style="text-align:center;color:var(--text-secondary);padding:30px;">
+                                        Aucune activité enregistrée sur l'année.
+                                    </div>`;
+                            } else {
+                                new frappe.Chart("#heatmap-chart", {
+                                    type: 'heatmap',
+                                    data: {
+                                        dataPoints: points,
+                                        start: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+                                        end: new Date()
+                                    },
+                                    countLabel: 'Activités',
+                                    colors: ['#ebedf0', '#d6e4ff', '#84aaff', '#3366ff', '#1a3380']
+                                });
+                            }
                         }
                     } else {
                         console.warn("Chart.js ou frappe-charts n'est pas disponible, les graphiques ne seront pas affichés.");
@@ -1224,8 +1238,59 @@
             }
         });
 
+        function launchConfetti(durationMs = 2500) {
+            const canvas = document.getElementById('confetti-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+            const colors = ['#f94144', '#f3722c', '#f9c74f', '#90be6d', '#43aa8b', '#577590'];
+            const pieces = Array.from({ length: 140 }).map(() => ({
+                x: Math.random() * w,
+                y: Math.random() * h - h,
+                vx: (Math.random() - 0.5) * 2,
+                vy: 2 + Math.random() * 3,
+                size: 6 + Math.random() * 6,
+                rot: Math.random() * Math.PI,
+                vr: (Math.random() - 0.5) * 0.2,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            }));
+            const resize = () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            };
+            window.addEventListener('resize', resize);
+            const start = performance.now();
+            const frame = (t) => {
+                ctx.clearRect(0, 0, w, h);
+                pieces.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.rot += p.vr;
+                    if (p.y > h) {
+                        p.y = -10;
+                        p.x = Math.random() * w;
+                    }
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                    ctx.restore();
+                });
+                if (t - start < durationMs) {
+                    requestAnimationFrame(frame);
+                } else {
+                    ctx.clearRect(0, 0, w, h);
+                    window.removeEventListener('resize', resize);
+                }
+            };
+            requestAnimationFrame(frame);
+        }
+
         async function showBadgeNotifications(badges) {
             for (const badge of badges) {
+                launchConfetti();
                 await Swal.fire({
                     title: 'Nouveau Badge Débloqué !',
                     text: `${badge.name}: ${badge.description}`,
@@ -1307,6 +1372,7 @@
             }
         });
     </script>
+    <canvas id="confetti-canvas"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>

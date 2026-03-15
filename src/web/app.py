@@ -938,7 +938,7 @@ def get_problems():
     topics = request.args.getlist('topic')
     difficulties = request.args.getlist('difficulty')
     
-    query = Problem.query
+    query = Problem.query.filter(Problem.is_published.is_(True))
     if topics:
         query = query.filter(Problem.topic.in_(topics))
     if difficulties:
@@ -998,6 +998,8 @@ def get_problem(problem_id):
     problem = db.session.get(Problem, problem_id)
     if not problem:
         return jsonify({'success': False, 'error': 'Problem not found'}), 404
+    if not problem.is_published:
+        return jsonify({'success': False, 'error': 'Problem not published'}), 403
     # Return only public test cases to frontend
     public_cases = [tc for tc in problem.test_cases if tc.is_public]
     
@@ -1355,6 +1357,32 @@ def get_user_progress():
     
     total_challenges_attempted = len(set(sub.problem_id for sub in submissions))
     passed_challenges = sum(1 for pid in challenge_stats if challenge_stats[pid]['passed'])
+
+    # Normalize challenge topics for badge logic / stats
+    def normalize_topic(value):
+        t = str(value or '').strip().lower()
+        if 'pile' in t or 'stack' in t:
+            return 'Piles'
+        if 'liste' in t or 'chain' in t or 'linked' in t:
+            return 'Listes_Chainees'
+        if 'file' in t or 'queue' in t:
+            return 'Files'
+        if 'array' in t or 'tableau' in t:
+            return 'Arrays'
+        if 'string' in t or 'chaine' in t:
+            return 'Strings'
+        if 'enregistr' in t or 'record' in t:
+            return 'Enregistrements'
+        return str(value or '').strip()
+
+    passed_problem_rows = ChallengeSubmission.query.join(Problem).filter(
+        ChallengeSubmission.user_id == current_user.id,
+        ChallengeSubmission.passed == True
+    ).with_entities(Problem.id, Problem.topic).distinct().all()
+    topic_counts_norm = {}
+    for _, topic in passed_problem_rows:
+        canon = normalize_topic(topic)
+        topic_counts_norm[canon] = topic_counts_norm.get(canon, 0) + 1
     
     # --- NEW ADVANCED STATISTICS (Phase 6) ---
     # 1. Challenge Distributions
@@ -1468,11 +1496,7 @@ def get_user_progress():
         
     # 5. Maitre Badges (Assuming specific topic problem counts)
     def chapter_prob_passed(topic):
-        return ChallengeSubmission.query.join(Problem).filter(
-            ChallengeSubmission.user_id == current_user.id,
-            ChallengeSubmission.passed == True,
-            Problem.topic == topic
-        ).with_entities(Problem.id).distinct().count()
+        return topic_counts_norm.get(topic, 0)
         
     if chapter_prob_passed("Arrays") >= 20: badges_to_award.append("maitre_tableaux")
     if chapter_prob_passed("Strings") >= 20: badges_to_award.append("maitre_chaines")
@@ -1550,11 +1574,16 @@ def get_user_progress():
     activity_map = {}
     today = datetime.date.today()
     one_year_ago = today - datetime.timedelta(days=365)
-    
-    for d in distinct_active_days:
+    for sub in submissions:
+        d = sub.timestamp.date()
         if d >= one_year_ago:
-            activity_map[d.isoformat()] = sum(1 for sub in submissions if sub.timestamp.date() == d) + \
-                                         sum(1 for qa in quiz_attempts if qa.timestamp.date() == d)
+            key = d.isoformat()
+            activity_map[key] = activity_map.get(key, 0) + 1
+    for qa in quiz_attempts:
+        d = qa.timestamp.date()
+        if d >= one_year_ago:
+            key = d.isoformat()
+            activity_map[key] = activity_map.get(key, 0) + 1
 
     # XP and Level computation
     xp_total, xp_breakdown, level_dict, xp_to_next = compute_xp_and_level(current_user.id)

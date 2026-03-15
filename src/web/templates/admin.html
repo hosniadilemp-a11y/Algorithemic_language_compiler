@@ -423,6 +423,15 @@
       letter-spacing: 0.5px;
       border-bottom: 1px solid #30363d;
     }
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    .sort-indicator {
+      margin-left: 6px;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
 
     td {
       padding: 12px 14px;
@@ -469,6 +478,14 @@
     .tag-failed {
       background: rgba(231, 76, 60, 0.15);
       color: #e74c3c;
+    }
+    .tag-published {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+    }
+    .tag-unpublished {
+      background: rgba(241, 196, 15, 0.15);
+      color: #f1c40f;
     }
 
     /* ── Buttons ── */
@@ -1006,8 +1023,12 @@
           <div class="panel">
             <div class="panel-header">
               <span class="panel-title"><i class="fas fa-list"></i> Problèmes (<span id="probCount">0</span>)</span>
-              <button class="btn btn-success" onclick="location.href='/admin/problems/new'"><i class="fas fa-plus"></i>
-                Nouveau</button>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <button class="btn btn-info" onclick="triggerImportProblemsJson()"><i class="fas fa-file-import"></i>
+                  Importer JSON</button>
+                <button class="btn btn-success" onclick="location.href='/admin/problems/new'"><i class="fas fa-plus"></i>
+                  Nouveau</button>
+              </div>
             </div>
             <div class="filter-bar">
               <input type="text" id="probSearch" placeholder="🔍 Rechercher…" oninput="filterProblems()">
@@ -1022,23 +1043,26 @@
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Titre</th>
-                    <th>Thème</th>
-                    <th>Difficulté</th>
-                    <th>Tests</th>
+                    <th class="sortable" data-sort="id">ID<span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort="title">Titre<span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort="topic">Thème<span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort="difficulty">Difficulté<span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort="status">Statut<span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort="tests">Tests<span class="sort-indicator"></span></th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="problemTable">
                   <tr>
-                    <td colspan="6" style="text-align:center;color:#8b949e;padding:30px;">Chargement…</td>
+                    <td colspan="7" style="text-align:center;color:#8b949e;padding:30px;">Chargement…</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+        <input type="file" id="problemJsonInput" accept="application/json,.json" multiple style="display:none;">
+        <input type="file" id="qJsonFileInput" accept="application/json,.json" style="display:none;">
 
         <!-- QUIZZES -->
         <div class="section" id="sec-quizzes">
@@ -1063,6 +1087,10 @@
                     onclick="exportQuestionsCsv()"><i class="fas fa-file-export"></i> CSV</button>
                   <button class="btn btn-info btn-sm" id="importQCsvBtn" style="display:none;"
                     onclick="triggerImportQuestionsCsv()"><i class="fas fa-file-import"></i> Import CSV</button>
+                  <button class="btn btn-info btn-sm" id="exportQJsonBtn" style="display:none;"
+                    onclick="exportQuestionsJson()"><i class="fas fa-file-export"></i> JSON</button>
+                  <button class="btn btn-info btn-sm" id="importQJsonBtn" style="display:none;"
+                    onclick="triggerImportQuestionsJson()"><i class="fas fa-file-import"></i> Import JSON</button>
                   <button class="btn btn-success btn-sm" id="addQBtn" style="display:none;"
                     onclick="openQuestionModal()"><i class="fas fa-plus"></i> Question</button>
                 </div>
@@ -1343,7 +1371,19 @@
     }
 
     // ── Init ─────────────────────────────────────────────────────────────────────
-    function initApp() { loadOverview(); }
+    function initApp() {
+      const hash = (location.hash || '').replace('#', '');
+      if (hash === 'problems') return showSection('problems');
+      if (hash === 'users') return showSection('users');
+      if (hash === 'quizzes') return showSection('quizzes');
+      if (hash === 'probstats') return showSection('probstats');
+      if (hash === 'admins') return showSection('admins');
+      showSection('overview');
+    }
+    window.addEventListener('hashchange', () => {
+      const hash = (location.hash || '').replace('#', '');
+      if (hash) showSection(hash);
+    });
 
     // ── Overview ─────────────────────────────────────────────────────────────────
     async function loadOverview() {
@@ -1505,20 +1545,122 @@
       const df = $('probDiffFilter').value;
       renderProblems(allProblems.filter(p => (!q || (p.title + p.topic).toLowerCase().includes(q)) && (!df || p.difficulty === df)));
     }
+    let problemSort = { key: 'difficulty', dir: 'asc' };
+    function applySortIndicators() {
+      document.querySelectorAll('th.sortable').forEach(th => {
+        const indicator = th.querySelector('.sort-indicator');
+        if (!indicator) return;
+        if (th.dataset.sort === problemSort.key) {
+          indicator.textContent = problemSort.dir === 'asc' ? '▲' : '▼';
+        } else {
+          indicator.textContent = '';
+        }
+      });
+    }
+    function sortProblems(probs) {
+      const order = { Easy: 0, Medium: 1, Hard: 2 };
+      const dir = problemSort.dir === 'asc' ? 1 : -1;
+      return [...probs].sort((a, b) => {
+        let va;
+        let vb;
+        switch (problemSort.key) {
+          case 'id':
+            va = Number(a.id) || 0;
+            vb = Number(b.id) || 0;
+            break;
+          case 'title':
+            va = String(a.title || '').toLowerCase();
+            vb = String(b.title || '').toLowerCase();
+            break;
+          case 'topic':
+            va = String(a.topic || '').toLowerCase();
+            vb = String(b.topic || '').toLowerCase();
+            break;
+          case 'difficulty':
+            va = order[a.difficulty] ?? 99;
+            vb = order[b.difficulty] ?? 99;
+            break;
+          case 'status':
+            va = a.is_published ? 1 : 0;
+            vb = b.is_published ? 1 : 0;
+            break;
+          case 'tests':
+            va = (a.test_cases || []).length;
+            vb = (b.test_cases || []).length;
+            break;
+          default:
+            va = String(a.title || '').toLowerCase();
+            vb = String(b.title || '').toLowerCase();
+        }
+        if (va < vb) return -1 * dir;
+        if (va > vb) return 1 * dir;
+        return 0;
+      });
+    }
     function renderProblems(probs) {
-      $('problemTable').innerHTML = probs.map(p => `<tr>
+      const sorted = sortProblems(probs);
+      applySortIndicators();
+      $('problemTable').innerHTML = sorted.map(p => `<tr>
     <td style="color:#8b949e;">#${p.id}</td>
     <td><strong>${p.title}</strong></td>
     <td>${p.topic}</td>
     <td>${diffTag(p.difficulty)}</td>
+    <td><span class="tag ${p.is_published ? 'tag-published' : 'tag-unpublished'}">${p.is_published ? 'Ready' : 'Not Ready'}</span></td>
     <td>${p.test_cases.length}</td>
     <td>
       <button class="btn btn-info btn-sm" onclick="location.href='/admin/problems/${p.id}/edit'" title="Modifier"><i class="fas fa-pencil-alt"></i></button>
       <button class="btn btn-danger btn-sm" onclick="deleteProblem(${p.id})" style="margin-left:4px;" title="Supprimer"><i class="fas fa-trash"></i></button>
+      ${p.is_published ? '' : `<button class="btn btn-success btn-sm" onclick="publishProblem(${p.id})" style="margin-left:4px;" title="Publier"><i class="fas fa-bullhorn"></i></button>`}
       <button class="btn btn-success btn-sm highlight" onclick="openLiveContest(${p.id}, '${p.title.replace(/'/g, "\\'")}')" style="margin-left:4px; background: #ff9800; border-color: #e68a00; color: white;" title="En direct"><i class="fas fa-users" style="animation: pulse 2s infinite;"></i></button>
     </td>
-  </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px;">Aucun problème</td></tr>';
+  </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:#8b949e;padding:20px;">Aucun problème</td></tr>';
     }
+    async function publishProblem(id) {
+      try {
+        await api(`/admin/api/problems/${id}/publish`, { method: 'POST', body: JSON.stringify({ is_published: true }) });
+        toast('Problème publié.');
+        loadProblems();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    function triggerImportProblemsJson() {
+      $('problemJsonInput').click();
+    }
+    $('problemJsonInput').addEventListener('change', async (evt) => {
+      const files = evt.target.files ? Array.from(evt.target.files) : [];
+      if (!files.length) return;
+      const form = new FormData();
+      files.forEach(f => form.append('files', f));
+      try {
+        const res = await fetch('/admin/api/problems/import_json', { method: 'POST', body: form });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Import JSON échoué');
+        const errCount = (data.errors || []).length;
+        if (errCount) {
+          toast(`Import terminé: ${data.inserted} ajoutés, ${errCount} erreurs`, 'error');
+        } else {
+          toast(`Import terminé: ${data.inserted} ajoutés`);
+        }
+        loadProblems();
+      } catch (e) {
+        toast(e.message, 'error');
+      } finally {
+        evt.target.value = '';
+      }
+    });
+
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const key = th.dataset.sort;
+        if (!key) return;
+        if (problemSort.key === key) {
+          problemSort.dir = problemSort.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+          problemSort.key = key;
+          problemSort.dir = 'asc';
+        }
+        renderProblems(allProblems);
+      });
+    });
     function openProblemModal(p = null) {
       editingProblemId = p ? p.id : null;
       $('probModalTitle').textContent = p ? 'Modifier le Problème' : 'Nouveau Problème';
@@ -1626,6 +1768,8 @@
       $('addQBtn').style.display = 'flex';
       $('exportQCsvBtn').style.display = 'inline-flex';
       $('importQCsvBtn').style.display = 'inline-flex';
+      $('exportQJsonBtn').style.display = 'inline-flex';
+      $('importQJsonBtn').style.display = 'inline-flex';
       const d = await api(`/admin/api/stats/quizzes/${id}/questions`);
       $('questionTable').innerHTML = d.questions.map(q => `<tr>
     <td style="color:#8b949e;">#${q.id}</td>
@@ -1692,6 +1836,11 @@
       $('qCsvFileInput').click();
     }
 
+    function triggerImportQuestionsJson() {
+      if (!currentChapterId) return toast('Sélectionnez un chapitre', 'error');
+      $('qJsonFileInput').click();
+    }
+
     async function exportQuestionsCsv() {
       if (!currentChapterId) return toast('Sélectionnez un chapitre', 'error');
       try {
@@ -1710,6 +1859,29 @@
         a.remove();
         URL.revokeObjectURL(url);
         toast('CSV exporté');
+      } catch (e) {
+        toast(e.message, 'error');
+      }
+    }
+
+    async function exportQuestionsJson() {
+      if (!currentChapterId) return toast('Sélectionnez un chapitre', 'error');
+      try {
+        const res = await fetch(`/admin/api/questions/export_json?chapter_id=${currentChapterId}`);
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || 'Export JSON impossible');
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chapter_${currentChapterId}_questions.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        toast('JSON exporté');
       } catch (e) {
         toast(e.message, 'error');
       }
@@ -1738,6 +1910,25 @@
         toast(e.message, 'error');
       } finally {
         $('qCsvFileInput').value = '';
+      }
+    });
+
+    $('qJsonFileInput').addEventListener('change', async (evt) => {
+      const file = evt.target.files && evt.target.files[0];
+      if (!file) return;
+      const form = new FormData();
+      form.append('file', file);
+      form.append('chapter_id', currentChapterId);
+      try {
+        const res = await fetch('/admin/api/questions/import_json', { method: 'POST', body: form });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Import JSON impossible');
+        toast(`JSON importé (${data.inserted || 0} questions)`);
+        selectChapter(currentChapterId, currentChapterTitle);
+      } catch (e) {
+        toast(e.message, 'error');
+      } finally {
+        evt.target.value = '';
       }
     });
 

@@ -60,6 +60,70 @@
         }
     });
 
+    function ensureConfettiCanvas() {
+        let canvas = document.getElementById('global-confetti-canvas');
+        if (canvas) return canvas;
+        canvas = document.createElement('canvas');
+        canvas.id = 'global-confetti-canvas';
+        canvas.style.position = 'fixed';
+        canvas.style.inset = '0';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        document.body.appendChild(canvas);
+        return canvas;
+    }
+
+    function launchConfetti(durationMs = 2500) {
+        const canvas = ensureConfettiCanvas();
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        const colors = ['#f94144', '#f3722c', '#f9c74f', '#90be6d', '#43aa8b', '#577590'];
+        const pieces = Array.from({ length: 140 }).map(() => ({
+            x: Math.random() * w,
+            y: Math.random() * h - h,
+            vx: (Math.random() - 0.5) * 2,
+            vy: 2 + Math.random() * 3,
+            size: 6 + Math.random() * 6,
+            rot: Math.random() * Math.PI,
+            vr: (Math.random() - 0.5) * 0.2,
+            color: colors[Math.floor(Math.random() * colors.length)]
+        }));
+        const resize = () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resize);
+        const start = performance.now();
+        const frame = (t) => {
+            ctx.clearRect(0, 0, w, h);
+            pieces.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rot += p.vr;
+                if (p.y > h) {
+                    p.y = -10;
+                    p.x = Math.random() * w;
+                }
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                ctx.restore();
+            });
+            if (t - start < durationMs) {
+                requestAnimationFrame(frame);
+            } else {
+                ctx.clearRect(0, 0, w, h);
+                window.removeEventListener('resize', resize);
+            }
+        };
+        requestAnimationFrame(frame);
+    }
+    window.launchConfetti = launchConfetti;
+
     // Global Badge Notification Polling
     window.checkNewBadges = async function () {
         // Only run if user is authenticated (checked via endpoint internally or global flag)
@@ -72,6 +136,7 @@
                     // Check if Swal is available
                     if (typeof Swal !== 'undefined') {
                         for (const badge of unread) {
+                            launchConfetti();
                             await Swal.fire({
                                 title: 'Nouveau Badge Débloqué !',
                                 text: `${badge.name}: ${badge.description}`,

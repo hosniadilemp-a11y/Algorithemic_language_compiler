@@ -606,7 +606,7 @@
 <body>
     <header class="editor-header">
         <div class="header-left">
-            <a href="/admin/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Tableau de bord</a>
+            <a href="/admin/dashboard#problems" class="back-btn"><i class="fas fa-arrow-left"></i> Tableau de bord</a>
             <div class="editor-title"><i class="fas fa-laptop-code"></i> {% if problem %}Modifier le problème #{{
                 problem_id }}{% else %}Nouveau problème{% endif %}</div>
         </div>
@@ -650,6 +650,14 @@
                             <div class="diff-pill" data-val="Hard">Difficile</div>
                         </div>
                     </div>
+                </div>
+
+                <div class="field-group" style="margin-top:8px;">
+                    <label class="field-label"><i class="fas fa-toggle-on"></i> Publication</label>
+                    <label style="display:flex; align-items:center; gap:8px; color:#cbd5f0;">
+                        <input type="checkbox" id="publishedToggle">
+                        <span>Publié (Ready)</span>
+                    </label>
                 </div>
             </section>
 
@@ -727,6 +735,7 @@
         const INIT_TEST_CASES = {{ (problem.test_cases if problem else[]) | tojson }};
         const INIT_TOPIC = {{ (problem.topic if problem else '') | tojson }};
         const INIT_DIFF = {{ (problem.difficulty if problem else 'Medium') | tojson }};
+        const INIT_PUBLISHED = {{ (problem.is_published if problem else false) | tojson }};
         const NEW_TOPIC_VALUE = '__new_topic__';
 
         const topicSelect = document.getElementById('topicSelect');
@@ -734,6 +743,7 @@
         const newTopicInput = document.getElementById('newTopicInput');
         const tcList = document.getElementById('tcList');
         const jsonFileInput = document.getElementById('jsonFileInput');
+        const publishedToggle = document.getElementById('publishedToggle');
 
         function toast(msg, type = 'success') {
             const t = document.getElementById('toast');
@@ -1080,6 +1090,7 @@
             const description = getDescriptionValue().trim();
             const template_code = getTemplateValue();
             const test_cases = getTestsFromDom();
+            const is_published = Boolean(publishedToggle.checked);
 
             if (validateRequired) {
                 if (!title) throw new Error('Le titre est obligatoire');
@@ -1088,7 +1099,7 @@
                 if (!test_cases.length) throw new Error('Ajoutez au moins un cas de test');
             }
 
-            return { title, topic, difficulty, description, template_code, test_cases };
+            return { title, topic, difficulty, description, template_code, test_cases, is_published };
         }
 
         async function saveProblem(andExit = false) {
@@ -1140,6 +1151,9 @@
             setDescriptionValue(String(payload.description || ''));
             setTemplateValue(String(payload.template_code || ''));
             applyTopic(payload.topic, true);
+            if ('is_published' in payload) {
+                publishedToggle.checked = Boolean(payload.is_published);
+            }
             renderTests((payload.test_cases || []).map(tc => ({
                 input: String(tc.input || ''),
                 expected_output: String(tc.expected_output || ''),
@@ -1292,6 +1306,7 @@
         });
 
         selectDiff(INIT_DIFF);
+        publishedToggle.checked = Boolean(INIT_PUBLISHED);
         renderTests(INIT_TEST_CASES);
         loadTopics();
         if (!window.EasyMDE) {
